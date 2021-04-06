@@ -8,6 +8,33 @@ export default function BootLogin({ login, setLogin }) {
         else { setLogin(true) }
     }
 
+    const signUp = () => {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in 
+                var user = userCredential.user;
+                // ...
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // ..
+            });
+    }
+
+    const logIn = () => {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in
+                var user = userCredential.user;
+                // ...
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+            });
+    }
+
     return (
         <Form>
             <Form.Group controlId="formBasicEmail">
