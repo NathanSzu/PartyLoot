@@ -1,7 +1,5 @@
 import React from 'react'
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
+import { Jumbotron, Container, Button } from 'react-bootstrap';
 
 export default function BootJumbo({ setWelcome, setLogin }) {
     const showForms = () => {

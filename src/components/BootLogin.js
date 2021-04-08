@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import { Form, Button} from 'react-bootstrap'
 
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
@@ -13,6 +12,10 @@ export default function BootLogin({ login, setLogin }) {
     }
     var email;
     var password;
+
+    const test = () => {
+        console.log(email)
+    }
 
     const signUp = () => {
         app.auth().createUserWithEmailAndPassword(email, password)
@@ -43,7 +46,7 @@ export default function BootLogin({ login, setLogin }) {
 
     return (
         <Form>
-            <Form.Group controlId="formBasicEmail">
+            <Form.Group controlId="Email">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" />
                 <Form.Text className="text-muted">
@@ -51,15 +54,15 @@ export default function BootLogin({ login, setLogin }) {
             </Form.Text>
             </Form.Group>
 
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group controlId="Password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" />
             </Form.Group>
 
             { !login ?
-                < Form.Group controlId="formBasicPassword">
+                < Form.Group controlId="PasswordConfirm">
                     <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Confirm Password" />
                 </Form.Group>
                 :
                 null
@@ -76,11 +79,11 @@ export default function BootLogin({ login, setLogin }) {
                 login ?
                     <Button variant="dark" type="submit">
                         Login
-            </Button>
+                    </Button>
                     :
                     <Button variant="dark" type="submit">
                         Create Account
-            </Button>
+                    </Button>
             }
 
         </Form >
