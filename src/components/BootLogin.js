@@ -1,15 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
+// Importing and initializing firebase from utils/firebase config file.
+import app from '../utils/firebase'
+
 export default function BootLogin({ login, setLogin }) {
+
     const toggleLogin = () => {
         if (login) { setLogin(false) }
         else { setLogin(true) }
     }
+    var email;
+    var password;
 
     const signUp = () => {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        app.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
@@ -23,7 +29,7 @@ export default function BootLogin({ login, setLogin }) {
     }
 
     const logIn = () => {
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        app.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in
                 var user = userCredential.user;

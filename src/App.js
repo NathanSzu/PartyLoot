@@ -5,6 +5,8 @@ import Loot from './pages/Loot';
 import BootNav from './components/BootNav';
 import Container from 'react-bootstrap/Container';
 
+import firebase from 'firebase/app'
+
 function App() {
   return (
     <Router>
