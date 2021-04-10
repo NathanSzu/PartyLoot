@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Redirect } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap'
 
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
 
-export default function BootLogin({ login, setLogin }) {
+export default function BootLogin({ login, setLogin, user }) {
+    useEffect(() => {
+        if (user) {
+            return (<Redirect to='/groups' />)
+        }
+    }, [])
+
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [checkPassword, setCheckPassword] = useState(null);
@@ -60,30 +67,37 @@ export default function BootLogin({ login, setLogin }) {
     const signUp = () => {
         if (emailValid && passwordValid && passwordLengthValid) {
             app.auth().createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Signed in 
-                var user = userCredential.user;
-                // ...
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // ..
-            });
+                .then((userCredential) => {
+                    // Signed in 
+                    var user = userCredential.user;
+                    // ...
+                    return(<Redirect to={'/groups'} />)
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode)
+                    console.log(errorMessage)
+                });
         }
     }
 
     const logIn = () => {
-        app.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Signed in
-                var user = userCredential.user;
-                // ...
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-            });
+        if (emailValid) {
+            app.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    // ...
+                    return(<Redirect to={'/groups'} />)
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode)
+                    console.log(errorMessage)
+                });
+        }
     }
 
     return (
@@ -137,11 +151,11 @@ export default function BootLogin({ login, setLogin }) {
 
             {
                 login ?
-                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test() }} >
+                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
                         Login
                     </Button>
                     :
-                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test() }} >
+                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
                         Create Account
                     </Button>
             }
