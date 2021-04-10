@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
-import { Form, Button} from 'react-bootstrap'
+import { Form, Button, Alert } from 'react-bootstrap'
 
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
 
 export default function BootLogin({ login, setLogin }) {
-    const [email, setEmail] = useState(null)
-    const [password, setPassword] = useState(null)
-    const [checkPassword, setCheckPassword] = useState(null)
-    const [emailValid, setEmailValid] = useState(null)
-    const [passwordMatch, setPasswordMatch] = useState(null)
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [checkPassword, setCheckPassword] = useState(null);
+    const [emailValid, setEmailValid] = useState('empty');
+    const [passwordValid, setPasswordValid] = useState('empty');
+    const [passwordLengthValid, setPasswordLengthValid] = useState('empty')
 
     const toggleLogin = () => {
         if (login) { setLogin(false) }
@@ -19,9 +20,8 @@ export default function BootLogin({ login, setLogin }) {
     const test = () => {
         console.log('email: ', email)
         console.log('password: ', password)
-        console.log('checkPassword: ', checkPassword)
         console.log('validEmail: ', emailValid)
-        console.log('validPassword: ', passwordMatch)
+        console.log('validPassword: ', passwordValid)
     }
 
     const validateEmail = (e) => {
@@ -33,16 +33,33 @@ export default function BootLogin({ login, setLogin }) {
         }
     }
 
-    const validatePassword = (e) => {
-        if (password === checkPassword) {
-            setPasswordMatch(true)
+    const validatePassword2 = (e) => {
+        if (password === e.target.value) {
+            setPasswordValid(true)
         } else {
-            setPasswordMatch(false)
+            setPasswordValid(false)
+        }
+    }
+
+    const validatePassword1 = (e) => {
+        if (checkPassword === e.target.value) {
+            setPasswordValid(true)
+        } else {
+            setPasswordValid(false)
+        }
+    }
+
+    const validatePasswordLength = (e) => {
+        if (e.target.value.length > 7) {
+            setPasswordLengthValid(true)
+        } else {
+            setPasswordLengthValid(false)
         }
     }
 
     const signUp = () => {
-        app.auth().createUserWithEmailAndPassword(email, password)
+        if (emailValid && passwordValid && passwordLengthValid) {
+            app.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
@@ -53,6 +70,7 @@ export default function BootLogin({ login, setLogin }) {
                 var errorMessage = error.message;
                 // ..
             });
+        }
     }
 
     const logIn = () => {
@@ -72,7 +90,13 @@ export default function BootLogin({ login, setLogin }) {
         <Form>
             <Form.Group controlId="Email">
                 <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" onChange={(e) => {setEmail(e.target.value);  validateEmail(e)}} />
+
+                {
+                    emailValid ? null :
+                        <Alert variant={'warning'}>Please enter a valid email address.</Alert>
+                }
+
+                <Form.Control type="email" placeholder="Enter email" onChange={(e) => { setEmail(e.target.value); validateEmail(e) }} />
                 <Form.Text className="text-muted">
                     We'll never share your email with anyone else.
             </Form.Text>
@@ -80,13 +104,25 @@ export default function BootLogin({ login, setLogin }) {
 
             <Form.Group controlId="Password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" onChange={(e) => {setPassword(e.target.value)}} />
+
+                {
+                    passwordLengthValid ? null :
+                        <Alert variant={'warning'}>Must be at least 8 characters!</Alert>
+                }
+
+                <Form.Control type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value); validatePassword1(e); validatePasswordLength(e) }} />
             </Form.Group>
 
             { !login ?
                 < Form.Group controlId="PasswordConfirm">
                     <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => {setCheckPassword(e.target.value); validatePassword()}} />
+
+                    {
+                        passwordValid ? null :
+                            <Alert variant={'warning'}>Passwords must match!</Alert>
+                    }
+
+                    <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => { setCheckPassword(e.target.value); validatePassword2(e) }} />
                 </Form.Group>
                 :
                 null
@@ -101,11 +137,11 @@ export default function BootLogin({ login, setLogin }) {
 
             {
                 login ?
-                    <Button variant="dark" type="submit" onClick={(e) => {e.preventDefault(); test()}} >
+                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test() }} >
                         Login
                     </Button>
                     :
-                    <Button variant="dark" type="submit" onClick={(e) => {e.preventDefault(); test()}} >
+                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test() }} >
                         Create Account
                     </Button>
             }
