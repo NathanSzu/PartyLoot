@@ -5,6 +5,8 @@ import Groups from './pages/Groups';
 import Loot from './pages/Loot';
 import BootNav from './components/BootNav';
 import Container from 'react-bootstrap/Container';
+import SecuredRoute from './utils/SecuredRoute';
+import SkippedRoute from './utils/SkippedRoute';
 
 function App() {
   return (
@@ -17,9 +19,9 @@ function App() {
         </header>
         <main>
           <Container>
-            <Route exact path='/' component={Home} />
-            <Route exact path='/groups' component={Groups} />
-            <Route exact path='/loot' component={Loot} />
+            <SkippedRoute exact path='/' component={Home} />
+            <SecuredRoute exact path='/groups' component={Groups} />
+            <SecuredRoute exact path='/loot' component={Loot} />
           </Container>
         </main>
       </Router>

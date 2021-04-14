@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { AuthContext } from '../utils/AuthContext'
+import { AuthContext } from '../utils/AuthContext';
 
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
@@ -71,10 +71,8 @@ export default function BootLogin({ login, setLogin, user }) {
                     // ...
                 })
                 .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log(errorCode)
-                    console.log(errorMessage)
+                    console.log(error.code)
+                    console.log(error.message)
                 });
         }
     }
@@ -88,10 +86,8 @@ export default function BootLogin({ login, setLogin, user }) {
                     // ...
                 })
                 .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log(errorCode)
-                    console.log(errorMessage)
+                    console.log(error.code)
+                    console.log(error.message)
                 });
         }
     }
