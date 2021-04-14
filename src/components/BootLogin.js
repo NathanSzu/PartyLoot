@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom';
-import { Form, Button, Alert } from 'react-bootstrap'
+import React, { useState, useEffect, useContext } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { AuthContext } from '../utils/AuthContext'
 
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
 
 export default function BootLogin({ login, setLogin, user }) {
-    useEffect(() => {
-        if (user) {
-            return (<Redirect to='/groups' />)
-        }
-    }, [])
+    const { currentUser } = useContext(AuthContext)
 
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
@@ -29,6 +25,8 @@ export default function BootLogin({ login, setLogin, user }) {
         console.log('password: ', password)
         console.log('validEmail: ', emailValid)
         console.log('validPassword: ', passwordValid)
+
+        console.log('User in context: ', currentUser)
     }
 
     const validateEmail = (e) => {
@@ -71,7 +69,6 @@ export default function BootLogin({ login, setLogin, user }) {
                     // Signed in 
                     var user = userCredential.user;
                     // ...
-                    return(<Redirect to={'/groups'} />)
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -89,7 +86,6 @@ export default function BootLogin({ login, setLogin, user }) {
                     // Signed in
                     var user = userCredential.user;
                     // ...
-                    return(<Redirect to={'/groups'} />)
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -159,6 +155,10 @@ export default function BootLogin({ login, setLogin, user }) {
                         Create Account
                     </Button>
             }
+
+            <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test()}} >
+               Test
+            </Button>
 
         </Form >
     )
