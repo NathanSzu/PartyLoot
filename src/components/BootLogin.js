@@ -143,16 +143,16 @@ export default function BootLogin({ login, setLogin, user }) {
 
             {
                 login ?
-                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
+                    <Button variant="dark" type="button" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
                         Login
                     </Button>
                     :
-                    <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
+                    <Button variant="dark" type="button" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
                         Create Account
                     </Button>
             }
 
-            <Button variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test()}} >
+            <Button variant="dark" type="button" onClick={(e) => { e.preventDefault(); test()}} >
                Test
             </Button>
 

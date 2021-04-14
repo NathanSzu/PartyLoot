@@ -9,11 +9,12 @@ export default function SkippedRoute({ component: RouteComponent, ...rest }) {
         <Route
             {...rest}
             render={routeProps =>
-                !currentUser ? (
-                    <RouteComponent {...routeProps} />
+                currentUser ? (
+                    <Redirect to={"/groups"} />
+
                 ) : (
-                        <Redirect to={"/groups"} />
-                    )
+                    <RouteComponent {...routeProps} />
+                )
             }
         />
     )
