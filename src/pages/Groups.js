@@ -40,7 +40,7 @@ export default function Groups() {
             {group.groupName}
           </Col>
           <Col xs='auto'>
-            <Button variant='dark'><img src={gear} fill='white'></img></Button>
+            <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button>
           </Col>
         </Row>
       ))}
