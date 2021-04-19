@@ -5,14 +5,17 @@ export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
+              setLoading(false);
               // User is signed in.
               setCurrentUser(user)
             } else {
               // No user is signed in.
+              setLoading(false);
             }
           });
     }, [])
@@ -22,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider
         value={{currentUser}}
         >
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     );
 }

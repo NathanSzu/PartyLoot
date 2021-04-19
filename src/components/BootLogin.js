@@ -13,7 +13,8 @@ export default function BootLogin({ login, setLogin, user }) {
     const [checkPassword, setCheckPassword] = useState(null);
     const [emailValid, setEmailValid] = useState('empty');
     const [passwordValid, setPasswordValid] = useState('empty');
-    const [passwordLengthValid, setPasswordLengthValid] = useState('empty')
+    const [passwordLengthValid, setPasswordLengthValid] = useState('empty');
+    const [loading, setLoading] = useState(false);
 
     const toggleLogin = () => {
         if (login) { setLogin(false) }
@@ -64,30 +65,36 @@ export default function BootLogin({ login, setLogin, user }) {
 
     const signUp = () => {
         if (emailValid && passwordValid && passwordLengthValid) {
+            setLoading(true);
             app.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Signed in 
                     var user = userCredential.user;
                     // ...
+                    setLoading(false);
                 })
                 .catch((error) => {
                     console.log(error.code)
                     console.log(error.message)
+                    setLoading(false);
                 });
         }
     }
 
     const logIn = () => {
         if (emailValid) {
+            setLoading(true);
             app.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Signed in
                     var user = userCredential.user;
                     // ...
+                    setLoading(false);
                 })
                 .catch((error) => {
                     console.log(error.code)
                     console.log(error.message)
+                    setLoading(false);
                 });
         }
     }
@@ -143,11 +150,11 @@ export default function BootLogin({ login, setLogin, user }) {
 
             {
                 login ?
-                    <Button variant="dark" type="button" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
+                    <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
                         Login
                     </Button>
                     :
-                    <Button variant="dark" type="button" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
+                    <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
                         Create Account
                     </Button>
             }
