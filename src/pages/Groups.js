@@ -13,58 +13,37 @@ export default function Groups() {
   const db = firebase.firestore();
 
   useEffect(() => {
-    console.log(currentUser)
-    db.collection('users').doc(`${currentUser.uid}`)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          let groupIDS = doc.data().groups
-          console.log("group data: ", doc.data().groups)
-          let pushData = [];
-
-          for (let i = 0; i < groupIDS.length; i++) {
-            let docRef = db.collection('groups').doc(groupIDS[i])
-
-            docRef.get().then((doc) => {
-              if (doc.exists) {
-                // console.log("Document data:", doc.data());
-                pushData.push(doc.data())
-                console.log(doc.data())
-              } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-              }
-              
-              setUserGroups(pushData)
-              
-            }).catch((error) => { console.log("Error getting document:", error) });
-          }
-          console.log('pushData: ', pushData)
-
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("Tap '+' to create a new group!");
-        }
+    db.collection('groups').where('members', 'array-contains', `${currentUser.uid}`).get()
+      .then((querySnapshot) => {
+        let groups = [];
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          groups.push(doc.data());
+        });
+        setUserGroups(groups)
         setLoading(false)
-      }).catch((error) => {
-        console.log("Error getting document:", error);
+      })
+      .catch((error) => {
+        console.log("Error getting groups: ", error);
       });
   }, [])
 
   return (
     <>
-      <Row>
-        {loading && <Alert variant={'dark'}>Loading groups...</Alert>}
-        {userGroups.map((group) => (
-          <div key={userGroups.keys()}>
-            <Col>
-              {group.groupName}
-            </Col>
-            <Col xs='3'>
-            </Col>
-          </div>
-        ))}
-      </Row>
+
+      {loading && <Alert variant={'dark'}>Loading groups...</Alert>}
+      {userGroups.map((group, idx) => (
+        <Row key={idx}>
+          <Col>
+            {group.groupName}
+          </Col>
+          <Col xs='3'>
+            Delete
+          </Col>
+        </Row>
+      ))}
+
 
       <Row className='justify-content-center'>
         <BootModalAddGroup />
