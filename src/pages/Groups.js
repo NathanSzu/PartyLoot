@@ -3,7 +3,8 @@ import firebase from '../utils/firebase';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { useState } from 'react';
-import BootModalAddGroup from '../components/BootModalAddGroup'
+import BootModalAddGroup from '../components/BootModalAddGroup';
+import gear from '../assets/gear-fill.svg'
 
 export default function Groups() {
   const { currentUser } = useContext(AuthContext)
@@ -34,12 +35,12 @@ export default function Groups() {
 
       {loading && <Alert variant={'dark'}>Loading groups...</Alert>}
       {userGroups.map((group, idx) => (
-        <Row key={idx}>
+        <Row key={idx} className='p-2'>
           <Col>
             {group.groupName}
           </Col>
-          <Col xs='3'>
-            Delete
+          <Col xs='auto'>
+            <Button variant='dark'><img src={gear} fill='white'></img></Button>
           </Col>
         </Row>
       ))}
