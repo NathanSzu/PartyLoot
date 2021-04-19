@@ -8,16 +8,17 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged(function(user) {
+        const unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-              setLoading(false);
               // User is signed in.
-              setCurrentUser(user)
+              setCurrentUser(user);
+              setLoading(false);
             } else {
               // No user is signed in.
               setLoading(false);
             }
           });
+          return unsubscribe;
     }, [])
 
 
