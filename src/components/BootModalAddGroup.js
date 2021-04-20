@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import fbApp from 'firebase/app';
+import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 
@@ -17,24 +17,17 @@ export default function BootModalAddGroup() {
     const addGroup = () => {
         console.log(nameRef.current.value)
         db.collection('groups').add({
-            groupName: nameRef.current.value
+            groupName: nameRef.current.value,
+            members: [currentUser.uid],
+            created: fb.firestore.FieldValue.serverTimestamp()
         })
         .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-            db.collection('users').doc(currentUser.uid).update({
-                groups: fbApp.firestore.FieldValue.arrayUnion(docRef.id)
-            })
-            .then(() => {
-                console.log("Group added to user list!");
-                handleClose()
-            })
-            .catch((error) => {
-                console.error("Error adding to user list: ", error);
-            });
-            
+            console.log("Group added with ID: ", docRef.id);
+            handleClose();
         })
         .catch((error) => {
             console.error("Error creating new group: ", error);
+            handleClose();
         });
     }
 
