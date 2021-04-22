@@ -4,6 +4,7 @@ import { Row, Col, Button, Alert } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { useState } from 'react';
 import BootModalAddGroup from '../components/BootModalAddGroup';
+import BootModalEditGroup from '../components/BootModalEditGroup';
 import gear from '../assets/gear-fill.svg'
 
 export default function Groups() {
@@ -22,6 +23,9 @@ export default function Groups() {
           console.log(doc.id, " => ", doc.data());
           groups.push(doc.data());
         });
+        groups.sort((a, b) => {
+          return b.created - a.created;
+        })
         setUserGroups(groups)
         setLoading(false)
       })
@@ -40,7 +44,8 @@ export default function Groups() {
             {group.groupName}
           </Col>
           <Col xs='auto'>
-            <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button>
+            {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
+            <BootModalEditGroup name={group.groupName} />
           </Col>
         </Row>
       ))}

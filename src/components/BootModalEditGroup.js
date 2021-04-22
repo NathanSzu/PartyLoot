@@ -5,9 +5,10 @@ import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg'
 
-export default function BootModalEditGroup() {
+export default function BootModalEditGroup({ name }) {
     const { currentUser } = useContext(AuthContext)
     const [show, setShow] = useState(false)
+    const [groupName, setGroupName] = useState(name)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -39,12 +40,12 @@ export default function BootModalEditGroup() {
             <Modal show={show} onHide={handleClose}>
                 <Form>
                     <Modal.Header closeButton>
-                        <Modal.Title>Edit your group.</Modal.Title>
+                        <Modal.Title>Edit {name}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
                         <Form.Group controlId='groupName'>
-                            <Form.Control ref={nameRef} type='text' placeholder='Group name' />
+                            <Form.Control ref={nameRef} type='text' value={groupName} />
                         </Form.Group>
                     </Modal.Body>
 
