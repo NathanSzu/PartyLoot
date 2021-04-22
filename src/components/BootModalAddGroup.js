@@ -4,7 +4,7 @@ import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 
-export default function BootModalAddGroup() {
+export default function BootModalAddGroup({ updateDisplay }) {
     const { currentUser } = useContext(AuthContext)
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
@@ -25,6 +25,7 @@ export default function BootModalAddGroup() {
         })
         .then((docRef) => {
             console.log("Group added with ID: ", docRef.id);
+            updateDisplay();
             setLoading(false);
             handleClose();
         })

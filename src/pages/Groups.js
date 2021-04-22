@@ -5,14 +5,22 @@ import { AuthContext } from '../utils/AuthContext';
 import { useState } from 'react';
 import BootModalAddGroup from '../components/BootModalAddGroup';
 import BootModalEditGroup from '../components/BootModalEditGroup';
-import gear from '../assets/gear-fill.svg'
 
 export default function Groups() {
-  const { currentUser } = useContext(AuthContext)
-  const [userGroups, setUserGroups] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { currentUser } = useContext(AuthContext);
+  const [userGroups, setUserGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [update, setUpdate] = useState(false);
 
   const db = firebase.firestore();
+
+  const updateDisplay = () => {
+    if (update === false) {
+      setUpdate(true);
+    } else {
+      setUpdate(false);
+    }
+  }
 
   useEffect(() => {
     db.collection('groups').where('members', 'array-contains', `${currentUser.uid}`).get()
@@ -36,7 +44,7 @@ export default function Groups() {
         console.log("Error getting groups: ", error);
       });
       console.log(userGroups)
-  }, [])
+  }, [update])
 
   return (
     <>
@@ -49,14 +57,14 @@ export default function Groups() {
           </Col>
           <Col xs='auto'>
             {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
-            <BootModalEditGroup name={group.data.groupName} id={group.id}/>
+            <BootModalEditGroup name={group.data.groupName} id={group.id} updateDisplay={updateDisplay} />
           </Col>
         </Row>
       ))}
 
 
       <Row className='justify-content-center'>
-        <BootModalAddGroup />
+        <BootModalAddGroup updateDisplay={updateDisplay} />
       </Row>
     </>
   )

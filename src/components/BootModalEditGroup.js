@@ -4,7 +4,7 @@ import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg'
 
-export default function BootModalEditGroup({ name, id }) {
+export default function BootModalEditGroup({ name, id, updateDisplay }) {
     const { currentUser } = useContext(AuthContext)
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
@@ -26,8 +26,9 @@ export default function BootModalEditGroup({ name, id }) {
         })
         .then(() => {
             console.log("Document successfully updated!");
-            setLoading(false)
-            handleClose()
+            updateDisplay();
+            setLoading(false);
+            handleClose();
         })
         .catch((error) => {
             // The document probably doesn't exist.
