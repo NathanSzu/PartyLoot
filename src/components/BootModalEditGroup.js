@@ -1,35 +1,39 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg'
 
-export default function BootModalEditGroup({ name }) {
+export default function BootModalEditGroup({ name, id }) {
     const { currentUser } = useContext(AuthContext)
     const [show, setShow] = useState(false)
-    const [groupName, setGroupName] = useState(name)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [loading, setLoading] = useState(false);
 
     const nameRef = useRef()
 
     const db = firebase.firestore();
 
     const editGroup = () => {
-        console.log(nameRef.current.value)
-        db.collection('groups').add({
-            groupName: nameRef.current.value,
-            members: [currentUser.uid],
-            created: fb.firestore.FieldValue.serverTimestamp()
+        if (nameRef.current.value === name || !nameRef.current.value) {
+            handleClose()
+            return
+        }
+        setLoading(true)
+        db.collection('groups').doc(`${id}`).update({
+            groupName: nameRef.current.value
         })
-        .then((docRef) => {
-            console.log("Group added with ID: ", docRef.id);
-            handleClose();
+        .then(() => {
+            console.log("Document successfully updated!");
+            setLoading(false)
+            handleClose()
         })
         .catch((error) => {
-            console.error("Error creating new group: ", error);
-            handleClose();
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+            setLoading(false)
+            handleClose()
         });
     }
 
@@ -45,12 +49,12 @@ export default function BootModalEditGroup({ name }) {
 
                     <Modal.Body>
                         <Form.Group controlId='groupName'>
-                            <Form.Control ref={nameRef} type='text' value={groupName} />
+                            <Form.Control ref={nameRef} type='text' defaultValue={name} />
                         </Form.Group>
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button variant='dark' type='submit' onClick={(e) => {e.preventDefault(); editGroup()}}>
+                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => {e.preventDefault(); editGroup()}}>
                             Save
                         </Button>
                     </Modal.Footer>

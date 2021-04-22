@@ -9,12 +9,14 @@ export default function BootModalAddGroup() {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [loading, setLoading] = useState(false);
 
     const nameRef = useRef()
 
     const db = firebase.firestore();
 
     const addGroup = () => {
+        setLoading(true);
         console.log(nameRef.current.value)
         db.collection('groups').add({
             groupName: nameRef.current.value,
@@ -23,10 +25,12 @@ export default function BootModalAddGroup() {
         })
         .then((docRef) => {
             console.log("Group added with ID: ", docRef.id);
+            setLoading(false);
             handleClose();
         })
         .catch((error) => {
             console.error("Error creating new group: ", error);
+            setLoading(false);
             handleClose();
         });
     }
@@ -50,7 +54,7 @@ export default function BootModalAddGroup() {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button variant='dark' type='submit' onClick={(e) => {e.preventDefault(); addGroup()}}>
+                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => {e.preventDefault(); addGroup()}}>
                             Create
                         </Button>
                     </Modal.Footer>

@@ -21,10 +21,13 @@ export default function Groups() {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data());
-          groups.push(doc.data());
+          groups.push({
+            id: doc.id,
+            data: doc.data()
+          });
         });
         groups.sort((a, b) => {
-          return b.created - a.created;
+          return b.data.created - a.data.created;
         })
         setUserGroups(groups)
         setLoading(false)
@@ -32,6 +35,7 @@ export default function Groups() {
       .catch((error) => {
         console.log("Error getting groups: ", error);
       });
+      console.log(userGroups)
   }, [])
 
   return (
@@ -41,11 +45,11 @@ export default function Groups() {
       {userGroups.map((group, idx) => (
         <Row key={idx} className='p-2'>
           <Col>
-            {group.groupName}
+            {group.data.groupName}
           </Col>
           <Col xs='auto'>
             {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
-            <BootModalEditGroup name={group.groupName} />
+            <BootModalEditGroup name={group.data.groupName} id={group.id}/>
           </Col>
         </Row>
       ))}
