@@ -57,7 +57,7 @@ export default function Groups() {
           </Col>
           <Col xs='auto'>
             {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
-            <BootModalEditGroup name={group.data.groupName} id={group.id} updateDisplay={updateDisplay} />
+            <BootModalEditGroup name={group.data.groupName} id={group.id} updateDisplay={updateDisplay} owner={group.data.owner} />
           </Col>
         </Row>
       ))}

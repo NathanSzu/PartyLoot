@@ -20,6 +20,7 @@ export default function BootModalAddGroup({ updateDisplay }) {
         console.log(nameRef.current.value)
         db.collection('groups').add({
             groupName: nameRef.current.value,
+            owner: currentUser.uid,
             members: [currentUser.uid],
             created: fb.firestore.FieldValue.serverTimestamp()
         })
