@@ -5,12 +5,13 @@ import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg'
 
 export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
-    const { currentUser } = useContext(AuthContext)
-    const [show, setShow] = useState(false)
+    const { currentUser } = useContext(AuthContext);
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [loading, setLoading] = useState(false);
-    const [userIsOwner, setUserIsOwner] = useState(false)
+    const [userIsOwner, setUserIsOwner] = useState(false);
+    const [confirmation, setConfirmation] = useState(false);
 
     const nameRef = useRef()
 
@@ -29,13 +30,15 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                 console.log('Document successfully updated!');
                 updateDisplay();
                 setLoading(false);
+                setConfirmation(false);
                 handleClose();
             })
             .catch((error) => {
                 // The document probably doesn't exist.
                 console.error('Error updating document: ', error);
-                setLoading(false)
-                handleClose()
+                setLoading(false);
+                setConfirmation(false);
+                handleClose();
             });
     }
 
@@ -47,10 +50,12 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                 console.log('Document successfully deleted!');
                 updateDisplay();
                 setLoading(false);
+                setConfirmation(false);
                 handleClose();
             }).catch((error) => {
                 console.error('Error removing document: ', error);
                 setLoading(false)
+                setConfirmation(false);
                 handleClose()
             });
     }
@@ -66,7 +71,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
         <>
             <Button variant='dark' className='p-1' onClick={handleShow}><img src={gear} fill='white'></img></Button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={() => { handleClose(); setConfirmation(false) }}>
                 <Form>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit {name}</Modal.Title>
@@ -82,7 +87,10 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                         <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
                             Save
                         </Button>
-                        {userIsOwner ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
+                        {confirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
+                            Yes, I'm sure. Delete!
+                        </Button> : null}
+                        {userIsOwner && !confirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); setConfirmation(true) }}>
                             Delete
                         </Button> : null}
                     </Modal.Footer>
