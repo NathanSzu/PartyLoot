@@ -23,6 +23,7 @@ export default function Groups() {
   }
 
   useEffect(() => {
+    console.log(currentUser)
     db.collection('groups').where('members', 'array-contains', `${currentUser.uid}`).get()
       .then((querySnapshot) => {
         let groups = [];

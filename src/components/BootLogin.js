@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 
 // Importing and initializing firebase from utils/firebase config file.
@@ -15,19 +15,11 @@ export default function BootLogin({ login, setLogin, user }) {
     const [passwordValid, setPasswordValid] = useState('empty');
     const [passwordLengthValid, setPasswordLengthValid] = useState('empty');
     const [loading, setLoading] = useState(false);
+    const [resetEmailSent, setResetEmailSent] = useState(false);
 
     const toggleLogin = () => {
         if (login) { setLogin(false) }
         else { setLogin(true) }
-    }
-
-    const test = () => {
-        console.log('email: ', email)
-        console.log('password: ', password)
-        console.log('validEmail: ', emailValid)
-        console.log('validPassword: ', passwordValid)
-
-        console.log('User in context: ', currentUser)
     }
 
     const validateEmail = (e) => {
@@ -74,9 +66,9 @@ export default function BootLogin({ login, setLogin, user }) {
                     setLoading(false);
                 })
                 .catch((error) => {
+                    setLoading(false);
                     console.log(error.code)
                     console.log(error.message)
-                    setLoading(false);
                 });
         }
     }
@@ -96,6 +88,20 @@ export default function BootLogin({ login, setLogin, user }) {
                     console.log(error.message)
                     setLoading(false);
                 });
+        }
+    }
+
+    const passwordReset = () => {
+        if (emailValid) {
+            setLoading(true);
+            app.auth.sendPasswordResetEmail(currentUser.email).then(function () {
+                // Email sent.
+                setResetEmailSent(true);
+                setLoading(false);
+            }).catch(function (error) {
+                // An error happened.
+                setLoading(false);
+            });
         }
     }
 
@@ -141,28 +147,40 @@ export default function BootLogin({ login, setLogin, user }) {
                 null
             }
 
-            <div>
-                {!login ? 'Already have an account?' : 'Need to create an account?'}
-                <Button variant="link" onClick={toggleLogin}>
-                    {!login ? 'Login here!' : 'Sign up here!'}
-                </Button>
-            </div>
+            <Row className='justify-content-between'>
+                <Col className='text-center'>
+                    {!login ? 'Already have an account?' : 'Need to create an account?'}
+                    <Button variant="link" onClick={toggleLogin}>
+                        {!login ? 'Login here!' : 'Sign up here!'}
+                    </Button>
+                </Col>
+            </Row>
 
             {
                 login ?
-                    <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
-                        Login
-                    </Button>
+                    <>
+                        <Row>
+                            <Col className='text-center mt-3 mb-3'>
+                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
+                                    Login
+                                </Button>
+                            </Col>
+                        </Row>
+                        <Row className='justify-content-center'>
+                            <Button variant="link" onClick={passwordReset}>
+                                Send a password reset email.
+                            </Button>
+                        </Row>
+                    </>
                     :
-                    <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
-                        Create Account
-                    </Button>
+                    <Row className='justify-content-center'>
+                        <Col className='text-center mt-3'>
+                        <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
+                            Create Account
+                        </Button>
+                        </Col>
+                    </Row>
             }
-
-            <Button variant="dark" type="button" onClick={(e) => { e.preventDefault(); test()}} >
-               Test
-            </Button>
-
         </Form >
     )
 }
