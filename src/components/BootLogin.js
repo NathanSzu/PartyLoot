@@ -94,7 +94,7 @@ export default function BootLogin({ login, setLogin, user }) {
     const passwordReset = () => {
         if (emailValid) {
             setLoading(true);
-            app.auth.sendPasswordResetEmail(currentUser.email).then(function () {
+            app.auth().sendPasswordResetEmail(email).then(function () {
                 // Email sent.
                 setResetEmailSent(true);
                 setLoading(false);
