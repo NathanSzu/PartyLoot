@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 
@@ -11,11 +11,13 @@ export default function BootLogin({ login, setLogin, user }) {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [checkPassword, setCheckPassword] = useState(null);
-    const [emailValid, setEmailValid] = useState('empty');
+    const [emailValid, setEmailValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState('empty');
     const [passwordLengthValid, setPasswordLengthValid] = useState('empty');
     const [loading, setLoading] = useState(false);
     const [resetEmailSent, setResetEmailSent] = useState(false);
+
+    const emailRef = useRef(false);
 
     const toggleLogin = () => {
         if (login) { setLogin(false) }
@@ -26,36 +28,29 @@ export default function BootLogin({ login, setLogin, user }) {
         const emailRequirements = /[a-z0-9]+@+[a-z0-9]+[.]+[a-z0-9]/;
         if (!emailRequirements.test(e.target.value)) {
             setEmailValid(false)
-        } else {
-            setEmailValid(true)
-        }
+        } else { setEmailValid(true) }
     }
 
     const validatePassword2 = (e) => {
         if (password === e.target.value) {
             setPasswordValid(true)
-        } else {
-            setPasswordValid(false)
-        }
+        } else { setPasswordValid(false) }
     }
 
     const validatePassword1 = (e) => {
         if (checkPassword === e.target.value) {
             setPasswordValid(true)
-        } else {
-            setPasswordValid(false)
-        }
+        } else { setPasswordValid(false) }
     }
 
     const validatePasswordLength = (e) => {
         if (e.target.value.length > 7) {
             setPasswordLengthValid(true)
-        } else {
-            setPasswordLengthValid(false)
-        }
+        } else { setPasswordLengthValid(false) }
     }
 
     const signUp = () => {
+        if (!emailRef.current.value) return;
         if (emailValid && passwordValid && passwordLengthValid) {
             setLoading(true);
             app.auth().createUserWithEmailAndPassword(email, password)
@@ -74,6 +69,7 @@ export default function BootLogin({ login, setLogin, user }) {
     }
 
     const logIn = () => {
+        if (!emailRef.current.value) return;
         if (emailValid) {
             setLoading(true);
             app.auth().signInWithEmailAndPassword(email, password)
@@ -112,7 +108,7 @@ export default function BootLogin({ login, setLogin, user }) {
 
                 {
                     emailValid ? null :
-                        <Alert variant={'warning'}>Please enter a valid email address.</Alert>
+                        <Alert ref={emailRef} variant={'warning'}>Please enter a valid email address.</Alert>
                 }
 
                 <Form.Control type="email" placeholder="Enter email" onChange={(e) => { setEmail(e.target.value); validateEmail(e) }} />
@@ -161,22 +157,22 @@ export default function BootLogin({ login, setLogin, user }) {
                     <>
                         <Row>
                             <Col className='text-center mt-3 mb-3'>
-                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); logIn() }} >
+                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); logIn() }} >
                                     Login
                                 </Button>
                             </Col>
                         </Row>
                         <Row className='justify-content-center'>
                             <Button variant="link" onClick={passwordReset}>
-                                Send a password reset email.
+                                Forgot password?
                             </Button>
                         </Row>
                     </>
                     :
                     <Row className='justify-content-center'>
                         <Col className='text-center mt-3'>
-                        <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); test(); signUp() }} >
-                            Create Account
+                            <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); signUp() }} >
+                                Create Account
                         </Button>
                         </Col>
                     </Row>
