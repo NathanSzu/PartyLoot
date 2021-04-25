@@ -24,7 +24,7 @@ export default function BootNav() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
                         {!currentUser ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
-                        {location.pathname === '/' || location.pathname === '/groups' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
+                        {location.pathname === '/' || location.pathname === '/groups' || location.pathname === '/forgot-password' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
                         {!currentUser ? null : <Nav.Link href="/groups">Settings</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
