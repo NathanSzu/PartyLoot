@@ -122,7 +122,7 @@ export default function BootLogin({ login, setLogin, user }) {
                         <Alert variant={'warning'}>Must be at least 8 characters!</Alert>
                 }
 
-                <Form.Control type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value); validatePassword1(e); validatePasswordLength(e) }} />
+                <Form.Control ref={passwordRef} type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value); validatePassword1(e); validatePasswordLength(e) }} />
             </Form.Group>
 
             { !login ?
@@ -154,7 +154,7 @@ export default function BootLogin({ login, setLogin, user }) {
                     <>
                         <Row>
                             <Col className='text-center mt-3 mb-3'>
-                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); logIn() }} >
+                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); logIn()}} >
                                     Login
                                 </Button>
                             </Col>

@@ -17,18 +17,16 @@ export default function BootNav() {
     }
 
     return (
-        <nav>
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="false">
                 <Navbar.Brand href="/">Party Loot</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
                         {!currentUser ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
                         {location.pathname === '/' || location.pathname === '/groups' || location.pathname === '/forgot-password' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
-                        {!currentUser ? null : <Nav.Link href="/groups">Settings</Nav.Link>}
+                        {!currentUser ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-        </nav>
     )
 }
