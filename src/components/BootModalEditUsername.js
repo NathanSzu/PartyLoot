@@ -7,17 +7,32 @@ export default function BootModalEditUsername({ username, setUsername }) {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [usernameValid, setUsernameValid] = useState(true);
+    const [usernameProfane, setUsernameProfane] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const checkUsername = (e) => {
         var filter = new Filter().isProfane(e.target.value)
-        setUsernameValid(filter)
+        setUsernameProfane(filter)
         console.log(filter)
     }
 
     const editUsername = () => {
-
+        if (!usernameProfane) {
+            setLoading(true);
+            firebase.auth().currentUser.updateProfile({
+                displayName: username
+            }).then(function () {
+                // Update successful.
+                setLoading(false);
+                handleClose();
+                console.log('profile updated');
+            }).catch(function (error) {
+                // An error happened.
+                setLoading(false);
+                handleClose();
+                console.log(error);
+            });
+        }
     }
 
     return (
@@ -33,7 +48,7 @@ export default function BootModalEditUsername({ username, setUsername }) {
                     <Modal.Body>
                         <Form.Group controlId="Username">
                             <Form.Control type="text" defaultValue={username} onChange={(e) => { setUsername(e.target.value); checkUsername(e) }} />
-                            {usernameValid ? null : <Alert variant={'warning'}>Must be at least 8 characters!</Alert>}
+                            {!usernameProfane ? null : <Alert variant={'warning'}>Keep it clean!</Alert>}
                         </Form.Group>
                     </Modal.Body>
 
