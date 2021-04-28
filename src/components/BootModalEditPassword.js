@@ -7,7 +7,7 @@ export default function BootModalEditPassword() {
     const [passwordValid, setPasswordValid] = useState('empty');
     const [passwordLengthValid, setPasswordLengthValid] = useState('empty');
     const [loading, setLoading] = useState(false);
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 

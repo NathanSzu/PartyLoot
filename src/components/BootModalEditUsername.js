@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import Filter from 'bad-words';
 import firebase from '../utils/firebase';
+import { AuthContext } from '../utils/AuthContext';
 
 export default function BootModalEditUsername({ username, setUsername }) {
+    const { currentUser } = useContext(AuthContext);
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -13,11 +15,10 @@ export default function BootModalEditUsername({ username, setUsername }) {
     const checkUsername = (e) => {
         var filter = new Filter().isProfane(e.target.value)
         setUsernameProfane(filter)
-        console.log(filter)
     }
 
     const editUsername = () => {
-        if (!usernameProfane) {
+        if (!usernameProfane && !username.includes('#')) {
             setLoading(true);
             firebase.auth().currentUser.updateProfile({
                 displayName: username
@@ -39,7 +40,7 @@ export default function BootModalEditUsername({ username, setUsername }) {
         <>
             <Button variant='dark' className='p-1 mt-2 mb-2 w-100' onClick={handleShow}>Change Username</Button>
 
-            <Modal show={show} onHide={() => { handleClose() }}>
+            <Modal show={show} onHide={() => { handleClose(); setUsername(currentUser.displayName) }}>
                 <Form>
                     <Modal.Header closeButton>
                         <Modal.Title>Change Username</Modal.Title>

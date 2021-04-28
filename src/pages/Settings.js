@@ -61,7 +61,7 @@ export default function Settings() {
                 <h1>Group Code</h1>
             </Col>
             <Col xs={12}>
-                <p>{`${currentUser.displayName + '#' + groupCode}`}</p>
+                <p>{`${username + '#' + groupCode}`}</p>
             </Col>
 
             <Col md={8} className='mr-auto ml-auto'>
