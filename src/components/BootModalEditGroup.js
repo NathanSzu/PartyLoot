@@ -1,5 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg'
@@ -11,15 +12,24 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
     const handleShow = () => setShow(true);
     const [loading, setLoading] = useState(false);
     const [userIsOwner, setUserIsOwner] = useState(false);
-    const [confirmation, setConfirmation] = useState(false);
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+    const [leaveConfirmation, setLeaveConfirmation] = useState(false);
 
     const nameRef = useRef()
 
     const db = firebase.firestore();
 
+    const setFalseThenClose = () => {
+        setLoading(false);
+        setDeleteConfirmation(false);
+        setLeaveConfirmation(false);
+        handleClose();
+    }
+
     const editGroup = () => {
+        // Does not call update function if the group name has not been changed or is left empty.
         if (nameRef.current.value === name || !nameRef.current.value) {
-            handleClose()
+            setFalseThenClose();
             return
         }
         setLoading(true)
@@ -29,16 +39,12 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
             .then(() => {
                 console.log('Document successfully updated!');
                 updateDisplay();
-                setLoading(false);
-                setConfirmation(false);
-                handleClose();
+                setFalseThenClose();
             })
             .catch((error) => {
                 // The document probably doesn't exist.
                 console.error('Error updating document: ', error);
-                setLoading(false);
-                setConfirmation(false);
-                handleClose();
+                setFalseThenClose();
             });
     }
 
@@ -49,14 +55,26 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
             .then(() => {
                 console.log('Document successfully deleted!');
                 updateDisplay();
-                setLoading(false);
-                setConfirmation(false);
-                handleClose();
+                setFalseThenClose();
             }).catch((error) => {
                 console.error('Error removing document: ', error);
-                setLoading(false)
-                setConfirmation(false);
-                handleClose()
+                setFalseThenClose();
+            });
+    }
+
+    const leaveGroup = () => {
+        if (currentUser.uid === owner) { return }
+        setLoading(true)
+        db.collection('groups').doc(`${id}`).update({
+            'members': fb.firestore.FieldValue.arrayRemove(currentUser.uid)
+        })
+            .then(() => {
+                console.log('Document successfully deleted!');
+                updateDisplay();
+                setFalseThenClose();
+            }).catch((error) => {
+                console.error('Error removing document: ', error);
+                setFalseThenClose();
             });
     }
 
@@ -71,7 +89,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
         <>
             <Button variant='dark' className='p-1' onClick={handleShow}><img src={gear} fill='white'></img></Button>
 
-            <Modal show={show} onHide={() => { handleClose(); setConfirmation(false) }}>
+            <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit {name}</Modal.Title>
@@ -87,12 +105,25 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                         <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
                             Save
                         </Button>
-                        {confirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
+                        {deleteConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
                             Yes, I'm sure. Delete!
                         </Button> : null}
-                        {userIsOwner && !confirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); setConfirmation(true) }}>
-                            Delete
+
+                        {leaveConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup() }}>
+                            Yes, I'm sure. Leave Group!
                         </Button> : null}
+
+                        {userIsOwner && !deleteConfirmation ?
+                        // Delete button that only shows if the current user owns the group.
+                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); setDeleteConfirmation(true) }}>
+                                Delete
+                            </Button> : null}
+
+                        {!userIsOwner && !leaveConfirmation ?
+                            // Alternate Leave Group button that only shows if current user does not own the group.
+                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); setLeaveConfirmation(true) }}>
+                                Leave Group
+                            </Button> : null}
                     </Modal.Footer>
                 </Form>
             </Modal>
