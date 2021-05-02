@@ -16,6 +16,7 @@ export default function BootModalAddGroup({ updateDisplay }) {
     const db = firebase.firestore();
 
     const addGroup = () => {
+        if (!nameRef.current.value) { return }
         setLoading(true);
         console.log(nameRef.current.value)
         db.collection('groups').add({
