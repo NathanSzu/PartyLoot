@@ -11,7 +11,6 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [loading, setLoading] = useState(false);
-    const [userIsOwner, setUserIsOwner] = useState(false);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
 
@@ -38,8 +37,8 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
         })
             .then(() => {
                 console.log('Document successfully updated!');
-                updateDisplay();
                 setFalseThenClose();
+                updateDisplay();
             })
             .catch((error) => {
                 // The document probably doesn't exist.
@@ -54,8 +53,8 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
         db.collection('groups').doc(`${id}`).delete()
             .then(() => {
                 console.log('Document successfully deleted!');
-                updateDisplay();
                 setFalseThenClose();
+                updateDisplay();
             }).catch((error) => {
                 console.error('Error removing document: ', error);
                 setFalseThenClose();
@@ -77,13 +76,6 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                 setFalseThenClose();
             });
     }
-
-    useEffect(() => {
-        if (currentUser.uid === owner) {
-            setUserIsOwner(true)
-        }
-
-    }, [])
 
     return (
         <>
@@ -113,15 +105,15 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                             Yes, I'm sure. Leave Group!
                         </Button> : null}
 
-                        {userIsOwner && !deleteConfirmation ?
+                        {currentUser.uid === owner && !deleteConfirmation ?
                         // Delete button that only shows if the current user owns the group.
-                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); setDeleteConfirmation(true) }}>
+                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }}>
                                 Delete
                             </Button> : null}
 
-                        {!userIsOwner && !leaveConfirmation ?
+                        {currentUser.uid !== owner && !leaveConfirmation ?
                             // Alternate Leave Group button that only shows if current user does not own the group.
-                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); setLeaveConfirmation(true) }}>
+                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }}>
                                 Leave Group
                             </Button> : null}
                     </Modal.Footer>
