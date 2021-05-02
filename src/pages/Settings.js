@@ -46,7 +46,7 @@ export default function Settings() {
     const initiateGroupCode = () => {
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         let code = '';
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 3; i++) {
             code += alphabet[Math.floor(Math.random() * alphabet.length)];
             code += Math.floor(Math.random() * 10);
         }
@@ -58,16 +58,21 @@ export default function Settings() {
     return (
         <Row className='p-2 text-center'>
             <Col xs={12}>
-                <h1>Group Code</h1>
+                <h1>Username</h1>
             </Col>
             <Col xs={12}>
-                <p>{`${username + '#' + groupCode}`}</p>
+                <p>{username}</p>
             </Col>
-
             <Col md={8} className='mr-auto ml-auto'>
                 <BootModalEditUsername username={username} setUsername={setUsername} />
             </Col>
 
+            <Col xs={12}>
+                <h1>Group Code</h1>
+            </Col>
+            <Col xs={12}>
+                <p>{groupCode}</p>
+            </Col>
             <Col md={8} className='mr-auto ml-auto'>
                 <BootModalEditPassword />
             </Col>

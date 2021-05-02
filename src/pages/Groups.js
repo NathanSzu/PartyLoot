@@ -22,8 +22,7 @@ export default function Groups() {
     }
   }
 
-  useEffect(() => {
-    console.log(currentUser)
+  const retrieveGroups = () => {
     db.collection('groups').where('members', 'array-contains', `${currentUser.uid}`).get()
       .then((querySnapshot) => {
         let groups = [];
@@ -45,6 +44,11 @@ export default function Groups() {
         console.log("Error getting groups: ", error);
       });
       console.log(userGroups)
+  }
+
+  useEffect(() => {
+    console.log(currentUser)
+    retrieveGroups();
   }, [update])
 
   return (
