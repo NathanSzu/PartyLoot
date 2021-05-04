@@ -89,14 +89,17 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
 
                     <Modal.Body>
                         <Form.Group controlId='groupName'>
-                            <Form.Control ref={nameRef} type='text' defaultValue={name} />
+                            <Form.Control ref={nameRef} disabled={currentUser.uid === owner ? false : true} type='text' defaultValue={name} />
                         </Form.Group>
                     </Modal.Body>
 
                     <Modal.Footer className='justify-content-between'>
+                        {currentUser.uid === owner ?
                         <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
                             Save
-                        </Button>
+                        </Button> : 
+                        <div></div>}
+
                         {deleteConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
                             Yes, I'm sure. Delete!
                         </Button> : null}
