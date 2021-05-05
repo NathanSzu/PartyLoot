@@ -5,7 +5,7 @@ import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg'
 
-export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
+export default function BootModalEditGroup({ name, id, updateDisplay, owner, members }) {
     const { currentUser } = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -17,6 +17,22 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
     const nameRef = useRef()
 
     const db = firebase.firestore();
+
+    useEffect(() => {
+                  
+    }, [])
+
+    const getGroupMembers = () => {
+        console.log(`${id} members: `, members)
+        db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              // doc.data() is never undefined for query doc snapshots
+              console.log('testing => ', doc.data());
+              console.log(doc.id)
+            });
+          })
+    }
 
     const setFalseThenClose = () => {
         setLoading(false);
@@ -79,12 +95,12 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
 
     return (
         <>
-            <Button variant='dark' className='p-1' onClick={handleShow}><img src={gear} fill='white'></img></Button>
+            <Button variant='dark' className='p-1' onClick={() => {handleShow(); getGroupMembers()}}><img src={gear} fill='white'></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
                     <Modal.Header closeButton>
-                        <Modal.Title>Edit {name}</Modal.Title>
+                        <Modal.Title>{currentUser.uid === owner ? 'Edit' : null} {name}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
@@ -120,6 +136,16 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner }) {
                                 Leave Group
                             </Button> : null}
                     </Modal.Footer>
+
+                    {/* Purely for the border */}
+                    <Modal.Footer></Modal.Footer>
+                    
+                    <Modal.Header>
+                        <Modal.Title>Group Members</Modal.Title>
+                    </Modal.Header>
+                    {/* <Modal.Footer>
+
+                    </Modal.Footer> */}
                 </Form>
             </Modal>
         </>
