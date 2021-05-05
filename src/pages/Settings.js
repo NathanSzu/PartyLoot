@@ -9,8 +9,9 @@ export default function Settings() {
     const { currentUser } = useContext(AuthContext);
     const db = firebase.firestore();
     const [groupCode, setGroupCode] = useState('');
-    const [username, setUsername] = useState(null);
-    
+    const [username, setUsername] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         if (currentUser.displayName) { setUsername(currentUser.displayName) }
@@ -25,26 +26,33 @@ export default function Settings() {
         db.collection('users').doc(`${currentUser.uid}`)
             .onSnapshot((doc) => {
                 if (doc.data().code) { console.log(doc.data().code) }
-                else { initiateGroupCode() }
+                else { initiateGroupCode() };
+
+                if (doc.data().displayName) { console.log(doc.data().code) }
+                else { initiateUsername('Anonymous-Bear') }
                 console.log('Current data: ', doc.data());
                 setGroupCode(doc.data().code);
+                setUsername(doc.data().displayName);
             });
     }, [currentUser])
 
-    const initiateUsername = (arr) => {
-        firebase.auth().currentUser.updateProfile({
-            displayName: arr[Math.floor(Math.random() * arr.length)]
-        }).then(function () {
-            // Update successful.
-            console.log('profile updated')
-        }).catch(function (error) {
-            // An error happened.
-            console.log(error)
-        });
+    const initiateUsername = (name) => {
+        setLoading(true)
+        db.collection('users').doc(`${currentUser.uid}`).set({ displayName: name }, { merge: true })
+            .then(() => {
+                console.log('Display name updated!')
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error('Error creating code: ', error)
+                setLoading(false);
+            });
     }
 
+
+
     const initiateGroupCode = () => {
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+        const alphabet = 'ABCDEFGHIJKLMNPQRSTUVWXYZ1234567890'
         let code = '';
         for (let i = 0; i < 3; i++) {
             code += alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -64,7 +72,7 @@ export default function Settings() {
                 <p>{username}</p>
             </Col>
             <Col md={8} className='mr-auto ml-auto'>
-                <BootModalEditUsername username={username} setUsername={setUsername} />
+                <BootModalEditUsername username={username} initiateUsername={initiateUsername} loading={loading} setLoading={setLoading} />
             </Col>
 
             <Col xs={12}>
@@ -74,7 +82,7 @@ export default function Settings() {
                 <p>{groupCode}</p>
             </Col>
             <Col md={8} className='mr-auto ml-auto'>
-                <BootModalEditPassword />
+                <BootModalEditPassword loading={loading} setLoading={setLoading} />
             </Col>
         </Row>
     )

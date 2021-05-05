@@ -2,17 +2,16 @@ import React, { useState } from 'react';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import firebase from '../utils/firebase';
 
-export default function BootModalEditPassword() {
+export default function BootModalEditPassword({ loading, setLoading }) {
     const [password, setPassword] = useState(null);
     const [passwordValid, setPasswordValid] = useState('empty');
     const [passwordLengthValid, setPasswordLengthValid] = useState('empty');
-    const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const editPassword = () => {
-        if (passwordValid && passwordLengthValid) {
+        if (passwordValid && passwordLengthValid && password) {
             setLoading(true)
             firebase.auth().currentUser.updatePassword(password)
                 .then(() => {
