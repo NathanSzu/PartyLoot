@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
@@ -19,19 +19,19 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     const db = firebase.firestore();
 
     useEffect(() => {
-                  
+
     }, [])
 
     const getGroupMembers = () => {
         console.log(`${id} members: `, members)
         db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members).get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-              console.log('testing => ', doc.data());
-              console.log(doc.id)
-            });
-          })
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log('testing => ', doc.data());
+                    console.log(doc.id)
+                });
+            })
     }
 
     const setFalseThenClose = () => {
@@ -95,7 +95,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
 
     return (
         <>
-            <Button variant='dark' className='p-1' onClick={() => {handleShow(); getGroupMembers()}}><img src={gear} fill='white'></img></Button>
+            <Button variant='dark' className='p-1' onClick={() => { handleShow(); getGroupMembers() }}><img src={gear} fill='white'></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
@@ -111,10 +111,10 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
 
                     <Modal.Footer className='justify-content-between'>
                         {currentUser.uid === owner ?
-                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
-                            Save
-                        </Button> : 
-                        <div></div>}
+                            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
+                                Save
+                        </Button> :
+                            <div></div>}
 
                         {deleteConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
                             Yes, I'm sure. Delete!
@@ -125,7 +125,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                         </Button> : null}
 
                         {currentUser.uid === owner && !deleteConfirmation ?
-                        // Delete button that only shows if the current user owns the group.
+                            // Delete button that only shows if the current user owns the group.
                             <Button disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }}>
                                 Delete
                             </Button> : null}
@@ -139,13 +139,19 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
 
                     {/* Purely for the border */}
                     <Modal.Footer></Modal.Footer>
-                    
+
                     <Modal.Header>
                         <Modal.Title>Group Members</Modal.Title>
                     </Modal.Header>
-                    {/* <Modal.Footer>
-
-                    </Modal.Footer> */}
+                    <Modal.Footer>
+                        {members.map((member, idx) => (
+                            <Row key={idx} className='p-2'>
+                                <Col>
+                                    {member}
+                                </Col>
+                            </Row>
+                        ))}
+                    </Modal.Footer>
                 </Form>
             </Modal>
         </>
