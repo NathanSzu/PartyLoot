@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Container } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
@@ -13,24 +13,29 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     const [loading, setLoading] = useState(false);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
+    const [displayMembers, setDisplayMembers] = useState([])
 
-    const nameRef = useRef()
+    const nameRef = useRef();
+    const memberRef = useRef();
 
     const db = firebase.firestore();
 
     useEffect(() => {
-        
+
     }, [])
 
     const getGroupMembers = () => {
         console.log(`${id} members: `, members)
+        let currMembers = [];
         db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members).get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     console.log('testing => ', doc.data());
                     console.log(doc.id)
+                    currMembers.push(doc.data())
                 });
+                setDisplayMembers(currMembers)
             })
     }
 
@@ -113,7 +118,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                         {currentUser.uid === owner ?
                             <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
                                 Save
-                        </Button> :
+                            </Button> :
                             <div></div>}
 
                         {deleteConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
@@ -143,16 +148,37 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                     <Modal.Header>
                         <Modal.Title>Group Members</Modal.Title>
                     </Modal.Header>
-                    <Modal.Footer>
-                        {members.map((member, idx) => (
-                            <Row key={idx} className='p-2'>
-                                <Col>
-                                    {member}
-                                </Col>
-                            </Row>
-                        ))}
-                    </Modal.Footer>
+
                 </Form>
+
+                <Modal.Footer>
+                    {displayMembers.map((displayMember, idx) => (
+                        <Row key={idx} className='p-2 w-100'>
+                            <Col>
+                                {displayMember.displayName}
+                            </Col>
+                        </Row>
+                    ))}
+
+                    {currentUser.uid === owner ?
+                        <Form className='w-100'>
+                            <Container>
+                                <Row>
+                                    <Col>
+                                        <Form.Group controlId='addMember'>
+                                            <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
+                                        </Form.Group>
+                                    </Col>
+
+                                    <Col xs='auto'>
+                                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); }}>
+                                            +
+                                    </Button>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Form> : null}
+                </Modal.Footer>
             </Modal>
         </>
     )
