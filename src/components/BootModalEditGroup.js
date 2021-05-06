@@ -19,7 +19,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     const db = firebase.firestore();
 
     useEffect(() => {
-
+        
     }, [])
 
     const getGroupMembers = () => {

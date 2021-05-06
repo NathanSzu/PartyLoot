@@ -25,14 +25,15 @@ export default function Settings() {
 
         db.collection('users').doc(`${currentUser.uid}`)
             .onSnapshot((doc) => {
-                if (doc.data().code) { console.log(doc.data().code) }
-                else { initiateGroupCode() };
-
-                if (doc.data().displayName) { console.log(doc.data().code) }
-                else { initiateUsername('Anonymous-Bear') }
-                console.log('Current data: ', doc.data());
-                setGroupCode(doc.data().code);
-                setUsername(doc.data().displayName);
+                if (doc.data()) {
+                    console.log('Current data: ', doc.data());
+                    setGroupCode(doc.data().code);
+                    setUsername(doc.data().displayName);
+                }
+                else {
+                    initiateGroupCode();
+                    initiateUsername('Anonymous-Bear');
+                };
             });
     }, [currentUser])
 
