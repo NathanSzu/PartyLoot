@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, Container } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
@@ -82,6 +82,25 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
             });
     }
 
+    const addMember = () => {
+        console.log(memberRef)
+        db.collection('users').where('code', '==', memberRef.current.value.toUpperCase()).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                    if (doc.id) {
+                        db.collection('groups').doc(id).update({
+                            members: fb.firestore.FieldValue.arrayUnion(doc.id)
+                        })
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting user: ", error);
+            });
+    }
+
     const leaveGroup = () => {
         if (currentUser.uid === owner) { return }
         setLoading(true)
@@ -145,12 +164,11 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                     {/* Purely for the border */}
                     <Modal.Footer></Modal.Footer>
 
-                    <Modal.Header>
-                        <Modal.Title>Group Members</Modal.Title>
-                    </Modal.Header>
-
                 </Form>
 
+                <Modal.Header>
+                    <Modal.Title>Members</Modal.Title>
+                </Modal.Header>
                 <Modal.Footer>
                     {displayMembers.map((displayMember, idx) => (
                         <Row key={idx} className='p-2 w-100'>
@@ -159,9 +177,14 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                             </Col>
                         </Row>
                     ))}
+                </Modal.Footer>
 
-                    {currentUser.uid === owner ?
-                        <Form className='w-100'>
+                {currentUser.uid === owner ?
+                    <>
+                        <Modal.Header>
+                            <Modal.Title>Add Members</Modal.Title>
+                        </Modal.Header>
+                        <Form className='w-100 mt-3'>
                             <Container>
                                 <Row>
                                     <Col>
@@ -171,14 +194,14 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                                     </Col>
 
                                     <Col xs='auto'>
-                                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); }}>
+                                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
                                             +
                                     </Button>
                                     </Col>
                                 </Row>
                             </Container>
-                        </Form> : null}
-                </Modal.Footer>
+                        </Form>
+                    </> : null}
             </Modal>
         </>
     )
