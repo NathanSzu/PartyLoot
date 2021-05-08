@@ -13,7 +13,8 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     const [loading, setLoading] = useState(false);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
-    const [displayMembers, setDisplayMembers] = useState([])
+    const [displayMembers, setDisplayMembers] = useState([]);
+    const [noResult, setNoResult] = useState(false);
 
     const nameRef = useRef();
     const memberRef = useRef();
@@ -33,7 +34,9 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                     // doc.data() is never undefined for query doc snapshots
                     console.log('testing => ', doc.data());
                     console.log(doc.id)
-                    currMembers.push(doc.data())
+                    if (doc.id !== currentUser.uid) {
+                        currMembers.push(doc.data())
+                    }
                 });
                 setDisplayMembers(currMembers)
             })
@@ -43,6 +46,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
         setLoading(false);
         setDeleteConfirmation(false);
         setLeaveConfirmation(false);
+        setNoResult(false);
         handleClose();
     }
 
@@ -83,22 +87,31 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     }
 
     const addMember = () => {
-        console.log(memberRef)
-        db.collection('users').where('code', '==', memberRef.current.value.toUpperCase()).get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
-                    if (doc.id) {
-                        db.collection('groups').doc(id).update({
-                            members: fb.firestore.FieldValue.arrayUnion(doc.id)
-                        })
+        if (memberRef.current.value) {
+            setLoading(true);
+            db.collection('users').where('code', '==', memberRef.current.value.toUpperCase()).get()
+                .then((querySnapshot) => {
+                    // Check if there are no results and display alert
+                    if (querySnapshot.empty) {
+                        setNoResult(true);
+                        setLoading(false);
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            // doc.data() is never undefined for query doc snapshots
+                            console.log(doc.id, " => ", doc.data());
+                            if (doc.id) {
+                                db.collection('groups').doc(id).update({
+                                    members: fb.firestore.FieldValue.arrayUnion(doc.id)
+                                })
+                            }
+                        });
+                        setLoading(false);
                     }
+                })
+                .catch((error) => {
+                    console.log("Error getting user: ", error);
                 });
-            })
-            .catch((error) => {
-                console.log("Error getting user: ", error);
-            });
+        }
     }
 
     const leaveGroup = () => {
@@ -196,7 +209,12 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                                     <Col xs='auto'>
                                         <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
                                             +
-                                    </Button>
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
                                     </Col>
                                 </Row>
                             </Container>
