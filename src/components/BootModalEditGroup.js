@@ -3,7 +3,8 @@ import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
-import gear from '../assets/gear-fill.svg'
+import gear from '../assets/gear-fill.svg';
+import remove from '../assets/remove-user.svg';
 
 export default function BootModalEditGroup({ name, id, updateDisplay, owner, members }) {
     const { currentUser } = useContext(AuthContext);
@@ -21,25 +22,21 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
 
     const db = firebase.firestore();
 
-    useEffect(() => {
-
-    }, [])
-
     const getGroupMembers = () => {
-        console.log(`${id} members: `, members)
-        let currMembers = [];
         db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members).get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    console.log('testing => ', doc.data());
-                    console.log(doc.id)
-                    if (doc.id !== currentUser.uid) {
-                        currMembers.push(doc.data())
-                    }
-                });
-                setDisplayMembers(currMembers)
-            })
+        .then((querySnapshot) => {
+            let currMembers = [];
+            querySnapshot.forEach((doc) => {
+                if (doc.id !== currentUser.uid) {
+                    currMembers.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                }
+            });
+            setDisplayMembers(currMembers)
+            console.log(currMembers)
+        })
     }
 
     const setFalseThenClose = () => {
@@ -48,6 +45,13 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
         setLeaveConfirmation(false);
         setNoResult(false);
         handleClose();
+    }
+
+    const setFalseNoClose = () => {
+        setLoading(false);
+        setDeleteConfirmation(false);
+        setLeaveConfirmation(false);
+        setNoResult(false);
     }
 
     const editGroup = () => {
@@ -105,7 +109,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                                 })
                             }
                         });
-                        setLoading(false);
+                        setFalseNoClose();
                     }
                 })
                 .catch((error) => {
@@ -115,24 +119,38 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     }
 
     const leaveGroup = () => {
-        if (currentUser.uid === owner) { return }
         setLoading(true)
         db.collection('groups').doc(`${id}`).update({
             'members': fb.firestore.FieldValue.arrayRemove(currentUser.uid)
         })
             .then(() => {
-                console.log('Document successfully deleted!');
+                console.log('Member romved!');
                 updateDisplay();
                 setFalseThenClose();
             }).catch((error) => {
-                console.error('Error removing document: ', error);
+                console.error('Error removing member: ', error);
                 setFalseThenClose();
+            });
+    }
+
+    const removeMember = (e) => {
+        setLoading(true)
+        db.collection('groups').doc(`${id}`).update({
+            'members': fb.firestore.FieldValue.arrayRemove(e.target.id)
+        })
+            .then(() => {
+                console.log('Member removed!');
+                updateDisplay();
+                setFalseNoClose();
+            }).catch((error) => {
+                console.error('Error removing member: ', error);
+                setFalseNoClose();
             });
     }
 
     return (
         <>
-            <Button variant='dark' className='p-1' onClick={() => { handleShow(); getGroupMembers() }}><img src={gear} fill='white'></img></Button>
+            <Button variant='dark' className='p-1' onClick={() => { handleShow(); getGroupMembers() }}><img src={gear}></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
@@ -148,30 +166,26 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
 
                     <Modal.Footer className='justify-content-between'>
                         {currentUser.uid === owner ?
-                            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }}>
-                                Save
-                            </Button> :
-                            <div></div>}
+                            <Button as='input' value='Save' disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }} />
+                            : <div></div>}
 
-                        {deleteConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }}>
-                            Yes, I'm sure. Delete!
-                        </Button> : null}
+                        {deleteConfirmation ?
+                            <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }} />
+                            : null}
 
-                        {leaveConfirmation ? <Button disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup() }}>
-                            Yes, I'm sure. Leave Group!
-                        </Button> : null}
+                        {leaveConfirmation ?
+                            <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser.uid) }} />
+                            : null}
 
                         {currentUser.uid === owner && !deleteConfirmation ?
                             // Delete button that only shows if the current user owns the group.
-                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }}>
-                                Delete
-                            </Button> : null}
+                            <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
+                            : null}
 
                         {currentUser.uid !== owner && !leaveConfirmation ?
                             // Alternate Leave Group button that only shows if current user does not own the group.
-                            <Button disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }}>
-                                Leave Group
-                            </Button> : null}
+                            <Button as='input' value={`Leave Group`} disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }} />
+                            : null}
                     </Modal.Footer>
 
                     {/* Purely for the border */}
@@ -182,44 +196,55 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                 <Modal.Header>
                     <Modal.Title>Members</Modal.Title>
                 </Modal.Header>
-                <Modal.Footer>
-                    {displayMembers.map((displayMember, idx) => (
-                        <Row key={idx} className='p-2 w-100'>
+
+                {displayMembers.map((displayMember, idx) => (
+                    <Container>
+                        <Row key={idx} className='p-2'>
                             <Col>
-                                {displayMember.displayName}
+                                {displayMember.data.displayName}
                             </Col>
+                            {currentUser.uid === owner ?
+                                <Col xs='auto'>
+                                    <Button disabled={loading} variant='danger' id={displayMember.id} type='button' onClick={(e) => { removeMember(e) }}>
+                                        <img id={displayMember.id} src={remove}></img>
+                                    </Button>
+                                </Col> : null
+                            }
                         </Row>
-                    ))}
-                </Modal.Footer>
+                    </Container>
+                ))}
 
-                {currentUser.uid === owner ?
-                    <>
-                        <Modal.Header>
-                            <Modal.Title>Add Members</Modal.Title>
-                        </Modal.Header>
-                        <Form className='w-100 mt-3'>
-                            <Container>
-                                <Row>
-                                    <Col>
-                                        <Form.Group controlId='addMember'>
-                                            <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
-                                        </Form.Group>
-                                    </Col>
 
-                                    <Col xs='auto'>
-                                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
-                                            +
-                                        </Button>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </Form>
-                    </> : null}
+                {
+                    currentUser.uid === owner ?
+                        <>
+                            <Modal.Header>
+                                <Modal.Title>Add Members</Modal.Title>
+                            </Modal.Header>
+                            <Form className='w-100 mt-3'>
+                                <Container>
+                                    <Row>
+                                        <Col>
+                                            <Form.Group controlId='addMember'>
+                                                <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
+                                            </Form.Group>
+                                        </Col>
+
+                                        <Col xs='auto'>
+                                            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
+                                                +
+                                                </Button>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Form>
+                        </> : null
+                }
             </Modal>
         </>
     )
