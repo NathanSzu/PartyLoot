@@ -6,7 +6,7 @@ import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg';
 import remove from '../assets/remove-user.svg';
 
-export default function BootModalEditGroup({ name, id, updateDisplay, owner, members }) {
+export default function BootModalEditGroup({ name, id, owner, members }) {
     const { currentUser } = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -16,27 +16,41 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
     const [displayMembers, setDisplayMembers] = useState([]);
     const [noResult, setNoResult] = useState(false);
+    const [update, setUpdate] = useState(false);
 
     const nameRef = useRef();
     const memberRef = useRef();
 
     const db = firebase.firestore();
 
+    useEffect(() => {
+        getGroupMembers();
+        console.log('useEffect fired')
+    }, [update])
+
+    const updateDisplay = () => {
+        if (update === false) {
+            setUpdate(true);
+        } else {
+            setUpdate(false);
+        }
+    }
+
     const getGroupMembers = () => {
-        db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members).get()
-        .then((querySnapshot) => {
-            let currMembers = [];
-            querySnapshot.forEach((doc) => {
-                if (doc.id !== currentUser.uid) {
-                    currMembers.push({
-                        id: doc.id,
-                        data: doc.data()
-                    })
-                }
-            });
-            setDisplayMembers(currMembers)
-            console.log(currMembers)
-        })
+        db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members)
+            .onSnapshot((querySnapshot) => {
+                let currMembers = [];
+                querySnapshot.forEach((doc) => {
+                    if (doc.id !== currentUser.uid) {
+                        currMembers.push({
+                            id: doc.id,
+                            data: doc.data()
+                        })
+                    }
+                })
+                setDisplayMembers(currMembers)
+                console.log('curremembers: ', currMembers)
+            })
     }
 
     const setFalseThenClose = () => {
@@ -110,6 +124,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                             }
                         });
                         setFalseNoClose();
+                        updateDisplay();
                     }
                 })
                 .catch((error) => {
@@ -140,8 +155,8 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
         })
             .then(() => {
                 console.log('Member removed!');
-                updateDisplay();
                 setFalseNoClose();
+                updateDisplay();
             }).catch((error) => {
                 console.error('Error removing member: ', error);
                 setFalseNoClose();
@@ -150,7 +165,7 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
 
     return (
         <>
-            <Button variant='dark' className='p-1' onClick={() => { handleShow(); getGroupMembers() }}><img src={gear}></img></Button>
+            <Button variant='dark' className='p-1' onClick={() => { handleShow() }}><img src={gear}></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
@@ -198,8 +213,8 @@ export default function BootModalEditGroup({ name, id, updateDisplay, owner, mem
                 </Modal.Header>
 
                 {displayMembers.map((displayMember, idx) => (
-                    <Container>
-                        <Row key={idx} className='p-2'>
+                    <Container key={idx}>
+                        <Row className='p-2'>
                             <Col>
                                 {displayMember.data.displayName}
                             </Col>
