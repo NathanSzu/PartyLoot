@@ -10,6 +10,7 @@ import BootNav from './components/BootNav';
 import { Container, Row, Col } from 'react-bootstrap';
 import SecuredRoute from './utils/SecuredRoute';
 import SkippedRoute from './utils/SkippedRoute';
+import GroupRoute from './utils/GroupRoute';
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
                   <SkippedRoute exact path='/forgot-password' component={PasswordReset} />
                   <SecuredRoute exact path='/groups' component={Groups} />
                   <SecuredRoute exact path='/user-settings' component={Settings} />
-                  <SecuredRoute exact path='/loot' component={Loot} />
+                  <GroupRoute exact path='/loot' component={Loot} />
                 </Col>
               </Row>
             </Container>

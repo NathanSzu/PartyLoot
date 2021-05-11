@@ -1,21 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { AuthContext } from '../utils/AuthContext';
+import { GroupContext } from '../utils/GroupContext';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-              // User is signed in.
-              console.log(user.email)
-            } else {
-              // No user is signed in.
-            }
-          });
-    }, [])
+  const { currentUser } = useContext(AuthContext);
+  const { currentGroup, setCurrentGroup } = useContext(GroupContext);
 
-    return (
-        <div>
-            
-        </div>
-    )
+  useEffect(() => {
+    console.log('currentUser: ', currentUser)
+    console.log('currentGroup: ', currentGroup)
+  }, [])
+
+  return (
+    <div>
+
+    </div>
+  )
 }

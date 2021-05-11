@@ -3,6 +3,7 @@ import firebase from '../utils/firebase';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import BootModalAddGroup from '../components/BootModalAddGroup';
 import BootModalEditGroup from '../components/BootModalEditGroup';
@@ -62,9 +63,11 @@ export default function Groups() {
       {userGroups.map((group, idx) => (
         <Row key={idx} className='p-2'>
           <Col>
-            <Button id={group.id} variant='outline-dark' className='w-100 text-left' onClick={(e) => {setCurrentGroup(e.target.id)}}>
-              {group.data.groupName}
-            </Button>
+            <Link to='/loot' >
+              <Button id={group.id} variant='outline-dark' className='w-100 text-left' onClick={(e) => { setCurrentGroup(e.target.id) }}>
+                {group.data.groupName}
+              </Button>
+            </Link>
           </Col>
           <Col xs='auto'>
             {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
