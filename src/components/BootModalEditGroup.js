@@ -248,7 +248,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
                                         <Col xs='auto'>
                                             <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
                                                 +
-                                                </Button>
+                                            </Button>
                                         </Col>
                                     </Row>
                                     <Row>
