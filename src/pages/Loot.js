@@ -1,7 +1,9 @@
 import React, { useEffect, useContext, useRef, useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
+import BootModalAddLoot from '../components/BootModalAddLoot';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
@@ -10,30 +12,34 @@ export default function Loot() {
   const { currentGroup, setCurrentGroup } = useContext(GroupContext);
   const itemRef = useRef(null)
 
+  const db = firebase.firestore();
+  const lootRef = firebase.firestore().collection('groups').doc(currentGroup).collection('loot');
+  const query = lootRef.orderBy('created');
+  const [lootItems] = useCollectionData(query);
+
   useEffect(() => {
+
     console.log('currentUser: ', currentUser)
     console.log('currentGroup: ', currentGroup)
   }, [])
 
-  const addItem = () => {
-
+  const test = () => {
+    console.log('lootItems: ', lootItems)
   }
 
   return (
     <>
-      <Row className='p-2'>
-        <Col>
-          <Form.Group controlId='addMember'>
-            <Form.Control ref={itemRef} type='text' placeholder='Enter group code' />
-          </Form.Group>
-        </Col>
-
-        <Col xs='auto'>
-          <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addItem() }}>
-            +
-          </Button>
-        </Col>
+      {lootItems && lootItems.map((item) => {
+        <>
+          hello
+          <p>{item.id}</p>
+          <p>{item.itemDesc}</p>
+        </>
+      })}
+      <Row className='justify-content-center'>
+        <BootModalAddLoot currentUser={currentUser} currentGroup={currentGroup} />
       </Row>
+      <button onClick={test}>test</button>
     </>
   )
 }
