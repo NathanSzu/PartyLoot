@@ -19,9 +19,7 @@ export default function Loot() {
 
   useEffect(() => {
 
-    console.log('currentUser: ', currentUser)
-    console.log('currentGroup: ', currentGroup)
-  }, [])
+  }, [lootItems])
 
   const test = () => {
     console.log('lootItems: ', lootItems)
@@ -29,13 +27,12 @@ export default function Loot() {
 
   return (
     <>
-      {lootItems && lootItems.map((item) => {
-        <>
-          hello
-          <p>{item.id}</p>
+      {lootItems && lootItems.map((item) => (
+        <div>
+          <p>{item.itemName}</p>
           <p>{item.itemDesc}</p>
-        </>
-      })}
+        </div>
+      ))}
       <Row className='justify-content-center'>
         <BootModalAddLoot currentUser={currentUser} currentGroup={currentGroup} />
       </Row>
