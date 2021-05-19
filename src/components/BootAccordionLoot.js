@@ -21,7 +21,7 @@ export default function BootAccordionLoot({ item }) {
                         </Row>
                         <Row>
                             <Col>
-                                <p>{item.itemDesc}</p>
+                                <pre>{item.itemDesc}</pre>
                             </Col>
                         </Row>
 
