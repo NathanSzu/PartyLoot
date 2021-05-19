@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useRef, useState } from 'react';
-import { Row } from 'react-bootstrap';
+import { Row, Card } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
@@ -25,6 +25,12 @@ export default function Loot() {
 
   return (
     <>
+    <Card>
+      <Card.Header>Gold Will Go Here</Card.Header>
+    </Card>
+    <Card>
+      <Card.Header>search & sort</Card.Header>
+    </Card>
       {lootItems && lootItems.map((item) => (
         <Accordion item={item} />
       ))}
