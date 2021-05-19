@@ -25,10 +25,10 @@ export default function Loot() {
 
   return (
     <>
-    <Card>
+    <Card className='mt-2'>
       <Card.Header>Gold Will Go Here</Card.Header>
     </Card>
-    <Card>
+    <Card className='mt-3 mb-2'>
       <Card.Header>search & sort</Card.Header>
     </Card>
       {lootItems && lootItems.map((item) => (
