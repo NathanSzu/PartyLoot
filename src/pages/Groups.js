@@ -5,8 +5,9 @@ import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import BootModalAddGroup from '../components/BootModalAddGroup';
-import BootModalEditGroup from '../components/BootModalEditGroup';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import ModalAdd from '../components/BootModalAddGroup';
+import ModalEdit from '../components/BootModalEditGroup';
 
 export default function Groups() {
   const { currentUser } = useContext(AuthContext);
@@ -24,8 +25,6 @@ export default function Groups() {
       setUpdate(false);
     }
   }
-
-
 
   const retrieveGroups = () => {
     db.collection('groups').where('members', 'array-contains', `${currentUser.uid}`).get()
@@ -71,14 +70,13 @@ export default function Groups() {
           </Col>
           <Col xs='auto'>
             {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
-            <BootModalEditGroup name={group.data.groupName} id={group.id} owner={group.data.owner} members={group.data.members} />
+            <ModalEdit name={group.data.groupName} id={group.id} owner={group.data.owner} members={group.data.members} />
           </Col>
         </Row>
       ))}
 
-
       <Row className='justify-content-center'>
-        <BootModalAddGroup updateDisplay={updateDisplay} />
+        <ModalAdd updateDisplay={updateDisplay} />
       </Row>
     </>
   )

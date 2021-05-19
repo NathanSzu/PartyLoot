@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import BootModalEditUsername from '../components/BootModalEditUsername';
-import BootModalEditPassword from '../components/BootModalEditPassword';
+import ModalEditUser from '../components/BootModalEditUsername';
+import ModalEditPass from '../components/BootModalEditPassword';
 import { Row, Col } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import firebase from '../utils/firebase';
@@ -73,7 +73,7 @@ export default function Settings() {
                 <p>{username}</p>
             </Col>
             <Col md={8} className='mr-auto ml-auto'>
-                <BootModalEditUsername username={username} initiateUsername={initiateUsername} loading={loading} setLoading={setLoading} />
+                <ModalEditUser username={username} initiateUsername={initiateUsername} loading={loading} setLoading={setLoading} />
             </Col>
 
             <Col xs={12}>
@@ -83,7 +83,7 @@ export default function Settings() {
                 <p>{groupCode}</p>
             </Col>
             <Col md={8} className='mr-auto ml-auto'>
-                <BootModalEditPassword loading={loading} setLoading={setLoading} />
+                <ModalEditPass loading={loading} setLoading={setLoading} />
             </Col>
         </Row>
     )
