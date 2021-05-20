@@ -5,7 +5,7 @@ import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollectionData, useCollection } from 'react-firebase-hooks/firestore';
 import ModalAdd from '../components/BootModalAddGroup';
 import ModalEdit from '../components/BootModalEditGroup';
 
@@ -13,70 +13,47 @@ export default function Groups() {
   const { currentUser } = useContext(AuthContext);
   const { currentGroup, setCurrentGroup } = useContext(GroupContext);
   const [userGroups, setUserGroups] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [update, setUpdate] = useState(false);
+  const [sortedGroups, setSortedGroups] = useState([])
 
   const db = firebase.firestore();
-
-  const updateDisplay = () => {
-    if (update === false) {
-      setUpdate(true);
-    } else {
-      setUpdate(false);
-    }
-  }
-
-  const retrieveGroups = () => {
-    db.collection('groups').where('members', 'array-contains', `${currentUser.uid}`).get()
-      .then((querySnapshot) => {
-        let groups = [];
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          groups.push({
-            id: doc.id,
-            data: doc.data()
-          });
-        });
-        groups.sort((a, b) => {
-          return b.data.created - a.data.created;
-        })
-        setUserGroups(groups)
-        setLoading(false)
-        console.log('usergroups: ', groups)
-      })
-      .catch((error) => {
-        console.log("Error getting groups: ", error);
-      });
-  }
+  const groupRef = db.collection('groups')
+  const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
+  const [groupList, loading] = useCollectionData(query, { idField: 'id' });
 
   useEffect(() => {
-    console.log(currentUser)
-    retrieveGroups();
-  }, [update])
+    groupList && setSortedGroups(defaultSort())
+  }, [groupList])
+
+  const defaultSort = () => {
+    let sorted = groupList.sort((a, b) => {
+      return b.created - a.created;
+    })
+    return(sorted)
+  }
 
   return (
     <>
 
       {loading && <Alert variant={'dark'}>Loading groups...</Alert>}
-      {userGroups.map((group, idx) => (
+      {sortedGroups.map((group, idx) => (
         <Row key={idx} className='p-2'>
           <Col>
             <Link to='/loot' >
               <Button id={group.id} variant='outline-dark' className='w-100 text-left' onClick={(e) => { setCurrentGroup(e.target.id) }}>
-                {group.data.groupName}
+                {group.groupName}
               </Button>
             </Link>
           </Col>
           <Col xs='auto'>
             {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
-            <ModalEdit name={group.data.groupName} id={group.id} owner={group.data.owner} members={group.data.members} />
+            <ModalEdit name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
           </Col>
         </Row>
       ))}
 
       <Row className='justify-content-center'>
-        <ModalAdd updateDisplay={updateDisplay} />
+        <ModalAdd />
       </Row>
     </>
   )
