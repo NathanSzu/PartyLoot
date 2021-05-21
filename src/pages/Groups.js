@@ -19,10 +19,11 @@ export default function Groups() {
   const db = firebase.firestore();
   const groupRef = db.collection('groups')
   const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
-  const [groupList, loading] = useCollectionData(query, { idField: 'id' });
+  const [groupList, loading, error] = useCollectionData(query, { idField: 'id' });
 
   useEffect(() => {
     groupList && setSortedGroups(defaultSort())
+    error && console.log('Group load error: ', error)
   }, [groupList])
 
   const defaultSort = () => {

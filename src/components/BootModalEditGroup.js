@@ -1,5 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
@@ -11,50 +12,34 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [loading, setLoading] = useState(false);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
     const [displayMembers, setDisplayMembers] = useState([]);
     const [noResult, setNoResult] = useState(false);
-    const [update, setUpdate] = useState(false);
+
+    const db = firebase.firestore();
+    const userRef = db.collection('users')
+    const query = userRef.where(fb.firestore.FieldPath.documentId(), 'in', members);
+    const [groupMembers, loading, error] = useCollectionData(query, { idField: 'id' })
 
     const nameRef = useRef();
     const memberRef = useRef();
 
-    const db = firebase.firestore();
-
     useEffect(() => {
-        getGroupMembers();
-        console.log('useEffect fired')
-    }, [update])
+        error && console.log('Error loading members: ', error)
+        groupMembers && setDisplayMembers(defaultFilter())
+    }, [groupMembers])
 
-    const updateDisplay = () => {
-        if (update === false) {
-            setUpdate(true);
-        } else {
-            setUpdate(false);
-        }
-    }
-
-    const getGroupMembers = () => {
-        db.collection('users').where(fb.firestore.FieldPath.documentId(), 'in', members)
-            .onSnapshot((querySnapshot) => {
-                let currMembers = [];
-                querySnapshot.forEach((doc) => {
-                    if (doc.id !== currentUser.uid) {
-                        currMembers.push({
-                            id: doc.id,
-                            data: doc.data()
-                        })
-                    }
-                })
-                setDisplayMembers(currMembers)
-                console.log('curremembers: ', currMembers)
-            })
-    }
+    const defaultFilter = () => {
+        let filtered = groupMembers.filter((member) => {
+          if (member.id !== currentUser.uid) {
+              return member
+          } else { return }
+        })
+        return(filtered)
+      }
 
     const setFalseThenClose = () => {
-        setLoading(false);
         setDeleteConfirmation(false);
         setLeaveConfirmation(false);
         setNoResult(false);
@@ -62,7 +47,6 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
     }
 
     const setFalseNoClose = () => {
-        setLoading(false);
         setDeleteConfirmation(false);
         setLeaveConfirmation(false);
         setNoResult(false);
@@ -74,14 +58,12 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
             setFalseThenClose();
             return
         }
-        setLoading(true)
         db.collection('groups').doc(`${id}`).update({
             groupName: nameRef.current.value
         })
             .then(() => {
                 console.log('Document successfully updated!');
                 setFalseThenClose();
-                updateDisplay();
             })
             .catch((error) => {
                 // The document probably doesn't exist.
@@ -92,12 +74,10 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
     const deleteGroup = () => {
         if (currentUser.uid !== owner) { return }
-        setLoading(true)
         db.collection('groups').doc(`${id}`).delete()
             .then(() => {
                 console.log('Document successfully deleted!');
                 setFalseThenClose();
-                updateDisplay();
             }).catch((error) => {
                 console.error('Error removing document: ', error);
                 setFalseThenClose();
@@ -106,13 +86,11 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
     const addMember = () => {
         if (memberRef.current.value) {
-            setLoading(true);
             db.collection('users').where('code', '==', memberRef.current.value.toUpperCase()).get()
                 .then((querySnapshot) => {
                     // Check if there are no results and display alert
                     if (querySnapshot.empty) {
                         setNoResult(true);
-                        setLoading(false);
                     } else {
                         querySnapshot.forEach((doc) => {
                             // doc.data() is never undefined for query doc snapshots
@@ -123,8 +101,8 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
                                 })
                             }
                         });
+                        memberRef.current.value = '';
                         setFalseNoClose();
-                        updateDisplay();
                     }
                 })
                 .catch((error) => {
@@ -134,13 +112,11 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
     }
 
     const leaveGroup = () => {
-        setLoading(true)
         db.collection('groups').doc(`${id}`).update({
             'members': fb.firestore.FieldValue.arrayRemove(currentUser.uid)
         })
             .then(() => {
                 console.log('Member romved!');
-                updateDisplay();
                 setFalseThenClose();
             }).catch((error) => {
                 console.error('Error removing member: ', error);
@@ -149,14 +125,12 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
     }
 
     const removeMember = (e) => {
-        setLoading(true)
         db.collection('groups').doc(`${id}`).update({
             'members': fb.firestore.FieldValue.arrayRemove(e.target.id)
         })
             .then(() => {
                 console.log('Member removed!');
                 setFalseNoClose();
-                updateDisplay();
             }).catch((error) => {
                 console.error('Error removing member: ', error);
                 setFalseNoClose();
@@ -208,20 +182,21 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
                 </Form>
 
+                {displayMembers.length === 0 ? null :
                 <Modal.Header>
                     <Modal.Title>Members</Modal.Title>
-                </Modal.Header>
+                </Modal.Header>}
 
-                {displayMembers.map((displayMember, idx) => (
+                {displayMembers && displayMembers.map((member, idx) => (
                     <Container key={idx}>
                         <Row className='p-2'>
                             <Col>
-                                {displayMember.data.displayName}
+                                {member.displayName}
                             </Col>
                             {currentUser.uid === owner ?
                                 <Col xs='auto'>
-                                    <Button disabled={loading} variant='danger' id={displayMember.id} type='button' onClick={(e) => { removeMember(e) }}>
-                                        <img id={displayMember.id} src={remove}></img>
+                                    <Button disabled={loading} variant='danger' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
+                                        <img id={member.id} src={remove}></img>
                                     </Button>
                                 </Col> : null
                             }
