@@ -21,13 +21,34 @@ export default function BootModalAddLoot({ item }) {
     const descRef = useRef();
 
     const db = firebase.firestore();
+    const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`)
 
     const editLoot = () => {
-        console.log('Edit loot clicked')
+        // Does not call update function if the group name has not been changed or is left empty.
+        if (!nameRef.current.value) {
+            handleClose();
+            return
+        }
+        setLoading(true)
+        itemRef.update({
+            itemName: nameRef.current.value,
+            itemDesc: descRef.current.value
+        })
+            .then(() => {
+                console.log('Item successfully updated!');
+                setLoading(false);
+                handleClose();
+            })
+            .catch((error) => {
+                // The document probably doesn't exist.
+                console.error('Error updating item: ', error);
+                setLoading(false);
+                handleClose();
+            });
     }
 
     const deleteItem = () => {
-        db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`).delete()
+        itemRef.delete()
             .then(() => {
                 console.log('Item successfully deleted!');
                 console.log('Group: ', currentGroup)
@@ -52,10 +73,10 @@ export default function BootModalAddLoot({ item }) {
 
                     <Modal.Body>
                         <Form.Group controlId='itemName'>
-                            <Form.Control ref={nameRef} type='text' placeholder='Item name' />
+                            <Form.Control ref={nameRef} defaultValue={item.itemName} type='text' placeholder='Item name' />
                         </Form.Group>
                         <Form.Group controlId='itemDesc'>
-                            <Form.Control ref={descRef} as='textarea' rows={4} placeholder='Item description' />
+                            <Form.Control ref={descRef} as='textarea' defaultValue={item.itemDesc} rows={4} placeholder='Item description' />
                         </Form.Group>
                     </Modal.Body>
 

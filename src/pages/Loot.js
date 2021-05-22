@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, useRef, useState } from 'react';
-import { Row, Card } from 'react-bootstrap';
+import { Row, Card, Accordion } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import Modal from '../components/BootModalAddLoot';
 import AlertLoading from '../components/AlertLoading';
-import Accordion from '../components/BootAccordionLoot';
+import LootAccordion from '../components/BootAccordionLoot';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
@@ -31,8 +31,8 @@ export default function Loot() {
       <Card.Header>search & sort</Card.Header>
     </Card>
       {loading && <AlertLoading />}
-      {lootItems && lootItems.map((item) => (
-        <Accordion item={item} />
+      {lootItems && lootItems.map((item, idx) => (
+        <LootAccordion item={item} key={idx} />
       ))}
       <Row className='justify-content-center'>
         <Modal currentUser={currentUser} currentGroup={currentGroup} />
