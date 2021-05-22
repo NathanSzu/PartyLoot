@@ -1,6 +1,7 @@
 import React from 'react';
 import edit from '../assets/pencil-square.svg';
 import { Accordion, Card, Button, Col, Row } from 'react-bootstrap';
+import EditLoot from '../components/ModalEditLoot';
 
 export default function BootAccordionLoot({ item }) {
     return (
@@ -16,7 +17,7 @@ export default function BootAccordionLoot({ item }) {
                                 <h2 className='item-h2'>Description</h2>
                             </Col>
                             <Col xs={2} className='text-right'>
-                                <Button variant='dark' className='p-2'><img src={edit}></img></Button>
+                                <EditLoot item={item} />
                             </Col>
                         </Row>
                         <Row>

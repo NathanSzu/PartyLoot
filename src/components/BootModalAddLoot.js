@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 
-export default function BootModalAddLoot({ currentUser, currentGroup }) {
+export default function BootModalAddLoot({ currentGroup }) {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);

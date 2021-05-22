@@ -4,23 +4,22 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import Modal from '../components/BootModalAddLoot';
+import AlertLoading from '../components/AlertLoading';
 import Accordion from '../components/BootAccordionLoot';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
-  const [loading, setLoading] = useState(false)
   const { currentUser } = useContext(AuthContext);
-  const { currentGroup, setCurrentGroup } = useContext(GroupContext);
+  const { currentGroup } = useContext(GroupContext);
   const itemRef = useRef(null)
 
   const db = firebase.firestore();
-  const lootRef = firebase.firestore().collection('groups').doc(currentGroup).collection('loot');
+  const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
   const query = lootRef.orderBy('created');
-  const [lootItems] = useCollectionData(query, { idField: 'id' });
+  const [lootItems, loading, error] = useCollectionData(query, { idField: 'id' });
 
   useEffect(() => {
-    console.log(lootItems)
-
+    error && console.log('Error loading items: ', error)
   }, [lootItems])
 
   return (
@@ -31,6 +30,7 @@ export default function Loot() {
     <Card className='mt-3 mb-2'>
       <Card.Header>search & sort</Card.Header>
     </Card>
+      {loading && <AlertLoading />}
       {lootItems && lootItems.map((item) => (
         <Accordion item={item} />
       ))}

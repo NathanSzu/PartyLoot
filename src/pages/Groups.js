@@ -5,15 +5,14 @@ import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useCollectionData, useCollection } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import ModalAdd from '../components/BootModalAddGroup';
 import ModalEdit from '../components/BootModalEditGroup';
+import AlertLoading from '../components/AlertLoading';
 
 export default function Groups() {
   const { currentUser } = useContext(AuthContext);
   const { currentGroup, setCurrentGroup } = useContext(GroupContext);
-  const [userGroups, setUserGroups] = useState([]);
-  const [update, setUpdate] = useState(false);
   const [sortedGroups, setSortedGroups] = useState([])
 
   const db = firebase.firestore();
@@ -36,7 +35,7 @@ export default function Groups() {
   return (
     <>
 
-      {loading && <Alert variant={'dark'}>Loading groups...</Alert>}
+      {loading && <AlertLoading />}
       {sortedGroups.map((group, idx) => (
         <Row key={idx} className='p-2'>
           <Col>
