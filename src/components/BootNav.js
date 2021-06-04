@@ -11,22 +11,27 @@ export default function BootNav() {
     const logOut = () => {
         firebase.auth().signOut().then(() => {
             // Sign-out successful.
-          }).catch((error) => {
+        }).catch((error) => {
             // An error happened.
-          });
+        });
     }
 
     return (
-            <Navbar bg="light" expand="false">
-                <Navbar.Brand href="/">Party Loot</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="ml-auto">
-                        {!currentUser ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
-                        {location.pathname === '/' || location.pathname === '/groups' || location.pathname === '/forgot-password' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
-                        {!currentUser ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
+        <>
+            {
+                location.pathname === '/' ? null :
+                    <Navbar bg="light" expand="false">
+                        <Navbar.Brand href="/">Party Loot</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="ml-auto">
+                                {!currentUser ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
+                                {location.pathname === '/' || location.pathname === '/groups' || location.pathname === '/forgot-password' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
+                                {!currentUser ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
+            }
+        </>
     )
 }

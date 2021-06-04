@@ -1,9 +1,10 @@
 import React, { useEffect, useContext, useRef, useState } from 'react';
-import { Row, Card, Accordion } from 'react-bootstrap';
+import { Row, Card, Col, Form } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import Modal from '../components/BootModalAddLoot';
+import GoldTracker from '../components/GoldTracker';
 import AlertLoading from '../components/AlertLoading';
 import LootAccordion from '../components/BootAccordionLoot';
 import firebase from '../utils/firebase';
@@ -25,9 +26,11 @@ export default function Loot() {
   return (
     <>
     <Card className='mt-2'>
-      <Card.Header>Gold Will Go Here</Card.Header>
+      <Card.Header>
+        <GoldTracker />
+      </Card.Header>
     </Card>
-    <Card className='mt-3 mb-2'>
+    <Card className='mt-2 mb-2'>
       <Card.Header>search & sort</Card.Header>
     </Card>
       {loading && <AlertLoading />}

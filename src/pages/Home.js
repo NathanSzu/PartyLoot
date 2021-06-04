@@ -22,13 +22,13 @@ export default function Home() {
     const [welcome, setWelcome] = useState(true)
 
     return (
-        <>
+        <div className='pt-3'>
             { welcome ? <Jumbotron setLogin={setLogin} setWelcome={setWelcome} /> : null}
             <Row className="justify-content-md-center">
                 <Col md={6}>
                     {!welcome ? <Login login={login} setLogin={setLogin} user={user} /> : null}
                 </Col>
             </Row>
-        </>
+        </div>
     )
 }
