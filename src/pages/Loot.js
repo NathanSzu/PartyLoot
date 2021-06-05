@@ -5,6 +5,7 @@ import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import Modal from '../components/BootModalAddLoot';
 import GoldTracker from '../components/GoldTracker';
+import ItemSearch from '../components/ItemSearch';
 import AlertLoading from '../components/AlertLoading';
 import LootAccordion from '../components/BootAccordionLoot';
 import firebase from '../utils/firebase';
@@ -31,7 +32,9 @@ export default function Loot() {
       </Card.Header>
     </Card>
     <Card className='mt-2 mb-2'>
-      <Card.Header>search & sort</Card.Header>
+      <Card.Header>
+        <ItemSearch />
+      </Card.Header>
     </Card>
       {loading && <AlertLoading />}
       {lootItems && lootItems.map((item, idx) => (

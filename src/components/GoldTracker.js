@@ -6,25 +6,35 @@ import copper from '../assets/currency_copper.svg';
 
 export default function GoldTracker() {
     return (
-        <Row>
-            <Col xs={2} className='p-0'>
-                <Form.Label className='text-right'><img src={gold} className='w-50'></img></Form.Label>
-            </Col>
-            <Col xs={4} className='pl-2'>
-                <Form.Control type='number' />
-            </Col>
-            <Col xs={2} className='p-0'>
-                <Form.Label className='text-right'><img src={silver} className='w-50'></img></Form.Label>
-            </Col>
-            <Col xs={4} className='pl-2'>
-                <Form.Control type='number' />
-            </Col>
-            <Col xs={2} className='p-0'>
-                <Form.Label className='text-right'><img src={copper} className='w-50'></img></Form.Label>
-            </Col>
-            <Col xs={4} className='pl-2'>
-                <Form.Control type='number' />
-            </Col>
-        </Row>
+        <>
+            <Row>
+                <Col xs={1} className='p-0'>
+                    <Form.Label className='text-right'><img src={gold} className='w-100'></img></Form.Label>
+                </Col>
+                <Col xs={5} className='pl-2'>
+                    <Form.Control type='number' />
+                </Col>
+                <Col xs={1} className='p-0'>
+                    <Form.Label className='text-right'><img src={silver} className='w-100'></img></Form.Label>
+                </Col>
+                <Col xs={5} className='pl-2'>
+                    <Form.Control type='number' />
+                </Col>
+            </Row>
+            <Row className='mt-2'>
+                <Col xs={1} className='p-0'>
+                    <Form.Label className='text-right'><img src={copper} className='w-100'></img></Form.Label>
+                </Col>
+                <Col xs={5} className='pl-2'>
+                    <Form.Control type='number' />
+                </Col>
+                <Col xs={1} className='p-0'>
+                    <Form.Label className='text-right'><img src={copper} className='w-100'></img></Form.Label>
+                </Col>
+                <Col xs={5} className='pl-2'>
+                    <Form.Control type='number' />
+                </Col>
+            </Row>
+        </>
     )
 }
