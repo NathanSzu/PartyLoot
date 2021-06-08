@@ -21,9 +21,9 @@ export default function Loot() {
 
   const query = lootRef.orderBy('created', 'desc');
   const goldQuery = currencyRef.where('name', '==', 'gold');
-  const silverQuery = currencyRef.where('name', '===', 'silver');
-  const copperQuery = currencyRef.where('name', '===', 'copper');
-  const misc1Query = currencyRef.where('name', '===', 'misc1');
+  const silverQuery = currencyRef.where('name', '==', 'silver');
+  const copperQuery = currencyRef.where('name', '==', 'copper');
+  const misc1Query = currencyRef.where('name', '==', 'misc1');
 
   const [lootItems, loading, error] = useCollectionData(query, { idField: 'id' });
   const [gold] = useCollectionData(goldQuery, { idField: 'id' });
@@ -35,17 +35,17 @@ export default function Loot() {
     error && console.log('Error loading items: ', error)
   }, [lootItems])
 
-  // useEffect(() => {
-  //   gold && console.log('gold', gold[0])
-  // }, [gold])
+  useEffect(() => {
+    gold && console.log('gold', gold[0])
+  }, [gold])
 
-  // useEffect(() => {
-  //   silver && console.log('silver', silver[0])
-  // }, [silver])
+  useEffect(() => {
+    silver && console.log('silver', silver[0])
+  }, [silver])
 
-  // useEffect(() => {
-  //   copper && console.log('copper', copper[0])
-  // }, [copper])
+  useEffect(() => {
+    copper && console.log('copper', copper[0])
+  }, [copper])
 
 
 
