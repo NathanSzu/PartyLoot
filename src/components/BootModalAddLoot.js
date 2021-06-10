@@ -38,8 +38,8 @@ export default function BootModalAddLoot({ currentGroup }) {
 
     return (
         <>
-            <Button variant='dark' onClick={handleShow} className='w-75 m-2'>
-                +
+            <Button variant='dark' onClick={handleShow} className='w-100 m-2 mr-auto ml-auto'>
+                Add Item
             </Button>
 
             <Modal show={show} onHide={handleClose}>

@@ -3,7 +3,7 @@ import { Row, Card, Col, Form } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
-import Modal from '../components/BootModalAddLoot';
+import AddLoot from '../components/BootModalAddLoot';
 import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import AlertLoading from '../components/AlertLoading';
@@ -13,7 +13,7 @@ import firebase from '../utils/firebase';
 export default function Loot() {
   const { currentUser } = useContext(AuthContext);
   const { currentGroup } = useContext(GroupContext);
-  const itemRef = useRef(null)
+  const itemRef = useRef(null);
 
   const db = firebase.firestore();
   const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
@@ -25,6 +25,8 @@ export default function Loot() {
   const copperQuery = currencyRef.where('name', '==', 'copper');
   const misc1Query = currencyRef.where('name', '==', 'misc1');
 
+  const [filteredItems, setFilteredItems] = useState([])
+
   const [lootItems, loading, error] = useCollectionData(query, { idField: 'id' });
   const [gold] = useCollectionData(goldQuery, { idField: 'id' });
   const [silver] = useCollectionData(silverQuery, { idField: 'id' });
@@ -33,6 +35,7 @@ export default function Loot() {
 
   useEffect(() => {
     error && console.log('Error loading items: ', error)
+    lootItems && setFilteredItems(lootItems)
   }, [lootItems])
 
   useEffect(() => {
@@ -51,23 +54,26 @@ export default function Loot() {
 
   return (
     <>
-    <Card className='mt-2'>
-      <Card.Header>
-        <GoldTracker gold={gold} silver={silver} copper={copper} misc1={misc1} currencyRef={currencyRef} />
-      </Card.Header>
-    </Card>
-    <Card className='mt-2 mb-2'>
-      <Card.Header>
-        <ItemSearch />
-      </Card.Header>
-    </Card>
+      <Card className='mt-2'>
+        <Card.Header>
+          <GoldTracker gold={gold} silver={silver} copper={copper} misc1={misc1} currencyRef={currencyRef} />
+        </Card.Header>
+      </Card>
+      <Card className='mt-2 mb-2'>
+        <Card.Header>
+          <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} />
+        </Card.Header>
+      </Card>
+      <Card>
+        <Card.Header>
+          <AddLoot currentUser={currentUser} currentGroup={currentGroup} />
+        </Card.Header>
+      </Card>
       {loading && <AlertLoading />}
-      {lootItems && lootItems.map((item, idx) => (
+      {filteredItems.map((item, idx) => (
         <LootAccordion item={item} key={idx} />
       ))}
-      <Row className='justify-content-center'>
-        <Modal currentUser={currentUser} currentGroup={currentGroup} />
-      </Row>
+
     </>
   )
 }
