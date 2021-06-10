@@ -44,7 +44,7 @@ export default function GoldTracker({ gold, silver, copper, misc1, currencyRef }
 
     return (
         <>
-            <Row>
+            <Row className='pl-2'>
                 <Col xs={1} className='p-0'>
                     <Form.Label className='text-right'><img src={goldImg} className='w-100'></img></Form.Label>
                 </Col>
@@ -58,7 +58,7 @@ export default function GoldTracker({ gold, silver, copper, misc1, currencyRef }
                     <Form.Control type='number' defaultValue={silver && silver[0] && silver[0].qty ? silver[0].qty : null} ref={silverRef} onChange={updateSilver} />
                 </Col>
             </Row>
-            <Row className='mt-2'>
+            <Row className='mt-2 pl-2'>
                 <Col xs={1} className='p-0'>
                     <Form.Label className='text-right'><img src={copperImg} className='w-100'></img></Form.Label>
                 </Col>

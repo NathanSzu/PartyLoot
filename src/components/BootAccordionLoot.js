@@ -5,7 +5,7 @@ import EditLoot from '../components/ModalEditLoot';
 
 export default function BootAccordionLoot({ item }) {
     return (
-        <Accordion className='m-1'>
+        <Accordion className='m-0 mt-1'>
             <Card>
                 <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
                     <h1 className='item-h1'>{item.itemName}</h1>
