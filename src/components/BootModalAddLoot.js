@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 
@@ -11,6 +11,9 @@ export default function BootModalAddLoot({ currentGroup }) {
 
     const nameRef = useRef();
     const descRef = useRef();
+    const chargeRef = useRef();
+    const chargesRef = useRef();
+    const tagsRef = useRef();
 
     const db = firebase.firestore();
 
@@ -49,12 +52,33 @@ export default function BootModalAddLoot({ currentGroup }) {
                     </Modal.Header>
 
                     <Modal.Body>
+
                         <Form.Group controlId='itemName'>
                             <Form.Control ref={nameRef} type='text' placeholder='Item name' />
                         </Form.Group>
+
+                        <Form.Group controlId='itemCharges'>
+                            <Row>
+                                <Col xs={4}>
+                                    <Form.Control className='text-center' ref={chargeRef} type='number' placeholder='Charge' />
+                                </Col>
+                                <Col xs={4} className='d-flex align-items-center justify-content-center'>
+                                    out of
+                                </Col>
+                                <Col xs={4}>
+                                    <Form.Control className='text-center' ref={chargesRef} type='number' placeholder='Charges' />
+                                </Col>
+                            </Row>
+                        </Form.Group>
+
                         <Form.Group controlId='itemDesc'>
                             <Form.Control ref={descRef} as='textarea' rows={4} placeholder='Item description' />
                         </Form.Group>
+
+                        <Form.Group controlId='itemTags'>
+                            <Form.Control ref={tagsRef} type='text' placeholder='Enter searchable item tags here' />
+                        </Form.Group>
+
                     </Modal.Body>
 
                     <Modal.Footer>

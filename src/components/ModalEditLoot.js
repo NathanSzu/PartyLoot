@@ -5,7 +5,7 @@ import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 
-export default function BootModalAddLoot({ item }) {
+export default function BootModalEditLoot({ item }) {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
