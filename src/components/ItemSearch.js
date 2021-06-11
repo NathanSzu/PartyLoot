@@ -5,9 +5,9 @@ export default function ItemSearch({ items, setFilteredItems }) {
     const searchRef = useRef('');
 
     const search = (item) => {
-        if (item.itemName.includes(searchRef.current.value)) {
+        if (item.itemName.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
             return item
-        } else if (item.itemDesc.includes(searchRef.current.value)) {
+        } else if (item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
             return item
         }
     };
@@ -16,7 +16,7 @@ export default function ItemSearch({ items, setFilteredItems }) {
         <Form onSubmit={(e) => { e.preventDefault(); setFilteredItems(items.filter(search)); }}>
             <Row>
                 <Col xs={12}>
-                    <Form.Control type='text' placeholder='Type to search items!' ref={searchRef} onChange={() => { setFilteredItems(items.filter(search)); }}></Form.Control>
+                    <Form.Control className='text-center' type='text' placeholder='Type to search items!' ref={searchRef} onChange={() => { setFilteredItems(items.filter(search)); }}></Form.Control>
                 </Col>
             </Row>
         </Form>

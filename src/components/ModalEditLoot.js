@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
@@ -19,6 +19,9 @@ export default function BootModalAddLoot({ item }) {
 
     const nameRef = useRef();
     const descRef = useRef();
+    const chargeRef = useRef();
+    const chargesRef = useRef();
+    const tagsRef = useRef();
 
     const db = firebase.firestore();
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`)
@@ -63,24 +66,47 @@ export default function BootModalAddLoot({ item }) {
 
     return (
         <>
-            <Button variant='dark' className='p-2' onClick={handleShow}><img src={edit}></img></Button>
+            <Button variant='dark' className='p-1 m-0' onClick={handleShow}><img src={edit}></img></Button>
 
             <Modal show={show} onHide={handleClose}>
-                <Form>
+                <Form onSubmit={(e) => { e.preventDefault() }}>
+
                     <Modal.Header closeButton>
                         <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
+
                         <Form.Group controlId='itemName'>
                             <Form.Control ref={nameRef} defaultValue={item.itemName} type='text' placeholder='Item name' />
                         </Form.Group>
+
+                        <Form.Group controlId='itemCharges'>
+                            <Row>
+                                <Col xs={4}>
+                                    <Form.Control className='text-center' ref={chargeRef} defaultValue={item.itemName} type='number' placeholder='Charge' />
+                                </Col>
+                                <Col xs={4} className='d-flex align-items-center justify-content-center'>
+                                    out of
+                                </Col>
+                                <Col xs={4}>
+                                    <Form.Control className='text-center' ref={chargesRef} defaultValue={item.itemName} type='number' placeholder='Charges' />
+                                </Col>
+                            </Row>
+                        </Form.Group>
+
                         <Form.Group controlId='itemDesc'>
                             <Form.Control ref={descRef} as='textarea' defaultValue={item.itemDesc} rows={4} placeholder='Item description' />
                         </Form.Group>
+
+                        <Form.Group controlId='itemTags'>
+                            <Form.Control ref={tagsRef} type='text' placeholder='Enter searchable item tags here' />
+                        </Form.Group>
+
                     </Modal.Body>
 
                     <Modal.Footer className='justify-content-between'>
+
                         <Button as='input' disabled={loading} value='Save' variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editLoot() }} />
 
                         {deleteConfirmation ?
@@ -91,6 +117,7 @@ export default function BootModalAddLoot({ item }) {
                             // Delete button that only shows if the current user owns the group.
                             <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
                             : null}
+
                     </Modal.Footer>
                 </Form>
             </Modal>

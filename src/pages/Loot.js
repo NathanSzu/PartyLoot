@@ -54,11 +54,7 @@ export default function Loot() {
 
   return (
     <>
-      <Card className='mt-2'>
-        <Card.Header>
-          <GoldTracker gold={gold} silver={silver} copper={copper} misc1={misc1} currencyRef={currencyRef} />
-        </Card.Header>
-      </Card>
+      <GoldTracker gold={gold} silver={silver} copper={copper} misc1={misc1} currencyRef={currencyRef} />
       <Card className='mt-2 mb-2'>
         <Card.Header>
           <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} />
@@ -73,7 +69,6 @@ export default function Loot() {
       {filteredItems.map((item, idx) => (
         <LootAccordion item={item} key={idx} />
       ))}
-
     </>
   )
 }
