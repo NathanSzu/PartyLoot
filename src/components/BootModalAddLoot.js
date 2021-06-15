@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
@@ -25,18 +25,21 @@ export default function BootModalAddLoot({ currentGroup }) {
         db.collection('groups').doc(`${currentGroup}`).collection('loot').add({
             itemName: nameRef.current.value,
             itemDesc: descRef.current.value,
+            currCharges: chargeRef.current.value,
+            maxCharges: chargesRef.current.value,
+            itemTags: tagsRef.current.value,
             created: fb.firestore.FieldValue.serverTimestamp()
         })
-        .then((docRef) => {
-            console.log("Item added with ID: ", docRef.id);
-            setLoading(false);
-            handleClose();
-        })
-        .catch((error) => {
-            console.error("Error creating new group: ", error);
-            setLoading(false);
-            handleClose();
-        });
+            .then((docRef) => {
+                console.log("Item added with ID: ", docRef.id);
+                setLoading(false);
+                handleClose();
+            })
+            .catch((error) => {
+                console.error("Error creating new group: ", error);
+                setLoading(false);
+                handleClose();
+            });
     }
 
     return (
@@ -59,13 +62,13 @@ export default function BootModalAddLoot({ currentGroup }) {
 
                         <Form.Group controlId='itemCharges'>
                             <Row>
-                                <Col xs={4}>
+                                <Col xs={5}>
                                     <Form.Control className='text-center' ref={chargeRef} type='number' placeholder='Charge' />
                                 </Col>
-                                <Col xs={4} className='d-flex align-items-center justify-content-center'>
-                                    out of
+                                <Col xs={2} className='d-flex align-items-center justify-content-center'>
+                                    /
                                 </Col>
-                                <Col xs={4}>
+                                <Col xs={5}>
                                     <Form.Control className='text-center' ref={chargesRef} type='number' placeholder='Charges' />
                                 </Col>
                             </Row>
@@ -82,7 +85,7 @@ export default function BootModalAddLoot({ currentGroup }) {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => {e.preventDefault(); addLoot()}}>
+                        <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addLoot() }}>
                             Create
                         </Button>
                     </Modal.Footer>

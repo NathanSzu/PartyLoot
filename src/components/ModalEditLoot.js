@@ -27,15 +27,18 @@ export default function BootModalEditLoot({ item }) {
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`)
 
     const editLoot = () => {
-        // Does not call update function if the group name has not been changed or is left empty.
-        if (!nameRef.current.value) {
+        // Does not call update function if the group name or description is left empty.
+        if (!nameRef.current.value || !descRef.current.value) {
             handleClose();
             return
         }
         setLoading(true)
         itemRef.update({
             itemName: nameRef.current.value,
-            itemDesc: descRef.current.value
+            itemDesc: descRef.current.value,
+            currCharges: chargeRef.current.value,
+            maxCharges: chargesRef.current.value,
+            itemTags: tagsRef.current.value
         })
             .then(() => {
                 console.log('Item successfully updated!');
@@ -83,14 +86,14 @@ export default function BootModalEditLoot({ item }) {
 
                         <Form.Group controlId='itemCharges'>
                             <Row>
-                                <Col xs={4}>
-                                    <Form.Control className='text-center' ref={chargeRef} defaultValue={item.itemName} type='number' placeholder='Charge' />
+                                <Col xs={5}>
+                                    <Form.Control className='text-center' ref={chargeRef} defaultValue={item.currCharges} type='number' placeholder='Charge' />
                                 </Col>
-                                <Col xs={4} className='d-flex align-items-center justify-content-center'>
-                                    out of
+                                <Col xs={2} className='d-flex align-items-center justify-content-center'>
+                                    /
                                 </Col>
-                                <Col xs={4}>
-                                    <Form.Control className='text-center' ref={chargesRef} defaultValue={item.itemName} type='number' placeholder='Charges' />
+                                <Col xs={5}>
+                                    <Form.Control className='text-center' ref={chargesRef} defaultValue={item.maxCharges} type='number' placeholder='Charges' />
                                 </Col>
                             </Row>
                         </Form.Group>
@@ -100,7 +103,7 @@ export default function BootModalEditLoot({ item }) {
                         </Form.Group>
 
                         <Form.Group controlId='itemTags'>
-                            <Form.Control ref={tagsRef} type='text' placeholder='Enter searchable item tags here' />
+                            <Form.Control ref={tagsRef} type='text' defaultValue={item.itemTags} placeholder='Enter searchable item tags here' />
                         </Form.Group>
 
                     </Modal.Body>

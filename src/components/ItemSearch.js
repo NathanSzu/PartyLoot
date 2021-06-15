@@ -9,6 +9,8 @@ export default function ItemSearch({ items, setFilteredItems }) {
             return item
         } else if (item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
             return item
+        } else if (item.itemTags && item.itemTags.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            return item
         }
     };
 

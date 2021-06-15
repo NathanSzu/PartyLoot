@@ -12,10 +12,15 @@ export default function BootAccordionLoot({ item }) {
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey='0'>
                     <Card.Body>
-                        <Row className='pt-1 pb-1 '>
+                        <Row className='pt-1 pb-1'>
                             <Col className='d-flex align-items-center border-bottom border-dark'>
                                 <h2 className='item-h2 m-0'>Description</h2>
                             </Col>
+                            {item.currCharges && item.maxCharges ?
+                                <Col className='d-flex align-items-center border-bottom border-dark'>
+                                    <h2 className='item-h2 mb-1 mt-1'>{item.currCharges} / {item.maxCharges} charges</h2>
+                                </Col>
+                            : null}
                             <Col xs={2} className='text-right'>
                                 <EditLoot item={item} />
                             </Col>
@@ -31,7 +36,7 @@ export default function BootAccordionLoot({ item }) {
                                     <h2 className='item-h2 mb-1 mt-1'>Held By</h2>
                                 </Col>
                             </Row>
-                        : null}
+                            : null}
 
                     </Card.Body>
                 </Accordion.Collapse>
