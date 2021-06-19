@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import ModalEditUser from '../components/BootModalEditUsername';
 import ModalEditPass from '../components/BootModalEditPassword';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import firebase from '../utils/firebase';
 
@@ -14,6 +14,7 @@ export default function Settings() {
 
 
     useEffect(() => {
+        setLoading(true)
         if (currentUser.displayName) { setUsername(currentUser.displayName) }
         else {
             db.collection('random-data').doc('identification')
@@ -29,10 +30,12 @@ export default function Settings() {
                     console.log('Current data: ', doc.data());
                     setGroupCode(doc.data().code);
                     setUsername(doc.data().displayName);
+                    setLoading(false)
                 }
                 else {
                     initiateGroupCode();
                     initiateUsername('Anonymous-Bear');
+                    setLoading(false);
                 };
             });
     }, [currentUser])
@@ -65,26 +68,44 @@ export default function Settings() {
     }
 
     return (
-        <Row className='p-2 text-center'>
-            <Col xs={12}>
-                <h1>Username</h1>
-            </Col>
-            <Col xs={12}>
-                <p>{username}</p>
-            </Col>
-            <Col md={8} className='mr-auto ml-auto'>
-                <ModalEditUser username={username} initiateUsername={initiateUsername} loading={loading} setLoading={setLoading} />
-            </Col>
+        <>
+            <Row className='p-2 text-center border-top border-dark'>
+                
+                <Col xs={12}>
+                    <h1 className='settings-h1'>Account Settings</h1>
+                </Col>
 
-            <Col xs={12}>
-                <h1>Group Code</h1>
-            </Col>
-            <Col xs={12}>
-                <p>{groupCode}</p>
-            </Col>
-            <Col md={8} className='mr-auto ml-auto'>
-                <ModalEditPass loading={loading} setLoading={setLoading} />
-            </Col>
-        </Row>
+                <Col xs={12}>
+                    {loading ?
+                        <Spinner animation="border" role="status" />
+                        :
+                        <p className='settings-p'>Username: {username}</p>}
+                </Col>
+
+                <Col md={8} className='mr-auto ml-auto'>
+                    <ModalEditUser username={username} initiateUsername={initiateUsername} loading={loading} setLoading={setLoading} />
+                </Col>
+
+                <Col md={8} className='mr-auto ml-auto'>
+                    <ModalEditPass loading={loading} setLoading={setLoading} />
+                </Col>
+
+            </Row>
+
+            <Row className='p-2 text-center border-top border-dark'>
+
+                <Col xs={12}>
+                    <h1 className='settings-h1'>Group Code</h1>
+                </Col>
+
+                <Col xs={12}>
+                    {loading ?
+                        <Spinner animation="border" role="status" />
+                        :
+                        <p className='settings-p'>{groupCode}</p>}
+                </Col>
+
+            </Row>
+        </>
     )
 }
