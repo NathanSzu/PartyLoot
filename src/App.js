@@ -27,7 +27,8 @@ function App() {
           <main>
             <Container>
               <Row>
-                <Col>
+                {/* Constraining the max-width with Col md=8 */}
+                <Col md={8} className='ml-auto mr-auto'>
                   <SkippedRoute exact path='/' component={Home} />
                   <SkippedRoute exact path='/forgot-password' component={PasswordReset} />
                   <SecuredRoute exact path='/groups' component={Groups} />

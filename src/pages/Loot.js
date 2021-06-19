@@ -3,7 +3,7 @@ import { Row, Card, Col, Form } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
-import AddLoot from '../components/BootModalAddLoot';
+import ModalLoot from '../components/ModalLoot';
 import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import AlertLoading from '../components/AlertLoading';
@@ -62,7 +62,8 @@ export default function Loot() {
       </Card>
       <Card>
         <Card.Header>
-          <AddLoot currentUser={currentUser} currentGroup={currentGroup} />
+          {/* Item should be empty string to prevent error */}
+          <ModalLoot item={''} />
         </Card.Header>
       </Card>
       {loading && <AlertLoading />}
