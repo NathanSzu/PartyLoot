@@ -40,7 +40,7 @@ export default function BootModalAddGroup({ updateDisplay }) {
 
     return (
         <>
-            <Button variant='dark' onClick={handleShow} className='w-75 m-2'>
+            <Button variant='dark' onClick={handleShow} className='w-100 m-2'>
                 +
             </Button>
 

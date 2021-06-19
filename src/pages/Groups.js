@@ -51,7 +51,7 @@ export default function Groups() {
         </Row>
       ))}
 
-      <Row className='justify-content-center'>
+      <Row className='justify-content-center border pt-2 pb-2'>
         <ModalAdd />
       </Row>
     </>

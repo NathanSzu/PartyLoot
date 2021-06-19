@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Badge } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
@@ -140,7 +140,15 @@ export default function ModalLoot({ item }) {
                             <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags} placeholder='Enter searchable item tags here' />
                         </Form.Group>
 
+                        <Form.Group controlId='itemOwner'>
+                            <span>{'Owner: '}
+                                {!item.itemOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault() }}>Unclaimed</Badge>
+                                    : <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); }}>{item.itemOwner}</Badge>}
+                            </span>
+                        </Form.Group>
+
                     </Modal.Body>
+
 
                     <Modal.Footer className='justify-content-between'>
 
@@ -163,7 +171,10 @@ export default function ModalLoot({ item }) {
 
                     </Modal.Footer>
                 </Form>
+
+
             </Modal>
+
         </>
     )
 }
