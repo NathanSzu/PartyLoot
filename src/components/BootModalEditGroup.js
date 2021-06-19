@@ -144,7 +144,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
                     <Modal.Header closeButton>
-                        <Modal.Title>{currentUser.uid === owner ? 'Edit' : null} {name}</Modal.Title>
+                        <Modal.Title>{currentUser.uid === owner ? 'Edit: ' : null} {name}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>

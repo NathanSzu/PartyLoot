@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import firebase from '../utils/firebase';
-import { Row, Col, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import { Link } from 'react-router-dom';
@@ -35,18 +35,17 @@ export default function Groups() {
   return (
     <>
 
-      {loading && <AlertLoading />}
+      {loading && <Spinner animation="border" role="status" />}
       {sortedGroups.map((group, idx) => (
-        <Row key={idx} className='p-2'>
-          <Col>
+        <Row key={idx} className='p-0 border'>
+          <Col className='p-0'>
             <Link to='/loot' >
-              <Button id={group.id} variant='outline-dark' className='w-100 text-left' onClick={(e) => { setCurrentGroup(e.target.id) }}>
+              <Button id={group.id} variant='outline' className='w-100 text-left p-3 groups-h1' onClick={(e) => { setCurrentGroup(e.target.id) }}>
                 {group.groupName}
               </Button>
             </Link>
           </Col>
-          <Col xs='auto'>
-            {/* <Button variant='dark' className='p-1'><img src={gear} fill='white'></img></Button> */}
+          <Col xs='auto d-flex align-items-center'>
             <ModalEdit name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
           </Col>
         </Row>
