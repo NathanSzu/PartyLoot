@@ -12,7 +12,7 @@ import firebase from '../utils/firebase';
 
 export default function Loot() {
   const { currentUser } = useContext(AuthContext);
-  const { currentGroup } = useContext(GroupContext);
+  const { currentGroup, groupData } = useContext(GroupContext);
   const itemRef = useRef(null);
 
   const db = firebase.firestore();
@@ -49,6 +49,10 @@ export default function Loot() {
   useEffect(() => {
     copper && console.log('copper', copper[0])
   }, [copper])
+
+  useEffect(() => {
+    groupData && groupData.groupName && console.log('groupData', groupData)
+  }, [groupData])
 
 
 

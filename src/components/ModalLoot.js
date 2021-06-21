@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Badge } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
 import { GroupContext } from '../utils/GroupContext';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 
@@ -11,9 +12,12 @@ export default function ModalLoot({ item }) {
     const handleShow = () => setShow(true);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [selectOwner, setSelectOwner] = useState(false);
     const { currentGroup } = useContext(GroupContext);
     const db = firebase.firestore();
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
+
+    const [group] = useDocumentData(db.collection('groups').doc(currentGroup));
 
     useEffect(() => {
         if (item && item.id) {
@@ -23,6 +27,10 @@ export default function ModalLoot({ item }) {
             console.log('Add item')
         }
     }, [])
+
+    useEffect(() => {
+        group && console.log('Group Members: ', group.members)
+    }, [group])
 
     const nameRef = useRef();
     const descRef = useRef();
@@ -142,9 +150,16 @@ export default function ModalLoot({ item }) {
 
                         <Form.Group controlId='itemOwner'>
                             <span>{'Owner: '}
-                                {!item.itemOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault() }}>Unclaimed</Badge>
-                                    : <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); }}>{item.itemOwner}</Badge>}
+                                {!item.itemOwner && !selectOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); console.log(currentGroup) }}>Unclaimed</Badge> : null}
+                                {item.itemOwner && !selectOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault();  currentGroup.members && setSelectOwner(true) }}>{item.itemOwner}</Badge> : null}
                             </span>
+                            {selectOwner ?
+                                currentGroup.members.map((member, idx) => (
+                                    <p>Member {idx}</p>
+                                ))
+                                :
+                                null
+                            }
                         </Form.Group>
 
                     </Modal.Body>
