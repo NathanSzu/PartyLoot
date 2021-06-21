@@ -23,6 +23,7 @@ export default function Groups() {
   useEffect(() => {
     groupList && setSortedGroups(defaultSort())
     error && console.log('Group load error: ', error)
+    console.log(currentUser.displayName || 'Anonymous')
   }, [groupList])
 
   const defaultSort = () => {

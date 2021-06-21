@@ -11,7 +11,7 @@ import LootAccordion from '../components/BootAccordionLoot';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, userData } = useContext(AuthContext);
   const { currentGroup, groupData } = useContext(GroupContext);
   const itemRef = useRef(null);
 
@@ -36,6 +36,8 @@ export default function Loot() {
   useEffect(() => {
     error && console.log('Error loading items: ', error)
     lootItems && setFilteredItems(lootItems)
+    console.log('currentuser: ', currentUser)
+    console.log('userData: ', userData)
   }, [lootItems])
 
   useEffect(() => {
