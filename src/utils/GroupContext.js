@@ -6,7 +6,7 @@ export const GroupContext = React.createContext();
 
 export const GroupProvider = ({ children }) => {
     const db = firebase.firestore();
-    const [currentGroup, setCurrentGroup] = useState('wJ2STtvDmLVncgiNscUt')
+    const [currentGroup, setCurrentGroup] = useState(' ')
     const [loading, setLoading] = useState(false)
     const [groupData] = useDocumentData(db.collection('groups').doc(currentGroup));
 

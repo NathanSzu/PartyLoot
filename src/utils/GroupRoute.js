@@ -9,7 +9,8 @@ export default function GroupRoute({ component: RouteComponent, ...rest }) {
         <Route
             {...rest}
             render={routeProps =>
-                !currentGroup ? (
+                // ' ' is the default group value set in GroupContext.
+                currentGroup === ' ' ? (
                     <Redirect to={"/groups"} />
 
                 ) : (

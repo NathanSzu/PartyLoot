@@ -23,7 +23,6 @@ export default function Groups() {
   useEffect(() => {
     groupList && setSortedGroups(defaultSort())
     error && console.log('Group load error: ', error)
-    groupList && console.log('G-list: ', groupList)
   }, [groupList])
 
   const defaultSort = () => {
