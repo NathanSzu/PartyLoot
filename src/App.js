@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from './utils/AuthContext';
 import { GroupProvider } from './utils/GroupContext';
 import Home from './pages/Home';

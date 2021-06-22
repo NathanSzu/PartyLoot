@@ -1,9 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { AuthContext } from '../utils/AuthContext';
 
 export default function SkippedRoute({ component: RouteComponent, ...rest }) {
-    const { currentUser } = useContext(AuthContext)
+    const { currentUser, userData, setGroupCode } = useContext(AuthContext)
+
+    // useEffect(() => {
+    //     if (userData) {
+    //         console.log(userData)
+    //     } else {
+    //         setGroupCode()
+    //     }
+    // }, [])
 
     return (
         <Route

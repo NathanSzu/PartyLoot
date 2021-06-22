@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import React, { useRef } from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 
 export default function ItemSearch({ items, setFilteredItems }) {
     const searchRef = useRef('');

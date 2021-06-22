@@ -2,12 +2,11 @@ import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 
-export default function BootModalEditUsername({ username, loading, setLoading }) {
+export default function BootModalEditUsername({ loading }) {
     const { setUsername, userData } = useContext(AuthContext);
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [usernameProfane, setUsernameProfane] = useState(false);
     const usernameRef = useRef(null);
 
     const save = (e) => {
@@ -31,7 +30,6 @@ export default function BootModalEditUsername({ username, loading, setLoading })
                     <Modal.Body>
                         <Form.Group controlId="Username">
                             <Form.Control type="text" ref={usernameRef} defaultValue={userData && userData.displayName} />
-                            {!usernameProfane ? null : <Alert variant={'warning'}>Keep it clean!</Alert>}
                         </Form.Group>
                     </Modal.Body>
 

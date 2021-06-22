@@ -1,13 +1,11 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
-import { AuthContext } from '../utils/AuthContext';
 import { Link } from 'react-router-dom';
 
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
 
 export default function BootLogin({ login, setLogin }) {
-    const { setUsername, setGroupCode } = useContext(AuthContext)
 
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);

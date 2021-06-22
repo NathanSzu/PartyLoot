@@ -8,11 +8,10 @@ import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import ModalAdd from '../components/BootModalAddGroup';
 import ModalEdit from '../components/BootModalEditGroup';
-import AlertLoading from '../components/AlertLoading';
 
 export default function Groups() {
-  const { currentUser, userData, setGroupCode } = useContext(AuthContext);
-  const { currentGroup, setCurrentGroup } = useContext(GroupContext);
+  const { currentUser } = useContext(AuthContext);
+  const { setCurrentGroup } = useContext(GroupContext);
   const [sortedGroups, setSortedGroups] = useState([])
 
   const db = firebase.firestore();

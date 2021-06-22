@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useRef, useState } from 'react';
-import { Row, Card, Col, Form } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
@@ -13,7 +13,6 @@ import firebase from '../utils/firebase';
 export default function Loot() {
   const { currentUser, userData } = useContext(AuthContext);
   const { currentGroup, groupData } = useContext(GroupContext);
-  const itemRef = useRef(null);
 
   const db = firebase.firestore();
   const lootRef = db.collection('groups').doc(currentGroup).collection('loot');

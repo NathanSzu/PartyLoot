@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Card, Button, Col, Row } from 'react-bootstrap';
+import { Accordion, Card, Col, Row } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 
 export default function BootAccordionLoot({ item }) {

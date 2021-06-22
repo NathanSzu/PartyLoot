@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Jumbotron from '../components/BootJumbo';
 import Login from '../components/BootLogin';
 import { Row, Col } from 'react-bootstrap';
-import firebase from '../utils/firebase';
+// import firebase from '../utils/firebase';
 
 export default function Home() {
     // useEffect(() => {
