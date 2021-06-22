@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useDocumentData, useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import firebase from './firebase';
 
 export const AuthContext = React.createContext();
@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(' ');
   const [loading, setLoading] = useState(true);
   const [userData] = useDocumentData(db.collection('users').doc(currentUser.uid));
+  const [randomData] = useDocumentDataOnce(db.collection('random-data').doc('identification'));
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, userData }}
+      value={{ currentUser, userData, randomData }}
     >
       {!loading && children}
     </AuthContext.Provider>

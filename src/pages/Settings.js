@@ -6,13 +6,16 @@ import { AuthContext } from '../utils/AuthContext';
 import firebase from '../utils/firebase';
 
 export default function Settings() {
-    const { currentUser } = useContext(AuthContext);
+    const { currentUser, userData, randomData } = useContext(AuthContext);
     const db = firebase.firestore();
     const [groupCode, setGroupCode] = useState('');
     const [username, setUsername] = useState('');
     const [loading, setLoading] = useState(false);
 
 
+    useEffect(() => {
+        randomData && console.log(randomData.usernames)
+    }, [randomData])
     useEffect(() => {
         setLoading(true)
         if (currentUser.displayName) { setUsername(currentUser.displayName) }
@@ -24,20 +27,31 @@ export default function Settings() {
                 });
         }
 
-        db.collection('users').doc(`${currentUser.uid}`)
-            .onSnapshot((doc) => {
-                if (doc.data()) {
-                    console.log('Current data: ', doc.data());
-                    setGroupCode(doc.data().code);
-                    setUsername(doc.data().displayName);
-                    setLoading(false)
-                }
-                else {
-                    initiateGroupCode();
-                    initiateUsername('Anonymous-Bear');
-                    setLoading(false);
-                };
-            });
+        // db.collection('users').doc(`${currentUser.uid}`)
+        //     .onSnapshot((doc) => {
+        //         if (doc.data()) {
+        //             console.log('Current data: ', doc.data());
+        //             setGroupCode(doc.data().code);
+        //             setUsername(doc.data().displayName);
+        //             setLoading(false)
+        //         }
+        //         else {
+        //             initiateGroupCode();
+        //             initiateUsername('Anonymous-Bear');
+        //             setLoading(false);
+        //         };
+        //     });
+
+        if (userData) {
+            console.log('Current data: ', userData);
+            userData.code && setGroupCode(userData.code);
+            userData.displayName && setUsername(userData.displayName);
+            setLoading(false)
+        } else {
+            initiateGroupCode();
+            initiateUsername('Anonymous-Bear');
+            setLoading(false);
+        }
     }, [currentUser])
 
     const initiateUsername = (name) => {
@@ -70,7 +84,7 @@ export default function Settings() {
     return (
         <>
             <Row className='p-2 text-center border-top border-dark'>
-                
+
                 <Col xs={12}>
                     <h1 className='settings-h1'>Account Settings</h1>
                 </Col>
