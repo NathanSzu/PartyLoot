@@ -11,19 +11,18 @@ import ModalEdit from '../components/BootModalEditGroup';
 import AlertLoading from '../components/AlertLoading';
 
 export default function Groups() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, userData, setGroupCode } = useContext(AuthContext);
   const { currentGroup, setCurrentGroup } = useContext(GroupContext);
   const [sortedGroups, setSortedGroups] = useState([])
 
   const db = firebase.firestore();
   const groupRef = db.collection('groups')
-  const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
+  const query = groupRef.where('members', 'array-contains', `${currentUser}`);
   const [groupList, loading, error] = useCollectionData(query, { idField: 'id' });
 
   useEffect(() => {
     groupList && setSortedGroups(defaultSort())
     error && console.log('Group load error: ', error)
-    console.log(currentUser.displayName || 'Anonymous')
   }, [groupList])
 
   const defaultSort = () => {

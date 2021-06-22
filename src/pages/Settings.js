@@ -35,7 +35,7 @@ export default function Settings() {
             code += alphabet[Math.floor(Math.random() * alphabet.length)];
             code += Math.floor(Math.random() * 10);
         }
-        db.collection('users').doc(`${currentUser.uid}`).set({ code: code }, { merge: true })
+        db.collection('users').doc(currentUser).set({ code: code }, { merge: true })
             .then(() => { console.log('Code created!') })
             .catch((error) => { console.error('Error creating code: ', error) });
     }

@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 // Importing and initializing firebase from utils/firebase config file.
 import app from '../utils/firebase'
 
-export default function BootLogin({ login, setLogin, user }) {
-    const { currentUser } = useContext(AuthContext)
+export default function BootLogin({ login, setLogin }) {
+    const { setUsername, setGroupCode } = useContext(AuthContext)
 
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
@@ -103,10 +103,7 @@ export default function BootLogin({ login, setLogin, user }) {
             <Form.Group controlId="Email">
                 <Form.Label>Email address</Form.Label>
 
-                {
-                    emailValid ? null :
-                        <Alert variant={'warning'}>Please enter a valid email address.</Alert>
-                }
+                { emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert> }
 
                 <Form.Control ref={emailRef} type="email" placeholder="Enter email" onChange={(e) => { setEmail(e.target.value); validateEmail(e) }} />
                 <Form.Text className="text-muted">
@@ -117,10 +114,7 @@ export default function BootLogin({ login, setLogin, user }) {
             <Form.Group controlId="Password">
                 <Form.Label>Password</Form.Label>
 
-                {
-                    passwordLengthValid ? null :
-                        <Alert variant={'warning'}>Must be at least 8 characters!</Alert>
-                }
+                { passwordLengthValid ? null : <Alert variant={'warning'}>Must be at least 8 characters!</Alert> }
 
                 <Form.Control ref={passwordRef} type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value); validatePassword1(e); validatePasswordLength(e) }} />
             </Form.Group>
@@ -129,10 +123,7 @@ export default function BootLogin({ login, setLogin, user }) {
                 < Form.Group controlId="PasswordConfirm">
                     <Form.Label>Confirm Password</Form.Label>
 
-                    {
-                        passwordValid ? null :
-                            <Alert variant={'warning'}>Passwords must match!</Alert>
-                    }
+                    { passwordValid ? null : <Alert variant={'warning'}>Passwords must match!</Alert> }
 
                     <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => { setCheckPassword(e.target.value); validatePassword2(e) }} />
                 </Form.Group>

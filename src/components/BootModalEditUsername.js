@@ -1,7 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
-import Filter from 'bad-words';
-import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 
 export default function BootModalEditUsername({ username, loading, setLoading }) {

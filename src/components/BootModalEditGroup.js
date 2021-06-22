@@ -32,7 +32,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
     const defaultFilter = () => {
         let filtered = groupMembers.filter((member) => {
-          if (member.id !== currentUser.uid) {
+          if (member.id !== currentUser) {
               return member
           } else { return }
         })
@@ -73,7 +73,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
     }
 
     const deleteGroup = () => {
-        if (currentUser.uid !== owner) { return }
+        if (currentUser !== owner) { return }
         db.collection('groups').doc(`${id}`).delete()
             .then(() => {
                 console.log('Document successfully deleted!');
@@ -113,7 +113,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
     const leaveGroup = () => {
         db.collection('groups').doc(`${id}`).update({
-            'members': fb.firestore.FieldValue.arrayRemove(currentUser.uid)
+            'members': fb.firestore.FieldValue.arrayRemove(currentUser)
         })
             .then(() => {
                 console.log('Member romved!');
@@ -144,17 +144,17 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
                     <Modal.Header closeButton>
-                        <Modal.Title>{currentUser.uid === owner ? 'Edit: ' : null} {name}</Modal.Title>
+                        <Modal.Title>{currentUser === owner ? 'Edit: ' : null} {name}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
                         <Form.Group controlId='groupName'>
-                            <Form.Control ref={nameRef} disabled={currentUser.uid === owner ? false : true} type='text' defaultValue={name} />
+                            <Form.Control ref={nameRef} disabled={currentUser === owner ? false : true} type='text' defaultValue={name} />
                         </Form.Group>
                     </Modal.Body>
 
                     <Modal.Footer className='justify-content-between'>
-                        {currentUser.uid === owner ?
+                        {currentUser === owner ?
                             <Button as='input' value='Save' disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }} />
                             : <div></div>}
 
@@ -163,15 +163,15 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
                             : null}
 
                         {leaveConfirmation ?
-                            <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser.uid) }} />
+                            <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser) }} />
                             : null}
 
-                        {currentUser.uid === owner && !deleteConfirmation ?
+                        {currentUser === owner && !deleteConfirmation ?
                             // Delete button that only shows if the current user owns the group.
                             <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
                             : null}
 
-                        {currentUser.uid !== owner && !leaveConfirmation ?
+                        {currentUser !== owner && !leaveConfirmation ?
                             // Alternate Leave Group button that only shows if current user does not own the group.
                             <Button as='input' value={`Leave Group`} disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }} />
                             : null}
@@ -193,7 +193,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
                             <Col>
                                 {member.displayName}
                             </Col>
-                            {currentUser.uid === owner ?
+                            {currentUser === owner ?
                                 <Col xs='auto'>
                                     <Button disabled={loading} variant='danger' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
                                         <img id={member.id} src={remove}></img>
@@ -206,7 +206,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
 
                 {
-                    currentUser.uid === owner ?
+                    currentUser === owner ?
                         <>
                             <Modal.Header>
                                 <Modal.Title>Add Members</Modal.Title>

@@ -9,9 +9,9 @@ export default function SkippedRoute({ component: RouteComponent, ...rest }) {
         <Route
             {...rest}
             render={routeProps =>
-                currentUser ? (
+                // If currentUser conditional changes, edit here and in SecuredRoute
+                currentUser !== ' ' ? (
                     <Redirect to={"/groups"} />
-
                 ) : (
                     <RouteComponent {...routeProps} />
                 )

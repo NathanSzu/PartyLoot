@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const db = firebase.firestore();
-  const userRef = db.collection('users').doc(currentUser.uid)
+  const userRef = db.collection('users').doc(currentUser)
 
   const [userData] = useDocumentData(userRef);
   const [randomData] = useDocumentDataOnce(db.collection('random-data').doc('identification'));
@@ -41,7 +41,8 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-        setCurrentUser(user);
+        // if currentUser is set to user it creates an infinite re-render loop.
+        setCurrentUser(user.uid);
         setLoading(false);
       } else {
         // No user is signed in.
