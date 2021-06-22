@@ -1,28 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import Filter from 'bad-words';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 
-export default function BootModalEditUsername({ username, initiateUsername, loading, setLoading }) {
-    const { currentUser } = useContext(AuthContext);
+export default function BootModalEditUsername({ username, loading, setLoading }) {
+    const { setUsername, userData } = useContext(AuthContext);
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [usernameProfane, setUsernameProfane] = useState(false);
-    const [displayName, setDisplayName] = useState(username)
-
-    const checkUsername = (e) => {
-        var filter = new Filter().isProfane(e.target.value)
-        setUsernameProfane(filter)
-    }
+    const usernameRef = useRef(null);
 
     const save = (e) => {
         e.preventDefault()
-        if (!usernameProfane && !username.includes(' ')) {
-            initiateUsername(displayName);
-            handleClose();
+        if (usernameRef.current.value !== userData.displayName) {
+            setUsername(usernameRef.current.value);
         }
+        handleClose();
     }
 
     return (
@@ -37,7 +32,7 @@ export default function BootModalEditUsername({ username, initiateUsername, load
 
                     <Modal.Body>
                         <Form.Group controlId="Username">
-                            <Form.Control type="text" defaultValue={username} onChange={(e) => { setDisplayName(e.target.value); checkUsername(e) }} />
+                            <Form.Control type="text" ref={usernameRef} defaultValue={userData && userData.displayName} />
                             {!usernameProfane ? null : <Alert variant={'warning'}>Keep it clean!</Alert>}
                         </Form.Group>
                     </Modal.Body>

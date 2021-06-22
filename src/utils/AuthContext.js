@@ -5,12 +5,37 @@ import firebase from './firebase';
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-  const db = firebase.firestore();
   // Default setting is ' ' so the app will initiate react-firebase-hooks useDocumentData call
   const [currentUser, setCurrentUser] = useState(' ');
   const [loading, setLoading] = useState(true);
-  const [userData] = useDocumentData(db.collection('users').doc(currentUser.uid));
+
+  const db = firebase.firestore();
+  const userRef = db.collection('users').doc(currentUser.uid)
+
+  const [userData] = useDocumentData(userRef);
   const [randomData] = useDocumentDataOnce(db.collection('random-data').doc('identification'));
+
+  const setUsername = (username) => {
+    userRef.set({
+      displayName: username
+    }, { merge: true })
+      .then(() => { console.log('Username saved!') })
+      .catch((error) => { console.error('Error creating code: ', error) });
+  }
+
+  const setGroupCode = () => {
+    const alphabet = 'ABCDEFGHIJKLMNPQRSTUVWXYZ1234567890'
+    let code = '';
+    for (let i = 0; i < 3; i++) {
+      code += alphabet[Math.floor(Math.random() * alphabet.length)];
+      code += Math.floor(Math.random() * 10);
+    }
+    userRef.set({
+      code: code
+    }, { merge: true })
+      .then(() => { console.log('Code created!') })
+      .catch((error) => { console.error('Error creating code: ', error) });
+  }
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
@@ -29,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, userData, randomData }}
+      value={{ currentUser, userData, randomData, setUsername, setGroupCode }}
     >
       {!loading && children}
     </AuthContext.Provider>

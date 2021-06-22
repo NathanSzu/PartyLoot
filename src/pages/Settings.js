@@ -16,58 +16,17 @@ export default function Settings() {
     useEffect(() => {
         randomData && console.log(randomData.usernames)
     }, [randomData])
+
     useEffect(() => {
         setLoading(true)
-        if (currentUser.displayName) { setUsername(currentUser.displayName) }
-        else {
-            db.collection('random-data').doc('identification')
-                .onSnapshot((doc) => {
-                    initiateUsername(doc.data().usernames)
-                    console.log('Current data: ', doc.data().usernames);
-                });
-        }
 
-        // db.collection('users').doc(`${currentUser.uid}`)
-        //     .onSnapshot((doc) => {
-        //         if (doc.data()) {
-        //             console.log('Current data: ', doc.data());
-        //             setGroupCode(doc.data().code);
-        //             setUsername(doc.data().displayName);
-        //             setLoading(false)
-        //         }
-        //         else {
-        //             initiateGroupCode();
-        //             initiateUsername('Anonymous-Bear');
-        //             setLoading(false);
-        //         };
-        //     });
-
+        console.log('Current data: ', userData);
         if (userData) {
-            console.log('Current data: ', userData);
             userData.code && setGroupCode(userData.code);
             userData.displayName && setUsername(userData.displayName);
             setLoading(false)
-        } else {
-            initiateGroupCode();
-            initiateUsername('Anonymous-Bear');
-            setLoading(false);
         }
-    }, [currentUser])
-
-    const initiateUsername = (name) => {
-        setLoading(true)
-        db.collection('users').doc(`${currentUser.uid}`).set({ displayName: name }, { merge: true })
-            .then(() => {
-                console.log('Display name updated!')
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error creating code: ', error)
-                setLoading(false);
-            });
-    }
-
-
+    }, [userData])
 
     const initiateGroupCode = () => {
         const alphabet = 'ABCDEFGHIJKLMNPQRSTUVWXYZ1234567890'
@@ -93,11 +52,11 @@ export default function Settings() {
                     {loading ?
                         <Spinner animation="border" role="status" />
                         :
-                        <p className='settings-p'>Username: {username}</p>}
+                        <p className='settings-p'>Username: {userData && userData.displayName}</p>}
                 </Col>
 
                 <Col md={8} className='mr-auto ml-auto'>
-                    <ModalEditUser username={username} initiateUsername={initiateUsername} loading={loading} setLoading={setLoading} />
+                    <ModalEditUser username={userData && userData.displayName} loading={loading} setLoading={setLoading} />
                 </Col>
 
                 <Col md={8} className='mr-auto ml-auto'>
@@ -116,7 +75,7 @@ export default function Settings() {
                     {loading ?
                         <Spinner animation="border" role="status" />
                         :
-                        <p className='settings-p'>{groupCode}</p>}
+                        <p className='settings-p'>{userData && userData.code}</p>}
                 </Col>
 
             </Row>
