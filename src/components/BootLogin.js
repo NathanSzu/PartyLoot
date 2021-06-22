@@ -63,7 +63,7 @@ export default function BootLogin({ login, setLogin }) {
             app.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Signed in 
-                    var user = userCredential.user;
+                    // var user = userCredential.user;
                     // ...
                     setLoading(false);
                 })
@@ -84,7 +84,7 @@ export default function BootLogin({ login, setLogin }) {
             app.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Signed in
-                    var user = userCredential.user;
+                    // var user = userCredential.user;
                     // ...
                     setLoading(false);
                 })

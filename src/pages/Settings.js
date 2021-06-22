@@ -3,12 +3,10 @@ import ModalEditUser from '../components/BootModalEditUsername';
 import ModalEditPass from '../components/BootModalEditPassword';
 import { Row, Col, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
-import firebase from '../utils/firebase';
 
 export default function Settings() {
     const { userData, randomData } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
-
 
     useEffect(() => {
         randomData && console.log(randomData.usernames)

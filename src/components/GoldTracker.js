@@ -1,10 +1,10 @@
-import React, { useRef, useContext } from 'react'
+import React, { useRef } from 'react'
 import { Row, Card, Col, Form, Accordion } from 'react-bootstrap';
 import goldImg from '../assets/currency_gold.svg';
 import silverImg from '../assets/currency_silver.svg';
 import copperImg from '../assets/currency_copper.svg';
-import { AuthContext } from '../utils/AuthContext';
-import { GroupContext } from '../utils/GroupContext';
+// import { AuthContext } from '../utils/AuthContext';
+// import { GroupContext } from '../utils/GroupContext';
 
 export default function GoldTracker({ gold, silver, copper, misc1, currencyRef }) {
 

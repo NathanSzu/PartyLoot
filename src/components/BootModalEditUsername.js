@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Form, Button, Alert, Modal } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 
 export default function BootModalEditUsername({ loading }) {

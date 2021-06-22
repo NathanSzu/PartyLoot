@@ -20,13 +20,12 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
     const db = firebase.firestore();
     const userRef = db.collection('users')
     const query = userRef.where(fb.firestore.FieldPath.documentId(), 'in', members);
-    const [groupMembers, loading, error] = useCollectionData(query, { idField: 'id' })
+    const [groupMembers, loading] = useCollectionData(query, { idField: 'id' })
 
     const nameRef = useRef();
     const memberRef = useRef();
 
     useEffect(() => {
-        error && console.log('Error loading members: ', error)
         groupMembers && setDisplayMembers(defaultFilter())
     }, [groupMembers])
 
@@ -34,7 +33,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
         let filtered = groupMembers.filter((member) => {
           if (member.id !== currentUser) {
               return member
-          } else { return }
+          } else { return null }
         })
         return(filtered)
       }
@@ -139,7 +138,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
     return (
         <>
-            <Button variant='dark' className='p-1' onClick={() => { handleShow() }}><img src={gear}></img></Button>
+            <Button variant='dark' className='p-1' onClick={() => { handleShow() }}><img alt='Edit Group' src={gear}></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <Form>
@@ -196,7 +195,7 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
                             {currentUser === owner ?
                                 <Col xs='auto'>
                                     <Button disabled={loading} variant='danger' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
-                                        <img id={member.id} src={remove}></img>
+                                        <img alt='Delete Group' id={member.id} src={remove}></img>
                                     </Button>
                                 </Col> : null
                             }

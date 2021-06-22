@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Badge } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
 import { GroupContext } from '../utils/GroupContext';
@@ -91,7 +91,7 @@ export default function ModalLoot({ item }) {
 
     return (
         <>
-            {item ? <Button variant='dark' className='p-1 m-0' onClick={handleShow}><img src={edit}></img></Button>
+            {item ? <Button variant='dark' className='p-1 m-0' onClick={handleShow}><img alt='Edit Item' src={edit}></img></Button>
                 :
                 <Button variant='dark' onClick={handleShow} className='w-100 m-0 mr-auto ml-auto'>Add Item</Button>}
 

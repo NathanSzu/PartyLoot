@@ -1,7 +1,7 @@
-import React, { useEffect, useContext, useRef, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { AuthContext } from '../utils/AuthContext';
+// import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
 import GoldTracker from '../components/GoldTracker';
@@ -11,8 +11,8 @@ import LootAccordion from '../components/BootAccordionLoot';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
-  const { currentUser, userData } = useContext(AuthContext);
-  const { currentGroup, groupData } = useContext(GroupContext);
+  // const { currentUser, userData } = useContext(AuthContext);
+  const { currentGroup } = useContext(GroupContext);
 
   const db = firebase.firestore();
   const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
@@ -26,34 +26,31 @@ export default function Loot() {
 
   const [filteredItems, setFilteredItems] = useState([])
 
-  const [lootItems, loading, error] = useCollectionData(query, { idField: 'id' });
+  const [lootItems, loading] = useCollectionData(query, { idField: 'id' });
   const [gold] = useCollectionData(goldQuery, { idField: 'id' });
   const [silver] = useCollectionData(silverQuery, { idField: 'id' });
   const [copper] = useCollectionData(copperQuery, { idField: 'id' });
   const [misc1] = useCollectionData(misc1Query, { idField: 'id' });
 
   useEffect(() => {
-    error && console.log('Error loading items: ', error)
     lootItems && setFilteredItems(lootItems)
-    console.log('currentuser: ', currentUser)
-    console.log('userData: ', userData)
   }, [lootItems])
 
-  useEffect(() => {
-    gold && console.log('gold', gold[0])
-  }, [gold])
+  // useEffect(() => {
+  //   gold && console.log('gold', gold[0])
+  // }, [gold])
 
-  useEffect(() => {
-    silver && console.log('silver', silver[0])
-  }, [silver])
+  // useEffect(() => {
+  //   silver && console.log('silver', silver[0])
+  // }, [silver])
 
-  useEffect(() => {
-    copper && console.log('copper', copper[0])
-  }, [copper])
+  // useEffect(() => {
+  //   copper && console.log('copper', copper[0])
+  // }, [copper])
 
-  useEffect(() => {
-    groupData && groupData.groupName && console.log('groupData', groupData)
-  }, [groupData])
+  // useEffect(() => {
+  //   groupData && groupData.groupName && console.log('groupData', groupData)
+  // }, [groupData])
 
 
 
