@@ -29,7 +29,7 @@ export default function Groups() {
     userRef.get()
       .then((doc) => {
         if (doc.exists) {
-          console.log("Document data:", doc.data());
+          // console.log("Document data:", doc.data());
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -43,7 +43,7 @@ export default function Groups() {
   }, [])
 
   useEffect(() => {
-    console.log('currentUser: ', currentUser)
+    // console.log('currentUser: ', currentUser)
   }, [currentUser])
 
   const defaultSort = () => {
