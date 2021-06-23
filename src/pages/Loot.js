@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 // import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
@@ -8,6 +8,7 @@ import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import AlertLoading from '../components/AlertLoading';
 import LootAccordion from '../components/BootAccordionLoot';
+import fb from 'firebase';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
@@ -16,6 +17,7 @@ export default function Loot() {
 
   const db = firebase.firestore();
   const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
+  const memberRef = db.collection('groups').doc(currentGroup)
   const currencyRef = db.collection('groups').doc(currentGroup).collection('currency');
 
   const query = lootRef.orderBy('created', 'desc');
@@ -23,6 +25,8 @@ export default function Loot() {
   const silverQuery = currencyRef.where('name', '==', 'silver');
   const copperQuery = currencyRef.where('name', '==', 'copper');
   const misc1Query = currencyRef.where('name', '==', 'misc1');
+
+  const [groupMembers] = useDocumentData(memberRef)
 
   const [filteredItems, setFilteredItems] = useState([])
 
@@ -34,6 +38,7 @@ export default function Loot() {
 
   useEffect(() => {
     lootItems && setFilteredItems(lootItems)
+    groupMembers && console.log('Group Members', groupMembers)
   }, [lootItems])
 
   // useEffect(() => {

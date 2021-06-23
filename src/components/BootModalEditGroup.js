@@ -19,8 +19,8 @@ export default function BootModalEditGroup({ name, id, owner, members }) {
 
     const db = firebase.firestore();
     const userRef = db.collection('users')
-    const query = userRef.where(fb.firestore.FieldPath.documentId(), 'in', members);
-    const [groupMembers, loading] = useCollectionData(query, { idField: 'id' })
+    const membersQuery = userRef.where(fb.firestore.FieldPath.documentId(), 'in', members);
+    const [groupMembers, loading] = useCollectionData(membersQuery, { idField: 'id' })
 
     const nameRef = useRef();
     const memberRef = useRef();

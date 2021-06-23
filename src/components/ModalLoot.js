@@ -1,5 +1,6 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Badge } from 'react-bootstrap';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import edit from '../assets/pencil-square.svg';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
@@ -88,6 +89,28 @@ export default function ModalLoot({ item }) {
             });
     }
 
+    const editOwner = () => {
+        // setLoading(true)
+        // itemRef.update({
+        //     itemName: nameRef.current.value,
+        //     itemDesc: descRef.current.value,
+        //     currCharges: chargeRef.current.value,
+        //     maxCharges: chargesRef.current.value,
+        //     itemTags: tagsRef.current.value
+        // })
+        //     .then(() => {
+        //         console.log('Item successfully updated!');
+        //         setLoading(false);
+        //         handleClose();
+        //     })
+        //     .catch((error) => {
+        //         // The document probably doesn't exist.
+        //         console.error('Error updating item: ', error);
+        //         setLoading(false);
+        //         handleClose();
+        //     });
+    }
+
 
     return (
         <>
@@ -140,7 +163,7 @@ export default function ModalLoot({ item }) {
                             <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags} placeholder='Enter searchable item tags here' />
                         </Form.Group>
 
-                        <Form.Group controlId='itemOwner'>
+                        {/* <Form.Group controlId='itemOwner'>
                             <span>{selectOwner ? 'Choose Owner: ' : 'Owner: '}
                                 {!item.itemOwner && !selectOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(true) }}>Unclaimed</Badge> : null}
                                 {item.itemOwner && !selectOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(true) }}>{item.itemOwner}</Badge> : null}
@@ -156,7 +179,7 @@ export default function ModalLoot({ item }) {
                                 :
                                 null
                             }
-                        </Form.Group>
+                        </Form.Group> */}
 
                     </Modal.Body>
 
