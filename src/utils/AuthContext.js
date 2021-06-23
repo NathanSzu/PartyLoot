@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDocumentData, useDocumentDataOnce } from 'react-firebase-hooks/firestore';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 import firebase from './firebase';
 
 export const AuthContext = React.createContext();
@@ -12,8 +12,7 @@ export const AuthProvider = ({ children }) => {
   const db = firebase.firestore();
   const userRef = db.collection('users').doc(currentUser.uid)
 
-  // const [userData] = useDocumentData(userRef);
-  const [randomData] = useDocumentDataOnce(db.collection('random-data').doc('identification'));
+  const randomData = ['name1', 'name2', 'name3']
 
   const setUsername = (username) => {
     userRef.set({
@@ -24,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const randomUsername = () => {
-    return randomData.usernames[Math.floor(Math.random() * randomData.usernames.length)]
+    return randomData[Math.floor(Math.random() * randomData.length)]
   }
 
   const setGroupCode = () => {
@@ -46,6 +45,8 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         // User is signed in.
         console.log('current user in auth: ', user)
+        console.log('display name in auth context', user.displayName)
+      
         // if currentUser is set to user it creates an infinite re-render loop.
         setCurrentUser(user);
         setLoading(false);
@@ -61,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, randomData, setUsername, setGroupCode, randomUsername }}
+      value={{ currentUser, randomData, setUsername, setGroupCode, randomUsername, userRef }}
     >
       {!loading && children}
     </AuthContext.Provider>

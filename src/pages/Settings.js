@@ -3,14 +3,18 @@ import ModalEditUser from '../components/BootModalEditUsername';
 import ModalEditPass from '../components/BootModalEditPassword';
 import { Row, Col, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export default function Settings() {
-    const { userData, randomData } = useContext(AuthContext);
+    const { currentUser, userRef } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
 
+    const [userData] = useDocumentData(userRef);
+
     useEffect(() => {
-        randomData && console.log(randomData.usernames)
-    }, [randomData])
+        console.log(currentUser.uid)
+        userData && console.log('settings userdata', userData.code)
+    }, [userData])
 
     return (
         <>

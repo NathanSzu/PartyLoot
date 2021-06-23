@@ -3,7 +3,7 @@ import { Form, Button, Modal } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 
 export default function BootModalEditUsername({ loading }) {
-    const { setUsername, userData } = useContext(AuthContext);
+    const { setUsername, userData, currentUser } = useContext(AuthContext);
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -11,7 +11,7 @@ export default function BootModalEditUsername({ loading }) {
 
     const save = (e) => {
         e.preventDefault()
-        if (usernameRef.current.value !== userData.displayName) {
+        if (usernameRef.current.value !== currentUser.displayName) {
             setUsername(usernameRef.current.value);
         }
         handleClose();

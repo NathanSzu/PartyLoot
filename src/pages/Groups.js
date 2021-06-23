@@ -8,27 +8,39 @@ import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import ModalAdd from '../components/BootModalAddGroup';
 import ModalEdit from '../components/BootModalEditGroup';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+
 
 export default function Groups() {
-  const { currentUser, randomUsername, setGroupCode, setUsername, userRef } = useContext(AuthContext);
+  const { currentUser, setUsername, setGroupCode, randomUsername } = useContext(AuthContext);
   const { setCurrentGroup } = useContext(GroupContext);
   const [sortedGroups, setSortedGroups] = useState([])
 
   const db = firebase.firestore();
   const groupRef = db.collection('groups')
   const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
+  const userRef = db.collection('users').doc(currentUser.uid);
   const [groupList, loading] = useCollectionData(query, { idField: 'id' });
-
-  // const [userData] = useDocumentData(userRef);
 
   useEffect(() => {
     groupList && setSortedGroups(defaultSort())
   }, [groupList])
 
-  // useEffect(() => {
-  //   console.log(userData)
-  // }, [userData])
+  useEffect(() => {
+    userRef.get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          setUsername(currentUser.displayName || randomUsername())
+          setGroupCode()
+        }
+
+      }).catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  }, [])
 
   useEffect(() => {
     console.log('currentUser: ', currentUser)
@@ -38,7 +50,7 @@ export default function Groups() {
     let sorted = groupList.sort((a, b) => {
       return b.created - a.created;
     })
-    return(sorted)
+    return (sorted)
   }
 
   return (
