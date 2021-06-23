@@ -8,20 +8,31 @@ import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import ModalAdd from '../components/BootModalAddGroup';
 import ModalEdit from '../components/BootModalEditGroup';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export default function Groups() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, randomUsername, setGroupCode, setUsername, userRef } = useContext(AuthContext);
   const { setCurrentGroup } = useContext(GroupContext);
   const [sortedGroups, setSortedGroups] = useState([])
 
   const db = firebase.firestore();
   const groupRef = db.collection('groups')
-  const query = groupRef.where('members', 'array-contains', `${currentUser}`);
+  const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
   const [groupList, loading] = useCollectionData(query, { idField: 'id' });
+
+  // const [userData] = useDocumentData(userRef);
 
   useEffect(() => {
     groupList && setSortedGroups(defaultSort())
   }, [groupList])
+
+  // useEffect(() => {
+  //   console.log(userData)
+  // }, [userData])
+
+  useEffect(() => {
+    console.log('currentUser: ', currentUser)
+  }, [currentUser])
 
   const defaultSort = () => {
     let sorted = groupList.sort((a, b) => {

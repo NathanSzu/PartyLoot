@@ -110,19 +110,27 @@ export default function ModalLoot({ item }) {
                             <Form.Control ref={nameRef} defaultValue={item && item.itemName} type='text' placeholder='Item name' />
                         </Form.Group>
 
-                        <Form.Group controlId='itemCharges'>
-                            <Row>
-                                <Col xs={5}>
+
+                        <Row>
+
+                            <Col xs={5}>
+                                <Form.Group controlId='itemCharge'>
                                     <Form.Control className='text-center' ref={chargeRef} defaultValue={item && item.currCharges} type='number' placeholder='Charge' />
-                                </Col>
-                                <Col xs={2} className='d-flex align-items-center justify-content-center'>
-                                    /
-                                </Col>
-                                <Col xs={5}>
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={2} className='d-flex align-items-center justify-content-center'>
+                                /
+                            </Col>
+
+                            <Col xs={5}>
+                                <Form.Group controlId='itemCharges'>
                                     <Form.Control className='text-center' ref={chargesRef} defaultValue={item && item.maxCharges} type='number' placeholder='Charges' />
-                                </Col>
-                            </Row>
-                        </Form.Group>
+                                </Form.Group>
+                            </Col>
+
+                        </Row>
+
 
                         <Form.Group controlId='itemDesc'>
                             <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={item && item.itemDesc} placeholder='Item description' />
@@ -139,10 +147,10 @@ export default function ModalLoot({ item }) {
                             </span>
                             {selectOwner ?
                                 <Row>
-                                {groupData.members.map((member, idx) => (
-                                    <Col xs={6} key={idx}>
-                                        <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(false) }}>{member}</Badge>
-                                    </Col>
+                                    {groupData.members.map((member, idx) => (
+                                        <Col xs={6} key={idx}>
+                                            <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(false) }}>{member}</Badge>
+                                        </Col>
                                     ))}
                                 </Row>
                                 :

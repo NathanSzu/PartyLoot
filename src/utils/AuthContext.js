@@ -6,13 +6,13 @@ export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   // Default setting is ' ' so the app will initiate react-firebase-hooks useDocumentData call
-  const [currentUser, setCurrentUser] = useState(' ');
+  const [currentUser, setCurrentUser] = useState('');
   const [loading, setLoading] = useState(true);
 
   const db = firebase.firestore();
-  const userRef = db.collection('users').doc(currentUser)
+  const userRef = db.collection('users').doc(currentUser.uid)
 
-  const [userData] = useDocumentData(userRef);
+  // const [userData] = useDocumentData(userRef);
   const [randomData] = useDocumentDataOnce(db.collection('random-data').doc('identification'));
 
   const setUsername = (username) => {
@@ -21,6 +21,10 @@ export const AuthProvider = ({ children }) => {
     }, { merge: true })
       .then(() => { console.log('Username saved!') })
       .catch((error) => { console.error('Error creating code: ', error) });
+  }
+
+  const randomUsername = () => {
+    return randomData.usernames[Math.floor(Math.random() * randomData.usernames.length)]
   }
 
   const setGroupCode = () => {
@@ -41,11 +45,13 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
+        console.log('current user in auth: ', user)
         // if currentUser is set to user it creates an infinite re-render loop.
-        setCurrentUser(user.uid);
+        setCurrentUser(user);
         setLoading(false);
       } else {
         // No user is signed in.
+        console.log('signed out')
         setLoading(false);
       }
     });
@@ -55,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, userData, randomData, setUsername, setGroupCode }}
+      value={{ currentUser, randomData, setUsername, setGroupCode, randomUsername }}
     >
       {!loading && children}
     </AuthContext.Provider>

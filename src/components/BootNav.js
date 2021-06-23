@@ -25,9 +25,9 @@ export default function BootNav() {
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="ml-auto">
-                                {!currentUser ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
+                                {currentUser.uid === ' ' ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
                                 {location.pathname === '/' || location.pathname === '/groups' || location.pathname === '/forgot-password' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
-                                {!currentUser ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
+                                {currentUser.uid === ' ' ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
                             </Nav>
                         </Navbar.Collapse>
                     </Navbar>

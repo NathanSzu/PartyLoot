@@ -10,7 +10,7 @@ export default function SecuredRoute({ component: RouteComponent, ...rest }) {
             {...rest}
             render={routeProps =>
                 // If currentUser conditional changes, edit here and in SkippedRoute
-                currentUser !== ' ' ? (
+                currentUser ? (
                     <RouteComponent {...routeProps} />
                 ) : (
                         <Redirect to={"/"} />
