@@ -4,7 +4,7 @@ import fb from 'firebase';
 import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 
-export default function BootModalAddGroup({ updateDisplay }) {
+export default function BootModalAddGroup() {
     const { currentUser } = useContext(AuthContext)
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
@@ -22,12 +22,11 @@ export default function BootModalAddGroup({ updateDisplay }) {
         db.collection('groups').add({
             groupName: nameRef.current.value,
             owner: currentUser.uid,
-            members: [{ id: currentUser.uid }],
+            members: [currentUser.uid],
             created: fb.firestore.FieldValue.serverTimestamp()
         })
         .then((docRef) => {
             console.log("Group added with ID: ", docRef.id);
-            updateDisplay();
             setLoading(false);
             handleClose();
         })

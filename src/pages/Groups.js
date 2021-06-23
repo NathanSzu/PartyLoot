@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import firebase from '../utils/firebase';
-import { Row, Col, Button, Spinner } from 'react-bootstrap';
+import { Row, Col, Button, Spinner, Alert } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import { Link } from 'react-router-dom';
@@ -57,6 +57,7 @@ export default function Groups() {
     <>
 
       {loading && <Spinner animation="border" role="status" />}
+      {!loading && groupList.length === 0 && <Alert variant='dark' className='text-center'> Click '+' to create a new group!</Alert>}
       {sortedGroups.map((group, idx) => (
         <Row key={idx} className='p-0 border'>
           <Col className='p-0'>
