@@ -13,6 +13,7 @@ export default function BootLogin({ login, setLogin }) {
     const [emailValid, setEmailValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState('empty');
     const [passwordLengthValid, setPasswordLengthValid] = useState('empty');
+    const [noUser, setNoUser] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const emailRef = useRef(false);
@@ -47,7 +48,7 @@ export default function BootLogin({ login, setLogin }) {
         } else { setPasswordValid(false) }
     }
 
-    // Verifies that the password entered is at least 8 characters before account creation of logging in.
+    // Verifies that the password entered is at least 8 characters before account creation.
     const validatePasswordLength = (e) => {
         if (e.target.value.length > 7) {
             setPasswordLengthValid(true)
@@ -89,8 +90,9 @@ export default function BootLogin({ login, setLogin }) {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    console.log(error.code)
-                    console.log(error.message)
+                    setNoUser(true);
+                    console.log(error.code);
+                    console.log(error.message);
                     setLoading(false);
                 });
         }
@@ -98,10 +100,11 @@ export default function BootLogin({ login, setLogin }) {
 
     return (
         <Form>
+            {noUser ? <Alert className='text-center' variant={'warning'}>Invalid email or password.</Alert> : null}
             <Form.Group controlId="Email">
                 <Form.Label>Email address</Form.Label>
 
-                { emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert> }
+                {emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert>}
 
                 <Form.Control ref={emailRef} type="email" placeholder="Enter email" onChange={(e) => { setEmail(e.target.value); validateEmail(e) }} />
                 <Form.Text className="text-muted">
@@ -112,16 +115,16 @@ export default function BootLogin({ login, setLogin }) {
             <Form.Group controlId="Password">
                 <Form.Label>Password</Form.Label>
 
-                { passwordLengthValid ? null : <Alert variant={'warning'}>Must be at least 8 characters!</Alert> }
+                {passwordLengthValid || login ? null : <Alert variant={'warning'}>Must be at least 8 characters!</Alert>}
 
                 <Form.Control ref={passwordRef} type="password" placeholder="Password" onChange={(e) => { setPassword(e.target.value); validatePassword1(e); validatePasswordLength(e) }} />
             </Form.Group>
 
-            { !login ?
+            {!login ?
                 < Form.Group controlId="PasswordConfirm">
                     <Form.Label>Confirm Password</Form.Label>
 
-                    { passwordValid ? null : <Alert variant={'warning'}>Passwords must match!</Alert> }
+                    {passwordValid ? null : <Alert variant={'warning'}>Passwords must match!</Alert>}
 
                     <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => { setCheckPassword(e.target.value); validatePassword2(e) }} />
                 </Form.Group>
@@ -132,7 +135,7 @@ export default function BootLogin({ login, setLogin }) {
             <Row className='justify-content-between'>
                 <Col className='text-center'>
                     {!login ? 'Already have an account?' : 'Need to create an account?'}
-                    <Button variant="link" onClick={toggleLogin}>
+                    <Button variant="link" onClick={() => {toggleLogin()}}>
                         {!login ? 'Login here!' : 'Sign up here!'}
                     </Button>
                 </Col>
@@ -143,7 +146,7 @@ export default function BootLogin({ login, setLogin }) {
                     <>
                         <Row>
                             <Col className='text-center mt-3 mb-3'>
-                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); logIn()}} >
+                                <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); logIn() }} >
                                     Login
                                 </Button>
                             </Col>

@@ -25,13 +25,13 @@ export default function BootModalAddGroup() {
             members: [currentUser.uid],
             created: fb.firestore.FieldValue.serverTimestamp()
         })
-        .then((docRef) => {
-            console.log("Group added with ID: ", docRef.id);
+        .then(() => {
+            console.log("Group added");
             setLoading(false);
             handleClose();
         })
         .catch((error) => {
-            console.error("Error creating new group: ", error);
+            console.log("Error creating new group: ", error);
             setLoading(false);
             handleClose();
         });

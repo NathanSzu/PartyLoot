@@ -20,7 +20,7 @@ export default function PasswordReset() {
         } else { setEmailValid(true) }
     }
 
-    const passwordReset = () => {
+    const passwordReset = (email) => {
         if (!emailRef.current.value) return
         if (emailValid) {
             setLoading(true);
@@ -48,7 +48,7 @@ export default function PasswordReset() {
                                 <Alert variant={'warning'}>Please enter a valid email address.</Alert>
                         }
 
-{
+                        {
                             !resetEmailSent ? null :
                                 <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
                         }
@@ -61,7 +61,7 @@ export default function PasswordReset() {
 
                     <Row className='justify-content-center'>
                         <Col className='text-center mt-3'>
-                            <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); passwordReset() }} >
+                            <Button disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); passwordReset(email) }} >
                                 Reset password!
                             </Button>
                         </Col>

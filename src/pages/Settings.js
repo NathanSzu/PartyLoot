@@ -1,15 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
 import ModalEditUser from '../components/BootModalEditUsername';
-import ModalEditPass from '../components/BootModalEditPassword';
-import { Row, Col, Spinner } from 'react-bootstrap';
+import { Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import app from '../utils/firebase'
 
 export default function Settings() {
     const { currentUser, userRef } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
+    const [resetEmailSent, setResetEmailSent] = useState(false);
 
     const [userData] = useDocumentData(userRef);
+
+    const passwordReset = (email) => {
+        setLoading(true);
+        app.auth().sendPasswordResetEmail(email).then(function () {
+            // Email sent.
+            setResetEmailSent(true);
+            setLoading(false);
+        }).catch(function (error) {
+            // An error happened.
+            setLoading(false);
+        });
+    }
 
     useEffect(() => {
         console.log(currentUser.uid)
@@ -36,7 +49,13 @@ export default function Settings() {
                 </Col>
 
                 <Col md={8} className='mr-auto ml-auto'>
-                    <ModalEditPass loading={loading} setLoading={setLoading} />
+                    <Button className='w-100' disabled={loading} variant="dark" type="submit" onClick={(e) => { e.preventDefault(); passwordReset(currentUser.email) }} >
+                        Reset password!
+                    </Button>
+                    {
+                        !resetEmailSent ? null :
+                            <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
+                    }
                 </Col>
 
             </Row>
