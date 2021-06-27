@@ -24,11 +24,6 @@ export default function Settings() {
         });
     }
 
-    useEffect(() => {
-        console.log(currentUser.uid)
-        userData && console.log('settings userdata', userData.code)
-    }, [userData])
-
     return (
         <>
             <Row className='p-2 text-center border-top border-dark'>

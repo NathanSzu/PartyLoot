@@ -18,7 +18,6 @@ export default function ModalAddGroup() {
     const addGroup = () => {
         if (!nameRef.current.value) { return }
         setLoading(true);
-        console.log(nameRef.current.value)
         db.collection('groups').add({
             groupName: nameRef.current.value,
             owner: currentUser.uid,

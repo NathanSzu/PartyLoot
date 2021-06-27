@@ -43,7 +43,6 @@ export default function Groups() {
   }, [])
 
   useEffect(() => {
-    // console.log('currentUser: ', currentUser)
   }, [currentUser])
 
   const defaultSort = () => {

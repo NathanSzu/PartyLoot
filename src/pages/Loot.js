@@ -36,26 +36,7 @@ export default function Loot() {
 
   useEffect(() => {
     lootItems && setFilteredItems(lootItems)
-    groupMembers && console.log('Group Members', groupMembers)
   }, [lootItems])
-
-  // useEffect(() => {
-  //   gold && console.log('gold', gold[0])
-  // }, [gold])
-
-  // useEffect(() => {
-  //   silver && console.log('silver', silver[0])
-  // }, [silver])
-
-  // useEffect(() => {
-  //   copper && console.log('copper', copper[0])
-  // }, [copper])
-
-  // useEffect(() => {
-  //   groupData && groupData.groupName && console.log('groupData', groupData)
-  // }, [groupData])
-
-
 
   return (
     <>

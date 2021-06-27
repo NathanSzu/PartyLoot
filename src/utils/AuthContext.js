@@ -43,10 +43,7 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-        console.log('current user in auth: ', user)
-        console.log('display name in auth context', user.displayName)
-      
-        // if currentUser is set to user it creates an infinite re-render loop.
+              
         setCurrentUser(user);
         setLoading(false);
       } else {

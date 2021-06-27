@@ -1,6 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Badge } from 'react-bootstrap';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import edit from '../assets/pencil-square.svg';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
@@ -12,7 +11,6 @@ export default function ModalLoot({ item }) {
     const handleShow = () => setShow(true);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [selectOwner, setSelectOwner] = useState(false);
     const { currentGroup, groupData } = useContext(GroupContext);
     const db = firebase.firestore();
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
@@ -26,8 +24,6 @@ export default function ModalLoot({ item }) {
     const addLoot = () => {
         if (!nameRef.current.value || !descRef.current.value) { return }
         setLoading(true);
-        console.log('Name: ', nameRef.current.value)
-        console.log('Desc: ', descRef.current.value)
         db.collection('groups').doc(`${currentGroup}`).collection('loot').add({
             itemName: nameRef.current.value,
             itemDesc: descRef.current.value,
@@ -37,7 +33,7 @@ export default function ModalLoot({ item }) {
             created: fb.firestore.FieldValue.serverTimestamp()
         })
             .then((docRef) => {
-                console.log("Item added with ID: ", docRef.id);
+                console.log("Item added: ");
                 setLoading(false);
                 handleClose();
             })
@@ -79,8 +75,6 @@ export default function ModalLoot({ item }) {
         itemRef.delete()
             .then(() => {
                 console.log('Item successfully deleted!');
-                console.log('Group: ', currentGroup)
-                console.log('Item: ', item.id)
                 setLoading(false);
                 handleClose();
             }).catch((error) => {
@@ -88,29 +82,6 @@ export default function ModalLoot({ item }) {
                 setLoading(false);
             });
     }
-
-    const editOwner = () => {
-        // setLoading(true)
-        // itemRef.update({
-        //     itemName: nameRef.current.value,
-        //     itemDesc: descRef.current.value,
-        //     currCharges: chargeRef.current.value,
-        //     maxCharges: chargesRef.current.value,
-        //     itemTags: tagsRef.current.value
-        // })
-        //     .then(() => {
-        //         console.log('Item successfully updated!');
-        //         setLoading(false);
-        //         handleClose();
-        //     })
-        //     .catch((error) => {
-        //         // The document probably doesn't exist.
-        //         console.error('Error updating item: ', error);
-        //         setLoading(false);
-        //         handleClose();
-        //     });
-    }
-
 
     return (
         <>
@@ -162,24 +133,6 @@ export default function ModalLoot({ item }) {
                         <Form.Group controlId='itemTags'>
                             <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags} placeholder='Enter searchable item tags here' />
                         </Form.Group>
-
-                        {/* <Form.Group controlId='itemOwner'>
-                            <span>{selectOwner ? 'Choose Owner: ' : 'Owner: '}
-                                {!item.itemOwner && !selectOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(true) }}>Unclaimed</Badge> : null}
-                                {item.itemOwner && !selectOwner ? <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(true) }}>{item.itemOwner}</Badge> : null}
-                            </span>
-                            {selectOwner ?
-                                <Row>
-                                    {groupData.members.map((member, idx) => (
-                                        <Col xs={6} key={idx}>
-                                            <Badge as='button' pill variant='secondary' onClick={(e) => { e.preventDefault(); setSelectOwner(false) }}>{member}</Badge>
-                                        </Col>
-                                    ))}
-                                </Row>
-                                :
-                                null
-                            }
-                        </Form.Group> */}
 
                     </Modal.Body>
 

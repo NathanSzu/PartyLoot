@@ -27,6 +27,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     useEffect(() => {
         groupMembers && setDisplayMembers(defaultFilter())
+        groupMembers && console.log(groupMembers)
     }, [groupMembers])
 
     const defaultFilter = () => {
@@ -91,11 +92,12 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                     if (querySnapshot.empty) {
                         setNoResult(true);
                     } else {
+                        if (groupMembers.length > 9) { return }
                         querySnapshot.forEach((doc) => {
                             // doc.data() is never undefined for query doc snapshots
-                            console.log(doc.id, " => ", doc.data());
                             if (doc.id) {
                                 db.collection('groups').doc(id).update({
+                                    // Adds the user with the entered group code to be added to the groups user array.
                                     members: fb.firestore.FieldValue.arrayUnion(doc.id)
                                 })
                             }
