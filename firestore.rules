@@ -14,9 +14,17 @@ service cloud.firestore {
         allow read, create: if request.auth != null;
     }
     
-    match /groups/{group} {
+    match /groups/{group} {    	
     		allow delete: if request.auth != null && request.auth.uid == resource.data.owner
     		allow read, create, update: if request.auth != null
+        
+        match /loot/{item} {
+    		allow create, read, update, delete: if request.auth != null
+    		}
+        
+        match /currency/{denomination} {
+    		allow create, read, update, delete: if request.auth != null
+    		}
     }
   }
 }

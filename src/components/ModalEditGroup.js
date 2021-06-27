@@ -27,7 +27,6 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     useEffect(() => {
         groupMembers && setDisplayMembers(defaultFilter())
-        groupMembers && console.log(groupMembers)
     }, [groupMembers])
 
     const defaultFilter = () => {
@@ -107,7 +106,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                     }
                 })
                 .catch((error) => {
-                    console.log("Error getting user: ", error);
+                    console.error("Error getting user: ", error);
                 });
         }
     }
@@ -117,7 +116,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
             'members': fb.firestore.FieldValue.arrayRemove(currentUser.uid)
         })
             .then(() => {
-                console.log('Member romved!');
+                console.log('Member removed!');
                 setFalseThenClose();
             }).catch((error) => {
                 console.error('Error removing member: ', error);
