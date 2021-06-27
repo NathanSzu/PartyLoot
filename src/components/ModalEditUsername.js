@@ -2,8 +2,8 @@ import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 
-export default function BootModalEditUsername({ loading }) {
-    const { setUsername, userData, currentUser } = useContext(AuthContext);
+export default function ModalEditUsername({ loading, userData }) {
+    const { setUsername, currentUser } = useContext(AuthContext);
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);

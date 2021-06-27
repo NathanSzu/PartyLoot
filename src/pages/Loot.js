@@ -1,18 +1,16 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
-// import { AuthContext } from '../utils/AuthContext';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
 import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import AlertLoading from '../components/AlertLoading';
-import LootAccordion from '../components/BootAccordionLoot';
+import LootAccordion from '../components/AccordionLoot';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
-  // const { currentUser, userData } = useContext(AuthContext);
   const { currentGroup } = useContext(GroupContext);
 
   const db = firebase.firestore();

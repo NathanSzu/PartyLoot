@@ -6,8 +6,8 @@ import { GroupContext } from '../utils/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import ModalAdd from '../components/BootModalAddGroup';
-import ModalEdit from '../components/BootModalEditGroup';
+import ModalAdd from '../components/ModalAddGroup';
+import ModalEdit from '../components/ModalEditGroup';
 
 
 export default function Groups() {

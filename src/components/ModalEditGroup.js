@@ -7,7 +7,7 @@ import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg';
 import remove from '../assets/remove-user.svg';
 
-export default function BootModalEditGroup({ name, id, owner, members }) {
+export default function ModalEditGroup({ name, id, owner, members }) {
     const { currentUser } = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);

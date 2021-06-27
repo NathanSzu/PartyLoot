@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import ModalEditUser from '../components/BootModalEditUsername';
+import ModalEditUser from '../components/ModalEditUsername';
 import { Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -45,7 +45,7 @@ export default function Settings() {
                 </Col>
 
                 <Col md={8} className='mr-auto ml-auto'>
-                    <ModalEditUser loading={loading} setLoading={setLoading} />
+                    <ModalEditUser loading={loading} setLoading={setLoading} userData={userData}/>
                 </Col>
 
                 <Col md={8} className='mr-auto ml-auto'>
