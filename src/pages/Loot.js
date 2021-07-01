@@ -1,13 +1,12 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
 import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import AlertLoading from '../components/AlertLoading';
 import LootAccordion from '../components/AccordionLoot';
-import fb from 'firebase';
 import firebase from '../utils/firebase';
 
 export default function Loot() {
@@ -15,32 +14,19 @@ export default function Loot() {
 
   const db = firebase.firestore();
   const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
-  const memberRef = db.collection('groups').doc(currentGroup)
-  const currencyRef = db.collection('groups').doc(currentGroup).collection('currency');
-
   const query = lootRef.orderBy('created', 'desc');
-  const goldQuery = currencyRef.where('name', '==', 'gold');
-  const silverQuery = currencyRef.where('name', '==', 'silver');
-  const copperQuery = currencyRef.where('name', '==', 'copper');
-  const misc1Query = currencyRef.where('name', '==', 'misc1');
-
-  const [groupMembers] = useDocumentData(memberRef)
 
   const [filteredItems, setFilteredItems] = useState([])
 
   const [lootItems, loading] = useCollectionData(query, { idField: 'id' });
-  const [gold] = useCollectionData(goldQuery, { idField: 'id' });
-  const [silver] = useCollectionData(silverQuery, { idField: 'id' });
-  const [copper] = useCollectionData(copperQuery, { idField: 'id' });
-  const [misc1] = useCollectionData(misc1Query, { idField: 'id' });
 
   useEffect(() => {
     lootItems && setFilteredItems(lootItems)
   }, [lootItems])
 
   return (
-    <>
-      <GoldTracker gold={gold} silver={silver} copper={copper} misc1={misc1} currencyRef={currencyRef} />
+    <div className='mb-5'>
+      <GoldTracker />
       <Card className='mt-2 mb-2'>
         <Card.Header>
           <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} />
@@ -56,6 +42,6 @@ export default function Loot() {
       {filteredItems.map((item, idx) => (
         <LootAccordion item={item} key={idx} />
       ))}
-    </>
+    </div>
   )
 }

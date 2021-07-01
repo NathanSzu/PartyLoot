@@ -1,42 +1,46 @@
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { Row, Card, Col, Form, Accordion } from 'react-bootstrap';
 import goldImg from '../assets/currency_gold.svg';
 import silverImg from '../assets/currency_silver.svg';
 import copperImg from '../assets/currency_copper.svg';
 // import { AuthContext } from '../utils/AuthContext';
-// import { GroupContext } from '../utils/GroupContext';
+import { GroupContext } from '../utils/GroupContext';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import firebase from '../utils/firebase';
 
-export default function GoldTracker({ gold, silver, copper, misc1, currencyRef }) {
+export default function GoldTracker() {
+    const { currentGroup } = useContext(GroupContext);
 
-    const goldRef = useRef();
-    const silverRef = useRef();
-    const copperRef = useRef();
-    const misc1Ref = useRef();
+    const db = firebase.firestore();
+    const currencyRef = db.collection('groups').doc(currentGroup).collection('currency');
 
-    const updateGold = () => {
-        currencyRef.doc('gold').set({
-            name: 'gold',
-            qty: goldRef.current.value
+    const currency1Query = currencyRef.where('name', '==', 'currency1');
+    const currency2Query = currencyRef.where('name', '==', 'currency2');
+    const currency3Query = currencyRef.where('name', '==', 'currency3');
+    const currency4Query = currencyRef.where('name', '==', 'currency4');
+    const currency5Query = currencyRef.where('name', '==', 'currency5');
+    const currency6Query = currencyRef.where('name', '==', 'currency6');
+
+    const [currency1] = useCollectionData(currency1Query, { idField: 'id' });
+    const [currency2] = useCollectionData(currency2Query, { idField: 'id' });
+    const [currency3] = useCollectionData(currency3Query, { idField: 'id' });
+    const [currency4] = useCollectionData(currency4Query, { idField: 'id' });
+    const [currency5] = useCollectionData(currency5Query, { idField: 'id' });
+    const [currency6] = useCollectionData(currency6Query, { idField: 'id' });
+
+    const currency1Ref = useRef();
+    const currency2Ref = useRef();
+    const currency3Ref = useRef();
+    const currency4Ref = useRef();
+    const currency5Ref = useRef();
+    const currency6Ref = useRef();
+
+    const updateCurrency = (currency, currencyValueRef) => {
+        currencyRef.doc(currency).set({
+            name: currency,
+            qty: currencyValueRef.current.value
         })
-    };
-    const updateSilver = () => {
-        currencyRef.doc('silver').set({
-            name: 'silver',
-            qty: silverRef.current.value
-        })
-    };
-    const updateCopper = () => {
-        currencyRef.doc('copper').set({
-            name: 'copper',
-            qty: copperRef.current.value
-        })
-    };
-    const updateMisc1 = () => {
-        currencyRef.doc('misc1').set({
-            name: 'misc1',
-            qty: misc1Ref.current.value
-        })
-    };
+    }
 
     return (
         <>
@@ -52,13 +56,13 @@ export default function GoldTracker({ gold, silver, copper, misc1, currencyRef }
                                     <Form.Label className='text-right'><img alt='Currency1' src={goldImg} className='w-100'></img></Form.Label>
                                 </Col>
                                 <Col xs={5} className='pl-2'>
-                                    <Form.Control type='number' defaultValue={gold && gold[0] && gold[0].qty ? gold[0].qty : null} ref={goldRef} onChange={updateGold} />
+                                    <Form.Control type='number' defaultValue={currency1 && currency1[0] && currency1[0].qty ? currency1[0].qty : null} ref={currency1Ref} onChange={() => {updateCurrency('currency1', currency1Ref)}} />
                                 </Col>
                                 <Col xs={1} className='p-0'>
                                     <Form.Label className='text-right'><img alt='Currency2' src={silverImg} className='w-100'></img></Form.Label>
                                 </Col>
                                 <Col xs={5} className='pl-2'>
-                                    <Form.Control type='number' defaultValue={silver && silver[0] && silver[0].qty ? silver[0].qty : null} ref={silverRef} onChange={updateSilver} />
+                                    <Form.Control type='number' defaultValue={currency2 && currency2[0] && currency2[0].qty ? currency2[0].qty : null} ref={currency2Ref} onChange={() => {updateCurrency('currency2', currency2Ref)}} />
                                 </Col>
                             </Row>
                             <Row className='mt-2 pl-2'>
@@ -66,13 +70,27 @@ export default function GoldTracker({ gold, silver, copper, misc1, currencyRef }
                                     <Form.Label className='text-right'><img alt='Currency3' src={copperImg} className='w-100'></img></Form.Label>
                                 </Col>
                                 <Col xs={5} className='pl-2'>
-                                    <Form.Control type='number' defaultValue={copper && copper[0] && copper[0].qty ? copper[0].qty : null} ref={copperRef} onChange={updateCopper} />
+                                    <Form.Control type='number' defaultValue={currency3 && currency3[0] && currency3[0].qty ? currency3[0].qty : null} ref={currency3Ref} onChange={() => {updateCurrency('currency3', currency3Ref)}} />
                                 </Col>
                                 <Col xs={1} className='p-0'>
                                     <Form.Label className='text-right'><img alt='Currency4' src={copperImg} className='w-100'></img></Form.Label>
                                 </Col>
                                 <Col xs={5} className='pl-2'>
-                                    <Form.Control type='number' defaultValue={misc1 && misc1[0] && misc1[0].qty ? misc1[0].qty : null} ref={misc1Ref} onChange={updateMisc1} />
+                                    <Form.Control type='number' defaultValue={currency4 && currency4[0] && currency4[0].qty ? currency4[0].qty : null} ref={currency4Ref} onChange={() => {updateCurrency('currency4', currency4Ref)}} />
+                                </Col>
+                            </Row>
+                            <Row className='mt-2 pl-2'>
+                                <Col xs={1} className='p-0'>
+                                    <Form.Label className='text-right'><img alt='Currency5' src={copperImg} className='w-100'></img></Form.Label>
+                                </Col>
+                                <Col xs={5} className='pl-2'>
+                                    <Form.Control type='number' defaultValue={currency5 && currency5[0] && currency5[0].qty ? currency5[0].qty : null} ref={currency5Ref} onChange={() => {updateCurrency('currency5', currency5Ref)}} />
+                                </Col>
+                                <Col xs={1} className='p-0'>
+                                    <Form.Label className='text-right'><img alt='Currency6' src={copperImg} className='w-100'></img></Form.Label>
+                                </Col>
+                                <Col xs={5} className='pl-2'>
+                                    <Form.Control type='number' defaultValue={currency6 && currency6[0] && currency6[0].qty ? currency6[0].qty : null} ref={currency6Ref} onChange={() => {updateCurrency('currency6', currency6Ref)}} />
                                 </Col>
                             </Row>
                         </Card.Body>
