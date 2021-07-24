@@ -6,6 +6,7 @@ import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 import gear from '../assets/gear-fill.svg';
 import remove from '../assets/remove-user.svg';
+import add from '../assets/add-user.svg';
 
 export default function ModalEditGroup({ name, id, owner, members }) {
     const { currentUser } = useContext(AuthContext);
@@ -31,12 +32,12 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     const defaultFilter = () => {
         let filtered = groupMembers.filter((member) => {
-          if (member.id !== currentUser.uid) {
-              return member
-          } else { return null }
+            if (member.id !== currentUser.uid) {
+                return member
+            } else { return null }
         })
-        return(filtered)
-      }
+        return (filtered)
+    }
 
     const setFalseThenClose = () => {
         setDeleteConfirmation(false);
@@ -183,9 +184,9 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                 </Form>
 
                 {displayMembers.length === 0 ? null :
-                <Modal.Header>
-                    <Modal.Title>Members</Modal.Title>
-                </Modal.Header>}
+                    <Modal.Header>
+                        <Modal.Title>Members</Modal.Title>
+                    </Modal.Header>}
 
                 {displayMembers && displayMembers.map((member, idx) => (
                     <Container key={idx}>
@@ -213,7 +214,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                             </Modal.Header>
                             <Form className='w-100 mt-3'>
                                 <Container>
-                                    <Row>
+                                    <Row className='p-2'>
                                         <Col>
                                             <Form.Group controlId='addMember'>
                                                 <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
@@ -222,7 +223,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
                                         <Col xs='auto'>
                                             <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
-                                                +
+                                                <img alt='Add Group Member' src={add} />
                                             </Button>
                                         </Col>
                                     </Row>
