@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Navbar } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
@@ -32,19 +32,23 @@ export default function Loot() {
 
   return (
     <div className='mb-5'>
-      <GoldTracker />
-      <Card className='mt-2 mb-2'>
-        <Card.Header>
-          <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
-          <OwnerFilter setSortBy={setSortBy} />
-        </Card.Header>
-      </Card>
-      <Card>
-        <Card.Header>
-          {/* Item should be empty string to prevent error */}
-          <ModalLoot item={''} />
-        </Card.Header>
-      </Card>
+      <Navbar sticky='top' className='w-100 p-0'>
+        <div className='d-block w-100 theme-background'>
+          <GoldTracker />
+          <Card className='mt-2 mb-2'>
+            <Card.Header>
+              <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
+              <OwnerFilter setSortBy={setSortBy} />
+            </Card.Header>
+          </Card>
+          <Card>
+            <Card.Header>
+              {/* Item should be empty string to prevent error */}
+              <ModalLoot item={''} />
+            </Card.Header>
+          </Card>
+        </div>
+      </Navbar>
       {loading && <AlertLoading />}
       {filteredItems.map((item, idx) => (
         <LootAccordion item={item} key={idx} />
