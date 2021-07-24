@@ -17,7 +17,7 @@ export default function ItemSearch({ items, setFilteredItems, sortBy }) {
             } else if (item.itemTags && item.itemTags.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
                 return item
             }
-        } else if ( item.owner && item.owner === sortBy) {
+        } else if ( item.owner && item.owner.toLowerCase() === sortBy.toLowerCase()) {
             if (item.itemName.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
                 return item
             } else if (item.itemDesc && item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase())) {

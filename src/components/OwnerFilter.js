@@ -6,14 +6,13 @@ import { GroupContext } from '../utils/GroupContext';
 import addUser from '../assets/add-user.svg';
 import viewUsers from '../assets/view-users.svg';
 import removeUser from '../assets/remove-user.svg';
+import fb from 'firebase';
 
 export default function OwnerFilter({ setSortBy }) {
     const { currentGroup } = useContext(GroupContext);
     const sortRef = useRef('');
     const addPartyMemberRef = useRef('');
     const [loading, setLoading] = useState(false)
-
-    const displayMembers = ['Dave', 'Allie']
 
     const [show, setShow] = useState(false)
 
@@ -32,6 +31,31 @@ export default function OwnerFilter({ setSortBy }) {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const addPartyMember = () => {
+        if (!addPartyMemberRef.current.value) {
+            console.log('Enter a name first')
+            return
+        }
+        setLoading(true)
+        groupRef.update({
+            'party': fb.firestore.FieldValue.arrayUnion(addPartyMemberRef.current.value.trim())
+        }).then(() => {
+            addPartyMemberRef.current.value = ''
+            console.log('Party member added!')
+            setLoading(false)
+        })
+    }
+
+    const removePartyMember = (partyMember) => {
+        setLoading(true)
+        groupRef.update({
+            'party': fb.firestore.FieldValue.arrayRemove(partyMember)
+        }).then(() => {
+            console.log('Party member removed!')
+            setLoading(false)
+        })
+    }
 
     return (
         <Row className='mt-2'>
@@ -55,27 +79,31 @@ export default function OwnerFilter({ setSortBy }) {
                         <Modal.Title>Edit Party Members</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={(e) => { e.preventDefault() }}>
-                            <Row>
-                                <Col xs={10}>
-                                    <Form.Control type='input' ref={addPartyMemberRef}></Form.Control>
-                                </Col>
-                                <Col xs={2} className='pl-1'>
-                                    <Button variant="dark" type='submit' onClick={handleClose}><img alt='Add Party Member' src={addUser} /></Button>
-                                </Col>
-                            </Row>
-                        </Form>
+                        <Container>
+                            <Form onSubmit={(e) => { e.preventDefault() }}>
+                                <Row>
+                                    <Col className='pl-0' xs={10}>
+                                        <Form.Control type='input' placeholder='Add Party Members' ref={addPartyMemberRef}></Form.Control>
+                                    </Col>
+                                    <Col className='pl-2' xs={2}>
+                                        <Button disabled={loading} variant="dark" type='submit' onClick={addPartyMember}>
+                                            <img alt='Add Party Member' src={addUser} />
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Container>
                     </Modal.Body>
 
                     <Modal.Footer>
                         {partyData && partyData.party && partyData.party.map((member, idx) => (
                             <Container key={idx}>
-                                <Row className='p-0'>
-                                    <Col>
+                                <Row>
+                                    <Col className='pl-0' xs={10}>
                                         {member}
                                     </Col>
-                                    <Col xs='auto' className='p-0'>
-                                        <Button disabled={loading} variant='danger' type='button' onClick={(e) => { }}>
+                                    <Col className='pl-2' xs={2}>
+                                        <Button disabled={loading} variant='danger' type='button' onClick={(e) => { removePartyMember(member) }}>
                                             <img alt='Delete Group' src={removeUser}></img>
                                         </Button>
                                     </Col>
