@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, Badge } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
@@ -14,15 +15,20 @@ export default function ModalLoot({ item }) {
     const { currentGroup, groupData } = useContext(GroupContext);
     const db = firebase.firestore();
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
+    const groupRef = db.collection('groups').doc(currentGroup);
+
+    const [partyData] = useDocumentData(groupRef)
 
     const nameRef = useRef();
     const descRef = useRef();
     const chargeRef = useRef();
     const chargesRef = useRef();
     const tagsRef = useRef();
+    const ownerRef = useRef();
 
     const addLoot = () => {
         if (!nameRef.current.value || !descRef.current.value) { return }
+        if (ownerRef.current.value === 'Select Owner') { ownerRef.current.value = '' }
         setLoading(true);
         db.collection('groups').doc(`${currentGroup}`).collection('loot').add({
             itemName: nameRef.current.value,
@@ -30,6 +36,7 @@ export default function ModalLoot({ item }) {
             currCharges: chargeRef.current.value,
             maxCharges: chargesRef.current.value,
             itemTags: tagsRef.current.value,
+            owner: ownerRef.current.value,
             created: fb.firestore.FieldValue.serverTimestamp()
         })
             .then((docRef) => {
@@ -50,13 +57,15 @@ export default function ModalLoot({ item }) {
             handleClose();
             return
         }
+        if (ownerRef.current.value === 'Select Owner') { ownerRef.current.value = '' }
         setLoading(true)
         itemRef.update({
             itemName: nameRef.current.value,
             itemDesc: descRef.current.value,
             currCharges: chargeRef.current.value,
             maxCharges: chargesRef.current.value,
-            itemTags: tagsRef.current.value
+            itemTags: tagsRef.current.value,
+            owner: ownerRef.current.value
         })
             .then(() => {
                 console.log('Item successfully updated!');
@@ -133,6 +142,15 @@ export default function ModalLoot({ item }) {
 
                         <Form.Group controlId='itemTags'>
                             <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags} placeholder='Enter searchable item tags here' />
+                        </Form.Group>
+
+                        <Form.Group controlId='itemOwner'>
+                            <Form.Control as='select' defaultValue={item && item.owner} ref={ownerRef}>
+                                <option>Select Owner</option>
+                                {partyData && partyData.party && partyData.party.map((partyMember, idx) => (
+                                    <option key={idx}>{partyMember}</option>
+                                ))}
+                            </Form.Control>
                         </Form.Group>
 
                     </Modal.Body>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Card, Col, Row } from 'react-bootstrap';
+import { Accordion, Card, Col, Row, Badge } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 
 export default function AccordionLoot({ item }) {
@@ -19,7 +19,7 @@ export default function AccordionLoot({ item }) {
                                 <Col className='d-flex align-items-center border-bottom border-dark'>
                                     <h2 className='item-h2 mb-1 mt-1'>{item.currCharges} / {item.maxCharges} charges</h2>
                                 </Col>
-                            : null}
+                                : null}
                             <Col xs={2} className='text-right'>
                                 <ModalLoot item={item} />
                             </Col>
@@ -29,12 +29,19 @@ export default function AccordionLoot({ item }) {
                                 <pre>{item.itemDesc}</pre>
                             </Col>
                         </Row>
-                        {item.itemOwner ?
-                            <Row className='border-bottom border-dark pt-1 pb-1'>
-                                <Col className='d-flex align-items-center'>
-                                    <h2 className='item-h2 mb-1 mt-1'>Held By</h2>
-                                </Col>
-                            </Row>
+                        {item.owner ?
+                            <>
+                                <Row className='border-bottom border-dark pt-1 pb-1'>
+                                    <Col className='d-flex align-items-center'>
+                                        <h2 className='item-h2 mb-1 mt-1'>Held By</h2>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Badge variant="dark" className='mt-3 p-2 pl-3 pr-3'>{item.owner}</Badge>
+                                    </Col>
+                                </Row>
+                            </>
                             : null}
 
                     </Card.Body>
