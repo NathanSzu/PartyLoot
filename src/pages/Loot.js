@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Card, Navbar } from 'react-bootstrap';
+import { Card, Navbar, Row, Col } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
@@ -31,17 +31,17 @@ export default function Loot() {
   }, [lootItems])
 
   return (
-    <div className='mb-5'>
-      <Navbar sticky='top' className='w-100 p-0'>
-        <div className='d-block w-100 theme-background'>
+    <Row className='mb-5'>
+      <Navbar sticky='top' className='w-100 p-0 texture-backer'>
+        <div className='d-block w-100'>
           <GoldTracker />
-          <Card className='mt-2 mb-2'>
+          <Card className='mt-2 mb-2 clear-background'>
             <Card.Header>
               <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
               <OwnerFilter setSortBy={setSortBy} />
             </Card.Header>
           </Card>
-          <Card>
+          <Card className='clear-background'>
             <Card.Header>
               {/* Item should be empty string to prevent error */}
               <ModalLoot item={''} />
@@ -49,10 +49,12 @@ export default function Loot() {
           </Card>
         </div>
       </Navbar>
-      {loading && <AlertLoading />}
-      {filteredItems.map((item, idx) => (
-        <LootAccordion item={item} key={idx} />
-      ))}
-    </div>
+      <Col className='pt-2'>
+        {loading && <AlertLoading />}
+        {filteredItems.map((item, idx) => (
+          <LootAccordion item={item} key={idx} />
+        ))}
+      </Col>
+    </Row>
   )
 }

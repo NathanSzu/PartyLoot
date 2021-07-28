@@ -20,7 +20,9 @@ function App() {
           <header>
             <nav>
               <Container className='pr-0 pl-0'>
-                <BootNav />
+                <Col md={8} className='ml-auto mr-auto p-0'>
+                  <BootNav />
+                </Col>
               </Container>
             </nav>
           </header>

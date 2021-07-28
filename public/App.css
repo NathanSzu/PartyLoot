@@ -29,6 +29,10 @@
     font-size: 20px;
 }
 
-.theme-background {
-    background-color: white;
+.texture-backer {
+    background-image: url(ravenna.png);
+}
+
+.clear-background {
+    background-color: unset;
 }

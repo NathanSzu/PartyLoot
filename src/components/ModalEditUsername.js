@@ -22,7 +22,7 @@ export default function ModalEditUsername({ loading, userData }) {
             <Button variant='dark' className='p-1 mt-2 mb-2 w-100' onClick={handleShow}>Change Username</Button>
 
             <Modal show={show} onHide={() => { handleClose() }}>
-                <Form>
+                <Form className='texture-backer'>
                     <Modal.Header closeButton>
                         <Modal.Title>Change Username</Modal.Title>
                     </Modal.Header>

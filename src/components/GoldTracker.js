@@ -61,8 +61,8 @@ export default function GoldTracker() {
 
     return (
         <>
-            <Accordion className='m-0 mt-1'>
-                <Card>
+            <Accordion className='m-0 mt-0'>
+                <Card className='clear-background'>
                     <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
                         <h1 className='item-h1 m-0 text-center'>Gold Tracker</h1>
                     </Accordion.Toggle>

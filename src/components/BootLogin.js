@@ -99,7 +99,7 @@ export default function BootLogin({ login, setLogin }) {
     }
 
     return (
-        <Form>
+        <Form className='texture-backer p-3'>
             {noUser ? <Alert className='text-center' variant={'warning'}>Invalid email or password.</Alert> : null}
             <Form.Group controlId="Email">
                 <Form.Label>Email address</Form.Label>

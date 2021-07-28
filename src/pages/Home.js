@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Jumbotron from '../components/BootJumbo';
+import Jumbotron from '../components/JumbotronWelcome';
 import Login from '../components/BootLogin';
 import { Row, Col } from 'react-bootstrap';
 

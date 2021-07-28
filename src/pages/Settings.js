@@ -25,8 +25,8 @@ export default function Settings() {
     }
 
     return (
-        <>
-            <Row className='p-2 text-center border-top border-dark'>
+        <Row className='texture-backer'>
+            <div className='p-2 m-0 w-100 text-center border-top border-dark'>
 
                 <Col xs={12}>
                     <h1 className='settings-h1'>Account Settings</h1>
@@ -53,9 +53,9 @@ export default function Settings() {
                     }
                 </Col>
 
-            </Row>
+            </div>
 
-            <Row className='p-2 text-center border-top border-dark'>
+            <div className='p-2 w-100 text-center border-top border-dark'>
 
                 <Col xs={12}>
                     <h1 className='settings-h1'>Group Code</h1>
@@ -68,7 +68,7 @@ export default function Settings() {
                         <p className='settings-p'>{userData && userData.code}</p>}
                 </Col>
 
-            </Row>
-        </>
+            </div>
+        </Row>
     )
 }

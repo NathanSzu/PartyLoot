@@ -143,99 +143,99 @@ export default function ModalEditGroup({ name, id, owner, members }) {
             <Button variant='dark' className='p-1' onClick={() => { handleShow() }}><img alt='Edit Group' src={gear}></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
-                <Form>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{currentUser.uid === owner ? 'Edit: ' : null} {name}</Modal.Title>
-                    </Modal.Header>
+                <div className='texture-backer'>
+                    <Form>
+                        <Modal.Header closeButton>
+                            <Modal.Title>{currentUser.uid === owner ? 'Edit: ' : null} {name}</Modal.Title>
+                        </Modal.Header>
 
-                    <Modal.Body>
-                        <Form.Group controlId='groupName'>
-                            <Form.Control ref={nameRef} disabled={currentUser.uid === owner ? false : true} type='text' defaultValue={name} />
-                        </Form.Group>
-                    </Modal.Body>
+                        <Modal.Body>
+                            <Form.Group controlId='groupName'>
+                                <Form.Control ref={nameRef} disabled={currentUser.uid === owner ? false : true} type='text' defaultValue={name} />
+                            </Form.Group>
+                        </Modal.Body>
 
-                    <Modal.Footer className='justify-content-between'>
-                        {currentUser.uid === owner ?
-                            <Button as='input' value='Save' disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }} />
-                            : <div></div>}
-
-                        {deleteConfirmation ?
-                            <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }} />
-                            : null}
-
-                        {leaveConfirmation ?
-                            <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser.uid) }} />
-                            : null}
-
-                        {currentUser.uid === owner && !deleteConfirmation ?
-                            // Delete button that only shows if the current user owns the group.
-                            <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
-                            : null}
-
-                        {currentUser.uid !== owner && !leaveConfirmation ?
-                            // Alternate Leave Group button that only shows if current user does not own the group.
-                            <Button as='input' value={`Leave Group`} disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }} />
-                            : null}
-                    </Modal.Footer>
-
-                    {/* Purely for the border */}
-                    <Modal.Footer></Modal.Footer>
-
-                </Form>
-
-                {displayMembers.length === 0 ? null :
-                    <Modal.Header>
-                        <Modal.Title>Members</Modal.Title>
-                    </Modal.Header>}
-
-                {displayMembers && displayMembers.map((member, idx) => (
-                    <Container key={idx}>
-                        <Row className='p-2'>
-                            <Col>
-                                {member.displayName}
-                            </Col>
+                        <Modal.Footer className='justify-content-between border-0 pt-0'>
                             {currentUser.uid === owner ?
-                                <Col xs='auto'>
-                                    <Button disabled={loading} variant='danger' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
-                                        <img alt='Delete Group' id={member.id} src={remove}></img>
-                                    </Button>
-                                </Col> : null
-                            }
-                        </Row>
-                    </Container>
-                ))}
+                                <Button as='input' value='Save' disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }} />
+                                : <div></div>}
+
+                            {deleteConfirmation ?
+                                <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }} />
+                                : null}
+
+                            {leaveConfirmation ?
+                                <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser.uid) }} />
+                                : null}
+
+                            {currentUser.uid === owner && !deleteConfirmation ?
+                                // Delete button that only shows if the current user owns the group.
+                                <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
+                                : null}
+
+                            {currentUser.uid !== owner && !leaveConfirmation ?
+                                // Alternate Leave Group button that only shows if current user does not own the group.
+                                <Button as='input' value={`Leave Group`} disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }} />
+                                : null}
+                        </Modal.Footer>
 
 
-                {
-                    currentUser.uid === owner ?
-                        <>
-                            <Modal.Header>
-                                <Modal.Title>Add Members</Modal.Title>
-                            </Modal.Header>
-                            <Form className='w-100 mt-3'>
-                                <Container>
-                                    <Row className='p-2'>
-                                        <Col>
-                                            <Form.Group controlId='addMember'>
-                                                <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
-                                            </Form.Group>
-                                        </Col>
+                    </Form>
 
-                                        <Col xs='auto'>
-                                            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
-                                                <img alt='Add Group Member' src={add} />
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
-                                        </Col>
-                                    </Row>
-                                </Container>
-                            </Form>
-                        </> : null
-                }
+                    {displayMembers.length === 0 ? null :
+                        <Modal.Header>
+                            <Modal.Title>Members</Modal.Title>
+                        </Modal.Header>}
+
+                    {displayMembers && displayMembers.map((member, idx) => (
+                        <Container key={idx}>
+                            <Row className='p-2'>
+                                <Col>
+                                    {member.displayName}
+                                </Col>
+                                {currentUser.uid === owner ?
+                                    <Col xs='auto'>
+                                        <Button disabled={loading} variant='danger' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
+                                            <img alt='Delete Group' id={member.id} src={remove}></img>
+                                        </Button>
+                                    </Col> : null
+                                }
+                            </Row>
+                        </Container>
+                    ))}
+
+
+                    {
+                        currentUser.uid === owner ?
+                            <>
+                                <Modal.Header>
+                                    <Modal.Title>Add Members</Modal.Title>
+                                </Modal.Header>
+                                <Form className='w-100 mt-3'>
+                                    <Container>
+                                        <Row className='p-2'>
+                                            <Col>
+                                                <Form.Group controlId='addMember'>
+                                                    <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
+                                                </Form.Group>
+                                            </Col>
+
+                                            <Col xs='auto'>
+                                                <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
+                                                    <img alt='Add Group Member' src={add} />
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
+                                            </Col>
+                                        </Row>
+                                    </Container>
+                                </Form>
+                            </> : null
+                    }
+                </div>
             </Modal>
         </>
     )
