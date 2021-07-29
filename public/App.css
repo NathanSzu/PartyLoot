@@ -26,7 +26,7 @@
 /* Groups Page */
 
 .groups-h1 {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .texture-backer {
@@ -35,4 +35,12 @@
 
 .clear-background {
     background-color: unset;
+}
+
+.theme1-backer {
+    background-color: var(--theme1);
+}
+
+.fancy-font {
+    font-family: 'Akbaal', sans-serif;
 }

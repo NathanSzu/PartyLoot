@@ -58,10 +58,10 @@ export default function Groups() {
       {loading && <Spinner animation="border" role="status" />}
       {!loading && groupList.length === 0 && <Alert variant='dark' className='text-center'> Click '+' to create a new group!</Alert>}
       {sortedGroups.map((group, idx) => (
-        <Row key={idx} className='p-0 border texture-backer'>
+        <Row key={idx} className='p-0 mt-1 texture-backer'>
           <Col className='p-0'>
             <Link to='/loot' >
-              <Button id={group.id} variant='outline' className='w-100 text-left p-3 groups-h1' onClick={(e) => { setCurrentGroup(e.target.id) }}>
+              <Button id={group.id} variant='outline' className='w-100 text-left p-3 groups-h1 fancy-font' onClick={(e) => { setCurrentGroup(e.target.id) }}>
                 {group.groupName}
               </Button>
             </Link>
@@ -72,7 +72,7 @@ export default function Groups() {
         </Row>
       ))}
 
-      <Row className='justify-content-center border-0 pt-2 pb-2 texture-backer'>
+      <Row className='justify-content-center border-0 pt-1 pb-2 clear-background'>
         <ModalAdd />
       </Row>
     </>

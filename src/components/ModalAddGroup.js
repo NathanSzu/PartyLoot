@@ -38,7 +38,7 @@ export default function ModalAddGroup() {
 
     return (
         <>
-            <Button variant='dark' onClick={handleShow} className='w-100 m-2'>
+            <Button variant='light' onClick={handleShow} className='w-100 m-2'>
                 +
             </Button>
 

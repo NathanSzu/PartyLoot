@@ -32,16 +32,16 @@ export default function Loot() {
 
   return (
     <Row className='mb-5'>
-      <Navbar sticky='top' className='w-100 p-0 texture-backer'>
+      <Navbar sticky='top' className='w-100 p-0 theme1-backer'>
         <div className='d-block w-100'>
           <GoldTracker />
-          <Card className='mt-2 mb-2 clear-background'>
+          <Card className='m-2 texture-backer'>
             <Card.Header>
               <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
               <OwnerFilter setSortBy={setSortBy} />
             </Card.Header>
           </Card>
-          <Card className='clear-background'>
+          <Card className='texture-backer m-2'>
             <Card.Header>
               {/* Item should be empty string to prevent error */}
               <ModalLoot item={''} />

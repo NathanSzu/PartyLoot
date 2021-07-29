@@ -21,7 +21,7 @@ export default function BootNav() {
             {
                 location.pathname === '/' ? null :
                     <Navbar bg="light" expand="false">
-                        <Navbar.Brand href="/groups">Party Loot</Navbar.Brand>
+                        <Navbar.Brand href="/groups" className='fancy-font'>Party Loot</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="ml-auto">
