@@ -26,10 +26,6 @@ export default function Loot() {
     console.log('sortBy: ', sortBy)
   }, [sortBy])
 
-  useEffect(() => {
-    lootItems && setFilteredItems(lootItems)
-  }, [lootItems])
-
   return (
     <Row className='mb-5'>
       <Navbar sticky='top' className='w-100 p-0 theme1-backer'>

@@ -159,9 +159,9 @@ export default function ModalLoot({ item, idx }) {
                     <Modal.Footer className='justify-content-between'>
 
                         {item ?
-                            <Button as='input' disabled={loading} value='Save' variant='dark' type='button' onClick={(e) => { e.preventDefault(); editLoot() }} />
+                            <Button as='input' disabled={loading} value='Save' variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editLoot() }} />
                             :
-                            <Button disabled={loading} variant='dark' type='button' onClick={(e) => { e.preventDefault(); addLoot() }}>
+                            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addLoot() }}>
                                 Create
                             </Button>}
 
