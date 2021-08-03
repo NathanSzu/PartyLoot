@@ -10,19 +10,19 @@ export default function ItemSearch({ items, setFilteredItems, sortBy }) {
 
     const search = (item) => {
         if (sortBy === 'All') {
-            if (item.itemName.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            if (item.itemName.toLowerCase().includes(searchRef.current.value.toLowerCase().trim())) {
                 return item
-            } else if (item.itemDesc && item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            } else if (item.itemDesc && item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase().trim())) {
                 return item
-            } else if (item.itemTags && item.itemTags.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            } else if (item.itemTags && item.itemTags.toLowerCase().includes(searchRef.current.value.toLowerCase().trim())) {
                 return item
             }
         } else if ( item.owner && item.owner.toLowerCase() === sortBy.toLowerCase()) {
-            if (item.itemName.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            if (item.itemName.toLowerCase().includes(searchRef.current.value.toLowerCase().trim())) {
                 return item
-            } else if (item.itemDesc && item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            } else if (item.itemDesc && item.itemDesc.toLowerCase().includes(searchRef.current.value.toLowerCase().trim())) {
                 return item
-            } else if (item.itemTags && item.itemTags.toLowerCase().includes(searchRef.current.value.toLowerCase())) {
+            } else if (item.itemTags && item.itemTags.toLowerCase().includes(searchRef.current.value.toLowerCase().trim())) {
                 return item
             }
         }
