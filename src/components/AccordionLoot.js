@@ -2,7 +2,7 @@ import React from 'react';
 import { Accordion, Card, Col, Row, Badge } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 
-export default function AccordionLoot({ item }) {
+export default function AccordionLoot({ item, idx }) {
     return (
         <Accordion className='m-0 mt-1'>
             <Card>
@@ -22,7 +22,7 @@ export default function AccordionLoot({ item }) {
                                     </Col>
                                     : null}
                                 <Col xs={2} className='text-right'>
-                                    <ModalLoot item={item} />
+                                    <ModalLoot item={item} idx={idx} />
                                 </Col>
                             </Row>
                             <Row>

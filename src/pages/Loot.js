@@ -36,13 +36,13 @@ export default function Loot() {
         <div className='d-block w-100'>
           <GoldTracker />
           <Card className='m-2 texture-backer'>
-            <Card.Header>
+            <Card.Header className='border-0'>
               <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
               <OwnerFilter setSortBy={setSortBy} />
             </Card.Header>
           </Card>
           <Card className='texture-backer m-2'>
-            <Card.Header>
+            <Card.Header className='border-0'>
               {/* Item should be empty string to prevent error */}
               <ModalLoot item={''} />
             </Card.Header>
@@ -52,7 +52,7 @@ export default function Loot() {
       <Col className='pt-2'>
         {loading && <AlertLoading />}
         {filteredItems.map((item, idx) => (
-          <LootAccordion item={item} key={idx} />
+          <LootAccordion item={item} key={idx} idx={idx} />
         ))}
       </Col>
     </Row>

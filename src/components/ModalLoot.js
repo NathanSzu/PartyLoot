@@ -6,7 +6,7 @@ import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 
-export default function ModalLoot({ item }) {
+export default function ModalLoot({ item, idx }) {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -69,22 +69,22 @@ export default function ModalLoot({ item }) {
         })
             .then(() => {
                 console.log('Item successfully updated!');
-                setLoading(false);
                 handleClose();
+                setLoading(false);
             })
             .catch((error) => {
                 // The document probably doesn't exist.
                 console.error('Error updating item: ', error);
-                setLoading(false);
                 handleClose();
+                setLoading(false);
             });
     }
 
     const deleteItem = () => {
-        setLoading(true)
+        setLoading(true);
+        handleClose();
         itemRef.delete()
             .then(() => {
-                handleClose();
                 setLoading(false);
                 console.log('Item successfully deleted!');
             }).catch((error) => {
