@@ -42,9 +42,6 @@ export default function Groups() {
       });
   }, [])
 
-  useEffect(() => {
-  }, [currentUser])
-
   const defaultSort = () => {
     let sorted = groupList.sort((a, b) => {
       return b.created - a.created;

@@ -11,7 +11,9 @@ export const AuthProvider = ({ children }) => {
   const db = firebase.firestore();
   const userRef = db.collection('users').doc(currentUser.uid)
 
-  const randomData = ['name1', 'name2', 'name3']
+  const randomAttr = ['Angry', 'Frustrated', 'Sad', 'Excited', 'Frightened', 'Prideful', 'Gloomy']
+
+  const randomName = ['Wizard', 'Fighter', 'Warlock', 'Artificer', 'Rogue', 'Sorcerer', 'Monk', 'Druid', 'Bard', 'Barbarian', 'Cleric', 'Paladin', 'Ranger']
 
   const setUsername = (username) => {
     userRef.set({
@@ -22,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const randomUsername = () => {
-    return randomData[Math.floor(Math.random() * randomData.length)]
+    return `${randomAttr[Math.floor(Math.random() * randomAttr.length)]} ${randomName[Math.floor(Math.random() * randomName.length)]}`
   }
 
   const setGroupCode = () => {
@@ -58,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, randomData, setUsername, setGroupCode, randomUsername, userRef }}
+      value={{ currentUser, randomName, setUsername, setGroupCode, randomUsername, userRef }}
     >
       {!loading && children}
     </AuthContext.Provider>
