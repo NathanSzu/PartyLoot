@@ -42,12 +42,18 @@ export default function GoldTracker({ sortBy }) {
     }
 
     useEffect(() => {
-        if(currency) {currency1Ref.current.value = currency[sortBy].currency1}
-        if(currency) {currency2Ref.current.value = currency[sortBy].currency2}
-        if(currency) {currency3Ref.current.value = currency[sortBy].currency3}
-        if(currency) {currency4Ref.current.value = currency[sortBy].currency4}
-        if(currency) {currency5Ref.current.value = currency[sortBy].currency5}
-        if(currency) {currency6Ref.current.value = currency[sortBy].currency6}
+        if(currency && currency[sortBy]) {currency1Ref.current.value = currency[sortBy].currency1}
+        else {currency1Ref.current.value = ''}
+        if(currency && currency[sortBy]) {currency2Ref.current.value = currency[sortBy].currency2}
+        else {currency2Ref.current.value = ''}
+        if(currency && currency[sortBy]) {currency3Ref.current.value = currency[sortBy].currency3}
+        else {currency3Ref.current.value = ''}
+        if(currency && currency[sortBy]) {currency4Ref.current.value = currency[sortBy].currency4}
+        else {currency4Ref.current.value = ''}
+        if(currency && currency[sortBy]) {currency5Ref.current.value = currency[sortBy].currency5}
+        else {currency5Ref.current.value = ''}
+        if(currency && currency[sortBy]) {currency6Ref.current.value = currency[sortBy].currency6}
+        else {currency6Ref.current.value = ''}
     }, [currency, sortBy])
 
     return (
