@@ -4,7 +4,7 @@ import ModalLoot from './ModalLoot';
 
 export default function AccordionLoot({ item, idx }) {
     return (
-        <Accordion className='m-0 mt-1'>
+        <Accordion className='m-0 mt-1 loot-item'>
             <Card>
                 <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
                     <h1 className='item-h1 m-0'>{item.itemName}</h1>

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { Card, Navbar, Row, Col } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
@@ -9,6 +9,7 @@ import OwnerFilter from '../components/OwnerFilter';
 import AlertLoading from '../components/AlertLoading';
 import LootAccordion from '../components/AccordionLoot';
 import firebase from '../utils/firebase';
+import { gsap } from 'gsap';
 
 export default function Loot() {
   const { currentGroup } = useContext(GroupContext);
@@ -22,9 +23,17 @@ export default function Loot() {
 
   const [lootItems, loading] = useCollectionData(query, { idField: 'id' });
 
+  useEffect(() => {
+    gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03, delay: .03 })
+  }, [filteredItems])
+
+  useEffect(() => {
+    gsap.fromTo('#sticky-filter', { yPercent: -100 }, { duration: .3, yPercent: 0 })
+  }, [filteredItems])
+
   return (
     <Row className='mb-5'>
-      <Navbar sticky='top' className='w-100 p-0 theme1-backer'>
+      <Navbar sticky='top' className='w-100 p-0 theme1-backer' id='sticky-filter'>
         <div className='d-block w-100'>
           <GoldTracker sortBy={sortBy} />
           <Card className='m-2 texture-backer'>
@@ -41,7 +50,7 @@ export default function Loot() {
           </Card>
         </div>
       </Navbar>
-      <Col className='pt-2'>
+      <Col className='pt-0'>
         {loading && <AlertLoading />}
         {filteredItems.map((item, idx) => (
           <LootAccordion item={item} key={idx} idx={idx} />
