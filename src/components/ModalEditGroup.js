@@ -17,6 +17,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
     const [leaveConfirmation, setLeaveConfirmation] = useState(false);
     const [displayMembers, setDisplayMembers] = useState([]);
     const [noResult, setNoResult] = useState(false);
+    const [maxReached, setMaxReached] = useState(false);
 
     const db = firebase.firestore();
     const userRef = db.collection('users')
@@ -92,7 +93,10 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                     if (querySnapshot.empty) {
                         setNoResult(true);
                     } else {
-                        if (groupMembers.length > 9) { return }
+                        if (groupMembers.length > 9) { 
+                            setMaxReached(true)
+                            return
+                        }
                         querySnapshot.forEach((doc) => {
                             // doc.data() is never undefined for query doc snapshots
                             if (doc.id) {
@@ -229,6 +233,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                                         <Row>
                                             <Col>
                                                 {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
+                                                {maxReached ? <Alert variant='dark'>Limit of 10 members!</Alert> : null}
                                             </Col>
                                         </Row>
                                     </Container>

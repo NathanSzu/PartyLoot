@@ -24,11 +24,7 @@ export default function Loot() {
   const [lootItems, loading] = useCollectionData(query, { idField: 'id' });
 
   useEffect(() => {
-    gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03, delay: .03 })
-  }, [filteredItems])
-
-  useEffect(() => {
-    gsap.fromTo('#sticky-filter', { yPercent: -100 }, { duration: .3, yPercent: 0 })
+    gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03 })
   }, [filteredItems])
 
   return (
