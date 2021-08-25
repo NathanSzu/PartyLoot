@@ -5,6 +5,7 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
+import boxDown from '../assets/box-down.svg'
 
 export default function ModalLoot({ item, idx }) {
     const [show, setShow] = useState(false)
@@ -110,10 +111,16 @@ export default function ModalLoot({ item, idx }) {
 
                     <Modal.Body>
 
-                        <Form.Group controlId='itemName'>
-                            <Form.Control ref={nameRef} defaultValue={item && item.itemName} type='text' placeholder='Item name' />
-                        </Form.Group>
-
+                        <Row>
+                            <Col xs={10}>
+                                <Form.Group controlId='itemName'>
+                                    <Form.Control ref={nameRef} defaultValue={item && item.itemName} type='text' placeholder='Item name' />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={2} className='pl-0'>
+                                <a href='https://www.dndbeyond.com/magic-items' target='_blank'><Button className='w-100' variant="dark"><img src={boxDown}></img></Button></a>
+                            </Col>
+                        </Row>
 
                         <Row>
 
