@@ -22,15 +22,11 @@ export default function Loot() {
 
   const [lootItems, loading] = useCollectionData(query, { idField: 'id' });
 
-  useEffect(() => {
-    console.log('sortBy: ', sortBy)
-  }, [sortBy])
-
   return (
     <Row className='mb-5'>
       <Navbar sticky='top' className='w-100 p-0 theme1-backer'>
         <div className='d-block w-100'>
-          <GoldTracker />
+          <GoldTracker sortBy={sortBy} />
           <Card className='m-2 texture-backer'>
             <Card.Header className='border-0'>
               <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
