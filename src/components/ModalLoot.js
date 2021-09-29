@@ -6,19 +6,23 @@ import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import boxDown from '../assets/box-down.svg'
+import DropdownAddItem from './DropdownAddItem';
+import SearchOpen5E from './SearchOpen5E';
 
 export default function ModalLoot({ item, idx }) {
-    const [show, setShow] = useState(false)
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-    const [loading, setLoading] = useState(false);
     const { currentGroup, groupData } = useContext(GroupContext);
+
     const db = firebase.firestore();
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
     const groupRef = db.collection('groups').doc(currentGroup);
 
-    const [partyData] = useDocumentData(groupRef)
+    const [show, setShow] = useState(false)
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [searchSRD, setSearchSRD] = useState(false);
+    const [SRDContent, setSRDContent] = useState({})
+
+    const [partyData] = useDocumentData(groupRef);
 
     const nameRef = useRef();
     const descRef = useRef();
@@ -26,6 +30,9 @@ export default function ModalLoot({ item, idx }) {
     const chargesRef = useRef();
     const tagsRef = useRef();
     const ownerRef = useRef();
+
+    const handleClose = () => {setShow(false); setSRDContent({}); setSearchSRD(false);}
+    const handleShow = () => setShow(true);
 
     const addLoot = () => {
         if (!nameRef.current.value || !descRef.current.value) { return }
@@ -111,16 +118,18 @@ export default function ModalLoot({ item, idx }) {
 
                     <Modal.Body>
 
+                    {searchSRD ? <SearchOpen5E setSearchSRD={setSearchSRD} setSRDContent={setSRDContent} /> : 
                         <Row>
-                            <Col xs={10}>
+                            {!item &&
+                            <Col xs={2} className='pr-0'>
+                                <DropdownAddItem setSearchSRD={setSearchSRD} />
+                            </Col>}
+                            <Col>
                                 <Form.Group controlId='itemName'>
-                                    <Form.Control ref={nameRef} defaultValue={item && item.itemName} type='text' placeholder='Item name' />
+                                    <Form.Control ref={nameRef} defaultValue={item && item.itemName || SRDContent.name} type='text' placeholder='Item name' />
                                 </Form.Group>
                             </Col>
-                            <Col xs={2} className='pl-0'>
-                                <a href='https://www.dndbeyond.com/magic-items' target='_blank'><Button className='w-100' variant="dark"><img src={boxDown}></img></Button></a>
-                            </Col>
-                        </Row>
+                        </Row>}
 
                         <Row>
 
@@ -144,11 +153,11 @@ export default function ModalLoot({ item, idx }) {
 
 
                         <Form.Group controlId='itemDesc'>
-                            <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={item && item.itemDesc} placeholder='Item description' />
+                            <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={item && item.itemDesc || SRDContent.desc} placeholder='Item description' />
                         </Form.Group>
 
                         <Form.Group controlId='itemTags'>
-                            <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags} placeholder='Enter searchable item tags here' />
+                            <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags || SRDContent.type} placeholder='Enter searchable item tags here' />
                         </Form.Group>
 
                         <Form.Group controlId='itemOwner'>

@@ -25,6 +25,7 @@ export default function Loot() {
 
   useEffect(() => {
     gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03 })
+    console.log('filtered items set')
   }, [filteredItems])
 
   return (
