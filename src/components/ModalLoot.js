@@ -116,82 +116,83 @@ export default function ModalLoot({ item, idx }) {
                             <Modal.Title>Add an item!</Modal.Title>}
                     </Modal.Header>
 
-                    <Modal.Body>
+                    {searchSRD ? <SearchOpen5E setSearchSRD={setSearchSRD} setSRDContent={setSRDContent} /> :
+                    <> 
+                        <Modal.Body>
+                            <Row>
+                                {!item &&
+                                <Col xs={2} className='pr-0'>
+                                    <DropdownAddItem setSearchSRD={setSearchSRD} />
+                                </Col>}
+                                <Col>
+                                    <Form.Group controlId='itemName'>
+                                        <Form.Control ref={nameRef} defaultValue={item && item.itemName || SRDContent.name} type='text' placeholder='Item name' />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-                    {searchSRD ? <SearchOpen5E setSearchSRD={setSearchSRD} setSRDContent={setSRDContent} /> : 
-                        <Row>
-                            {!item &&
-                            <Col xs={2} className='pr-0'>
-                                <DropdownAddItem setSearchSRD={setSearchSRD} />
-                            </Col>}
-                            <Col>
-                                <Form.Group controlId='itemName'>
-                                    <Form.Control ref={nameRef} defaultValue={item && item.itemName || SRDContent.name} type='text' placeholder='Item name' />
-                                </Form.Group>
-                            </Col>
-                        </Row>}
+                            <Row>
 
-                        <Row>
+                                <Col xs={5}>
+                                    <Form.Group controlId='itemCharge'>
+                                        <Form.Control className='text-center' ref={chargeRef} defaultValue={item && item.currCharges} type='number' placeholder='Charge' />
+                                    </Form.Group>
+                                </Col>
 
-                            <Col xs={5}>
-                                <Form.Group controlId='itemCharge'>
-                                    <Form.Control className='text-center' ref={chargeRef} defaultValue={item && item.currCharges} type='number' placeholder='Charge' />
-                                </Form.Group>
-                            </Col>
+                                <Col xs={2} className='d-flex align-items-center justify-content-center'>
+                                    /
+                                </Col>
 
-                            <Col xs={2} className='d-flex align-items-center justify-content-center'>
-                                /
-                            </Col>
+                                <Col xs={5}>
+                                    <Form.Group controlId='itemCharges'>
+                                        <Form.Control className='text-center' ref={chargesRef} defaultValue={item && item.maxCharges} type='number' placeholder='Charges' />
+                                    </Form.Group>
+                                </Col>
 
-                            <Col xs={5}>
-                                <Form.Group controlId='itemCharges'>
-                                    <Form.Control className='text-center' ref={chargesRef} defaultValue={item && item.maxCharges} type='number' placeholder='Charges' />
-                                </Form.Group>
-                            </Col>
-
-                        </Row>
-
-
-                        <Form.Group controlId='itemDesc'>
-                            <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={item && item.itemDesc || SRDContent.desc} placeholder='Item description' />
-                        </Form.Group>
-
-                        <Form.Group controlId='itemTags'>
-                            <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags || SRDContent.type} placeholder='Enter searchable item tags here' />
-                        </Form.Group>
-
-                        <Form.Group controlId='itemOwner'>
-                            <Form.Control as='select' defaultValue={item && item.owner} ref={ownerRef}>
-                                <option>Select Owner</option>
-                                {partyData && partyData.party && partyData.party.map((partyMember, idx) => (
-                                    <option key={idx}>{partyMember}</option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
-
-                    </Modal.Body>
+                            </Row>
 
 
-                    <Modal.Footer className='justify-content-between'>
+                            <Form.Group controlId='itemDesc'>
+                                <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={item && item.itemDesc || SRDContent.desc} placeholder='Item description' />
+                            </Form.Group>
 
-                        {item ?
-                            <Button as='input' disabled={loading} value='Save' variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editLoot() }} />
-                            :
-                            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addLoot() }}>
-                                Create
-                            </Button>}
+                            <Form.Group controlId='itemTags'>
+                                <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags || SRDContent.type} placeholder='Enter searchable item tags here' />
+                            </Form.Group>
 
-                        {deleteConfirmation ?
-                            <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteItem() }} />
-                            : null}
+                            <Form.Group controlId='itemOwner'>
+                                <Form.Control as='select' defaultValue={item && item.owner} ref={ownerRef}>
+                                    <option>Select Owner</option>
+                                    {partyData && partyData.party && partyData.party.map((partyMember, idx) => (
+                                        <option key={idx}>{partyMember}</option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
 
-                        {!deleteConfirmation && item ?
-                            <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
-                            : null}
+                        </Modal.Body>
+
+
+                        <Modal.Footer className='justify-content-between'>
+
+                            {item ?
+                                <Button as='input' disabled={loading} value='Save' variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editLoot() }} />
+                                :
+                                <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addLoot() }}>
+                                    Create
+                                </Button>}
+
+                            {deleteConfirmation ?
+                                <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteItem() }} />
+                                : null}
+
+                            {!deleteConfirmation && item ?
+                                <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
+                                : null}
 
 
 
-                    </Modal.Footer>
+                        </Modal.Footer>
+                    </>}
                 </Form>
 
 

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Form, Button, Col, Row, Card, ListGroup } from 'react-bootstrap';
 import search from '../assets/search.svg';
 
-export default function SearchOpen5E({ nameRef, setSRDContent, setSearchSRD }) {
+export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
     const [ results, setResults ] = useState([]);
 	const searchRef = useRef('');
 
@@ -34,13 +34,14 @@ export default function SearchOpen5E({ nameRef, setSRDContent, setSearchSRD }) {
 	return (
 		<Form>
 			<Row>
-				<Col>
+				<Col className='ml-3'>
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Control type="input" ref={searchRef} placeholder="Search open source D&D items" />
 					</Form.Group>
 				</Col>
-				<Col xs={2} className="pl-0">
+				<Col xs={2} className="pl-0 mr-3">
 					<Button
+                        className='w-100'
 						variant="dark"
 						type="submit"
 						onClick={(e) => {
