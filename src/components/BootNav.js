@@ -5,33 +5,45 @@ import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/AuthContext';
 
 export default function BootNav() {
-    const location = useLocation();
-    const { currentUser } = useContext(AuthContext)
+	const location = useLocation();
+	const { currentUser } = useContext(AuthContext);
 
-    const logOut = () => {
-        firebase.auth().signOut().then(() => {
-            // Sign-out successful.
-        }).catch((error) => {
-            // An error happened.
-        });
-    }
+	const logOut = () => {
+		firebase
+			.auth()
+			.signOut()
+			.then(() => {
+				// Sign-out successful.
+			})
+			.catch((error) => {
+				// An error happened.
+			});
+	};
 
-    return (
-        <>
-            {
-                location.pathname === '/' ? null :
-                    <Navbar bg="light" expand="false">
-                        <Navbar.Brand href="/groups" className='fancy-font'>Party Loot</Navbar.Brand>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav">
-                            <Nav className="ml-auto">
-                                {currentUser.uid === ' ' ? null : <Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>}
-                                {location.pathname === '/' || location.pathname === '/groups' || location.pathname === '/forgot-password' ? null : <Nav.Link href="/groups">Groups</Nav.Link>}
-                                {currentUser.uid === ' ' ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Navbar>
-            }
-        </>
-    )
+	return (
+		<Navbar bg="light" expand="false">
+			<Navbar.Brand href="/groups" className="fancy-font">
+				Party Loot
+			</Navbar.Brand>
+			{location.pathname === '/' ? null : 
+            <>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ml-auto">
+                        {currentUser.uid === ' ' ? null : (
+                            <Nav.Link href="/" onClick={logOut}>
+                                Sign Out
+                            </Nav.Link>
+                        )}
+                        {location.pathname === '/' ||
+                        location.pathname === '/groups' ||
+                        location.pathname === '/forgot-password' ? null : (
+                            <Nav.Link href="/groups">Groups</Nav.Link>
+                        )}
+                        {currentUser.uid === ' ' ? null : <Nav.Link href="/user-settings">Settings</Nav.Link>}
+                    </Nav>
+                </Navbar.Collapse>
+            </>}
+		</Navbar>
+	);
 }

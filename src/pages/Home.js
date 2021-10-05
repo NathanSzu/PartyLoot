@@ -9,10 +9,10 @@ export default function Home() {
     const [welcome, setWelcome] = useState(true)
 
     return (
-        <div className='pt-3'>
+        <div className='p-0'>
             { welcome ? <Jumbotron setLogin={setLogin} setWelcome={setWelcome} /> : null}
             <Row className="justify-content-md-center">
-                <Col md={6}>
+                <Col>
                     {!welcome ? <Login login={login} setLogin={setLogin} /> : null}
                 </Col>
             </Row>

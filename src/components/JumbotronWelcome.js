@@ -8,7 +8,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
     }
 
     return (
-        <Jumbotron fluid className='texture-backer'>
+        <Jumbotron fluid className='texture-backer rounded-bottom'>
             <Container>
                 <Row border='dark'>
                     <Col lg={9} className='mr-auto ml-auto'>

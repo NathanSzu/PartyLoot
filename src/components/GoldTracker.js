@@ -58,8 +58,8 @@ export default function GoldTracker({ sortBy }) {
 
     return (
         <>
-            <Accordion className='m-2'>
-                <Card className='texture-backer'>
+            <Accordion>
+                <Card className='texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
                     <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
                         <h1 className='item-h1 m-0 text-center'>{sortBy === 'All' ? 'Party' : sortBy} Gold</h1>
                     </Accordion.Toggle>
@@ -67,13 +67,13 @@ export default function GoldTracker({ sortBy }) {
                         <Card.Body>
                             <Row className='pl-1'>
                                 <Col xs={1} className='p-0'>
-                                    <Form.Control type='color' value={colorTags ? colorTags.currency1 : '#ffbb00'} ref={color1Ref} className='p-0 border-0' onChange={() => { updateColor('currency1', color1Ref) }} />
+                                    <Form.Control type='color' value={colorTags ? colorTags.currency1 : '#ffbb00'} ref={color1Ref} className='p-0 border-0 background-unset' onChange={() => { updateColor('currency1', color1Ref) }} />
                                 </Col>
                                 <Col xs={5} className='pl-1 pr-1'>
                                     <Form.Control type='number' ref={currency1Ref} onChange={() => { updateCurrency('currency1', currency1Ref) }} />
                                 </Col>
                                 <Col xs={1} className='p-0'>
-                                    <Form.Control type='color' value={colorTags ? colorTags.currency2 : '#bdbdbd'} ref={color2Ref} className='p-0 border-0' onChange={() => { updateColor('currency2', color2Ref) }} />
+                                    <Form.Control type='color' value={colorTags ? colorTags.currency2 : '#bdbdbd'} ref={color2Ref} className='p-0 border-0 background-unset' onChange={() => { updateColor('currency2', color2Ref) }} />
                                 </Col>
                                 <Col xs={5} className='pl-1 pr-1'>
                                     <Form.Control type='number' ref={currency2Ref} onChange={() => { updateCurrency('currency2', currency2Ref) }} />
@@ -81,13 +81,13 @@ export default function GoldTracker({ sortBy }) {
                             </Row>
                             <Row className='mt-2 pl-1'>
                                 <Col xs={1} className='p-0'>
-                                    <Form.Control type='color' value={colorTags ? colorTags.currency3 : '#d27e1e'} ref={color3Ref} className='p-0 border-0' onChange={() => { updateColor('currency3', color3Ref) }} />
+                                    <Form.Control type='color' value={colorTags ? colorTags.currency3 : '#d27e1e'} ref={color3Ref} className='p-0 border-0 background-unset' onChange={() => { updateColor('currency3', color3Ref) }} />
                                 </Col>
                                 <Col xs={5} className='pl-1 pr-1'>
                                     <Form.Control type='number' ref={currency3Ref} onChange={() => { updateCurrency('currency3', currency3Ref) }} />
                                 </Col>
                                 <Col xs={1} className='p-0'>
-                                    <Form.Control type='color' value={colorTags ? colorTags.currency4 : '#ffffff'} ref={color4Ref} className='p-0 border-0' onChange={() => { updateColor('currency4', color4Ref) }} />
+                                    <Form.Control type='color' value={colorTags ? colorTags.currency4 : '#ffffff'} ref={color4Ref} className='p-0 border-0 background-unset' onChange={() => { updateColor('currency4', color4Ref) }} />
                                 </Col>
                                 <Col xs={5} className='pl-1 pr-1'>
                                     <Form.Control type='number' ref={currency4Ref} onChange={() => { updateCurrency('currency4', currency4Ref) }} />
@@ -95,13 +95,13 @@ export default function GoldTracker({ sortBy }) {
                             </Row>
                             <Row className='mt-2 pl-1'>
                                 <Col xs={1} className='p-0'>
-                                    <Form.Control type='color' value={colorTags ? colorTags.currency5 : '#ffffff'} ref={color5Ref} className='p-0 border-0' onChange={() => { updateColor('currency5', color5Ref) }} />
+                                    <Form.Control type='color' value={colorTags ? colorTags.currency5 : '#ffffff'} ref={color5Ref} className='p-0 border-0 background-unset' onChange={() => { updateColor('currency5', color5Ref) }} />
                                 </Col>
                                 <Col xs={5} className='pl-1 pr-1'>
                                     <Form.Control type='number' ref={currency5Ref} onChange={() => { updateCurrency('currency5', currency5Ref) }} />
                                 </Col>
                                 <Col xs={1} className='p-0'>
-                                    <Form.Control type='color' value={colorTags ? colorTags.currency6 : '#ffffff'} ref={color6Ref} className='p-0 border-0' onChange={() => { updateColor('currency6', color6Ref) }} />
+                                    <Form.Control type='color' value={colorTags ? colorTags.currency6 : '#ffffff'} ref={color6Ref} className='p-0 border-0 background-unset' onChange={() => { updateColor('currency6', color6Ref) }} />
                                 </Col>
                                 <Col xs={5} className='pl-1 pr-1'>
                                     <Form.Control type='number' ref={currency6Ref} onChange={() => { updateCurrency('currency6', currency6Ref) }} />

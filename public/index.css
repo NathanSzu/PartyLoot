@@ -28,3 +28,19 @@ pre {
   white-space: -o-pre-wrap;
   word-wrap: break-word;
 }
+
+.text-light {
+  color: var(--theme2);
+}
+
+.text-dark {
+  color: var(--theme1);
+}
+
+.background-unset {
+  background-color: unset;
+}
+
+.background-test {
+  background-color: blue;
+}

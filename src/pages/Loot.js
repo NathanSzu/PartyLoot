@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { Card, Navbar, Row, Col } from 'react-bootstrap';
+import { Card, Navbar, Row, Col, Container } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
@@ -29,30 +29,32 @@ export default function Loot() {
   }, [filteredItems])
 
   return (
-    <Row className='mb-5'>
-      <Navbar sticky='top' className='w-100 p-0 theme1-backer' id='sticky-filter'>
-        <div className='d-block w-100'>
-          <GoldTracker sortBy={sortBy} />
-          <Card className='m-2 texture-backer'>
-            <Card.Header className='border-0'>
-              <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
-              <OwnerFilter setSortBy={setSortBy} />
-            </Card.Header>
-          </Card>
-          <Card className='texture-backer m-2'>
-            <Card.Header className='border-0'>
-              {/* Item should be empty string to prevent error */}
-              <ModalLoot item={''} />
-            </Card.Header>
-          </Card>
-        </div>
-      </Navbar>
-      <Col className='pt-0'>
-        {loading && <AlertLoading />}
-        {filteredItems.map((item, idx) => (
-          <LootAccordion item={item} key={idx} idx={idx} />
-        ))}
-      </Col>
-    </Row>
+    <Container>
+      <Row className='mb-5'>
+        <Navbar sticky='top' className='w-100 p-0 theme1-backer' id='sticky-filter'>
+          <div className='d-block w-100'>
+            <GoldTracker sortBy={sortBy} />
+            <Card className='texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
+              <Card.Header className='border-0'>
+                <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} sortBy={sortBy} />
+                <OwnerFilter setSortBy={setSortBy} />
+              </Card.Header>
+            </Card>
+            <Card className='texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
+              <Card.Header className='border-0'>
+                {/* Item should be empty string to prevent error */}
+                <ModalLoot item={''} />
+              </Card.Header>
+            </Card>
+          </div>
+        </Navbar>
+        <Col className='pl-2 pr-2 pt-1'>
+          {loading && <AlertLoading />}
+          {filteredItems.map((item, idx) => (
+            <LootAccordion item={item} key={idx} idx={idx} />
+          ))}
+        </Col>
+      </Row>
+    </Container>
   )
 }
