@@ -48,7 +48,6 @@ export default function ModalLoot({ item, idx }) {
             created: fb.firestore.FieldValue.serverTimestamp()
         })
             .then((docRef) => {
-                console.log("Item added: ");
                 setLoading(false);
                 handleClose();
             })
@@ -76,7 +75,6 @@ export default function ModalLoot({ item, idx }) {
             owner: ownerRef.current.value
         })
             .then(() => {
-                console.log('Item successfully updated!');
                 handleClose();
                 setLoading(false);
             })
@@ -94,7 +92,6 @@ export default function ModalLoot({ item, idx }) {
         itemRef.delete()
             .then(() => {
                 setLoading(false);
-                console.log('Item successfully deleted!');
             }).catch((error) => {
                 setLoading(false);
                 console.error('Error removing item: ', error);

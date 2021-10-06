@@ -44,3 +44,8 @@ pre {
 .background-test {
   background-color: blue;
 }
+
+.loading-spinner {
+  width: 100px;
+  height: 100px;
+}

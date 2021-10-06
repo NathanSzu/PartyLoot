@@ -38,11 +38,10 @@ export default function PasswordReset() {
     return (
 
         <Row className="justify-content-md-center">
-            <Col md={6} className='texture-backer p-3 rounded-bottom'>
-                <Form>
+            <Col md={6} className='texture-backer rounded-bottom'>
+                <Form className='p-3'>
                     <Form.Group controlId="Email">
                         <Form.Label>Email address</Form.Label>
-
                         {
                             emailValid ? null :
                                 <Alert variant={'warning'}>Please enter a valid email address.</Alert>
@@ -52,7 +51,6 @@ export default function PasswordReset() {
                             !resetEmailSent ? null :
                                 <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
                         }
-
                         <Form.Control ref={emailRef} type="email" placeholder="Enter email" onChange={(e) => { setEmail(e.target.value); validateEmail(e) }} />
                         <Form.Text className="text-muted text-center">
                             If we have an account with this email, we will send a link to reset your password.

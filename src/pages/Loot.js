@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { Card, Navbar, Row, Col, Container } from 'react-bootstrap';
+import { Card, Navbar, Row, Col, Container, Spinner } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import ModalLoot from '../components/ModalLoot';
@@ -25,7 +25,6 @@ export default function Loot() {
 
   useEffect(() => {
     gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03 })
-    console.log('filtered items set')
   }, [filteredItems])
 
   return (
@@ -49,7 +48,7 @@ export default function Loot() {
           </div>
         </Navbar>
         <Col className='pl-2 pr-2 pt-1'>
-          {loading && <AlertLoading />}
+          {loading && <Spinner as='div' className='d-flex mt-4 ml-auto mr-auto loading-spinner' animation="border" role="status" variant='light' />}
           {filteredItems.map((item, idx) => (
             <LootAccordion item={item} key={idx} idx={idx} />
           ))}

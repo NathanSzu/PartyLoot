@@ -21,14 +21,6 @@ export default function OwnerFilter({ setSortBy }) {
 
     const [partyData] = useDocumentData(groupRef)
 
-    useEffect(() => {
-        partyData && console.log('partyData', partyData)
-    }, [partyData])
-
-    useEffect(() => {
-        sortRef && console.log('sortRef', sortRef.current.value)
-    }, [sortRef])
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -42,8 +34,10 @@ export default function OwnerFilter({ setSortBy }) {
             'party': fb.firestore.FieldValue.arrayUnion(addPartyMemberRef.current.value.trim())
         }).then(() => {
             addPartyMemberRef.current.value = ''
-            console.log('Party member added!')
             setLoading(false)
+        }).catch((err) => {
+            console.log(err.code);
+            console.log(err.message)
         })
     }
 
@@ -52,8 +46,10 @@ export default function OwnerFilter({ setSortBy }) {
         groupRef.update({
             'party': fb.firestore.FieldValue.arrayRemove(partyMember)
         }).then(() => {
-            console.log('Party member removed!')
             setLoading(false)
+        }).catch((err) => {
+            console.log(err.code);
+            console.log(err.message)
         })
     }
 

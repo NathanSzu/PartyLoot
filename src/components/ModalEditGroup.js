@@ -63,7 +63,6 @@ export default function ModalEditGroup({ name, id, owner, members }) {
             groupName: nameRef.current.value
         })
             .then(() => {
-                console.log('Document successfully updated!');
                 setFalseThenClose();
             })
             .catch((error) => {
@@ -121,7 +120,6 @@ export default function ModalEditGroup({ name, id, owner, members }) {
             'members': fb.firestore.FieldValue.arrayRemove(currentUser.uid)
         })
             .then(() => {
-                console.log('Member removed!');
                 setFalseThenClose();
             }).catch((error) => {
                 console.error('Error removing member: ', error);
@@ -134,7 +132,6 @@ export default function ModalEditGroup({ name, id, owner, members }) {
             'members': fb.firestore.FieldValue.arrayRemove(e.target.id)
         })
             .then(() => {
-                console.log('Member removed!');
                 setFalseNoClose();
             }).catch((error) => {
                 console.error('Error removing member: ', error);

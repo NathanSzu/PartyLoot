@@ -25,7 +25,6 @@ export default function ModalAddGroup() {
             created: fb.firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
-            console.log("Group added");
             setLoading(false);
             handleClose();
         })

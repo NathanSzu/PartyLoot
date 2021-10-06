@@ -14,7 +14,6 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
 			.then((response) => response.json())
 			.then((data) => {
                 setResults(data.results)
-                console.log(data.results)
             });
 	};
 
@@ -28,7 +27,6 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
             type: selection[0].type
         });
         setSearchSRD(false);
-        console.log(selection[0].name)
     }
 
 	return (

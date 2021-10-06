@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     userRef.set({
       displayName: username
     }, { merge: true })
-      .then(() => { console.log('Username saved!') })
+      .then(() => {})
       .catch((error) => { console.error('Error creating code: ', error) });
   }
 
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     userRef.set({
       code: code
     }, { merge: true })
-      .then(() => { console.log('Code created!') })
+      .then(() => {})
       .catch((error) => { console.error('Error creating code: ', error) });
   }
 
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       } else {
         // No user is signed in.
-        console.log('signed out')
+        setCurrentUser('');
         setLoading(false);
       }
     });

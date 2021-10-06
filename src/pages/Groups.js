@@ -9,73 +9,108 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import ModalAdd from '../components/ModalAddGroup';
 import ModalEdit from '../components/ModalEditGroup';
 
-
 export default function Groups() {
-  const { currentUser, setUsername, setGroupCode, randomUsername } = useContext(AuthContext);
-  const { setCurrentGroup } = useContext(GroupContext);
-  const [sortedGroups, setSortedGroups] = useState([])
+	const { currentUser, setUsername, setGroupCode, randomUsername } = useContext(AuthContext);
+	const { setCurrentGroup } = useContext(GroupContext);
+	const [ sortedGroups, setSortedGroups ] = useState([]);
 
-  const db = firebase.firestore();
-  const groupRef = db.collection('groups')
-  const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
-  const userRef = db.collection('users').doc(currentUser.uid);
-  const [groupList, loading] = useCollectionData(query, { idField: 'id' });
+	const db = firebase.firestore();
+	const groupRef = db.collection('groups');
+	const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
+	const userRef = db.collection('users').doc(currentUser.uid);
+	const [ groupList, loading ] = useCollectionData(query, { idField: 'id' });
 
-  useEffect(() => {
-    groupList && setSortedGroups(defaultSort())
-  }, [groupList])
+	useEffect(
+		() => {
+			groupList && setSortedGroups(defaultSort());
+		},
+		[ groupList ]
+	);
 
-  useEffect(() => {
-    userRef.get()
-      .then((doc) => {
-        if (doc.exists) {
-          // console.log("Document data:", doc.data());
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-          setUsername(currentUser.displayName || randomUsername())
-          setGroupCode()
-        }
+	useEffect(() => {
+		userRef
+			.get()
+			.then((doc) => {
+				if (doc.exists) {
+					// Do nothing
+				} else {
+					// doc.data() will be undefined in this case
+					// Generate a random username
+					setUsername(currentUser.displayName || randomUsername());
+					// Generate a random group code
+					setGroupCode();
+				}
+			})
+			.catch((error) => {
+				console.log('Error getting document:', error);
+			});
+	}, []);
 
-      }).catch((error) => {
-        console.log("Error getting document:", error);
-      });
-  }, [])
+	const defaultSort = () => {
+		let sorted = groupList.sort((a, b) => {
+			return b.created - a.created;
+		});
+		return sorted;
+	};
 
-  const defaultSort = () => {
-    let sorted = groupList.sort((a, b) => {
-      return b.created - a.created;
-    })
-    return (sorted)
-  }
+	return (
+		<Container>
+			{loading ? (
+				<Spinner
+					as="div"
+					className="d-flex mt-4 ml-auto mr-auto loading-spinner"
+					animation="border"
+					role="status"
+					variant="light"
+				/>
+			) : (
+				<div>
+					{groupList.length === 0 ? (
+						<Alert variant="dark" className="text-center">
+							{' '}
+							Click '+' to create a new group!
+						</Alert>
+					) : (
+						<div>
+							{sortedGroups.map((group, idx) => (
+								<Row key={idx} className="p-0 border-top border-dark texture-backer">
+									<Col className="p-0">
+										<Link to="/loot">
+											<Button
+												id={group.id}
+												variant="outline"
+												className="w-100 text-left p-3 groups-h1 fancy-font"
+												onClick={(e) => {
+													setCurrentGroup(e.target.id);
+												}}
+											>
+												{group.groupName}
+											</Button>
+										</Link>
+									</Col>
+									<Col xs="auto d-flex align-items-center">
+										<ModalEdit
+											name={group.groupName}
+											id={group.id}
+											owner={group.owner}
+											members={group.members}
+										/>
+									</Col>
+								</Row>
+							))}
+						</div>
+					)}
+				</div>
+			)}
 
-  return (
-    <Container>
-      {loading && <Spinner animation="border" role="status" />}
-      {!loading && groupList.length === 0 && <Alert variant='dark' className='text-center'> Click '+' to create a new group!</Alert>}
-      {sortedGroups.map((group, idx) => (
-        <Row key={idx} className='p-0 border-top border-dark texture-backer'>
-          <Col className='p-0'>
-            <Link to='/loot' >
-              <Button id={group.id} variant='outline' className='w-100 text-left p-3 groups-h1 fancy-font' onClick={(e) => { setCurrentGroup(e.target.id) }}>
-                {group.groupName}
-              </Button>
-            </Link>
-          </Col>
-          <Col xs='auto d-flex align-items-center'>
-            <ModalEdit name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
-          </Col>
-        </Row>
-      ))}
-
-      <Row className='justify-content-center border-0 pt-1 pb-2 clear-background'>
-        <ModalAdd />
-      </Row>
-      <Row>
-        <Col>
-          <p className='text-center fancy-font text-light'>Tap + to create a new group.</p>
-        </Col>
-      </Row>
-    </Container>
-  )
+			<Row className="justify-content-center border-0 pt-1 pb-2 clear-background">
+				<ModalAdd />
+			</Row>
+			<Row>
+				<Col>
+					<p className="text-center fancy-font text-light">Tap + to create a new group.</p>
+				</Col>
+			</Row>
+		</Container>
+	);
 }
