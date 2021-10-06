@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import ModalEditUser from '../components/ModalEditUsername';
 import { Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
 import { AuthContext } from '../utils/AuthContext';

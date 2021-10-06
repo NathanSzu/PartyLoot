@@ -22,7 +22,12 @@ export default function Groups() {
 
 	useEffect(
 		() => {
-			groupList && setSortedGroups(defaultSort());
+			groupList && setSortedGroups(() => {
+				let sorted = groupList.sort((a, b) => {
+					return b.created - a.created;
+				});
+				return sorted;
+			});
 		},
 		[ groupList ]
 	);
@@ -44,14 +49,7 @@ export default function Groups() {
 			.catch((error) => {
 				console.log('Error getting document:', error);
 			});
-	}, []);
-
-	const defaultSort = () => {
-		let sorted = groupList.sort((a, b) => {
-			return b.created - a.created;
-		});
-		return sorted;
-	};
+	});
 
 	return (
 		<Container>

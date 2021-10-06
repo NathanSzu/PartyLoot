@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext, useEffect } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import firebase from '../utils/firebase';

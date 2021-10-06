@@ -1,16 +1,15 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
-import boxDown from '../assets/box-down.svg'
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
 
 export default function ModalLoot({ item, idx }) {
-    const { currentGroup, groupData } = useContext(GroupContext);
+    const { currentGroup } = useContext(GroupContext);
 
     const db = firebase.firestore();
     const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
@@ -123,7 +122,7 @@ export default function ModalLoot({ item, idx }) {
                                 </Col>}
                                 <Col>
                                     <Form.Group controlId='itemName'>
-                                        <Form.Control ref={nameRef} defaultValue={item && item.itemName || SRDContent.name} type='text' placeholder='Item name' />
+                                        <Form.Control ref={nameRef} defaultValue={(item && item.itemName) || SRDContent.name} type='text' placeholder='Item name' />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -150,11 +149,11 @@ export default function ModalLoot({ item, idx }) {
 
 
                             <Form.Group controlId='itemDesc'>
-                                <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={item && item.itemDesc || SRDContent.desc} placeholder='Item description' />
+                                <Form.Control ref={descRef} as='textarea' rows={4} defaultValue={(item && item.itemDesc) || SRDContent.desc} placeholder='Item description' />
                             </Form.Group>
 
                             <Form.Group controlId='itemTags'>
-                                <Form.Control ref={tagsRef} type='text' defaultValue={item && item.itemTags || SRDContent.type} placeholder='Enter searchable item tags here' />
+                                <Form.Control ref={tagsRef} type='text' defaultValue={(item && item.itemTags) || SRDContent.type} placeholder='Enter searchable item tags here' />
                             </Form.Group>
 
                             <Form.Group controlId='itemOwner'>

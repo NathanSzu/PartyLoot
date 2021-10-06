@@ -28,17 +28,17 @@ export default function ModalEditGroup({ name, id, owner, members }) {
     const memberRef = useRef();
 
     useEffect(() => {
-        groupMembers && setDisplayMembers(defaultFilter())
-    }, [groupMembers])
-
-    const defaultFilter = () => {
-        let filtered = groupMembers.filter((member) => {
-            if (member.id !== currentUser.uid) {
-                return member
-            } else { return null }
-        })
-        return (filtered)
-    }
+        groupMembers && setDisplayMembers(
+            () => {
+                let filtered = groupMembers.filter((member) => {
+                    if (member.id !== currentUser.uid) {
+                        return member
+                    } else { return null }
+                })
+                return (filtered)
+            }
+        )
+    }, [groupMembers, currentUser.uid])
 
     const setFalseThenClose = () => {
         setDeleteConfirmation(false);

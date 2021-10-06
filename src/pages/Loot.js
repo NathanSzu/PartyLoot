@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Card, Navbar, Row, Col, Container, Spinner } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/GroupContext';
@@ -6,7 +6,6 @@ import ModalLoot from '../components/ModalLoot';
 import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import OwnerFilter from '../components/OwnerFilter';
-import AlertLoading from '../components/AlertLoading';
 import LootAccordion from '../components/AccordionLoot';
 import firebase from '../utils/firebase';
 import { gsap } from 'gsap';
@@ -24,7 +23,9 @@ export default function Loot() {
   const [lootItems, loading] = useCollectionData(query, { idField: 'id' });
 
   useEffect(() => {
-    gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03 })
+    if (filteredItems.length > 0) {
+      gsap.fromTo('.loot-item', { opacity: 0 }, { duration: .3, opacity: 1, stagger: .03 })
+    } 
   }, [filteredItems])
 
   return (

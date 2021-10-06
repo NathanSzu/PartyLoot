@@ -47,7 +47,7 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
 							searchApi(searchRef.current.value);
 						}}
 					>
-						<img src={search} />
+						<img src={search} alt='Search'/>
 					</Button>
 				</Col>
 			</Row>

@@ -6,7 +6,7 @@ export default function ItemSearch({ items, setFilteredItems, sortBy }) {
 
     useEffect(() => {
         items && setFilteredItems(items.filter(search));
-    }, [sortBy, items])
+    }, [sortBy, items, setFilteredItems])
 
     const search = (item) => {
         if (sortBy === 'All') {
