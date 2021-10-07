@@ -13,16 +13,20 @@ service cloud.firestore {
 //     If no document matches the users UID then they are allowed to create one.
         allow read, create: if request.auth != null;
     }
-    
-    match /groups/{group} {    	
+
+    match /groups/{group} { 
+//		 Only allows group owner to delete a group.
     		allow delete: if request.auth != null && request.auth.uid == resource.data.owner
+//     Allows only signed in users to read, create, and update groups.
     		allow read, create, update: if request.auth != null
         
         match /loot/{item} {
+//     Only allows signed in users to create, read, update, and delete items.
     		allow create, read, update, delete: if request.auth != null
     		}
         
-        match /currency/{denomination} {
+        match /currency/{currency} {
+//     Only allows signed in users to create, read, update, and delete currency totals.
     		allow create, read, update, delete: if request.auth != null
     		}
     }
