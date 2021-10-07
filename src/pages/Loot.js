@@ -18,9 +18,9 @@ export default function Loot() {
 	const query = lootRef.orderBy('created', 'desc');
 
 	const [ filteredItems, setFilteredItems ] = useState([]);
-	const [ sortBy, setSortBy ] = useState('All');
+	const [loading, setLoading] = useState(true)
 
-	const [ lootItems, loading ] = useCollectionData(query, { idField: 'id' });
+	const [ lootItems ] = useCollectionData(query, { idField: 'id' });
 
 	useEffect(
 		() => {
@@ -39,7 +39,7 @@ export default function Loot() {
 						<GoldTracker />
 						<Card className="texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
 							<Card.Header className="border-0">
-								<ItemSearch items={lootItems} setFilteredItems={setFilteredItems} />
+								<ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
 								<OwnerFilter />
 							</Card.Header>
 						</Card>

@@ -1,15 +1,24 @@
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext, useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
 
-export default function ItemSearch({ items, setFilteredItems }) {
+export default function ItemSearch({ items, setFilteredItems, setLoading }) {
     const { sortBy } = useContext(GroupContext);
-
+    const [searchTerm, setSearchTerm] = useState('');
     const searchRef = useRef('');
 
     useEffect(() => {
+        // Waits for a brief delay after the last change to update the display
+        const delay = setTimeout(() => {
+            items && setFilteredItems(items.filter(search));
+            setLoading(false);
+        }, 750)
+        return () => {clearTimeout(delay)}
+    }, [searchTerm, items, setFilteredItems])
+
+    useEffect(() => {
         items && setFilteredItems(items.filter(search));
-    }, [sortBy, items, setFilteredItems])
+    }, [sortBy, setFilteredItems])
 
     const search = (item) => {
         if (sortBy === 'All') {
@@ -35,7 +44,7 @@ export default function ItemSearch({ items, setFilteredItems }) {
         <Form onSubmit={(e) => { e.preventDefault(); setFilteredItems(items.filter(search)); }}>
             <Row>
                 <Col xs={12}>
-                    <Form.Control className='text-center' type='text' placeholder='Type to search items!' ref={searchRef} onChange={() => { setFilteredItems(items.filter(search)); }}></Form.Control>
+                    <Form.Control className='text-center' type='text' placeholder='Type to search items!' ref={searchRef} onChange={() => { setSearchTerm(searchRef.current.value) }}></Form.Control>
                 </Col>
             </Row>
         </Form>
