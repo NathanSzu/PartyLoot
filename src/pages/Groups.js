@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import firebase from '../utils/firebase';
-import { Row, Col, Button, Spinner, Alert, Container } from 'react-bootstrap';
+import { Row, Col, Button, Spinner, Container } from 'react-bootstrap';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { Link } from 'react-router-dom';
