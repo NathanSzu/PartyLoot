@@ -44,6 +44,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
         setDeleteConfirmation(false);
         setLeaveConfirmation(false);
         setNoResult(false);
+        setMaxReached(false)
         handleClose();
     }
 
@@ -51,6 +52,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
         setDeleteConfirmation(false);
         setLeaveConfirmation(false);
         setNoResult(false);
+        setMaxReached(false)
     }
 
     const editGroup = () => {
@@ -86,6 +88,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     const addMember = () => {
         if (memberRef.current.value) {
+            setFalseNoClose();
             db.collection('users').where('code', '==', memberRef.current.value.toUpperCase()).get()
                 .then((querySnapshot) => {
                     // Check if there are no results and display alert
@@ -229,8 +232,8 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                                         </Row>
                                         <Row>
                                             <Col>
-                                                {noResult ? <Alert variant='dark'>User not found!</Alert> : null}
-                                                {maxReached ? <Alert variant='dark'>Limit of 10 members!</Alert> : null}
+                                                {noResult ? <Alert variant='warning'>User not found!</Alert> : null}
+                                                {maxReached ? <Alert variant='warning'>Limit of 10 members!</Alert> : null}
                                             </Col>
                                         </Row>
                                     </Container>

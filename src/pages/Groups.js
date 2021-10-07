@@ -22,12 +22,13 @@ export default function Groups() {
 
 	useEffect(
 		() => {
-			groupList && setSortedGroups(() => {
-				let sorted = groupList.sort((a, b) => {
-					return b.created - a.created;
+			groupList &&
+				setSortedGroups(() => {
+					let sorted = groupList.sort((a, b) => {
+						return b.created - a.created;
+					});
+					return sorted;
 				});
-				return sorted;
-			});
 		},
 		[ groupList ]
 	);
@@ -63,41 +64,32 @@ export default function Groups() {
 				/>
 			) : (
 				<div>
-					{groupList.length === 0 ? (
-						<Alert variant="dark" className="text-center">
-							{' '}
-							Click '+' to create a new group!
-						</Alert>
-					) : (
-						<div>
-							{sortedGroups.map((group, idx) => (
-								<Row key={idx} className="p-0 border-top border-dark texture-backer">
-									<Col className="p-0">
-										<Link to="/loot">
-											<Button
-												id={group.id}
-												variant="outline"
-												className="w-100 text-left p-3 groups-h1 fancy-font"
-												onClick={(e) => {
-													setCurrentGroup(e.target.id);
-												}}
-											>
-												{group.groupName}
-											</Button>
-										</Link>
-									</Col>
-									<Col xs="auto d-flex align-items-center">
-										<ModalEdit
-											name={group.groupName}
-											id={group.id}
-											owner={group.owner}
-											members={group.members}
-										/>
-									</Col>
-								</Row>
-							))}
-						</div>
-					)}
+					{sortedGroups.map((group, idx) => (
+						<Row key={idx} className="p-0 border-top border-dark texture-backer">
+							<Col className="p-0">
+								<Link to="/loot">
+									<Button
+										id={group.id}
+										variant="outline"
+										className="w-100 text-left p-3 groups-h1 fancy-font"
+										onClick={(e) => {
+											setCurrentGroup(e.target.id);
+										}}
+									>
+										{group.groupName}
+									</Button>
+								</Link>
+							</Col>
+							<Col xs="auto d-flex align-items-center">
+								<ModalEdit
+									name={group.groupName}
+									id={group.id}
+									owner={group.owner}
+									members={group.members}
+								/>
+							</Col>
+						</Row>
+					))}
 				</div>
 			)}
 
