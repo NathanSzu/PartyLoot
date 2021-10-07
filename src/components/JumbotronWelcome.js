@@ -21,7 +21,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
                     </Col>
                 </Row>
                 <Row className='justify-content-around mt-3'>
-                    <a href='https://www.patreon.com/appsbynathan' className='w-50' target='blank'>
+                    <a href='https://www.patreon.com/dndnathan?fan_landing=true' className='w-50' target='blank'>
                         <Button className='w-100' variant='dark'>Patreon</Button>
                     </a>
                 </Row>
