@@ -1,7 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
+import { GroupContext } from '../utils/contexts/GroupContext';
 
-export default function ItemSearch({ items, setFilteredItems, sortBy }) {
+export default function ItemSearch({ items, setFilteredItems }) {
+    const { sortBy } = useContext(GroupContext);
+
     const searchRef = useRef('');
 
     useEffect(() => {

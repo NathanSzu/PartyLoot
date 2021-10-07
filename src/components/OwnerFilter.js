@@ -2,18 +2,19 @@ import React, { useRef, useState, useContext } from 'react';
 import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import firebase from '../utils/firebase';
-import { GroupContext } from '../utils/GroupContext';
+import { GroupContext } from '../utils/contexts/GroupContext';
 import addUser from '../assets/add-user.svg';
 import viewUsers from '../assets/view-users.svg';
 import removeUser from '../assets/remove-user.svg';
 import fb from 'firebase';
 
-export default function OwnerFilter({ setSortBy }) {
-    const { currentGroup } = useContext(GroupContext);
+export default function OwnerFilter() {
+    const { currentGroup, setSortBy } = useContext(GroupContext);
+    
     const sortRef = useRef('');
     const addPartyMemberRef = useRef('');
-    const [loading, setLoading] = useState(false)
 
+    const [loading, setLoading] = useState(false)
     const [show, setShow] = useState(false)
 
     const db = firebase.firestore();

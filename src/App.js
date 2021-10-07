@@ -1,6 +1,6 @@
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from './utils/AuthContext';
-import { GroupProvider } from './utils/GroupContext';
+import { AuthProvider } from './utils/contexts/AuthContext';
+import { GroupProvider } from './utils/contexts/GroupContext';
 import Home from './pages/Home';
 import Groups from './pages/Groups';
 import Loot from './pages/Loot';
@@ -8,9 +8,9 @@ import Settings from './pages/Settings';
 import PasswordReset from './pages/PasswordReset';
 import BootNav from './components/BootNav';
 import { Container, Row, Col } from 'react-bootstrap';
-import SecuredRoute from './utils/SecuredRoute';
-import SkippedRoute from './utils/SkippedRoute';
-import GroupRoute from './utils/GroupRoute';
+import SecuredRoute from './utils/routing/SecuredRoute';
+import SkippedRoute from './utils/routing/SkippedRoute';
+import GroupRoute from './utils/routing/GroupRoute';
 
 function App() {
   return (

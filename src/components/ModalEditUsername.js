@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
-import { AuthContext } from '../utils/AuthContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 
 export default function ModalEditUsername({ loading, userData }) {
     const { setUsername, currentUser } = useContext(AuthContext);

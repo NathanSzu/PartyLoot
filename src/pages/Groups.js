@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from 'react';
 import firebase from '../utils/firebase';
 import { Row, Col, Button, Spinner, Alert, Container } from 'react-bootstrap';
-import { AuthContext } from '../utils/AuthContext';
-import { GroupContext } from '../utils/GroupContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
+import { GroupContext } from '../utils/contexts/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';

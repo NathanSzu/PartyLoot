@@ -1,18 +1,17 @@
 import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { GroupContext } from './GroupContext';
+import { AuthContext } from '../contexts/AuthContext';
 
-export default function GroupRoute({ component: RouteComponent, ...rest }) {
-    const { currentGroup } = useContext(GroupContext);
+export default function SkippedRoute({ component: RouteComponent, ...rest }) {
+    const { currentUser } = useContext(AuthContext)
 
     return (
         <Route
             {...rest}
             render={routeProps =>
-                // ' ' is the default group value set in GroupContext.
-                currentGroup === ' ' ? (
+                // If currentUser conditional changes, edit here and in SecuredRoute
+                currentUser ? (
                     <Redirect to={"/groups"} />
-
                 ) : (
                     <RouteComponent {...routeProps} />
                 )

@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import edit from '../assets/pencil-square.svg';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { GroupContext } from '../utils/GroupContext';
+import { GroupContext } from '../utils/contexts/GroupContext';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
 import DropdownAddItem from './DropdownAddItem';

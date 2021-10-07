@@ -3,7 +3,7 @@ import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
-import { AuthContext } from '../utils/AuthContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 import gear from '../assets/gear-fill.svg';
 import remove from '../assets/remove-user.svg';
 import add from '../assets/add-user.svg';

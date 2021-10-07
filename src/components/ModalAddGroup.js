@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import fb from 'firebase';
 import firebase from '../utils/firebase';
-import { AuthContext } from '../utils/AuthContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 
 export default function ModalAddGroup() {
     const { currentUser } = useContext(AuthContext)
