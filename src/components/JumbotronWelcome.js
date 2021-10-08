@@ -25,7 +25,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 					</Col>
 				</Row>
 				<Row border="dark">
-					<Col xs={12} lg={9} className="mr-auto ml-auto">
+					<Col xs={12} className="mr-auto ml-auto">
 						<div className="add-background-light mt-3">
 							<h1 className="text-center mb-4 background-dark rounded text-light p-2">
 								Welcome to Party Loot
@@ -40,7 +40,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 							</p>
 						</div>
 					</Col>
-					<Col xs={12} lg={9} className="mr-auto ml-auto">
+					<Col xs={12} className="mr-auto ml-auto">
 						<div className="add-background-light mt-3">
 							<h2 className="text-center mb-4 background-dark rounded text-light p-2">
 								This is a Progressive Web Application

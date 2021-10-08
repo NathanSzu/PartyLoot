@@ -37,8 +37,8 @@ export default function PasswordReset() {
 
     return (
 
-        <Row className="justify-content-md-center">
-            <Col md={6} className='add-background-light rounded-bottom'>
+        <Row className="justify-content-md-center pl-3 pr-3">
+            <Col xs={12} className='add-background-light rounded-bottom'>
                 <Form className='p-3'>
                     <Form.Group controlId="Email">
                         <Form.Label>Email address</Form.Label>
