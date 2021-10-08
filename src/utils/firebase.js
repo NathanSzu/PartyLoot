@@ -6,16 +6,13 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 // Configuration for firebase
-// NEED NEW HIDDEN KEYS BEFORE GOING TO PRODUCTION
-const firebaseConfig = {
-	apiKey: 'AIzaSyDNZIpJQJeKFGSZXmC-Jtn8wpJg2Nf-95Y',
-	authDomain: 'party-loot-tracker.firebaseapp.com',
-	projectId: 'party-loot-tracker',
-	storageBucket: 'party-loot-tracker.appspot.com',
-	messagingSenderId: '589283233009',
-	appId: '1:589283233009:web:4a1cd797c52177c5ab6d50'
-};
-const app = firebase.initializeApp(firebaseConfig);
-// var db = firebase.firestore(fbApp)
+const app = firebase.initializeApp({
+	apiKey: process.env.REACT_APP_API_KEY,
+	authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+	projectId: process.env.REACT_APP_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+	appId: process.env.REACT_APP_APP_ID
+});
 
 export default app;

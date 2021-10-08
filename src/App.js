@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from './utils/contexts/AuthContext';
 import { GroupProvider } from './utils/contexts/GroupContext';
@@ -8,11 +9,15 @@ import Settings from './pages/Settings';
 import PasswordReset from './pages/PasswordReset';
 import BootNav from './components/BootNav';
 import { Container, Row, Col } from 'react-bootstrap';
-import SecuredRoute from './utils/routing/SecuredRoute';
-import SkippedRoute from './utils/routing/SkippedRoute';
-import GroupRoute from './utils/routing/GroupRoute';
+import SecuredRoute from './utils/routingComponents/SecuredRoute';
+import SkippedRoute from './utils/routingComponents/SkippedRoute';
+import GroupRoute from './utils/routingComponents/GroupRoute';
 
 function App() {
+  useEffect(() => {
+    console.log(process.env.REACT_APP_ENVIRONMENT)
+  })
+
   return (
     <AuthProvider>
       <GroupProvider>
