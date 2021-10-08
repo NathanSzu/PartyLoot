@@ -10,8 +10,8 @@ export default function AccordionLoot({ item, idx }) {
                     <h1 className='item-h1 m-0'>{item.itemName}</h1>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey='0'>
-                    <div className='texture-backer'>
-                        <Card.Body>
+                    <div className=''>
+                        <Card.Body className='background-light'>
                             <Row className='pt-1 pb-1'>
                                 <Col className='d-flex align-items-center border-bottom border-dark'>
                                     <h2 className='item-h2 m-0'>Description</h2>

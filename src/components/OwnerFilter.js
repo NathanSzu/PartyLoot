@@ -69,7 +69,7 @@ export default function OwnerFilter() {
             </Col>
 
             <Col xs={2} className='pl-0'>
-                <Button className='w-100 pl-0 pr-0' variant="dark" onClick={handleShow}><img alt='Edit Party' src={viewUsers} /></Button>
+                <Button className='w-100 pl-0 pr-0 background-dark border-0' variant="dark" onClick={handleShow}><img alt='Edit Party' src={viewUsers} /></Button>
 
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>

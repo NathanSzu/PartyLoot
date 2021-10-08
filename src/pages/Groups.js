@@ -65,7 +65,7 @@ export default function Groups() {
 			) : (
 				<div>
 					{sortedGroups.map((group, idx) => (
-						<Row key={idx} className="p-0 border-top border-dark texture-backer">
+						<Row key={idx} className="p-0 border-top border-dark background-light">
 							<Col className="p-0">
 								<Link to="/loot">
 									<Button

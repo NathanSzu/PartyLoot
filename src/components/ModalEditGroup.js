@@ -144,7 +144,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     return (
         <>
-            <Button variant='dark' className='p-1' onClick={() => { handleShow() }}><img alt='Edit Group' src={gear}></img></Button>
+            <Button variant='dark' className='p-2 background-dark border-0' onClick={() => { handleShow() }}><img alt='Edit Group' src={gear}></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <div className='texture-backer'>
@@ -161,25 +161,25 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
                         <Modal.Footer className='justify-content-between border-0 pt-0'>
                             {currentUser.uid === owner ?
-                                <Button as='input' value='Save' disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }} />
+                                <Button as='input' value='Save' disabled={loading} variant='dark' className='background-dark border-0' type='submit' onClick={(e) => { e.preventDefault(); editGroup() }} />
                                 : <div></div>}
 
                             {deleteConfirmation ?
-                                <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }} />
+                                <Button as='input' value={`Yes, I'm sure. Delete!`} disabled={loading} variant='danger' className='background-danger border-0' type='button' onClick={(e) => { e.preventDefault(); deleteGroup() }} />
                                 : null}
 
                             {leaveConfirmation ?
-                                <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser.uid) }} />
+                                <Button as='input' value={`Yes, I'm sure. Leave Group!`} disabled={loading} variant='danger' className='background-danger border-0' type='button' onClick={(e) => { e.preventDefault(); leaveGroup(currentUser.uid) }} />
                                 : null}
 
                             {currentUser.uid === owner && !deleteConfirmation ?
                                 // Delete button that only shows if the current user owns the group.
-                                <Button as='input' value='Delete' disabled={loading} variant='danger' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
+                                <Button as='input' value='Delete' disabled={loading} variant='danger' className='background-danger border-0' type='button' onClick={(e) => { setDeleteConfirmation(true) }} />
                                 : null}
 
                             {currentUser.uid !== owner && !leaveConfirmation ?
                                 // Alternate Leave Group button that only shows if current user does not own the group.
-                                <Button as='input' value={`Leave Group`} disabled={loading} variant='danger' type='button' onClick={(e) => { setLeaveConfirmation(true) }} />
+                                <Button as='input' value={`Leave Group`} disabled={loading} variant='danger' className='background-danger border-0' type='button' onClick={(e) => { setLeaveConfirmation(true) }} />
                                 : null}
                         </Modal.Footer>
 
@@ -199,7 +199,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                                 </Col>
                                 {currentUser.uid === owner ?
                                     <Col xs='auto'>
-                                        <Button disabled={loading} variant='danger' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
+                                        <Button disabled={loading} variant='danger' className='background-danger border-0' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
                                             <img alt='Delete Group' id={member.id} src={remove}></img>
                                         </Button>
                                     </Col> : null
@@ -225,7 +225,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                                             </Col>
 
                                             <Col xs='auto'>
-                                                <Button disabled={loading} variant='dark' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
+                                                <Button disabled={loading} variant='dark' className='background-dark border-0' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
                                                     <img alt='Add Group Member' src={add} />
                                                 </Button>
                                             </Col>

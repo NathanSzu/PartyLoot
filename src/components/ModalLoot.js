@@ -120,11 +120,11 @@ export default function ModalLoot({ item, idx }) {
 	return (
 		<div>
 			{item ? (
-				<Button variant="dark" className="p-1 m-0" onClick={handleShow}>
+				<Button variant="dark" className="p-2 m-0 background-dark border-0" onClick={handleShow}>
 					<img alt="Edit Item" src={edit} />
 				</Button>
 			) : (
-				<Button variant="dark" onClick={handleShow} className="w-100 m-0 mr-auto ml-auto">
+				<Button variant="dark" onClick={handleShow} className="w-100 m-0 mr-auto ml-auto background-dark border-0">
 					Add Item
 				</Button>
 			)}
@@ -229,6 +229,7 @@ export default function ModalLoot({ item, idx }) {
 									<Button
 										as="input"
 										disabled={loading}
+										className='background-dark border-0'
 										value="Save"
 										variant="dark"
 										type="submit"
@@ -240,6 +241,7 @@ export default function ModalLoot({ item, idx }) {
 								) : (
 									<Button
 										disabled={loading}
+										className='background-dark border-0'
 										variant="dark"
 										type="submit"
 										onClick={(e) => {
@@ -255,6 +257,7 @@ export default function ModalLoot({ item, idx }) {
 									<Button
 										as="input"
 										value={`Yes, I'm sure. Delete!`}
+										className='background-danger border-0'
 										disabled={loading}
 										variant="danger"
 										type="button"
@@ -269,6 +272,7 @@ export default function ModalLoot({ item, idx }) {
 									<Button
 										as="input"
 										value="Delete"
+										className='background-danger border-0'
 										disabled={loading}
 										variant="danger"
 										type="button"

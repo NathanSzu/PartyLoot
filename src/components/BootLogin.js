@@ -99,7 +99,7 @@ export default function BootLogin({ login, setLogin }) {
     }
 
     return (
-        <Form className='texture-backer p-3 rounded-bottom'>
+        <Form className='add-background-light p-3 rounded-bottom'>
             {noUser ? <Alert className='text-center' variant={'warning'}>Invalid email or password.</Alert> : null}
             <Form.Group controlId="Email">
                 <Form.Label>Email address</Form.Label>
@@ -107,7 +107,7 @@ export default function BootLogin({ login, setLogin }) {
                 {emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert>}
 
                 <Form.Control ref={emailRef} type="email" placeholder="Enter email" onChange={(e) => { setEmail(e.target.value); validateEmail(e) }} />
-                <Form.Text className="text-muted">
+                <Form.Text className="text-dark">
                     We'll never share your email with anyone else.
                 </Form.Text>
             </Form.Group>

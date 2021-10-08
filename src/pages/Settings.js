@@ -30,7 +30,7 @@ export default function Settings() {
 
 	return (
 		<Container>
-			<Row className="texture-backer">
+			<Row className="background-light">
 				<div className="p-2 m-0 w-100 text-center border-top border-dark">
 					<Col xs={12}>
 						<h1 className="settings-h1">Account Settings</h1>
@@ -50,7 +50,7 @@ export default function Settings() {
 
 					<Col md={8} className="mr-auto ml-auto">
 						<Button
-							className="w-100"
+							className="w-100 background-dark border-0"
 							disabled={loading}
 							variant="dark"
 							type="submit"

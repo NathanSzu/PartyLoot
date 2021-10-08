@@ -86,7 +86,7 @@ export default function GoldTracker() {
 	return (
 		<div>
 			<Accordion>
-				<Card className="texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
+				<Card className="background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
 					<Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
 						<h1 className="item-h1 m-0 text-center">{sortBy === 'All' ? 'Party' : sortBy} Gold</h1>
 					</Accordion.Toggle>

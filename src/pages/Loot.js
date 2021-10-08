@@ -37,13 +37,13 @@ export default function Loot() {
 				<Navbar sticky="top" className="w-100 p-0 theme1-backer" id="sticky-filter">
 					<div className="d-block w-100">
 						<GoldTracker />
-						<Card className="texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
+						<Card className="background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
 							<Card.Header className="border-0">
 								<ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
 								<OwnerFilter />
 							</Card.Header>
 						</Card>
-						<Card className="texture-backer rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
+						<Card className="background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
 							<Card.Header className="border-0">
 								{/* Item should be empty string to prevent error */}
 								<ModalLoot item={''} />
