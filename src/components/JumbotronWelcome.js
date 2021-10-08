@@ -8,7 +8,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 	};
 
 	return (
-		<Jumbotron fluid className="background-unset rounded-bottom pt-3">
+		<Jumbotron fluid className="background-unset rounded-bottom pt-3" data-cy='welcome-message'>
 			<Container>
 				<Row className="justify-content-around mb-3">
 					<Col>
@@ -19,7 +19,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 						</a>
 					</Col>
 					<Col>
-						<Button  variant='light' className="w-100 border-0" onClick={showForms}>
+						<Button  variant='light' className="w-100 border-0" data-cy='get-started' onClick={showForms}>
 							Get Started
 						</Button>
 					</Col>
