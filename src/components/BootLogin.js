@@ -121,7 +121,7 @@ export default function BootLogin({ login, setLogin }) {
             </Form.Group>
 
             {!login ?
-                < Form.Group controlId="PasswordConfirm">
+                <Form.Group controlId="PasswordConfirm">
                     <Form.Label>Confirm Password</Form.Label>
 
                     {passwordValid ? null : <Alert variant={'warning'}>Passwords must match!</Alert>}
