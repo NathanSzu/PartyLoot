@@ -126,7 +126,7 @@ export default function BootLogin({ login, setLogin }) {
 
 				<Form.Control
 					ref={emailRef}
-					data-cy='login-email'
+					data-cy="login-email"
 					type="email"
 					placeholder="Enter email"
 					onChange={(e) => {
@@ -146,7 +146,7 @@ export default function BootLogin({ login, setLogin }) {
 
 				<Form.Control
 					ref={passwordRef}
-					data-cy='login-password'
+					data-cy="login-password"
 					type="password"
 					placeholder="Password"
 					onChange={(e) => {
@@ -165,7 +165,7 @@ export default function BootLogin({ login, setLogin }) {
 
 					<Form.Control
 						type="password"
-						data-cy='login-check-password'
+						data-cy="login-check-password"
 						placeholder="Confirm Password"
 						onChange={(e) => {
 							setCheckPassword(e.target.value);
@@ -180,7 +180,7 @@ export default function BootLogin({ login, setLogin }) {
 					{!login ? 'Already have an account?' : 'Need to create an account?'}
 					<Button
 						variant="link"
-						data-cy='sign-up-here'
+						data-cy="sign-up-here"
 						onClick={() => {
 							toggleLogin();
 						}}
@@ -196,6 +196,7 @@ export default function BootLogin({ login, setLogin }) {
 						<Col className="text-center mt-3 mb-3">
 							<Button
 								disabled={loading}
+								data-cy="login"
 								variant="dark"
 								type="submit"
 								onClick={(e) => {
@@ -209,7 +210,7 @@ export default function BootLogin({ login, setLogin }) {
 					</Row>
 					<Row className="justify-content-center">
 						<Link to="/forgot-password">
-							<Button variant="link">Forgot password?</Button>
+							<Button variant="link" data-cy="forgot-password">Forgot password?</Button>
 						</Link>
 					</Row>
 				</div>
@@ -218,7 +219,7 @@ export default function BootLogin({ login, setLogin }) {
 					<Col className="text-center mt-3">
 						<Button
 							disabled={loading}
-							data-cy='signup'
+							data-cy="signup"
 							variant="dark"
 							type="submit"
 							onClick={(e) => {
