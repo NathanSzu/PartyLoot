@@ -31,19 +31,19 @@ export default function BootNav() {
 			{/* Hides the nav links if no user is logged in */}
 			{!currentUser ? null : 
             <>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle aria-controls="basic-navbar-nav" data-cy='navbar-toggle' />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-						<Nav.Link href="/" onClick={logOut}>Sign Out</Nav.Link>
+						<Nav.Link href="/" onClick={logOut} data-cy='navbar-logout'>Sign Out</Nav.Link>
 						{/* Hides the groups nav link if on the groups page */}
                         {location.pathname === '/groups' ? null : (
-							<LinkContainer to='/groups'>
+							<LinkContainer to='/groups' data-cy='navbar-groups'>
                             	<Nav.Link>Groups</Nav.Link>
 							</LinkContainer>
                         )}
 						{/* Hides the user setting nav link if on the user setting page */}
                         {location.pathname === '/user-settings' ? null : 
-						<LinkContainer to='/user-settings'>
+						<LinkContainer to='/user-settings' data-cy='navbar-settings'>
 							<Nav.Link>Settings</Nav.Link>
 						</LinkContainer>
 						}

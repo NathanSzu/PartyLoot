@@ -70,6 +70,7 @@ export default function Groups() {
 								<Link to="/loot">
 									<Button
 										id={group.id}
+										data-cy={`group${idx}`}
 										variant="outline"
 										className="w-100 text-left p-3 groups-h1 fancy-font"
 										onClick={(e) => {
