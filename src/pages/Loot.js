@@ -18,7 +18,7 @@ export default function Loot() {
 	const query = lootRef.orderBy('created', 'desc');
 
 	const [ filteredItems, setFilteredItems ] = useState([]);
-	const [loading, setLoading] = useState(true)
+	const [ loading, setLoading ] = useState(true);
 
 	const [ lootItems ] = useCollectionData(query, { idField: 'id' });
 
@@ -39,7 +39,11 @@ export default function Loot() {
 						<GoldTracker />
 						<Card className="background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0">
 							<Card.Header className="border-0">
-								<ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
+								<ItemSearch
+									items={lootItems}
+									setFilteredItems={setFilteredItems}
+									setLoading={setLoading}
+								/>
 								<OwnerFilter />
 							</Card.Header>
 						</Card>
@@ -51,7 +55,7 @@ export default function Loot() {
 						</Card>
 					</div>
 				</Navbar>
-				<Col className="pl-2 pr-2 pt-1">
+				<Col xs={12} className="pl-2 pr-2 pt-1">
 					{loading && (
 						<Spinner
 							as="div"
@@ -63,6 +67,14 @@ export default function Loot() {
 					)}
 					{filteredItems.map((item, idx) => <LootAccordion item={item} key={idx} idx={idx} />)}
 				</Col>
+				{filteredItems.length > 0 || loading ? null : (
+					<Col xs={12} className="pt-3">
+						<p className="text-center fancy-font text-light">Tap Party Gold to expand. Color tags can be edited.</p>
+						<p className="text-center fancy-font text-light">Search bar filters items as you type. This feature searches item names, descriptions, and tags.</p>
+						<p className="text-center fancy-font text-light">You can sort items and gold by party member with the dropdown menu. Click the button to add or remove party members.</p>
+						<p className="text-center fancy-font text-light">To add items click the Add Item button. A name and description are required.</p>
+					</Col>
+				)}
 			</Row>
 		</Container>
 	);
