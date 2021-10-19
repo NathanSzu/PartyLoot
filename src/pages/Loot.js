@@ -68,7 +68,7 @@ export default function Loot() {
 					{filteredItems.map((item, idx) => <LootAccordion item={item} key={idx} idx={idx} />)}
 				</Col>
 				{filteredItems.length > 0 || loading ? null : (
-					<Col xs={12} className="pt-3">
+					<Col xs={12} className="pt-3 background-dark">
 						<p className="text-center fancy-font text-light">Tap Party Gold to expand. Color tags can be edited.</p>
 						<p className="text-center fancy-font text-light">Search bar filters items as you type. This feature searches item names, descriptions, and tags.</p>
 						<p className="text-center fancy-font text-light">You can sort items and gold by party member with the dropdown menu. Click the button to add or remove party members.</p>
