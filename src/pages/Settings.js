@@ -30,18 +30,15 @@ export default function Settings() {
 
 	return (
 		<Container>
-			<Row className="background-light">
-				<div className="p-2 m-0 w-100 text-center border-top border-dark">
+			<Row className="background-unset add-background-light pt-3 pb-4 border-top border-dark">
+				<div className="p-2 m-0 w-100">
 					<Col xs={12}>
-						<h1 className="settings-h1">Account Settings</h1>
+						<h1 className="text-center settings-h1">Account Settings</h1>
 					</Col>
 
-					<Col xs={12}>
-						{loading ? (
-							<Spinner animation="border" role="status" />
-						) : (
-							<p className="settings-p">Username: {userData && userData.displayName}</p>
-						)}
+					<Col xs={12} className="p-3">
+						<p className="settings-p m-0"><span className="font-weight-bold">Username:</span> {userData && userData.displayName}</p>
+						<p className="settings-p m-0"><span className="font-weight-bold">Group Code:</span> {userData && userData.code}</p>
 					</Col>
 
 					<Col md={8} className="mr-auto ml-auto">
@@ -63,20 +60,6 @@ export default function Settings() {
 						</Button>
 						{!resetEmailSent ? null : (
 							<Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
-						)}
-					</Col>
-				</div>
-
-				<div className="p-2 w-100 text-center border-top border-dark">
-					<Col xs={12}>
-						<h1 className="settings-h1">Group Code</h1>
-					</Col>
-
-					<Col xs={12}>
-						{loading ? (
-							<Spinner animation="border" role="status" />
-						) : (
-							<p className="settings-p">{userData && userData.code}</p>
 						)}
 					</Col>
 				</div>
