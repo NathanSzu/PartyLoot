@@ -85,6 +85,18 @@ pre {
   background-color: var(--danger-theme);
 }
 
+.add-background-dark::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: var(--theme1);
+  opacity: 65%;
+}
+
 .add-background-light::before {
   content: '';
   z-index: -1;
