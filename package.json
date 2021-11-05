@@ -8,7 +8,6 @@
     "@testing-library/user-event": "^12.8.3",
     "babel-preset-react": "^6.24.1",
     "bad-words": "^3.0.4",
-    "cypress": "^8.5.0",
     "env-cmd": "^10.1.0",
     "firebase": "^8.3.2",
     "gsap": "^3.6.1",
@@ -26,9 +25,14 @@
     "start:dev": "env-cmd -f ./src/utils/.env.development npm start",
     "start:prod": "env-cmd -f ./src/utils/.env.production npm start",
     "build": "react-scripts build",
-    "build:dev": "env-cmd -f ./src/utils/.env.development npm run build && firebase deploy --only hosting --project=dev",
+    "build:dev": "npm run test:dev && env-cmd -f ./src/utils/.env.development npm run build && firebase deploy --only hosting --project=dev",
     "build:prod": "env-cmd -f ./src/utils/.env.production npm run build && firebase deploy --only hosting --project=prod",
     "test": "react-scripts test",
+    "cy:run": "npx cypress run",
+    "cy:open": "npx cypress open",
+    "test:dev": "run-p --race start:dev cy:run",
+    "test:prod": "run-p --race start:prod cy:run",
+    "test:open": "run-p start:dev cy:open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,5 +52,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^8.7.0",
+    "npm-run-all": "^4.1.5"
   }
 }
