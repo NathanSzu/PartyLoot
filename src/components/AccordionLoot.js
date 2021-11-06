@@ -1,6 +1,7 @@
 import React from 'react';
 import { Accordion, Card, Col, Row, Badge } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
+import charge from '../assets/charge.svg'
 
 export default function AccordionLoot({ item, idx }) {
     return (
@@ -18,7 +19,7 @@ export default function AccordionLoot({ item, idx }) {
                                 </Col>
                                 {item.currCharges && item.maxCharges ?
                                     <Col className='d-flex align-items-center border-bottom border-dark'>
-                                        <h2 className='item-h2 mb-1 mt-1'>{item.currCharges} / {item.maxCharges} charges</h2>
+                                        <h2 className='item-h2 mb-1 mt-1'>{item.currCharges} / {item.maxCharges} <img alt='Charges' src={charge} /></h2>
                                     </Col>
                                     : null}
                                 <Col xs={2} className='text-right'>

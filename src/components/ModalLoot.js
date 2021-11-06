@@ -15,14 +15,14 @@ export default function ModalLoot({ item, idx }) {
 	const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
 	const groupRef = db.collection('groups').doc(currentGroup);
 
-	const [ show, setShow ] = useState(false);
-	const [ deleteConfirmation, setDeleteConfirmation ] = useState(false);
-	const [ loading, setLoading ] = useState(false);
-	const [ searchSRD, setSearchSRD ] = useState(false);
-	const [ SRDContent, setSRDContent ] = useState({});
-	const [ itemValidations, setItemValidations ] = useState('');
+	const [show, setShow] = useState(false);
+	const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [searchSRD, setSearchSRD] = useState(false);
+	const [SRDContent, setSRDContent] = useState({});
+	const [itemValidations, setItemValidations] = useState('');
 
-	const [ partyData ] = useDocumentData(groupRef);
+	const [partyData] = useDocumentData(groupRef);
 
 	const nameRef = useRef();
 	const descRef = useRef();
@@ -32,7 +32,7 @@ export default function ModalLoot({ item, idx }) {
 	const ownerRef = useRef();
 
 	const handleClose = () => {
-        setItemValidations('')
+		setItemValidations('')
 		setShow(false);
 		setSRDContent({});
 		setSearchSRD(false);
@@ -42,7 +42,7 @@ export default function ModalLoot({ item, idx }) {
 	const addLoot = () => {
 		if (!nameRef.current.value || !descRef.current.value) {
 			setItemValidations('name and description')
-            return;
+			return;
 		}
 		if (ownerRef.current.value === 'Select Owner') {
 			ownerRef.current.value = '';
@@ -75,7 +75,7 @@ export default function ModalLoot({ item, idx }) {
 	const editLoot = () => {
 		// Does not call update function if the group name or description is left empty.
 		if (!nameRef.current.value || !descRef.current.value) {
-            setItemValidations('name and description')
+			setItemValidations('name and description')
 			return;
 		}
 		if (ownerRef.current.value === 'Select Owner') {
@@ -169,8 +169,9 @@ export default function ModalLoot({ item, idx }) {
 												className="text-center"
 												ref={chargeRef}
 												defaultValue={item && item.currCharges}
-												type="number"
+												type="text"
 												placeholder="Charge"
+												maxLength="3"
 											/>
 										</Form.Group>
 									</Col>
@@ -185,8 +186,9 @@ export default function ModalLoot({ item, idx }) {
 												className="text-center"
 												ref={chargesRef}
 												defaultValue={item && item.maxCharges}
-												type="number"
+												type="text"
 												placeholder="Charges"
+												maxLength="3"
 											/>
 										</Form.Group>
 									</Col>
@@ -221,7 +223,7 @@ export default function ModalLoot({ item, idx }) {
 											))}
 									</Form.Control>
 								</Form.Group>
-                                {itemValidations && <Alert variant='warning'>Item {itemValidations} are required!</Alert>}
+								{itemValidations && <Alert variant='warning'>Item {itemValidations} are required!</Alert>}
 							</Modal.Body>
 
 							<Modal.Footer className="justify-content-between">

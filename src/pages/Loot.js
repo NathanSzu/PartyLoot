@@ -15,7 +15,7 @@ export default function Loot() {
 
 	const db = firebase.firestore();
 	const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
-	const query = lootRef.orderBy('created', 'desc');
+	const query = lootRef.orderBy('itemName');
 
 	const [ filteredItems, setFilteredItems ] = useState([]);
 	const [ loading, setLoading ] = useState(true);
