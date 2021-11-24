@@ -30,6 +30,7 @@ export default function ModalLoot({ item, idx }) {
 	const chargesRef = useRef();
 	const tagsRef = useRef();
 	const ownerRef = useRef();
+	const qtyRef = useRef();
 
 	const handleClose = () => {
 		setItemValidations('')
@@ -54,6 +55,7 @@ export default function ModalLoot({ item, idx }) {
 			.collection('loot')
 			.add({
 				itemName: nameRef.current.value,
+				itemQty: qtyRef.current.value,
 				itemDesc: descRef.current.value,
 				currCharges: chargeRef.current.value,
 				maxCharges: chargesRef.current.value,
@@ -85,6 +87,7 @@ export default function ModalLoot({ item, idx }) {
 		itemRef
 			.update({
 				itemName: nameRef.current.value,
+				itemQty: qtyRef.current.value,
 				itemDesc: descRef.current.value,
 				currCharges: chargeRef.current.value,
 				maxCharges: chargesRef.current.value,
@@ -158,6 +161,19 @@ export default function ModalLoot({ item, idx }) {
 												type="text"
 												placeholder="Item name"
 											/>
+										</Form.Group>
+									</Col>
+									<Col xs={3} className="pl-0">
+										<Form.Group controlId="itemCharge">
+											<Form.Control
+												className="text-center"
+												ref={qtyRef}
+												defaultValue={item && item.itemQty}
+												type="text"
+												placeholder="Qty"
+												maxLength="2"
+											/>
+											
 										</Form.Group>
 									</Col>
 								</Row>

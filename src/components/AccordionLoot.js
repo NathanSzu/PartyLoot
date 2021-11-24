@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Card, Col, Row, Badge } from 'react-bootstrap';
+import { Accordion, Card, Col, Row, Badge, Container } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 import charge from '../assets/charge.svg'
 
@@ -8,7 +8,17 @@ export default function AccordionLoot({ item, idx }) {
         <Accordion className='m-0 mt-1 loot-item'>
             <Card>
                 <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
-                    <h1 className='item-h1 m-0'>{item.itemName}</h1>
+                    <Container>
+                        <Row>
+                            <Col className='pl-0'>
+                                <h1 className='item-h1 m-0'>{item.itemName}</h1>
+                            </Col>
+                            {item.itemQty && item.itemQty > 1 ?
+                                <Col xs={1} className="p-0">
+                                    x{item.itemQty}
+                                </Col> : null}
+                        </Row>
+                    </Container>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey='0'>
                     <div className=''>
