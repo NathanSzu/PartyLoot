@@ -7,15 +7,15 @@ export default function AccordionLoot({ item, idx }) {
     return (
         <Accordion className='m-0 mt-1 loot-item'>
             <Card>
-                <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
+                <Accordion.Toggle as={Card.Header} variant="link" eventKey="0" className="p-2">
                     <Container>
                         <Row>
-                            <Col className='pl-0'>
-                                <h1 className='item-h1 m-0'>{item.itemName}</h1>
+                            <Col className='pl-0 pr-1'>
+                                <h1 className={`item-h1 m-0 pt-1 pb-1 ${item.itemQty && item.itemQty > 1 ? "border-right border-dark" : ""}`}>{item.itemName}</h1>
                             </Col>
                             {item.itemQty && item.itemQty > 1 ?
                                 <Col xs={1} className="p-0">
-                                    x{item.itemQty}
+                                    <p className="m-0 vertical-center pl-1">x{item.itemQty}</p>
                                 </Col> : null}
                         </Row>
                     </Container>
