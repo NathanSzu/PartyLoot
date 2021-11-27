@@ -1,8 +1,9 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import firebase from '../utils/firebase';
 import { GroupContext } from '../utils/contexts/GroupContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 import addUser from '../assets/add-user.svg';
 import viewUsers from '../assets/view-users.svg';
 import removeUser from '../assets/remove-user.svg';
@@ -10,6 +11,7 @@ import fb from 'firebase';
 
 export default function OwnerFilter() {
     const { currentGroup, setSortBy } = useContext(GroupContext);
+    const { currentUser } = useContext(AuthContext);
     
     const sortRef = useRef('');
     const addPartyMemberRef = useRef('');
@@ -24,6 +26,15 @@ export default function OwnerFilter() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    useEffect(() => {
+        partyData && partyData.favorites && partyData.favorites[currentUser.uid] ? setDefaultMember(currentUser.uid, partyData) : console.log("Loading...")
+    }, [partyData]);
+
+    const setDefaultMember = (member, party) => {
+        document.getElementById('defaultMember').value = party.favorites[member];
+        setSortBy(party.favorites[member]);
+    }
 
     const addPartyMember = () => {
         if (!addPartyMemberRef.current.value) {
@@ -59,7 +70,7 @@ export default function OwnerFilter() {
 
             <Col xs={10}>
                 <Form onSubmit={(e) => { e.preventDefault(); setSortBy(sortRef.current.value); }}>
-                    <Form.Control as='select' ref={sortRef} onChange={() => { setSortBy(sortRef.current.value); }}>
+                    <Form.Control as='select' ref={sortRef} onChange={() => { setSortBy(sortRef.current.value); }} id='defaultMember'>
                         <option>All</option>
                         {partyData && partyData.party && partyData.party.map((partyMember, idx) => (
                             <option key={idx}>{partyMember}</option>

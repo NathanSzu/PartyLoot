@@ -12,16 +12,17 @@ import ModalEdit from '../components/ModalEditGroup';
 export default function Groups() {
 	const { currentUser, setUsername, setGroupCode, randomUsername } = useContext(AuthContext);
 	const { setCurrentGroup } = useContext(GroupContext);
-	const [ sortedGroups, setSortedGroups ] = useState([]);
+	const [sortedGroups, setSortedGroups] = useState([]);
 
 	const db = firebase.firestore();
 	const groupRef = db.collection('groups');
 	const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
 	const userRef = db.collection('users').doc(currentUser.uid);
-	const [ groupList, loading ] = useCollectionData(query, { idField: 'id' });
+	const [groupList, loading] = useCollectionData(query, { idField: 'id' });
 
 	useEffect(
 		() => {
+			setCurrentGroup(' ')
 			groupList &&
 				setSortedGroups(() => {
 					let sorted = groupList.sort((a, b) => {
@@ -30,7 +31,7 @@ export default function Groups() {
 					return sorted;
 				});
 		},
-		[ groupList ]
+		[groupList]
 	);
 
 	useEffect(() => {
