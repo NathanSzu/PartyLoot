@@ -13,6 +13,13 @@
     font-size: 12px
 }
 
+.vertical-center {
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
 /* Settings Page */
 
 .settings-h1 {
