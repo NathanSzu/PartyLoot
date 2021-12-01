@@ -23,8 +23,10 @@ export default function OwnerFilter() {
 
     const setDefaultMember = (member, party) => {
         if (party.party.includes(party.favorites[member])) {
-            document.getElementById('defaultMember').value = party.favorites[member] || "All";
+            document.getElementById('defaultMember').value = party.favorites[member];
             setSortBy(party.favorites[member]);
+        } else {
+            setSortBy("All");
         }
         console.log("Complete!")
     }
