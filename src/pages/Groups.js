@@ -39,7 +39,7 @@ export default function Groups() {
 			.get()
 			.then((doc) => {
 				if (doc.exists) {
-					// Do nothing
+					// Do nothing unless missing data
 					if (!doc.data().displayName) setUsername(currentUser.displayName || randomUsername());
 					if (!doc.data().code) setGroupCode();
 				} else {

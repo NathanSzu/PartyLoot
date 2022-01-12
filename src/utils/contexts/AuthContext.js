@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     userRef.set({
       displayName: username
     }, { merge: true })
-      .then(() => {})
+      .then(() => { })
       .catch((error) => { console.error('Error creating code: ', error) });
   }
 
@@ -34,18 +34,34 @@ export const AuthProvider = ({ children }) => {
       code += alphabet[Math.floor(Math.random() * alphabet.length)];
       code += Math.floor(Math.random() * 10);
     }
-    userRef.set({
-      code: code
-    }, { merge: true })
-      .then(() => {})
-      .catch((error) => { console.error('Error creating code: ', error) });
+
+    db.collection('users').where('code', '==', code)
+      .get()
+      .then((querySnapshot) => {
+        let check = true;
+        querySnapshot.forEach((doc) => {
+          // if a document is found then the function restarts
+          check = false;
+        });
+        if (check) {
+          userRef.set({
+            code: code
+          }, { merge: true })
+            .then(() => { })
+            .catch((error) => { console.error('Error creating code: ', error) });
+        }
+        if (!check) setGroupCode()
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
   }
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-              
+
         setCurrentUser(user);
         setLoading(false);
       } else {
