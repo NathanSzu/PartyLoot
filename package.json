@@ -27,6 +27,8 @@
     "build": "react-scripts build",
     "build:dev": "npm run test:dev && env-cmd -f ./src/utils/.env.development npm run build && firebase deploy --only hosting --project=dev",
     "build:prod": "env-cmd -f ./src/utils/.env.production npm run build && firebase deploy --only hosting --project=prod",
+    "deploy:dev": "firebase deploy --only hosting --project=dev",
+    "deploy:prod": "firebase deploy --only hosting --project=prod",
     "test": "react-scripts test",
     "cy:run": "npx cypress run",
     "cy:open": "npx cypress open",

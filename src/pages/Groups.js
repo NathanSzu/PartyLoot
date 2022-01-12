@@ -40,6 +40,8 @@ export default function Groups() {
 			.then((doc) => {
 				if (doc.exists) {
 					// Do nothing
+					if (!doc.data().displayName) setUsername(currentUser.displayName || randomUsername());
+					if (!doc.data().code) setGroupCode();
 				} else {
 					// doc.data() will be undefined in this case
 					// Generate a random username
@@ -51,7 +53,7 @@ export default function Groups() {
 			.catch((error) => {
 				console.log('Error getting document:', error);
 			});
-	});
+	}, [currentUser]);
 
 	return (
 		<Container>
