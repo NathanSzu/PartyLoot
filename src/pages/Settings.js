@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import ModalEditUser from "../components/ModalEditUsername";
+import ModalAppRequest from "../components/ModalAppRequest";
 import { Row, Col, Spinner, Alert, Button, Container } from "react-bootstrap";
 import { AuthContext } from "../utils/contexts/AuthContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -64,6 +65,7 @@ export default function Settings() {
 					</Col>
 				</div>
 			</Row>
+
 			<Row className="background-unset add-background-light pt-3 pb-4 border-top border-dark">
 				<div className="p-2 m-0 w-100">
 					<Col xs={12} className="mb-4">
@@ -74,6 +76,9 @@ export default function Settings() {
 						<a href="https://www.patreon.com/dndnathan?fan_landing=true" target="blank">
 							<Button variant="dark background-dark w-100 mb-2">Visit our Patreon</Button>
 						</a>
+					</Col>
+					<Col md={8} className="mr-auto ml-auto">
+						<ModalAppRequest loading={loading} setLoading={setLoading} userData={userData} />
 					</Col>
 				</div>
 			</Row>
