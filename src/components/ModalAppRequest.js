@@ -1,15 +1,14 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Modal, Alert } from 'react-bootstrap';
 import { AuthContext } from '../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 
 export default function ModalEditUsername({ loading, setLoading, userData }) {
     const { currentUser } = useContext(AuthContext);
-    const [show, setShow] = useState(false);
+    const { showRequestModal, handleCloseRequestModal } = useContext(GlobalFeatures);
     const [action, setAction] = useState('...');
     const [errorMsg, setErrorMsg] = useState('');
     
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const usernameRef = useRef(null);
     const emailRef = useRef(null);
     const actionRef = useRef(null);
@@ -28,9 +27,9 @@ export default function ModalEditUsername({ loading, setLoading, userData }) {
 
     return (
         <>
-            <Button variant='dark' className='p-2 mb-2 w-100 background-dark border-0' onClick={handleShow}>Request Feature / Report Bug</Button>
+            {/* <Button variant='dark' className='p-2 mb-2 w-100 background-dark border-0' onClick={handleShow}>Request Feature / Report Bug</Button> */}
 
-            <Modal show={show} onHide={() => { handleClose() }}>
+            <Modal show={showRequestModal} onHide={() => { handleCloseRequestModal() }}>
                 <Form className='texture-backer'>
                     <Modal.Header closeButton>
                         <Modal.Title>Request Feature / Report Bug</Modal.Title>

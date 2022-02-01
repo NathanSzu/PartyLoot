@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import ModalEditUser from "../components/ModalEditUsername";
-import ModalAppRequest from "../components/ModalAppRequest";
+import ModalAppRequestTrigger from "../components/ModalAppRequestTrigger";
 import { Row, Col, Spinner, Alert, Button, Container } from "react-bootstrap";
 import { AuthContext } from "../utils/contexts/AuthContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -78,7 +78,7 @@ export default function Settings() {
 						</a>
 					</Col>
 					<Col md={8} className="mr-auto ml-auto">
-						<ModalAppRequest loading={loading} setLoading={setLoading} userData={userData} />
+						<ModalAppRequestTrigger />
 					</Col>
 				</div>
 			</Row>
