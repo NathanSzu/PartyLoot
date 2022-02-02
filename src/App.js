@@ -14,6 +14,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import SecuredRoute from './utils/routingComponents/SecuredRoute';
 import SkippedRoute from './utils/routingComponents/SkippedRoute';
 import GroupRoute from './utils/routingComponents/GroupRoute';
+import BootToast from './components/BootToast';
 
 function App() {
 	useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
 			<GroupProvider>
 				<GlobalFeaturesProvider>
 					<ModalAppRequest />
+					<BootToast />
 					<Router>
 						<header>
 							<nav>

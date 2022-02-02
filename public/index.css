@@ -57,6 +57,10 @@ pre {
   word-wrap: break-word;
 }
 
+.top-layer {
+  z-index: 1;
+}
+
 .text-light {
   color: var(--theme2);
 }

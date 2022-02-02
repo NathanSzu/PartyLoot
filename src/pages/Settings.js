@@ -5,6 +5,7 @@ import { Row, Col, Spinner, Alert, Button, Container } from "react-bootstrap";
 import { AuthContext } from "../utils/contexts/AuthContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import app from "../utils/firebase";
+import ButtonShareLink from "../components/ButtonShareLink"
 
 export default function Settings() {
 	const { currentUser, userRef } = useContext(AuthContext);
@@ -70,6 +71,9 @@ export default function Settings() {
 				<div className="p-2 m-0 w-100">
 					<Col xs={12} className="mb-4">
 						<h2 className="text-center settings-h2">Want to support the app?</h2>
+					</Col>
+					<Col md={8} className="mr-auto ml-auto">
+						<ButtonShareLink />
 					</Col>
 					<Col md={8} className="mr-auto ml-auto">
 						{/* <Button variant="dark background-dark w-100 mb-2">Report a Bug</Button> */}
