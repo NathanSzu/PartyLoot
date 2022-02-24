@@ -1,70 +1,23 @@
-# Getting Started with Create React App
+# Getting Started with Party Loot
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+This project is a progressive web application intended to assist players at the game table with a collaborative notekeeping experience to track inventory, currency, and other treasures gained throughout a roleplaying adventure. Every entry can be organized by party member and searched by item name, description, or user defined tags. Planned features also include the addition of session notekeeping, and creating shared house rule documents for reference.
 
-In the project directory, you can run:
+![](https://i.imgur.com/t5BHeHp.png)
 
-### `npm start`
+## Project Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Clone the repository
+2. Install Packages (npm install)
+3. Environment Setup
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Environment Setup
 
-### `npm test`
+This project has commands built to allow easy running and deployment to two different firebase projects/environments. To set this up you will want to create a new firebase project following the instructions here [Firebase Project Setup](https://firebase.google.com/docs/web/setup?authuser=0#create-project). Keep in mind that you will need to setup firebase auth (email only), and firestore database. Then in the src/utils directory you will see a file titled .env.example. Once that project has been created, edit .env.example to contain the correct environment variables and re-save it with the name .env.development.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You may repeat this process to add another environment (.env.production) but not required. Console commands for the application are environment specific and can be found in package.json.
 
-### `npm run build`
+## Project Contribution
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Community contributions are welcome! Please follow [this guide](https://www.dataschool.io/how-to-contribute-on-github/) to suggest contributions.
