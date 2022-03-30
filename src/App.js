@@ -17,9 +17,6 @@ import GroupRoute from './utils/routingComponents/GroupRoute';
 import BootToast from './components/BootToast';
 
 function App() {
-	useEffect(() => {
-		console.log(process.env.REACT_APP_ENVIRONMENT);
-	});
 
 	return (
 		<AuthProvider>
