@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Row, Card, Col, Form, Accordion } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import firebase from '../utils/firebase';
 
 export default function GoldTracker() {
+	const { db } = useContext(AuthContext)
 	const { currentGroup, sortBy } = useContext(GroupContext);
 
-	const db = firebase.firestore();
 	const currencyRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
 	const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
 

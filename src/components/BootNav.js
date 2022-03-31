@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
-import firebase from '../utils/firebase';
+import firebaseApp from '../utils/firebase';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
 import ModalAppRequestTrigger from './ModalAppRequestTrigger';
@@ -11,7 +11,7 @@ export default function BootNav() {
 	const { currentUser } = useContext(AuthContext);
 
 	const logOut = () => {
-		firebase
+		firebaseApp
 			.auth()
 			.signOut()
 			.then(() => {

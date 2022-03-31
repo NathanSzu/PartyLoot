@@ -4,18 +4,15 @@ import { AuthContext } from '../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import fb from 'firebase';
-import firebase from '../utils/firebase';
 
 export default function ModalAppRequest() {
-    const { currentUser, userRef } = useContext(AuthContext);
+    const { currentUser, userRef, db } = useContext(AuthContext);
     const { showRequestModal, handleCloseRequestModal } = useContext(GlobalFeatures);
     const [action, setAction] = useState('...');
     const [userMsg, setUserMsg] = useState('');
     const [status, setStatus] = useState(null);
     const [loading, setLoading] = useState(false);
     const [userData] = useDocumentDataOnce(userRef);
-
-    const db = firebase.firestore();
 
     const usernameRef = useRef(null);
     const emailRef = useRef(null);

@@ -2,14 +2,10 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
-import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/contexts/AuthContext';
-import gear from '../assets/gear-fill.svg';
-import remove from '../assets/remove-user.svg';
-import add from '../assets/add-user.svg';
 
 export default function ModalEditGroup({ name, id, owner, members }) {
-    const { currentUser } = useContext(AuthContext);
+    const { currentUser, db } = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -19,7 +15,6 @@ export default function ModalEditGroup({ name, id, owner, members }) {
     const [noResult, setNoResult] = useState(false);
     const [maxReached, setMaxReached] = useState(false);
 
-    const db = firebase.firestore();
     const userRef = db.collection('users')
     const membersQuery = userRef.where(fb.firestore.FieldPath.documentId(), 'in', members);
     const [groupMembers, loading] = useCollectionData(membersQuery, { idField: 'id' })
@@ -144,7 +139,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     return (
         <>
-            <Button variant='dark' className='p-2 background-dark border-0' onClick={() => { handleShow() }}><img alt='Edit Group' src={gear}></img></Button>
+            <Button variant='dark' className='p-2 background-dark border-0' onClick={() => { handleShow() }}><img alt='Edit Group' src='/APPIcons/gear-fill.svg'></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <div className='texture-backer'>
@@ -200,7 +195,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
                                 {currentUser.uid === owner ?
                                     <Col xs='auto'>
                                         <Button disabled={loading} variant='danger' className='background-danger border-0' id={member.id} type='button' onClick={(e) => { removeMember(e) }}>
-                                            <img alt='Delete Group' id={member.id} src={remove}></img>
+                                            <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg'></img>
                                         </Button>
                                     </Col> : null
                                 }
@@ -226,7 +221,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
                                             <Col xs='auto'>
                                                 <Button disabled={loading} variant='dark' className='background-dark border-0' type='submit' onClick={(e) => { e.preventDefault(); addMember() }}>
-                                                    <img alt='Add Group Member' src={add} />
+                                                    <img alt='Add Group Member' src='/APPIcons/add-user.svg' />
                                                 </Button>
                                             </Col>
                                         </Row>

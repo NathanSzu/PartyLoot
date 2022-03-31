@@ -1,17 +1,16 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
-import edit from '../assets/pencil-square.svg';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/contexts/GroupContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 import fb from 'firebase';
-import firebase from '../utils/firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
 
 export default function ModalLoot({ item, idx }) {
 	const { currentGroup } = useContext(GroupContext);
+	const { db } = useContext(AuthContext);
 
-	const db = firebase.firestore();
 	const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
 	const groupRef = db.collection('groups').doc(currentGroup);
 
@@ -124,7 +123,7 @@ export default function ModalLoot({ item, idx }) {
 		<div>
 			{item ? (
 				<Button variant="dark" className="p-2 m-0 background-dark border-0" onClick={handleShow}>
-					<img alt="Edit Item" src={edit} />
+					<img alt="Edit Item" src='APPIcons/pencil-square.svg' />
 				</Button>
 			) : (
 				<Button variant="dark" onClick={handleShow} className="w-100 m-0 mr-auto ml-auto background-dark border-0">

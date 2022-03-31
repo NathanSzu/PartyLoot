@@ -2,18 +2,18 @@ import React, { useEffect, useContext, useState } from 'react';
 import { Card, Navbar, Row, Col, Container, Spinner } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/contexts/GroupContext';
+import { AuthContext } from '../utils/contexts/AuthContext';
 import ModalLoot from '../components/ModalLoot';
 import GoldTracker from '../components/GoldTracker';
 import ItemSearch from '../components/ItemSearch';
 import OwnerFilter from '../components/OwnerFilter';
 import LootAccordion from '../components/AccordionLoot';
-import firebase from '../utils/firebase';
 import { gsap } from 'gsap';
 
 export default function Loot() {
 	const { currentGroup } = useContext(GroupContext);
+	const { db } = useContext(AuthContext);
 
-	const db = firebase.firestore();
 	const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
 	const query = lootRef.orderBy('itemName');
 

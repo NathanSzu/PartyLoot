@@ -1,18 +1,15 @@
 import React, { useRef, useContext, useEffect } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import firebase from '../utils/firebase';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import ModalParty from './ModalParty';
 
 export default function OwnerFilter() {
     const { currentGroup, setSortBy } = useContext(GroupContext);
-    const { currentUser } = useContext(AuthContext);
+    const { currentUser, db } = useContext(AuthContext);
 
     const sortRef = useRef('');
-
-    const db = firebase.firestore();
     const groupRef = db.collection('groups').doc(currentGroup);
 
     const [partyData] = useDocumentData(groupRef)

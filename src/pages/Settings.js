@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import ModalEditUser from "../components/ModalEditUsername";
 import ModalAppRequestTrigger from "../components/ModalAppRequestTrigger";
-import { Row, Col, Spinner, Alert, Button, Container } from "react-bootstrap";
+import { Row, Col, Alert, Button, Container } from "react-bootstrap";
 import { AuthContext } from "../utils/contexts/AuthContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import app from "../utils/firebase";

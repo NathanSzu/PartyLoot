@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { AuthContext } from '../utils/contexts/AuthContext';
-import star from '../assets/star.svg';
-import starFill from '../assets/star-fill.svg';
 
 export default function FavoriteIcon({ currentGroupData, member, groupRef }) {
     const { currentUser } = useContext(AuthContext);
@@ -32,7 +30,7 @@ export default function FavoriteIcon({ currentGroupData, member, groupRef }) {
     return (
         <>
             <Button disabled={loading} variant="outline-light" className="p-0" onClick={setFavoriteMember}>
-                {checkFavorite() ? <img className="m-2" alt="Favorited" src={starFill} /> : <img className="m-2" alt="Not Favorited" src={star} />}
+                {checkFavorite() ? <img className="m-2" alt="Favorited" src='APPIcons/star-fill.svg' /> : <img className="m-2" alt="Not Favorited" src='APPIcons/star.svg' />}
             </Button>
         </>
     )

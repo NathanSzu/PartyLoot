@@ -1,19 +1,16 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import fb from 'firebase';
-import firebase from '../utils/firebase';
 import { AuthContext } from '../utils/contexts/AuthContext';
 
 export default function ModalAddGroup() {
-    const { currentUser } = useContext(AuthContext)
-    const [show, setShow] = useState(false)
+    const { currentUser, db } = useContext(AuthContext);
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [loading, setLoading] = useState(false);
 
-    const nameRef = useRef()
-
-    const db = firebase.firestore();
+    const nameRef = useRef();
 
     const addGroup = () => {
         if (!nameRef.current.value) { return }

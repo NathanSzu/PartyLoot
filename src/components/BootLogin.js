@@ -3,7 +3,7 @@ import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 // Importing and initializing firebase from utils/firebase config file.
-import app from '../utils/firebase';
+import firebaseApp from '../utils/firebase';
 
 export default function BootLogin({ login, setLogin }) {
 	const [ email, setEmail ] = useState(null);
@@ -71,7 +71,7 @@ export default function BootLogin({ login, setLogin }) {
 		if (!passwordRef.current.value) return;
 		if (emailValid && passwordValid && passwordLengthValid) {
 			setLoading(true);
-			app
+			firebaseApp
 				.auth()
 				.createUserWithEmailAndPassword(email, password)
 				.then((userCredential) => {
@@ -94,7 +94,7 @@ export default function BootLogin({ login, setLogin }) {
 		if (!passwordRef.current.value) return;
 		if (emailValid) {
 			setLoading(true);
-			app
+			firebaseApp
 				.auth()
 				.signInWithEmailAndPassword(email, password)
 				.then((userCredential) => {

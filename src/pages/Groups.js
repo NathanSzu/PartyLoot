@@ -1,5 +1,4 @@
 import React, { useEffect, useContext } from 'react';
-import firebase from '../utils/firebase';
 import { Row, Col, Button, Spinner, Container } from 'react-bootstrap';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { GroupContext } from '../utils/contexts/GroupContext';
@@ -10,11 +9,10 @@ import ModalAdd from '../components/ModalAddGroup';
 import ModalEdit from '../components/ModalEditGroup';
 
 export default function Groups() {
-	const { currentUser, setUsername, setGroupCode, randomUsername } = useContext(AuthContext);
+	const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);
 	const { setCurrentGroup } = useContext(GroupContext);
 	const [sortedGroups, setSortedGroups] = useState([]);
 
-	const db = firebase.firestore();
 	const groupRef = db.collection('groups');
 	const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
 	const userRef = db.collection('users').doc(currentUser.uid);

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Form, Button, Col, Row, Card, ListGroup, Spinner } from 'react-bootstrap';
-import search from '../assets/search.svg';
 
 export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
 	const [ weapons, setWeapons ] = useState([]);
@@ -70,7 +69,7 @@ Properties: ${selection[0].properties.join(', ')}`,
 							searchApi(searchRef.current.value);
 						}}
 					>
-						<img src={search} alt="Search" />
+						<img src='APPIcons/search.svg' alt="Search" />
 					</Button>
 				</Col>
 			</Row>
