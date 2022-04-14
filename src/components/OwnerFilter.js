@@ -15,9 +15,10 @@ export default function OwnerFilter() {
   const [partyData] = useDocumentData(groupRef);
 
   useEffect(() => {
-    partyData && partyData.favorites && partyData.favorites[currentUser.uid]
-      ? setDefaultMember(currentUser.uid, partyData)
-      : console.log('Loading...');
+    partyData &&
+      partyData.favorites &&
+      partyData.favorites[currentUser.uid] &&
+      setDefaultMember(currentUser.uid, partyData);
   }, [partyData]);
 
   const setDefaultMember = (member, party) => {
@@ -27,7 +28,6 @@ export default function OwnerFilter() {
     } else {
       setSortBy('All');
     }
-    console.log('Complete!');
   };
 
   return (
