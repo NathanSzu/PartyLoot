@@ -54,6 +54,9 @@ export default function ModalAppRequest() {
                     handleCloseRequestModal();
                     clearModal();
                 }, 3500)
+                return () => {
+                    clearTimeout(killModal);
+                };
             })
             .catch((error) => {
                 console.log("Error creating new group: ", error);

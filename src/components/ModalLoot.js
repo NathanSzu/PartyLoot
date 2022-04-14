@@ -36,6 +36,7 @@ export default function ModalLoot({ item, idx }) {
 		setShow(false);
 		setSRDContent({});
 		setSearchSRD(false);
+		setDeleteConfirmation(false);
 	};
 	const handleShow = () => setShow(true);
 
@@ -62,7 +63,7 @@ export default function ModalLoot({ item, idx }) {
 				owner: ownerRef.current.value,
 				created: fb.firestore.FieldValue.serverTimestamp()
 			})
-			.then((docRef) => {
+			.then(() => {
 				setLoading(false);
 				handleClose();
 			})
