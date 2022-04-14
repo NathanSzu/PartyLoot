@@ -5,7 +5,6 @@ import firebaseApp from '../utils/firebase';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
 import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
-import ModalAppRequestTrigger from './ModalAppRequestTrigger';
 
 export default function BootNav() {
   const location = useLocation();
