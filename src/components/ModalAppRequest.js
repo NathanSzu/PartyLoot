@@ -85,7 +85,7 @@ export default function ModalAppRequest() {
           clearModal();
         }}
       >
-        <Form className='texture-backer'>
+        <Form className='texture-backer rounded'>
           <Modal.Header closeButton>
             <Modal.Title>Request Feature / Report Bug</Modal.Title>
           </Modal.Header>

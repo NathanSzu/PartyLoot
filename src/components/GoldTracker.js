@@ -51,32 +51,17 @@ export default function GoldTracker() {
 		() => {
 			if (currency && currency[sortBy]) {
 				currency1Ref.current.value = currency[sortBy].currency1;
-			} else {
-				currency1Ref.current.value = '';
-			}
-			if (currency && currency[sortBy]) {
 				currency2Ref.current.value = currency[sortBy].currency2;
-			} else {
-				currency2Ref.current.value = '';
-			}
-			if (currency && currency[sortBy]) {
 				currency3Ref.current.value = currency[sortBy].currency3;
-			} else {
-				currency3Ref.current.value = '';
-			}
-			if (currency && currency[sortBy]) {
 				currency4Ref.current.value = currency[sortBy].currency4;
-			} else {
-				currency4Ref.current.value = '';
-			}
-			if (currency && currency[sortBy]) {
 				currency5Ref.current.value = currency[sortBy].currency5;
-			} else {
-				currency5Ref.current.value = '';
-			}
-			if (currency && currency[sortBy]) {
 				currency6Ref.current.value = currency[sortBy].currency6;
 			} else {
+				currency1Ref.current.value = '';
+				currency2Ref.current.value = '';
+				currency3Ref.current.value = '';
+				currency4Ref.current.value = '';
+				currency5Ref.current.value = '';
 				currency6Ref.current.value = '';
 			}
 		},
@@ -96,7 +81,7 @@ export default function GoldTracker() {
 								<Col xs={1} className="p-0">
 									<Form.Control
 										type="color"
-										value={colorTags ? colorTags.currency1 : '#ffbb00'}
+										value={colorTags && colorTags.currency1 || '#ffbb00'}
 										ref={color1Ref}
 										className="p-0 border-0 background-unset"
 										onChange={() => {
@@ -116,7 +101,7 @@ export default function GoldTracker() {
 								<Col xs={1} className="p-0">
 									<Form.Control
 										type="color"
-										value={colorTags ? colorTags.currency2 : '#bdbdbd'}
+										value={colorTags && colorTags.currency2 || '#bdbdbd'}
 										ref={color2Ref}
 										className="p-0 border-0 background-unset"
 										onChange={() => {
@@ -138,7 +123,7 @@ export default function GoldTracker() {
 								<Col xs={1} className="p-0">
 									<Form.Control
 										type="color"
-										value={colorTags ? colorTags.currency3 : '#d27e1e'}
+										value={colorTags && colorTags.currency3 || '#d27e1e'}
 										ref={color3Ref}
 										className="p-0 border-0 background-unset"
 										onChange={() => {
@@ -158,7 +143,7 @@ export default function GoldTracker() {
 								<Col xs={1} className="p-0">
 									<Form.Control
 										type="color"
-										value={colorTags ? colorTags.currency4 : '#ffffff'}
+										value={colorTags && colorTags.currency4 || '#ffffff'}
 										ref={color4Ref}
 										className="p-0 border-0 background-unset"
 										onChange={() => {
@@ -180,7 +165,7 @@ export default function GoldTracker() {
 								<Col xs={1} className="p-0">
 									<Form.Control
 										type="color"
-										value={colorTags ? colorTags.currency5 : '#ffffff'}
+										value={colorTags && colorTags.currency5 || '#ffffff'}
 										ref={color5Ref}
 										className="p-0 border-0 background-unset"
 										onChange={() => {
@@ -200,7 +185,7 @@ export default function GoldTracker() {
 								<Col xs={1} className="p-0">
 									<Form.Control
 										type="color"
-										value={colorTags ? colorTags.currency6 : '#ffffff'}
+										value={colorTags && colorTags.currency6 || '#ffffff'}
 										ref={color6Ref}
 										className="p-0 border-0 background-unset"
 										onChange={() => {

@@ -35,7 +35,7 @@ export default function BootNav() {
             aria-controls='basic-navbar-nav'
             data-cy='navbar-toggle'
           />
-          <Navbar.Collapse id='basic-navbar-nav' collapseOnSelect>
+          <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ml-auto'>
               <Nav.Link href='/' onClick={logOut} data-cy='navbar-logout'>
                 Sign Out

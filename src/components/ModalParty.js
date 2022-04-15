@@ -60,7 +60,7 @@ export default function ModalParty() {
                 </Modal.Header>
                 <Modal.Body>
                     <Container>
-                        <Form onSubmit={(e) => { e.preventDefault() }}>
+                        <Form className='rounded' onSubmit={(e) => { e.preventDefault() }}>
                             <Row>
                                 <Col className='pl-0' xs={10}>
                                     <Form.Control type='input' placeholder='Add Party Members' ref={addPartyMemberRef}></Form.Control>

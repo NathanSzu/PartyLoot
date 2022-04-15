@@ -7,19 +7,14 @@ import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
 
-export default function ModalLoot({ item, idx }) {
+export default function ModalLoot({ item }) {
   const { currentGroup } = useContext(GroupContext);
   const { db } = useContext(AuthContext);
 
-  const itemRef = db
-    .collection('groups')
-    .doc(`${currentGroup}`)
-    .collection('loot')
-    .doc(`${item.id}`);
+  const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
   const groupRef = db.collection('groups').doc(currentGroup);
 
   const [show, setShow] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchSRD, setSearchSRD] = useState(false);
   const [SRDContent, setSRDContent] = useState({});
@@ -40,7 +35,6 @@ export default function ModalLoot({ item, idx }) {
     setShow(false);
     setSRDContent({});
     setSearchSRD(false);
-    setDeleteConfirmation(false);
   };
   const handleShow = () => setShow(true);
 
@@ -49,12 +43,8 @@ export default function ModalLoot({ item, idx }) {
       setItemValidations('name and description');
       return;
     }
-    if (ownerRef.current.value === 'Select Owner') {
-      ownerRef.current.value = '';
-    }
     setLoading(true);
-    db.collection('groups')
-      .doc(`${currentGroup}`)
+    groupRef
       .collection('loot')
       .add({
         itemName: nameRef.current.value,
@@ -63,12 +53,12 @@ export default function ModalLoot({ item, idx }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        owner: ownerRef.current.value,
+        owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value,
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        setLoading(false);
         handleClose();
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error creating new group: ', error);
@@ -83,9 +73,6 @@ export default function ModalLoot({ item, idx }) {
       setItemValidations('name and description');
       return;
     }
-    if (ownerRef.current.value === 'Select Owner') {
-      ownerRef.current.value = '';
-    }
     setLoading(true);
     itemRef
       .update({
@@ -95,7 +82,7 @@ export default function ModalLoot({ item, idx }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        owner: ownerRef.current.value,
+        owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value,
       })
       .then(() => {
         handleClose();
@@ -126,38 +113,23 @@ export default function ModalLoot({ item, idx }) {
   return (
     <div>
       {item ? (
-        <Button
-          variant='dark'
-          className='p-2 m-0 background-dark border-0'
-          onClick={handleShow}
-        >
+        <Button variant='dark' className='p-2 m-0 background-dark border-0' onClick={handleShow}>
           <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
         </Button>
       ) : (
-        <Button
-          variant='dark'
-          onClick={handleShow}
-          className='w-100 m-0 mr-auto ml-auto background-dark border-0'
-        >
+        <Button variant='dark' onClick={handleShow} className='w-100 m-0 mr-auto ml-auto background-dark border-0'>
           Add Item
         </Button>
       )}
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='texture-backer'>
+        <Form className='texture-backer rounded'>
           <Modal.Header closeButton>
-            {item ? (
-              <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title>
-            ) : (
-              <Modal.Title>Add an item!</Modal.Title>
-            )}
+            {item ? <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title> : <Modal.Title>Add an item!</Modal.Title>}
           </Modal.Header>
 
           {searchSRD ? (
-            <SearchOpen5E
-              setSearchSRD={setSearchSRD}
-              setSRDContent={setSRDContent}
-            />
+            <SearchOpen5E setSearchSRD={setSearchSRD} setSRDContent={setSRDContent} />
           ) : (
             <div>
               <Modal.Body>
@@ -171,9 +143,7 @@ export default function ModalLoot({ item, idx }) {
                     <Form.Group controlId='itemName'>
                       <Form.Control
                         ref={nameRef}
-                        defaultValue={
-                          (item && item.itemName) || SRDContent.name
-                        }
+                        defaultValue={(item && item.itemName) || SRDContent.name}
                         type='text'
                         placeholder='Item name'
                       />
@@ -207,10 +177,7 @@ export default function ModalLoot({ item, idx }) {
                     </Form.Group>
                   </Col>
 
-                  <Col
-                    xs={2}
-                    className='d-flex align-items-center justify-content-center'
-                  >
+                  <Col xs={2} className='d-flex align-items-center justify-content-center'>
                     /
                   </Col>
 
@@ -248,24 +215,14 @@ export default function ModalLoot({ item, idx }) {
                 </Form.Group>
 
                 <Form.Group controlId='itemOwner'>
-                  <Form.Control
-                    as='select'
-                    defaultValue={item && item.owner}
-                    ref={ownerRef}
-                  >
-                    <option>Select Owner</option>
+                  <Form.Control as='select' defaultValue={item && item.owner} ref={ownerRef}>
+                    <option>Select owner</option>
                     {partyData &&
                       partyData.party &&
-                      partyData.party.map((partyMember, idx) => (
-                        <option key={idx}>{partyMember}</option>
-                      ))}
+                      partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
                   </Form.Control>
                 </Form.Group>
-                {itemValidations && (
-                  <Alert variant='warning'>
-                    Item {itemValidations} are required!
-                  </Alert>
-                )}
+                {itemValidations && <Alert variant='warning'>Item {itemValidations} are required!</Alert>}
               </Modal.Body>
 
               <Modal.Footer className='justify-content-between'>
@@ -296,35 +253,6 @@ export default function ModalLoot({ item, idx }) {
                     Create
                   </Button>
                 )}
-
-                {deleteConfirmation ? (
-                  <Button
-                    as='input'
-                    value={`Yes, I'm sure. Delete!`}
-                    className='background-danger border-0'
-                    disabled={loading}
-                    variant='danger'
-                    type='button'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      deleteItem();
-                    }}
-                  />
-                ) : null}
-
-                {!deleteConfirmation && item ? (
-                  <Button
-                    as='input'
-                    value='Delete'
-                    className='background-danger border-0'
-                    disabled={loading}
-                    variant='danger'
-                    type='button'
-                    onClick={(e) => {
-                      setDeleteConfirmation(true);
-                    }}
-                  />
-                ) : null}
               </Modal.Footer>
             </div>
           )}

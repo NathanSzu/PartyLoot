@@ -3,8 +3,9 @@
   --support-theme-1: #52596f;
   --support-theme-2: #547088;
   --support-theme-3: #54889b;
-  --theme2: #d8e4ea;
-  --danger-theme: #be707e;
+  --theme2: #d8dcea;
+  --danger-theme: #ce6060;
+  --success-theme: #5cc251;
   background-color: var(--theme1);
 }
 
@@ -87,6 +88,10 @@ pre {
 
 .background-danger {
   background-color: var(--danger-theme);
+}
+
+.background-success {
+  background-color: var(--success-theme);
 }
 
 .add-background-dark::before {

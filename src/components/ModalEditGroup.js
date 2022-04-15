@@ -142,7 +142,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
             <Button variant='dark' className='p-2 background-dark border-0' onClick={() => { handleShow() }}><img alt='Edit Group' src='/APPIcons/gear-fill.svg'></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
-                <div className='texture-backer'>
+                <div className='texture-backer rounded'>
                     <Form>
                         <Modal.Header closeButton>
                             <Modal.Title>{currentUser.uid === owner ? 'Edit: ' : null} {name}</Modal.Title>

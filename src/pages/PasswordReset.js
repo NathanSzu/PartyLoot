@@ -47,16 +47,10 @@ export default function PasswordReset() {
         <Form className='p-3'>
           <Form.Group controlId='Email'>
             <Form.Label>Email address</Form.Label>
-            {emailValid ? null : (
-              <Alert variant={'warning'}>
-                Please enter a valid email address.
-              </Alert>
-            )}
+            {emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert>}
 
             {!resetEmailSent ? null : (
-              <Alert variant={'success'}>
-                Your email has been sent. Please check your inbox!
-              </Alert>
+              <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
             )}
             <Form.Control
               ref={emailRef}
@@ -68,8 +62,7 @@ export default function PasswordReset() {
               }}
             />
             <Form.Text className='text-dark text-center'>
-              If we have an account with this email, we will send a link to
-              reset your password.
+              If we have an account with this email, we will send a link to reset your password.
             </Form.Text>
           </Form.Group>
 
