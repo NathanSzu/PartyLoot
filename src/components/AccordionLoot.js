@@ -23,7 +23,7 @@ export default function AccordionLoot({ filteredItems }) {
   return (
     <Accordion className='m-0'>
       {filteredItems.map((item, idx) => (
-        <Card className='loot-item'>
+        <Card className='loot-item' key={idx}>
           <Accordion.Toggle as={Card.Header} variant='link' eventKey={item.id} className='p-2'>
             <Container>
               <Row>

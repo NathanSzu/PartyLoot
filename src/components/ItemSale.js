@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Modal, Button, Form, Badge, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Badge, Row, Col, Alert } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -8,12 +8,14 @@ export default function ModalLoot({ item }) {
   const { currentGroup } = useContext(GroupContext);
   const { db } = useContext(AuthContext);
 
-  const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
   const groupRef = db.collection('groups').doc(currentGroup);
   const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
+  const currencyRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
+  const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
 
   const [partyData] = useDocumentData(groupRef);
   const [colorTags] = useDocumentData(colorTagRef);
+  const [currency] = useDocumentData(currencyRef);
 
   const qtyRef = useRef();
 
@@ -24,31 +26,105 @@ export default function ModalLoot({ item }) {
   const currency5Ref = useRef();
   const currency6Ref = useRef();
 
+  const allCurrencies = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
+  const allCurrencyRefs = [currency1Ref, currency2Ref, currency3Ref, currency4Ref, currency5Ref, currency6Ref];
+
   const sellerRef = useRef();
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleClose = () => {
-    setShow(false);
-  };
+  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const sellItem = () => {
-    console.log('Qty: ', qtyRef.current.value);
-    console.log('Seller: ', sellerRef.current.value);
+  const maxQty = () => (qtyRef.current.value = item.itemQty);
 
-    // setLoading(true);
-    // handleClose();
-    // itemRef
-    //   .delete()
-    //   .then(() => {
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     setLoading(false);
-    //     console.error('Error removing item: ', error);
-    //   });
+  const deleteItem = () => {
+    setLoading(true);
+    handleClose();
+    itemRef
+      .delete()
+      .then(() => {
+        handleClose();
+        setLoading(false);
+      })
+      .catch((error) => {
+        handleClose();
+        setLoading(false);
+        console.error('Error removing item: ', error);
+      });
+  };
+
+  const updateQty = () => {
+    itemRef
+      .update({
+        itemQty: qtyRef.current.value,
+      })
+      .then(() => {
+        handleClose();
+        setLoading(false);
+      })
+      .catch((error) => {
+        // The document probably doesn't exist.
+        console.error('Error updating quantity: ', error);
+        handleClose();
+        setLoading(false);
+      });
+  };
+
+  const checkSellValidations = () => {
+    if (!qtyRef.current.value) {
+      setErrorMessage('Quantity must be greater than 0');
+      return false;
+    }
+    if (
+      !currency1Ref.current.value &&
+      !currency2Ref.current.value &&
+      !currency3Ref.current.value &&
+      !currency4Ref.current.value &&
+      !currency5Ref.current.value &&
+      !currency6Ref.current.value
+    ) {
+      setErrorMessage('At least one sale price must be entered');
+      return false;
+    }
+    setErrorMessage('');
+    return true;
+  };
+
+  const addCurrency = (currentCurrency, currencyValueRefs, currencies) => {
+    for (let i = 0; i < currencyValueRefs.length; i++) {
+      let updatedValue =
+        parseInt(currentCurrency[sellerRef.current.value][currencies[i]] || 0) +
+        parseInt(currencyValueRefs[i].current.value || 0) * parseInt(qtyRef.current.value || 1);
+      console.log(updatedValue);
+      currencyRef.set(
+        {
+          [sellerRef.current.value]: {
+            [currencies[i]]: updatedValue,
+          },
+        },
+        { merge: true }
+      );
+    }
+  };
+
+  const sellItem = () => {
+    qtyRef.current && console.log('Qty: ', qtyRef.current.value);
+    sellerRef.current && console.log('Seller: ', sellerRef.current.value);
+    if (item.itemQty >= 2) {
+      if (!checkSellValidations()) return;
+      // setLoading(true);
+      addCurrency(currency, allCurrencyRefs, allCurrencies);
+      // if (item.itemQty <= qtyRef.current.value) deleteItem();
+      // In this case, just add currency and update item qty
+      // if (item.itemQty > qtyRef.current.value) console.log('items left over!');
+    }
+    if (item.itemQty < 2) {
+      setLoading(true);
+      // deleteItem();
+    }
   };
 
   return (
@@ -74,11 +150,18 @@ export default function ModalLoot({ item }) {
             </Row>
             <Row>
               {item.itemQty > 1 ? (
-                <Col>
-                  <Form.Group controlId='itemQty'>
-                    <Form.Control type='number' ref={qtyRef} placeholder='Qty' />
-                  </Form.Group>
-                </Col>
+                <>
+                  <Col>
+                    <Form.Group controlId='itemQty'>
+                      <Form.Control type='number' ref={qtyRef} placeholder='Qty' />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={3} className='pl-0'>
+                    <Button className='w-100 background-dark border-0' variant='dark' onClick={maxQty}>
+                      Sell all
+                    </Button>
+                  </Col>
+                </>
               ) : null}
             </Row>
             <Row>
@@ -180,6 +263,11 @@ export default function ModalLoot({ item }) {
             </Row>
           </Modal.Body>
           <Modal.Footer className='pt-0'>
+            {errorMessage && (
+              <Alert variant='warning' className='w-100'>
+                {errorMessage}
+              </Alert>
+            )}
             <Button
               className='mt-3 p-2 pl-3 pr-3 background-success border-0 text-light'
               disabled={loading}

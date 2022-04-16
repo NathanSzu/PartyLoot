@@ -96,20 +96,6 @@ export default function ModalLoot({ item }) {
       });
   };
 
-  const deleteItem = () => {
-    setLoading(true);
-    handleClose();
-    itemRef
-      .delete()
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error('Error removing item: ', error);
-      });
-  };
-
   return (
     <div>
       {item ? (
