@@ -56,10 +56,10 @@ export default function ModalLoot({ item }) {
       });
   };
 
-  const updateQty = () => {
+  const updateQty = (qty, qtySold) => {
     itemRef
       .update({
-        itemQty: qtyRef.current.value,
+        itemQty: qty - qtySold,
       })
       .then(() => {
         handleClose();
@@ -76,6 +76,11 @@ export default function ModalLoot({ item }) {
   const checkSellValidations = () => {
     if (!qtyRef.current.value) {
       setErrorMessage('Quantity must be greater than 0');
+      return false;
+    }
+    if (qtyRef.current.value > (item.itemQty || 1)) {
+      setErrorMessage('Cannot sell more items than you own');
+      console.log(item.itemQty);
       return false;
     }
     if (
@@ -115,15 +120,20 @@ export default function ModalLoot({ item }) {
     sellerRef.current && console.log('Seller: ', sellerRef.current.value);
     if (item.itemQty >= 2) {
       if (!checkSellValidations()) return;
-      // setLoading(true);
+      setLoading(true);
       addCurrency(currency, allCurrencyRefs, allCurrencies);
-      // if (item.itemQty <= qtyRef.current.value) deleteItem();
-      // In this case, just add currency and update item qty
-      // if (item.itemQty > qtyRef.current.value) console.log('items left over!');
+      if (item.itemQty <= qtyRef.current.value) {
+        deleteItem();
+      } else {
+        // In this case, just add currency and update item qty
+        updateQty(item.itemQty, qtyRef.current.value);
+      }
     }
     if (item.itemQty < 2) {
+      if (!checkSellValidations()) return;
       setLoading(true);
-      // deleteItem();
+      addCurrency(currency, allCurrencyRefs, allCurrencies);
+      deleteItem();
     }
   };
 
@@ -149,20 +159,27 @@ export default function ModalLoot({ item }) {
               <Col className='pb-2'>This action cannot be undone!</Col>
             </Row>
             <Row>
-              {item.itemQty > 1 ? (
-                <>
-                  <Col>
-                    <Form.Group controlId='itemQty'>
-                      <Form.Control type='number' ref={qtyRef} placeholder='Qty' />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={3} className='pl-0'>
-                    <Button className='w-100 background-dark border-0' variant='dark' onClick={maxQty}>
-                      Sell all
-                    </Button>
-                  </Col>
-                </>
-              ) : null}
+              <Col>
+                <Form.Group controlId='itemQty'>
+                  <Form.Control
+                    type='number'
+                    ref={qtyRef}
+                    disabled={item.itemQty <= 1 && true}
+                    defaultValue={item.itemQty <= 1 && 1}
+                    placeholder='Qty'
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={3} className='pl-0'>
+                <Button
+                  className='w-100 background-dark border-0'
+                  disabled={item.itemQty <= 1 && true}
+                  variant='dark'
+                  onClick={maxQty}
+                >
+                  Sell all
+                </Button>
+              </Col>
             </Row>
             <Row>
               <Col xs={2} className='pr-0'>
@@ -173,7 +190,7 @@ export default function ModalLoot({ item }) {
                   className='p-0 border-0 background-unset'
                 />
               </Col>
-              <Col>
+              <Col xs={4}>
                 <Form.Group controlId='itemPrice1'>
                   <Form.Control type='number' ref={currency1Ref} placeholder='Price' />
                 </Form.Group>
@@ -186,13 +203,12 @@ export default function ModalLoot({ item }) {
                   className='p-0 border-0 background-unset'
                 />
               </Col>
-              <Col>
+              <Col xs={4}>
                 <Form.Group controlId='itemPrice2'>
                   <Form.Control type='number' ref={currency2Ref} placeholder='Price' />
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
+
               <Col xs={2} className='pr-0'>
                 <Form.Control
                   type='color'
@@ -201,7 +217,7 @@ export default function ModalLoot({ item }) {
                   className='p-0 border-0 background-unset'
                 />
               </Col>
-              <Col>
+              <Col xs={4}>
                 <Form.Group controlId='itemPrice3'>
                   <Form.Control type='number' ref={currency3Ref} placeholder='Price' />
                 </Form.Group>
@@ -214,13 +230,12 @@ export default function ModalLoot({ item }) {
                   className='p-0 border-0 background-unset'
                 />
               </Col>
-              <Col>
+              <Col xs={4}>
                 <Form.Group controlId='itemPrice4'>
                   <Form.Control type='number' ref={currency4Ref} placeholder='Price' />
                 </Form.Group>
               </Col>
-            </Row>
-            <Row>
+
               <Col xs={2} className='pr-0'>
                 <Form.Control
                   type='color'
@@ -229,7 +244,7 @@ export default function ModalLoot({ item }) {
                   className='p-0 border-0 background-unset'
                 />
               </Col>
-              <Col>
+              <Col xs={4}>
                 <Form.Group controlId='itemPrice5'>
                   <Form.Control type='number' ref={currency5Ref} placeholder='Price' />
                 </Form.Group>
@@ -242,7 +257,7 @@ export default function ModalLoot({ item }) {
                   className='p-0 border-0 background-unset'
                 />
               </Col>
-              <Col>
+              <Col xs={4}>
                 <Form.Group controlId='itemPrice6'>
                   <Form.Control type='number' ref={currency6Ref} placeholder='Price' />
                 </Form.Group>

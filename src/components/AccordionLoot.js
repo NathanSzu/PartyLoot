@@ -80,7 +80,7 @@ export default function AccordionLoot({ filteredItems }) {
                   </Col>
                   <Col className='d-flex justify-content-end'>
                     {/* Commented incomplete feature */}
-                    {/* <ItemSale item={item} /> */}
+                    <ItemSale item={item} />
                     <ItemDelete item={item} />
                   </Col>
                 </Row>
