@@ -4,7 +4,7 @@ import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-export default function ModalLoot({ item }) {
+export default function ItemSale({ item }) {
   const { currentGroup } = useContext(GroupContext);
   const { db } = useContext(AuthContext);
 
@@ -35,7 +35,11 @@ export default function ModalLoot({ item }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setErrorMessage('');
+  };
+
   const handleShow = () => setShow(true);
 
   const maxQty = () => (qtyRef.current.value = item.itemQty);
@@ -78,7 +82,7 @@ export default function ModalLoot({ item }) {
       setErrorMessage('Quantity must be greater than 0');
       return false;
     }
-    if (parseInt(qtyRef.current.value) > parseInt((item.itemQty || 1))) {
+    if (parseInt(qtyRef.current.value) > parseInt(item.itemQty || 1)) {
       setErrorMessage('Cannot sell more items than you own');
       console.log(item.itemQty);
       return false;
@@ -101,7 +105,9 @@ export default function ModalLoot({ item }) {
   const addCurrency = (currentCurrency, currencyValueRefs, currencies) => {
     for (let i = 0; i < currencyValueRefs.length; i++) {
       let updatedValue =
-        parseInt(currentCurrency[sellerRef.current.value][currencies[i]] || 0) +
+        parseInt(
+          (currentCurrency[sellerRef.current.value] && currentCurrency[sellerRef.current.value][currencies[i]]) || 0
+        ) +
         parseInt(currencyValueRefs[i].current.value || 0) * parseInt(qtyRef.current.value || 1);
       console.log(updatedValue);
       currencyRef.set(
