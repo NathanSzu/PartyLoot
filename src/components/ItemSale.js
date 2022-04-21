@@ -78,7 +78,7 @@ export default function ModalLoot({ item }) {
       setErrorMessage('Quantity must be greater than 0');
       return false;
     }
-    if (qtyRef.current.value > (item.itemQty || 1)) {
+    if (parseInt(qtyRef.current.value) > parseInt((item.itemQty || 1))) {
       setErrorMessage('Cannot sell more items than you own');
       console.log(item.itemQty);
       return false;

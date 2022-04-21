@@ -211,7 +211,7 @@ export default function ModalLoot({ item }) {
                 {itemValidations && <Alert variant='warning'>Item {itemValidations} are required!</Alert>}
               </Modal.Body>
 
-              <Modal.Footer className='justify-content-between'>
+              <Modal.Footer className='justify-content-end'>
                 {item ? (
                   <Button
                     as='input'
