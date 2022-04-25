@@ -36,13 +36,24 @@ export default function ModalLoot({ item }) {
     setSRDContent({});
     setSearchSRD(false);
   };
+
   const handleShow = () => setShow(true);
 
-  const addLoot = () => {
+  const checkItemValidations = () => {
     if (!nameRef.current.value || !descRef.current.value) {
-      setItemValidations('name and description');
+      setItemValidations('Item name and description are required!');
       return;
-    }
+    };
+    if (!/^\d+$/.test(qtyRef.current.value) && qtyRef.current.value !== '') {
+      setItemValidations('Item quantity must be a positive number!');
+      return false;
+    };
+    setItemValidations('');
+    return true;
+  };
+
+  const addLoot = () => {
+    if (!checkItemValidations()) return;
     setLoading(true);
     groupRef
       .collection('loot')
@@ -68,11 +79,7 @@ export default function ModalLoot({ item }) {
   };
 
   const editLoot = () => {
-    // Does not call update function if the group name or description is left empty.
-    if (!nameRef.current.value || !descRef.current.value) {
-      setItemValidations('name and description');
-      return;
-    }
+    if (!checkItemValidations()) return;
     setLoading(true);
     itemRef
       .update({
@@ -136,14 +143,14 @@ export default function ModalLoot({ item }) {
                     </Form.Group>
                   </Col>
                   <Col xs={3} className='pl-0'>
-                    <Form.Group controlId='itemCharge'>
+                    <Form.Group controlId='itemQty'>
                       <Form.Control
                         className='text-center'
                         ref={qtyRef}
                         defaultValue={item && item.itemQty}
                         type='text'
                         placeholder='Qty'
-                        maxLength='2'
+                        maxLength='3'
                       />
                     </Form.Group>
                   </Col>
@@ -208,7 +215,7 @@ export default function ModalLoot({ item }) {
                       partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
                   </Form.Control>
                 </Form.Group>
-                {itemValidations && <Alert variant='warning'>Item {itemValidations} are required!</Alert>}
+                {itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}
               </Modal.Body>
 
               <Modal.Footer className='justify-content-end'>

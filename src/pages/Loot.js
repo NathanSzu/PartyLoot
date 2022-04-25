@@ -48,7 +48,7 @@ export default function Loot() {
             </Card>
           </div>
         </Navbar>
-        <Col xs={12} className='pl-2 pr-2 pt-1'>
+        <Col xs={12} className='pl-1 pr-1 pt-1'>
           {loading && (
             <Spinner
               as='div'

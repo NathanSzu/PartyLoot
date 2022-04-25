@@ -24,21 +24,15 @@ export default function AccordionLoot({ filteredItems }) {
     <Accordion className='m-0'>
       {filteredItems.map((item, idx) => (
         <Card className='loot-item' key={idx}>
-          <Accordion.Toggle as={Card.Header} variant='link' eventKey={item.id} className='p-2'>
-            <Container>
-              <Row>
-                <Col className='pl-0 pr-1'>
-                  <h1
-                    className={`item-h1 m-0 pt-1 pb-1 ${
-                      item.itemQty && item.itemQty > 1 ? 'border-right border-dark' : ''
-                    }`}
-                  >
-                    {item.itemName}
-                  </h1>
+          <Accordion.Toggle as={Card.Header} variant='link' eventKey={item.id} className='pr-0'>
+            <Container className='pr-0'>
+              <Row className='mr-1'>
+                <Col className='pl-0 pr-0'>
+                  <h1 className='item-h1 m-0 pt-1 pb-1'>{item.itemName}</h1>
                 </Col>
                 {item.itemQty && item.itemQty > 1 ? (
-                  <Col xs={1} className='p-0'>
-                    <p className='m-0 vertical-center pl-1'>x{item.itemQty}</p>
+                  <Col xs={2} className='p-0 border-left border-dark'>
+                    <p className='m-0 vertical-center pl-1 pr-1 w-100 text-center'>x{item.itemQty}</p>
                   </Col>
                 ) : null}
               </Row>
