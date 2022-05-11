@@ -4,6 +4,7 @@ import ModalAppRequestTrigger from '../components/ModalAppRequestTrigger';
 import { Row, Col, Alert, Button, Container } from 'react-bootstrap';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import metadata from '../utils/metadata.json';
 import app from '../utils/firebase';
 import ButtonShareLink from '../components/ButtonShareLink';
 
@@ -89,6 +90,10 @@ export default function Settings() {
             <ModalAppRequestTrigger />
           </Col>
         </div>
+      </Row>
+
+      <Row>
+        <Col className='text-right p-2'>Version: {metadata.buildMajor}.{metadata.buildMinor}.{metadata.buildRevision} {metadata.buildTag}</Col>
       </Row>
     </Container>
   );
