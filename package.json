@@ -25,7 +25,7 @@
     "start:dev": "env-cmd -f ./src/utils/.env.development npm start",
     "start:prod": "env-cmd -f ./src/utils/.env.production npm start",
     "build": "react-scripts build",
-    "buildProd": "node generate-buildno.js react-scripts build",
+    "buildProd": "node generate-buildno.js && react-scripts build",
     "build:dev": "npm run test:dev && env-cmd -f ./src/utils/.env.development npm run build && firebase deploy --only hosting --project=dev",
     "build:prod": "env-cmd -f ./src/utils/.env.production npm run buildProd && firebase deploy --only hosting --project=prod",
     "deploy:dev": "firebase deploy --only hosting --project=dev",
