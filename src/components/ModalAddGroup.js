@@ -26,7 +26,7 @@ export default function ModalAddGroup() {
             handleClose();
         })
         .catch((error) => {
-            console.log("Error creating new group: ", error);
+            console.error("Error creating new group: ", error);
             setLoading(false);
             handleClose();
         });

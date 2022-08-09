@@ -46,7 +46,7 @@ export default function Groups() {
         }
       })
       .catch((error) => {
-        console.log('Error getting document:', error);
+        console.error('Error getting document:', error);
       });
   }, [currentUser]);
 

@@ -82,8 +82,8 @@ export default function BootLogin({ login, setLogin }) {
 				})
 				.catch((error) => {
 					setLoading(false);
-					console.log(error.code);
-					console.log(error.message);
+					console.error(error.code);
+					console.error(error.message);
 				});
 		}
 	};
@@ -105,8 +105,8 @@ export default function BootLogin({ login, setLogin }) {
 				})
 				.catch((error) => {
 					setNoUser(true);
-					console.log(error.code);
-					console.log(error.message);
+					console.error(error.code);
+					console.error(error.message);
 					setLoading(false);
 				});
 		}

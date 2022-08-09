@@ -67,7 +67,7 @@ export default function ModalAppRequest() {
         };
       })
       .catch((error) => {
-        console.log('Error creating new group: ', error);
+        console.error('Error creating new group: ', error);
         setLoading(false);
         setUserMsg('Unknown error, please try again.');
         setStatus('danger');

@@ -23,7 +23,7 @@ export default function ModalParty() {
 
     const addPartyMember = () => {
         if (!addPartyMemberRef.current.value) {
-            console.log('Enter a name first')
+            console.error('Enter a name first')
             return
         }
         setLoading(true)
@@ -33,8 +33,8 @@ export default function ModalParty() {
             addPartyMemberRef.current.value = ''
             setLoading(false)
         }).catch((err) => {
-            console.log(err.code);
-            console.log(err.message)
+            console.error(err.code);
+            console.error(err.message)
         })
     }
 
@@ -45,8 +45,8 @@ export default function ModalParty() {
         }).then(() => {
             setLoading(false)
         }).catch((err) => {
-            console.log(err.code);
-            console.log(err.message)
+            console.error(err.code);
+            console.error(err.message)
         })
     }
 

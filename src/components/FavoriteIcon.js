@@ -22,8 +22,8 @@ export default function FavoriteIcon({ currentGroupData, member, groupRef }) {
         }).then(() => {
             setLoading(false)
         }).catch((err) => {
-            console.log(err.code);
-            console.log(err.message)
+            console.error(err.code);
+            console.error(err.message)
         })
     }
 

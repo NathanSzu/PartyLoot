@@ -31,15 +31,12 @@ export default function BootNav() {
       {/* Hides the nav links if no user is logged in */}
       {!currentUser ? null : (
         <>
-          <Navbar.Toggle
-            aria-controls='basic-navbar-nav'
-            data-cy='navbar-toggle'
-          />
+          <Navbar.Toggle aria-controls='basic-navbar-nav' data-cy='navbar-toggle' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ml-auto'>
-              <Nav.Link href='/' onClick={logOut} data-cy='navbar-logout'>
-                Sign Out
-              </Nav.Link>
+              {/* <LinkContainer to='/item-compendium' data-cy='navbar-compendium'>
+                <Nav.Link>Item Compendium</Nav.Link>
+              </LinkContainer> */}
               {/* Hides the groups nav link if on the groups page */}
               {location.pathname === '/groups' ? null : (
                 <LinkContainer to='/groups' data-cy='navbar-groups'>
@@ -52,12 +49,13 @@ export default function BootNav() {
                   <Nav.Link>Settings</Nav.Link>
                 </LinkContainer>
               )}
+              <Nav.Link href='/' onClick={logOut} data-cy='navbar-logout'>
+                Sign Out
+              </Nav.Link>
               {/* Hides the Request Feature / Report Bug link if on the user setting page */}
               {location.pathname === '/user-settings' ? null : (
                 <LinkContainer to='/user-settings'>
-                  <Nav.Link onClick={handleShowRequestModal}>
-                    Request Feature / Report Bug
-                  </Nav.Link>
+                  <Nav.Link onClick={handleShowRequestModal}>Request Feature / Report Bug</Nav.Link>
                 </LinkContainer>
               )}
             </Nav>

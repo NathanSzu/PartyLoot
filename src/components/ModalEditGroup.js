@@ -73,7 +73,6 @@ export default function ModalEditGroup({ name, id, owner, members }) {
         if (currentUser.uid !== owner) { return }
         db.collection('groups').doc(`${id}`).delete()
             .then(() => {
-                console.log('Document successfully deleted!');
                 setFalseThenClose();
             }).catch((error) => {
                 console.error('Error removing document: ', error);

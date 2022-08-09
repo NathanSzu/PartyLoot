@@ -84,7 +84,6 @@ export default function ItemSale({ item }) {
     }
     if (parseInt(qtyRef.current.value) > parseInt(item.itemQty || 1)) {
       setErrorMessage('Cannot sell more items than you own');
-      console.log(item.itemQty);
       return false;
     }
     if (
@@ -109,7 +108,6 @@ export default function ItemSale({ item }) {
           (currentCurrency[sellerRef.current.value] && currentCurrency[sellerRef.current.value][currencies[i]]) || 0
         ) +
         parseInt(currencyValueRefs[i].current.value || 0) * parseInt(qtyRef.current.value || 1);
-      console.log(updatedValue);
       currencyRef.set(
         {
           [sellerRef.current.value]: {
@@ -122,8 +120,6 @@ export default function ItemSale({ item }) {
   };
 
   const sellItem = () => {
-    qtyRef.current && console.log('Qty: ', qtyRef.current.value);
-    sellerRef.current && console.log('Seller: ', sellerRef.current.value);
     if (item.itemQty >= 2) {
       if (!checkSellValidations()) return;
       setLoading(true);
@@ -274,7 +270,7 @@ export default function ItemSale({ item }) {
                 <Form.Group controlId='itemOwner'>
                   <Form.Label>Item seller</Form.Label>
                   <Form.Control as='select' defaultValue={item && item.owner} ref={sellerRef}>
-                    <option>Party</option>
+                    <option value={'All'}>Party</option>
                     {partyData &&
                       partyData.party &&
                       partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
