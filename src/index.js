@@ -15,4 +15,17 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-serviceWorker.register();
+serviceWorker.register({
+  onUpdate: registration => {
+    const waitingServiceWorker = registration.waiting
+
+    if (waitingServiceWorker) {
+      waitingServiceWorker.addEventListener("statechange", event => {
+        if (event.target.state === "activated") {
+          window.location.reload()
+        }
+      });
+      waitingServiceWorker.postMessage({ type: "SKIP_WAITING" });
+    }
+  }
+});
