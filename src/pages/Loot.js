@@ -58,9 +58,7 @@ export default function Loot() {
               variant='light'
             />
           )}
-          {/* {filteredItems.map((item, idx) => ( */}
-            <LootAccordion filteredItems={filteredItems} />
-          {/* // ))} */}
+          <LootAccordion filteredItems={filteredItems} />
         </Col>
         {filteredItems.length > 0 || loading ? null : (
           <Col xs={12} className='pt-4 pb-4 pl-5 pr-5 background-unset add-background-dark'>

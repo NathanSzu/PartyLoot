@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import ModalEditUser from '../components/ModalEditUsername';
 import ModalAppRequestTrigger from '../components/ModalAppRequestTrigger';
 import { Row, Col, Alert, Button, Container } from 'react-bootstrap';
 import { AuthContext } from '../utils/contexts/AuthContext';
+import { GroupContext } from '../utils/contexts/GroupContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import metadata from '../utils/metadata.json';
 import app from '../utils/firebase';
@@ -10,10 +11,15 @@ import ButtonShareLink from '../components/ButtonShareLink';
 
 export default function Settings() {
   const { currentUser, userRef } = useContext(AuthContext);
+  const { setCurrentGroup } = useContext(GroupContext);
   const [loading, setLoading] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
 
   const [userData] = useDocumentData(userRef);
+
+  useEffect(() => {
+    setCurrentGroup(' ');
+  });
 
   const passwordReset = (email) => {
     setLoading(true);

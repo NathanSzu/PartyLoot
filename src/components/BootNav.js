@@ -43,12 +43,26 @@ export default function BootNav() {
                   <Nav.Link>Groups</Nav.Link>
                 </LinkContainer>
               )}
+
+              {['/history', '/groups', '/user-settings'].includes(location.pathname) ? null : (
+                <LinkContainer to='/history' data-cy='navbar-history'>
+                  <Nav.Link>History</Nav.Link>
+                </LinkContainer>
+              )}
+
+              {['/groups', '/loot', '/user-settings'].includes(location.pathname) ? null : (
+                <LinkContainer to='/loot' data-cy='navbar-loot'>
+                  <Nav.Link>Loot</Nav.Link>
+                </LinkContainer>
+              )}
+
               {/* Hides the user setting nav link if on the user setting page */}
               {location.pathname === '/user-settings' ? null : (
                 <LinkContainer to='/user-settings' data-cy='navbar-settings'>
                   <Nav.Link>Settings</Nav.Link>
                 </LinkContainer>
               )}
+
               <Nav.Link href='/' onClick={logOut} data-cy='navbar-logout'>
                 Sign Out
               </Nav.Link>
