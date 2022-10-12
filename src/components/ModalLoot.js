@@ -3,13 +3,15 @@ import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
 
 export default function ModalLoot({ item }) {
   const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { db, currentUser } = useContext(AuthContext);
+  const { writeHistoryEvent } = useContext(GlobalFeatures);
 
   const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
   const groupRef = db.collection('groups').doc(currentGroup);
@@ -55,6 +57,12 @@ export default function ModalLoot({ item }) {
   const addLoot = () => {
     if (!checkItemValidations()) return;
     setLoading(true);
+
+    let historyData = {
+      itemName: nameRef.current.value,
+      owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value
+    };
+
     groupRef
       .collection('loot')
       .add({
@@ -68,6 +76,7 @@ export default function ModalLoot({ item }) {
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
+        writeHistoryEvent(currentUser.uid, 'createItem', historyData)
         handleClose();
         setLoading(false);
       })

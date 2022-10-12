@@ -9,10 +9,10 @@ export default function History() {
   const { groupData, currentGroup } = useContext(GroupContext);
   const { db } = useContext(AuthContext);
 
-  const [resultQty, setResultQty] = useState(10)
+  const [resultQty, setResultQty] = useState(10);
 
   const historyRef = db.collection('groups').doc(currentGroup).collection('history');
-  const query = historyRef.orderBy('timestamp').limitToLast(resultQty);
+  const query = historyRef.orderBy('timestamp', 'desc').limitToLast(resultQty);
 
   const [historyEvents] = useCollectionData(query);
 
@@ -25,9 +25,8 @@ export default function History() {
       </Row>
       <Row>
         <ListGroup className='w-100'>
-          {historyEvents && historyEvents.map((event, idx) => (
-            <HistoryItem event={event} key={idx} />
-          ))}
+          {historyEvents && historyEvents.length === 0 && <p className='text-center pt-3 text-light'>History is empty!</p>}
+          {historyEvents && historyEvents.map((event, idx) => <HistoryItem event={event} key={idx} />)}
         </ListGroup>
       </Row>
     </Container>
