@@ -138,7 +138,7 @@ export default function ModalEditGroup({ name, id, owner, members }) {
 
     return (
         <>
-            <Button variant='dark' className='p-2 background-dark border-0' onClick={() => { handleShow() }}><img alt='Edit Group' src='/APPIcons/gear-fill.svg'></img></Button>
+            <Button variant='dark' className=' background-dark border-0' onClick={() => { handleShow() }}><img alt='Edit Group' src='/APPIcons/gear-fill.svg'></img></Button>
 
             <Modal show={show} onHide={setFalseThenClose}>
                 <div className='texture-backer rounded'>

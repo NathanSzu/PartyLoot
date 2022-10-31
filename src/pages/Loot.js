@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Card, Navbar, Row, Col, Container, Spinner } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Card, Navbar, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
@@ -41,9 +42,14 @@ export default function Loot() {
               </Card.Header>
             </Card>
             <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
-              <Card.Header className='border-0'>
+              <Card.Header className='border-0 d-flex'>
                 {/* Item should be empty string to prevent error */}
                 <ModalLoot item={''} />
+                <Button variant='dark' className='background-dark ml-2'>
+                  <LinkContainer to='/history' data-cy='button-history'>
+                    <img className='m-1' alt='History' src='APPIcons/clock-fill.svg' />
+                  </LinkContainer>
+                </Button>
               </Card.Header>
             </Card>
           </div>

@@ -15,6 +15,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState('Notification content');
   const [toastHeader, setToastHeader] = useState('Notification');
+  const [expandNavbar, setExpandNavbar] = useState('false');
 
   const toggleShowToast = () => setShowToast(!showToast);
   const handleCloseRequestModal = () => setShowRequestModal(false);
@@ -25,9 +26,16 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
     switch (action) {
       case 'createItem':
-        summary = `created ${data.itemName} and gave it to ${data.owner || 'the party'}`
+        summary = `created ${data.itemName} and gave it to ${data.owner}`;
         break;
-    
+
+      case 'sellItem':
+        summary =
+          `sold ${data.qty} ${data.itemName}(s) for ${data.currency[0]}, ${data.currency[1]}, ` +
+          `${data.currency[2]}, ${data.currency[3]}, ${data.currency[4]}, ${data.currency[5]} ` +
+          `and gave the money to ${data.seller}`;
+        break;
+
       default:
         break;
     }
@@ -36,8 +44,8 @@ export const GlobalFeaturesProvider = ({ children }) => {
       completedBy,
       action,
       summary,
-      timestamp: fb.firestore.FieldValue.serverTimestamp()
-    })
+      timestamp: fb.firestore.FieldValue.serverTimestamp(),
+    });
   };
 
   return (
@@ -51,8 +59,10 @@ export const GlobalFeaturesProvider = ({ children }) => {
         toastContent,
         setToastContent,
         toastHeader,
+        expandNavbar,
+        setExpandNavbar,
         setToastHeader,
-        writeHistoryEvent
+        writeHistoryEvent,
       }}
     >
       {children}

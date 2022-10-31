@@ -55,3 +55,7 @@
 .fancy-font {
     font-family: 'Akbaal', sans-serif;
 }
+
+.fg-3 {
+    flex-grow: 3;
+}

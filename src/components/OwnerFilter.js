@@ -32,7 +32,7 @@ export default function OwnerFilter() {
 
   return (
     <Row className='mt-2'>
-      <Col xs={10}>
+      <Col xs={10} className='pr-2'>
         <Form
           onSubmit={(e) => {
             e.preventDefault();

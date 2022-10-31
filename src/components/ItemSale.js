@@ -2,11 +2,13 @@ import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Badge, Row, Col, Alert } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export default function ItemSale({ item }) {
   const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { writeHistoryEvent } = useContext(GlobalFeatures);
+  const { db, currentUser } = useContext(AuthContext);
 
   const groupRef = db.collection('groups').doc(currentGroup);
   const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
@@ -50,11 +52,9 @@ export default function ItemSale({ item }) {
     itemRef
       .delete()
       .then(() => {
-        handleClose();
         setLoading(false);
       })
       .catch((error) => {
-        handleClose();
         setLoading(false);
         console.error('Error removing item: ', error);
       });
@@ -78,7 +78,7 @@ export default function ItemSale({ item }) {
   };
 
   const checkSellValidations = () => {
-    if (!qtyRef.current.value) {
+    if (!qtyRef.current.value || qtyRef.current.value === '0') {
       setErrorMessage('Quantity must be greater than 0');
       return false;
     }
@@ -101,41 +101,65 @@ export default function ItemSale({ item }) {
     return true;
   };
 
-  const addCurrency = (currentCurrency, currencyValueRefs, currencies) => {
+  const addCurrency = async (currentCurrency, currencyValueRefs, currencies) => {
     for (let i = 0; i < currencyValueRefs.length; i++) {
       let updatedValue =
         parseInt(
           (currentCurrency[sellerRef.current.value] && currentCurrency[sellerRef.current.value][currencies[i]]) || 0
         ) +
         parseInt(currencyValueRefs[i].current.value || 0) * parseInt(qtyRef.current.value || 1);
-      currencyRef.set(
-        {
-          [sellerRef.current.value]: {
-            [currencies[i]]: updatedValue,
+      currencyRef
+        .set(
+          {
+            [sellerRef.current.value]: {
+              [currencies[i]]: updatedValue,
+            },
           },
-        },
-        { merge: true }
-      );
+          { merge: true }
+        )
+        .catch((error) => {
+          console.error('Error writing document: ', error);
+        });
     }
   };
 
+  const compileHistoryData = (qtyRef, item, currencyRefs) => {
+    let data = {
+      qty: parseInt(qtyRef.current.value || 1),
+      itemName: item.itemName,
+      currency: [
+        (currencyRefs[0].current.value || 0) * parseInt(qtyRef.current.value || 1),
+        (currencyRefs[1].current.value || 0) * parseInt(qtyRef.current.value || 1),
+        (currencyRefs[2].current.value || 0) * parseInt(qtyRef.current.value || 1),
+        (currencyRefs[3].current.value || 0) * parseInt(qtyRef.current.value || 1),
+        (currencyRefs[4].current.value || 0) * parseInt(qtyRef.current.value || 1),
+        (currencyRefs[5].current.value || 0) * parseInt(qtyRef.current.value || 1),
+      ],
+      seller: sellerRef.current.value === 'All' ? 'the party' : sellerRef.current.value,
+    };
+    writeHistoryEvent(currentUser.uid, 'sellItem', data);
+  };
+
   const sellItem = () => {
+    if (!checkSellValidations()) return;
     if (item.itemQty >= 2) {
-      if (!checkSellValidations()) return;
       setLoading(true);
-      addCurrency(currency, allCurrencyRefs, allCurrencies);
-      if (item.itemQty <= qtyRef.current.value) {
-        deleteItem();
-      } else {
-        // In this case, just add currency and update item qty
-        updateQty(item.itemQty, qtyRef.current.value);
-      }
+      addCurrency(currency, allCurrencyRefs, allCurrencies).then(() => {
+        compileHistoryData(qtyRef, item, allCurrencyRefs);
+        if (item.itemQty <= qtyRef.current.value) {
+          deleteItem();
+        } else {
+          // In this case, just add currency and update item qty
+          updateQty(item.itemQty, qtyRef.current.value);
+        }
+      });
     }
     if (item.itemQty < 2) {
-      if (!checkSellValidations()) return;
       setLoading(true);
-      addCurrency(currency, allCurrencyRefs, allCurrencies);
-      deleteItem();
+      addCurrency(currency, allCurrencyRefs, allCurrencies).then(() => {
+        compileHistoryData(qtyRef, item, allCurrencyRefs);
+        deleteItem();
+      });
     }
   };
 

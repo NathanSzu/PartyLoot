@@ -60,7 +60,7 @@ export default function ModalLoot({ item }) {
 
     let historyData = {
       itemName: nameRef.current.value,
-      owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value
+      owner: ownerRef.current.value === 'Select owner' ? 'the party' : ownerRef.current.value
     };
 
     groupRef
@@ -76,7 +76,7 @@ export default function ModalLoot({ item }) {
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        writeHistoryEvent(currentUser.uid, 'createItem', historyData)
+        writeHistoryEvent(currentUser.uid, 'createItem', historyData);
         handleClose();
         setLoading(false);
       })
@@ -113,13 +113,13 @@ export default function ModalLoot({ item }) {
   };
 
   return (
-    <div>
+    <>
       {item ? (
         <Button variant='dark' className='p-2 m-0 background-dark border-0' onClick={handleShow}>
           <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
         </Button>
       ) : (
-        <Button variant='dark' onClick={handleShow} className='w-100 m-0 mr-auto ml-auto background-dark border-0'>
+        <Button variant='dark' onClick={handleShow} className='m-0 p-0 background-dark border-0 fg-3'>
           Add Item
         </Button>
       )}
@@ -260,6 +260,6 @@ export default function ModalLoot({ item }) {
           )}
         </Form>
       </Modal>
-    </div>
+    </>
   );
 }

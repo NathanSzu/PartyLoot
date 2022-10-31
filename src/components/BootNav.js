@@ -18,8 +18,9 @@ export default function BootNav() {
       .then(() => {
         // Sign-out successful.
       })
-      .catch((error) => {
+      .catch((err) => {
         // An error happened.
+        console.error(err)
       });
   };
 
@@ -41,18 +42,6 @@ export default function BootNav() {
               {location.pathname === '/groups' ? null : (
                 <LinkContainer to='/groups' data-cy='navbar-groups'>
                   <Nav.Link>Groups</Nav.Link>
-                </LinkContainer>
-              )}
-
-              {['/history', '/groups', '/user-settings'].includes(location.pathname) ? null : (
-                <LinkContainer to='/history' data-cy='navbar-history'>
-                  <Nav.Link>History</Nav.Link>
-                </LinkContainer>
-              )}
-
-              {['/groups', '/loot', '/user-settings'].includes(location.pathname) ? null : (
-                <LinkContainer to='/loot' data-cy='navbar-loot'>
-                  <Nav.Link>Loot</Nav.Link>
                 </LinkContainer>
               )}
 
