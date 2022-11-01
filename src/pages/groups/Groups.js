@@ -1,12 +1,12 @@
 import React, { useEffect, useContext } from 'react';
 import { Row, Col, Button, Spinner, Container } from 'react-bootstrap';
-import { AuthContext } from '../utils/contexts/AuthContext';
-import { GroupContext } from '../utils/contexts/GroupContext';
+import { AuthContext } from '../../utils/contexts/AuthContext';
+import { GroupContext } from '../../utils/contexts/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import ModalAdd from '../components/ModalAddGroup';
-import ModalEdit from '../components/ModalEditGroup';
+import ModalAdd from '../../components/ModalAddGroup';
+import ModalEdit from '../../components/ModalEditGroup';
 
 export default function Groups() {
   const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);

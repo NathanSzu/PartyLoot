@@ -2,13 +2,13 @@ import React, { useEffect, useContext, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Card, Navbar, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { GroupContext } from '../utils/contexts/GroupContext';
-import { AuthContext } from '../utils/contexts/AuthContext';
-import ModalLoot from '../components/ModalLoot';
-import GoldTracker from '../components/GoldTracker';
-import ItemSearch from '../components/ItemSearch';
-import OwnerFilter from '../components/OwnerFilter';
-import LootAccordion from '../components/AccordionLoot';
+import { GroupContext } from '../../utils/contexts/GroupContext';
+import { AuthContext } from '../../utils/contexts/AuthContext';
+import ModalLoot from '../../components/ModalLoot';
+import GoldTracker from '../../components/GoldTracker';
+import ItemSearch from '../../components/ItemSearch';
+import OwnerFilter from '../../components/OwnerFilter';
+import LootAccordion from '../../components/AccordionLoot';
 import { gsap } from 'gsap';
 
 export default function Loot() {

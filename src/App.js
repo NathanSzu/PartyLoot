@@ -10,8 +10,8 @@ import { GlobalFeaturesProvider } from "./utils/contexts/GlobalFeatures";
 
 // Pages
 import Home from "./pages/Home";
-import Groups from "./pages/Groups";
-import Loot from "./pages/Loot";
+import Groups from "./pages/groups/Groups";
+import Loot from "./pages/loot/Loot";
 import Settings from "./pages/Settings";
 import History from './pages/History';
 import ItemCompendium from './pages/ItemCompendium';
