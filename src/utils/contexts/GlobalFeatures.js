@@ -26,7 +26,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
     switch (action) {
       case 'createItem':
-        summary = `created ${data.itemName} and gave it to ${data.owner}`;
+        summary = `created ${data.itemName} for ${data.owner}`;
         break;
 
       case 'sellItem':

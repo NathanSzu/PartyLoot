@@ -105,7 +105,7 @@ export default function ItemSale({ item }) {
     for (let i = 0; i < currencyValueRefs.length; i++) {
       let updatedValue =
         parseInt(
-          (currentCurrency[sellerRef.current.value] && currentCurrency[sellerRef.current.value][currencies[i]]) || 0
+          (currentCurrency && currentCurrency[sellerRef.current.value] && currentCurrency[sellerRef.current.value][currencies[i]]) || 0
         ) +
         parseInt(currencyValueRefs[i].current.value || 0) * parseInt(qtyRef.current.value || 1);
       currencyRef
