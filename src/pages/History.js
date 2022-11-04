@@ -18,7 +18,7 @@ export default function History() {
   const [historyEvents] = useCollectionData(query);
 
   return (
-    <Container>
+    <Container className='pb-5'>
       <Row>
         <Col xs={12} className='background-light pr-3 pl-3 pt-2 pb-2 d-flex'>
           <div className='fg-3'>

@@ -30,8 +30,8 @@ export default function Loot() {
   }, [filteredItems]);
 
   return (
-    <Container>
-      <Row className='mb-5'>
+    <Container className='pb-5'>
+      <Row>
         <Navbar sticky='top' className='w-100 p-0 theme1-backer' id='sticky-filter'>
           <div className='d-block w-100'>
             <GoldTracker />
