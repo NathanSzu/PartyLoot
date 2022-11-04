@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Button } from 'react-bootstrap';
-import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
+import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 
 export default function ButtonShareLink() {
     const { toggleShowToast, setToastContent, setToastHeader } = useContext(GlobalFeatures)

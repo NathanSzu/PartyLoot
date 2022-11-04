@@ -7,7 +7,7 @@ import { GroupContext } from '../utils/contexts/GroupContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import metadata from '../utils/metadata.json';
 import app from '../utils/firebase';
-import ButtonShareLink from '../components/ButtonShareLink';
+import ButtonShareLink from './common/ButtonShareLink';
 
 export default function Settings() {
   const { currentUser, userRef } = useContext(AuthContext);

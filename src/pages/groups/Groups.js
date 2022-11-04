@@ -5,8 +5,9 @@ import { GroupContext } from '../../utils/contexts/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import ModalAdd from '../../components/ModalAddGroup';
-import ModalEdit from '../../components/ModalEditGroup';
+import ModalAdd from './helpers/AddGroup';
+import ModalEdit from './helpers/EditGroup';
+import PatchNotes from './helpers/PatchNotes';
 
 export default function Groups() {
   const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);
@@ -52,6 +53,7 @@ export default function Groups() {
 
   return (
     <Container>
+      <PatchNotes />
       {loading ? (
         <Spinner
           as='div'
@@ -64,7 +66,7 @@ export default function Groups() {
         <div>
           {sortedGroups.map((group, idx) => (
             <Row key={idx} className='p-0 border-top border-dark background-light'>
-              <Col className='p-0'>
+              <Col className='p-0 groups-overflow'>
                 <Link to='/loot'>
                   <Button
                     id={group.id}

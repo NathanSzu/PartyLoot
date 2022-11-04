@@ -1,9 +1,9 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import fb from 'firebase';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 
-export default function ModalAddGroup() {
+export default function AddGroup() {
     const { currentUser, db } = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);

@@ -25,10 +25,10 @@ export default function History() {
             <h1 className='groups-h1 m-0 text-center fancy-font pt-2 pb-1'>History</h1>
           </div>
           <div>
-          <LinkContainer to='/loot' data-cy='button-loot'>
-            <Button variant='dark' className='background-dark pt-1 pb-1'>
-              <img className='m-1' alt='History' src='APPIcons/loot-list.svg' />
-            </Button>
+            <LinkContainer to='/loot' data-cy='button-loot'>
+              <Button variant='dark' className='background-dark pt-1 pb-1'>
+                <img className='m-1' alt='History' src='APPIcons/loot-list.svg' />
+              </Button>
             </LinkContainer>
           </div>
         </Col>
@@ -40,18 +40,20 @@ export default function History() {
           )}
           {historyEvents && historyEvents.map((event, idx) => <HistoryItem event={event} key={idx} />)}
         </ListGroup>
-        <Col xs={12} className='background-light d-flex flex-row-reverse p-0'>
-          <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(50)}>
-            50
-          </Button>
-          <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(25)}>
-            25
-          </Button>
-          <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(10)}>
-            10
-          </Button>
-          <div>Results:</div>
-        </Col>
+        {historyEvents && historyEvents.length >= 10 && (
+          <Col xs={12} className='background-light d-flex flex-row-reverse p-0'>
+            <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(50)}>
+              50
+            </Button>
+            <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(25)}>
+              25
+            </Button>
+            <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(10)}>
+              10
+            </Button>
+            <div>Results:</div>
+          </Col>
+        )}
       </Row>
     </Container>
   );
