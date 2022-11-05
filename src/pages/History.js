@@ -27,7 +27,7 @@ export default function History() {
           <div>
             <LinkContainer to='/loot' data-cy='button-loot'>
               <Button variant='dark' className='background-dark pt-1 pb-1'>
-                <img className='m-1' alt='History' src='APPIcons/loot-list.svg' />
+                <img className='m-1' alt='Loot list' src='APPIcons/loot-list.svg' />
               </Button>
             </LinkContainer>
           </div>
