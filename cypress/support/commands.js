@@ -23,3 +23,30 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', (email = 'test@test.com', password = 'password') => {
+  indexedDB.deleteDatabase('firebaseLocalStorageDb');
+  cy.visit('http://localhost:3000/');
+  cy.get('[data-cy=get-started]').click();
+  cy.get('[data-cy=login-email]').type(email);
+  cy.get('[data-cy=login-password]').type(password);
+  cy.get('[data-cy=login]').click();
+  cy.url().should('include', '/groups');
+  cy.get('.close').click();
+});
+
+Cypress.Commands.add('addGroup', () => {
+  cy.get('[data-cy=create-group]').click();
+  cy.get('[data-cy=new-group-name]').type('Cool group{enter}');
+  cy.contains('button', 'Cool group').should('have.length', 1);
+});
+
+Cypress.Commands.add('removeGroup', () => {
+    cy.visit('http://localhost:3000/groups');
+    cy.get('.close').click();
+    cy.get('[data-cy=edit-group]').eq(0).click();
+    cy.get('[data-cy=delete]').click();
+    cy.get('[data-cy=confirm-delete]').click();
+    cy.contains('button', 'Cool group').should('not.exist');
+    cy.contains('button', 'Better group name').should('not.exist');
+});

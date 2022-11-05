@@ -153,6 +153,7 @@ export default function EditGroup({ name, id, owner, members }) {
         onClick={() => {
           handleShow();
         }}
+        data-cy='edit-group'
       >
         <img alt='Edit Group' src='/APPIcons/gear-fill.svg'></img>
       </Button>
@@ -179,6 +180,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   disabled={currentUser.uid === owner ? false : true}
                   type='text'
                   defaultValue={name}
+                  data-cy='edit-group-name'
                 />
               </Form.Group>
             </Modal.Body>
@@ -213,6 +215,7 @@ export default function EditGroup({ name, id, owner, members }) {
                     e.preventDefault();
                     deleteGroup();
                   }}
+                  data-cy='confirm-delete'
                 />
               ) : null}
 
@@ -243,6 +246,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   onClick={(e) => {
                     setDeleteConfirmation(true);
                   }}
+                  data-cy='delete'
                 />
               ) : null}
 
@@ -285,6 +289,7 @@ export default function EditGroup({ name, id, owner, members }) {
                         onClick={(e) => {
                           removeMember(e);
                         }}
+                        data-cy='remove-member'
                       >
                         <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg'></img>
                       </Button>
@@ -304,7 +309,12 @@ export default function EditGroup({ name, id, owner, members }) {
                   <Row className='p-2'>
                     <Col>
                       <Form.Group controlId='addMember'>
-                        <Form.Control ref={memberRef} type='text' placeholder='Enter group code' />
+                        <Form.Control
+                          ref={memberRef}
+                          type='text'
+                          placeholder='Enter group code'
+                          data-cy='enter-group-code'
+                        />
                       </Form.Group>
                     </Col>
 
@@ -318,6 +328,7 @@ export default function EditGroup({ name, id, owner, members }) {
                           e.preventDefault();
                           addMember();
                         }}
+                        data-cy='add-member'
                       >
                         <img alt='Add Group Member' src='/APPIcons/add-user.svg' />
                       </Button>

@@ -34,7 +34,7 @@ export default function AddGroup() {
 
     return (
         <>
-            <Button variant='light' onClick={handleShow} className='w-100 m-2'>
+            <Button variant='light' onClick={handleShow} className='w-100 m-2' data-cy='create-group'>
                 +
             </Button>
 
@@ -46,7 +46,7 @@ export default function AddGroup() {
 
                     <Modal.Body>
                         <Form.Group controlId='groupName'>
-                            <Form.Control ref={nameRef} type='text' placeholder='Group name' />
+                            <Form.Control ref={nameRef} type='text' placeholder='Group name' data-cy='new-group-name'/>
                         </Form.Group>
                     </Modal.Body>
 
