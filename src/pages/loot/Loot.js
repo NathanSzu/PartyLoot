@@ -1,33 +1,52 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Card, Navbar, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import ModalLoot from '../../components/ModalLoot';
-import GoldTracker from '../../components/GoldTracker';
+import GoldTracker from './helpers/GoldTracker';
 import ItemSearch from '../../components/ItemSearch';
-import OwnerFilter from '../../components/OwnerFilter';
+import OwnerFilter from './helpers/OwnerFilter';
 import LootAccordion from '../../components/AccordionLoot';
 import { gsap } from 'gsap';
 
 export default function Loot() {
-  const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { currentGroup, setSortBy } = useContext(GroupContext);
+  const { db, currentUser } = useContext(AuthContext);
 
-  const lootRef = db.collection('groups').doc(currentGroup).collection('loot');
+  const groupRef = db.collection('groups').doc(currentGroup);
+  const lootRef = groupRef.collection('loot');
   const query = lootRef.orderBy('itemName');
 
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [lootItems] = useCollectionData(query, { idField: 'id' });
+  const [partyData, loadingPartyData] = useDocumentData(groupRef);
+
+  const setDefaultMember = (member, party) => {
+    if (party.party.includes(party.favorites[member])) {
+      document.getElementById('defaultMember').value = party.favorites[member];
+      setSortBy(party.favorites[member]);
+    } else {
+      setSortBy('All');
+    }
+  };
 
   useEffect(() => {
     if (filteredItems.length > 0) {
       gsap.fromTo('.loot-item', { opacity: 0 }, { duration: 0.3, opacity: 1, stagger: 0.03 });
     }
   }, [filteredItems]);
+
+  useEffect(() => {
+    !loadingPartyData &&
+      partyData &&
+      partyData.favorites &&
+      partyData.favorites[currentUser.uid] &&
+      setDefaultMember(currentUser.uid, partyData);
+  }, [partyData]);
 
   return (
     <Container className='pb-5'>
@@ -38,7 +57,7 @@ export default function Loot() {
             <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
               <Card.Header className='border-0'>
                 <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
-                <OwnerFilter />
+                <OwnerFilter partyData={partyData} />
               </Card.Header>
             </Card>
             <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>

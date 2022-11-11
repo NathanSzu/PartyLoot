@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Row, Card, Col, Form, Accordion } from 'react-bootstrap';
-import { GroupContext } from '../utils/contexts/GroupContext';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import GoldInput from './GoldInput';
 
 export default function GoldTracker() {
   const { db } = useContext(AuthContext);
@@ -11,8 +12,7 @@ export default function GoldTracker() {
   const currencyRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
   const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
 
-  const [currency] = useDocumentData(currencyRef);
-
+  const [currency, loadingCurrency] = useDocumentData(currencyRef);
   const [colorTags] = useDocumentData(colorTagRef);
 
   const currency1Ref = useRef();
@@ -21,6 +21,8 @@ export default function GoldTracker() {
   const currency4Ref = useRef();
   const currency5Ref = useRef();
   const currency6Ref = useRef();
+
+  const currencyRefs = [currency1Ref, currency2Ref, currency3Ref, currency4Ref, currency5Ref, currency6Ref];
 
   const color1Ref = useRef();
   const color2Ref = useRef();
@@ -47,21 +49,26 @@ export default function GoldTracker() {
     );
   };
 
+  const clearValues = (currencyRefs) => {
+    currencyRefs.forEach((ref) => {
+      ref.current.value = '';
+    });
+  };
+
   useEffect(() => {
-    if (currency && currency[sortBy]) {
-      currency1Ref.current.value = currency[sortBy].currency1;
-      currency2Ref.current.value = currency[sortBy].currency2;
-      currency3Ref.current.value = currency[sortBy].currency3;
-      currency4Ref.current.value = currency[sortBy].currency4;
-      currency5Ref.current.value = currency[sortBy].currency5;
-      currency6Ref.current.value = currency[sortBy].currency6;
-    } else {
-      currency1Ref.current.value = '';
-      currency2Ref.current.value = '';
-      currency3Ref.current.value = '';
-      currency4Ref.current.value = '';
-      currency5Ref.current.value = '';
-      currency6Ref.current.value = '';
+    if (!loadingCurrency) {
+      if (currency && currency[sortBy]) {
+        currency1Ref.current.value = currency[sortBy].currency1;
+        currency2Ref.current.value = currency[sortBy].currency2;
+        currency3Ref.current.value = currency[sortBy].currency3;
+        currency4Ref.current.value = currency[sortBy].currency4;
+        currency5Ref.current.value = currency[sortBy].currency5;
+        currency6Ref.current.value = currency[sortBy].currency6;
+        console.log('currency[sortBy]', currency[sortBy]);
+      } else {
+        clearValues(currencyRefs);
+        console.log('currency[sortBy]', currency[sortBy]);
+      }
     }
   }, [currency, sortBy]);
 
