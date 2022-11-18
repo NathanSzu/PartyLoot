@@ -17,6 +17,9 @@ export const GlobalFeaturesProvider = ({ children }) => {
   const [toastHeader, setToastHeader] = useState('Notification');
   const [expandNavbar, setExpandNavbar] = useState('false');
 
+  const defaultColors = ['#ffbb00', '#bdbdbd', '#d27e1e', '#ffffff', '#ffffff', '#ffffff'];
+  const currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
+
   const toggleShowToast = () => setShowToast(!showToast);
   const handleCloseRequestModal = () => setShowRequestModal(false);
   const handleShowRequestModal = () => setShowRequestModal(true);
@@ -55,6 +58,8 @@ export const GlobalFeaturesProvider = ({ children }) => {
         handleCloseRequestModal,
         handleShowRequestModal,
         showToast,
+        defaultColors,
+        currencyKeys,
         toggleShowToast,
         toastContent,
         setToastContent,
