@@ -41,7 +41,7 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
   };
 
   const updateTags = async (tagState) => {
-    // setLoading(true);
+    setLoading(true);
     tagRef.set(tagState, { merge: true }).catch((err) => console.error(err));
   };
 
@@ -56,15 +56,11 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
   const updateTagData = (tagState) => {
     updateTags(tagState).then(() => {
       updateColorTags(tagState).then(() => {
-        // clearStateAndClose();
-        // setLoading(false);
+        clearStateAndClose();
+        setLoading(false);
       });
     });
   };
-
-  // useEffect(() => {
-  //   console.log('tagState: ', tagState);
-  // }, [tagState]);
 
   return (
     <Modal size='lg' show={show} onHide={clearStateAndClose}>

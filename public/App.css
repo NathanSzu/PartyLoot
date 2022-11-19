@@ -79,3 +79,7 @@
 .mh-36 {
     min-height: 36px;
 }
+
+.disabled-opacity-100:disabled {
+    opacity: 100%;
+}

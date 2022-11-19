@@ -1,23 +1,27 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Badge, Row, Col, Alert } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import TagEditTrigger from '../pages/loot/helpers/TagEditTrigger';
 
 export default function ItemSale({ item }) {
   const { currentGroup } = useContext(GroupContext);
-  const { writeHistoryEvent } = useContext(GlobalFeatures);
+  const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { db, currentUser } = useContext(AuthContext);
 
   const groupRef = db.collection('groups').doc(currentGroup);
-  const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
   const currencyRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
   const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
+  const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
+  // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
+  const tagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('tags');
 
   const [partyData] = useDocumentData(groupRef);
   const [colorTags] = useDocumentData(colorTagRef);
   const [currency] = useDocumentData(currencyRef);
+  const [allTags] = useDocumentData(tagRef);
 
   const qtyRef = useRef();
 
@@ -28,72 +32,83 @@ export default function ItemSale({ item }) {
   const currency5Ref = useRef();
   const currency6Ref = useRef();
 
-  const allCurrencies = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
-  const allCurrencyRefs = [currency1Ref, currency2Ref, currency3Ref, currency4Ref, currency5Ref, currency6Ref];
-
   const sellerRef = useRef();
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [sellState, setSellState] = useState({});
+  const [sellQty, setSellQty] = useState(1);
 
   const handleClose = () => {
     setShow(false);
     setErrorMessage('');
+    setSellQty(1);
+    setSellState({});
   };
-
   const handleShow = () => setShow(true);
 
-  const maxQty = () => (qtyRef.current.value = item.itemQty);
+  const maxQty = (qty, qtyRef) => {
+    setSellQty(qty);
+    qtyRef.current.value = qty;
+  };
+
+  const updateSellState = (currencyKey, value) => {
+    setSellState({
+      ...sellState,
+      [currencyKey]: parseInt(value),
+    });
+  };
+
+  const calculateSale = (seller, currency, sellState, currencyKeys) => {
+    let output = {};
+    currencyKeys.forEach((currencyKey) => {
+      output[currencyKey] =
+        parseInt(currency?.[seller]?.[currencyKey] || 0) + (sellState?.[currencyKey] || 0) * sellQty;
+    });
+    return output;
+  };
 
   const deleteItem = () => {
-    setLoading(true);
-    handleClose();
     itemRef
       .delete()
       .then(() => {
         setLoading(false);
+        handleClose();
       })
-      .catch((error) => {
-        setLoading(false);
-        console.error('Error removing item: ', error);
+      .catch((err) => {
+        console.error('Error removing item: ', err);
       });
   };
 
-  const updateQty = (qty, qtySold) => {
+  const updateQty = (itemQty, sellQty) => {
     itemRef
       .update({
-        itemQty: qty - qtySold,
+        itemQty: itemQty - sellQty,
       })
       .then(() => {
         handleClose();
         setLoading(false);
       })
-      .catch((error) => {
-        // The document probably doesn't exist.
-        console.error('Error updating quantity: ', error);
-        handleClose();
-        setLoading(false);
+      .catch((err) => {
+        console.error('Error updating quantity: ', err);
       });
   };
 
-  const checkSellValidations = () => {
-    if (!qtyRef.current.value || qtyRef.current.value === '0') {
+  const checkSellValidations = (currencyKeys, sellState, sellQty) => {
+    let valueCheck = false;
+    if (sellQty < 1) {
       setErrorMessage('Quantity must be greater than 0');
       return false;
     }
-    if (parseInt(qtyRef.current.value) > parseInt(item.itemQty || 1)) {
+    if (sellQty > parseInt(item.itemQty || 1)) {
       setErrorMessage('Cannot sell more items than you own');
       return false;
     }
-    if (
-      !currency1Ref.current.value &&
-      !currency2Ref.current.value &&
-      !currency3Ref.current.value &&
-      !currency4Ref.current.value &&
-      !currency5Ref.current.value &&
-      !currency6Ref.current.value
-    ) {
+    currencyKeys.forEach((currencyKey) => {
+      if (sellState[currencyKey]) valueCheck = true;
+    });
+    if (valueCheck === false) {
       setErrorMessage('At least one sale price must be entered');
       return false;
     }
@@ -101,67 +116,54 @@ export default function ItemSale({ item }) {
     return true;
   };
 
-  const addCurrency = async (currentCurrency, currencyValueRefs, currencies) => {
-    for (let i = 0; i < currencyValueRefs.length; i++) {
-      let updatedValue =
-        parseInt(
-          (currentCurrency && currentCurrency[sellerRef.current.value] && currentCurrency[sellerRef.current.value][currencies[i]]) || 0
-        ) +
-        parseInt(currencyValueRefs[i].current.value || 0) * parseInt(qtyRef.current.value || 1);
-      currencyRef
-        .set(
-          {
-            [sellerRef.current.value]: {
-              [currencies[i]]: updatedValue,
-            },
-          },
-          { merge: true }
-        )
-        .catch((error) => {
-          console.error('Error writing document: ', error);
-        });
-    }
+  const writeSaleTotals = async (seller, total) => {
+    currencyRef
+      .set(
+        {
+          [seller]: total,
+        },
+        { merge: true }
+      )
+      .catch((err) => console.error(err));
   };
 
-  const compileHistoryData = (qtyRef, item, currencyRefs) => {
+  const compileHistoryData = (seller, sellQty, item, sellState, currencyKeys) => {
     let data = {
-      qty: parseInt(qtyRef.current.value || 1),
+      qty: parseInt(sellQty),
       itemName: item.itemName,
-      currency: [
-        (currencyRefs[0].current.value || 0) * parseInt(qtyRef.current.value || 1),
-        (currencyRefs[1].current.value || 0) * parseInt(qtyRef.current.value || 1),
-        (currencyRefs[2].current.value || 0) * parseInt(qtyRef.current.value || 1),
-        (currencyRefs[3].current.value || 0) * parseInt(qtyRef.current.value || 1),
-        (currencyRefs[4].current.value || 0) * parseInt(qtyRef.current.value || 1),
-        (currencyRefs[5].current.value || 0) * parseInt(qtyRef.current.value || 1),
-      ],
-      seller: sellerRef.current.value === 'All' ? 'the party' : sellerRef.current.value,
+      currency: [],
+      seller: seller === 'All' ? 'the party' : seller,
     };
+    currencyKeys.forEach((currencyKey) => {
+      data.currency.push((sellState[currencyKey] || 0) * sellQty);
+    });
     writeHistoryEvent(currentUser.uid, 'sellItem', data);
   };
 
   const sellItem = () => {
-    if (!checkSellValidations()) return;
-    if (item.itemQty >= 2) {
-      setLoading(true);
-      addCurrency(currency, allCurrencyRefs, allCurrencies).then(() => {
-        compileHistoryData(qtyRef, item, allCurrencyRefs);
-        if (item.itemQty <= qtyRef.current.value) {
+    if (!checkSellValidations(currencyKeys, sellState, sellQty)) return;
+    setLoading(true);
+    let totals = calculateSale(sellerRef.current.value, currency, sellState, currencyKeys);
+    writeSaleTotals(sellerRef.current.value, totals).then(() => {
+      compileHistoryData(sellerRef.current.value, sellQty, item, sellState, currencyKeys);
+      if (item.itemQty >= 2) {
+        if (item.itemQty <= sellQty) {
           deleteItem();
         } else {
           // In this case, just add currency and update item qty
-          updateQty(item.itemQty, qtyRef.current.value);
+          updateQty(item.itemQty, sellQty);
         }
-      });
-    }
-    if (item.itemQty < 2) {
-      setLoading(true);
-      addCurrency(currency, allCurrencyRefs, allCurrencies).then(() => {
-        compileHistoryData(qtyRef, item, allCurrencyRefs);
+      }
+      if (item.itemQty < 2) {
         deleteItem();
-      });
-    }
+      }
+    });
   };
+
+  useEffect(() => {
+    console.log('sellState: ', sellState);
+    console.log('sellQty: ', sellQty);
+  }, [sellState]);
 
   return (
     <>
@@ -193,6 +195,7 @@ export default function ItemSale({ item }) {
                     disabled={item.itemQty <= 1 && true}
                     defaultValue={item.itemQty <= 1 && 1}
                     placeholder='Qty'
+                    onChange={() => setSellQty(parseInt(qtyRef.current.value || 0))}
                   />
                 </Form.Group>
               </Col>
@@ -201,7 +204,7 @@ export default function ItemSale({ item }) {
                   className='w-100 background-dark border-0'
                   disabled={item.itemQty <= 1 && true}
                   variant='dark'
-                  onClick={maxQty}
+                  onClick={() => maxQty(item.itemQty, qtyRef)}
                 >
                   Sell all
                 </Button>
@@ -209,83 +212,107 @@ export default function ItemSale({ item }) {
             </Row>
             <Row>
               <Col xs={2} className='pr-0'>
-                <Form.Control
-                  type='color'
-                  value={(colorTags && colorTags.currency1) || '#ffbb00'}
-                  disabled='true'
-                  className='p-0 border-0 background-unset'
+                <TagEditTrigger
+                  tags={allTags?.[currencyKeys[0]]}
+                  colorTag={colorTags?.[currencyKeys[0]] || defaultColors[0]}
+                  disabled={true}
                 />
               </Col>
               <Col xs={4}>
                 <Form.Group controlId='itemPrice1'>
-                  <Form.Control type='number' ref={currency1Ref} placeholder='Price' />
+                  <Form.Control
+                    type='number'
+                    ref={currency1Ref}
+                    onChange={() => updateSellState(currencyKeys[0], currency1Ref.current.value)}
+                    placeholder='Price'
+                  />
                 </Form.Group>
               </Col>
               <Col xs={2} className='pr-0'>
-                <Form.Control
-                  type='color'
-                  value={(colorTags && colorTags.currency2) || '#bdbdbd'}
-                  disabled='true'
-                  className='p-0 border-0 background-unset'
+                <TagEditTrigger
+                  tags={allTags?.[currencyKeys[1]]}
+                  colorTag={colorTags?.[currencyKeys[1]] || defaultColors[1]}
+                  disabled={true}
                 />
               </Col>
               <Col xs={4}>
                 <Form.Group controlId='itemPrice2'>
-                  <Form.Control type='number' ref={currency2Ref} placeholder='Price' />
+                  <Form.Control
+                    type='number'
+                    ref={currency2Ref}
+                    onChange={() => updateSellState(currencyKeys[1], currency2Ref.current.value)}
+                    placeholder='Price'
+                  />
                 </Form.Group>
               </Col>
 
               <Col xs={2} className='pr-0'>
-                <Form.Control
-                  type='color'
-                  value={(colorTags && colorTags.currency3) || '#d27e1e'}
-                  disabled='true'
-                  className='p-0 border-0 background-unset'
+                <TagEditTrigger
+                  tags={allTags?.[currencyKeys[2]]}
+                  colorTag={colorTags?.[currencyKeys[2]] || defaultColors[2]}
+                  disabled={true}
                 />
               </Col>
               <Col xs={4}>
                 <Form.Group controlId='itemPrice3'>
-                  <Form.Control type='number' ref={currency3Ref} placeholder='Price' />
+                  <Form.Control
+                    type='number'
+                    ref={currency3Ref}
+                    onChange={() => updateSellState(currencyKeys[2], currency3Ref.current.value)}
+                    placeholder='Price'
+                  />
                 </Form.Group>
               </Col>
               <Col xs={2} className='pr-0'>
-                <Form.Control
-                  type='color'
-                  value={(colorTags && colorTags.currency4) || '#ffffff'}
-                  disabled='true'
-                  className='p-0 border-0 background-unset'
+                <TagEditTrigger
+                  tags={allTags?.[currencyKeys[3]]}
+                  colorTag={colorTags?.[currencyKeys[3]] || defaultColors[3]}
+                  disabled={true}
                 />
               </Col>
               <Col xs={4}>
                 <Form.Group controlId='itemPrice4'>
-                  <Form.Control type='number' ref={currency4Ref} placeholder='Price' />
+                  <Form.Control
+                    type='number'
+                    ref={currency4Ref}
+                    onChange={() => updateSellState(currencyKeys[3], currency4Ref.current.value)}
+                    placeholder='Price'
+                  />
                 </Form.Group>
               </Col>
 
               <Col xs={2} className='pr-0'>
-                <Form.Control
-                  type='color'
-                  value={(colorTags && colorTags.currency5) || '#ffffff'}
-                  disabled='true'
-                  className='p-0 border-0 background-unset'
+                <TagEditTrigger
+                  tags={allTags?.[currencyKeys[4]]}
+                  colorTag={colorTags?.[currencyKeys[4]] || defaultColors[4]}
+                  disabled={true}
                 />
               </Col>
               <Col xs={4}>
                 <Form.Group controlId='itemPrice5'>
-                  <Form.Control type='number' ref={currency5Ref} placeholder='Price' />
+                  <Form.Control
+                    type='number'
+                    ref={currency5Ref}
+                    onChange={() => updateSellState(currencyKeys[4], currency5Ref.current.value)}
+                    placeholder='Price'
+                  />
                 </Form.Group>
               </Col>
               <Col xs={2} className='pr-0'>
-                <Form.Control
-                  type='color'
-                  value={(colorTags && colorTags.currency6) || '#ffffff'}
-                  disabled='true'
-                  className='p-0 border-0 background-unset'
+                <TagEditTrigger
+                  tags={allTags?.[currencyKeys[5]]}
+                  colorTag={colorTags?.[currencyKeys[5]] || defaultColors[5]}
+                  disabled={true}
                 />
               </Col>
               <Col xs={4}>
                 <Form.Group controlId='itemPrice6'>
-                  <Form.Control type='number' ref={currency6Ref} placeholder='Price' />
+                  <Form.Control
+                    type='number'
+                    ref={currency6Ref}
+                    onChange={() => updateSellState(currencyKeys[5], currency6Ref.current.value)}
+                    placeholder='Price'
+                  />
                 </Form.Group>
               </Col>
             </Row>
