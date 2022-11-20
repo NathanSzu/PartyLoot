@@ -125,7 +125,7 @@ export default function ModalLoot({ item }) {
       )}
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='texture-backer rounded'>
+        <Form className='rounded'>
           <Modal.Header closeButton>
             {item ? <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title> : <Modal.Title>Add an item!</Modal.Title>}
           </Modal.Header>

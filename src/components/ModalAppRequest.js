@@ -85,7 +85,7 @@ export default function ModalAppRequest() {
           clearModal();
         }}
       >
-        <Form className='texture-backer rounded'>
+        <Form className='rounded'>
           <Modal.Header closeButton>
             <Modal.Title>Request Feature / Report Bug</Modal.Title>
           </Modal.Header>
@@ -133,7 +133,7 @@ export default function ModalAppRequest() {
             </Form.Group>
           </Modal.Body>
 
-          <Modal.Footer className='justify-content-between'>
+          <Modal.Footer>
             <Button
               disabled={loading}
               variant='dark'

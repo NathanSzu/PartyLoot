@@ -39,7 +39,7 @@ export default function AddGroup() {
             </Button>
 
             <Modal show={show} onHide={handleClose}>
-                <Form className='texture-backer rounded'>
+                <Form className='rounded'>
                     <Modal.Header closeButton>
                         <Modal.Title>Start a new group!</Modal.Title>
                     </Modal.Header>

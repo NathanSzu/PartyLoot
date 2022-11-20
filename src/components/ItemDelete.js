@@ -44,11 +44,11 @@ export default function ModalLoot({ item }) {
       </Badge>
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='texture-backer rounded'>
+        <Form className='rounded'>
           <Modal.Header closeButton>
             <Modal.Title>Delete item?</Modal.Title>
           </Modal.Header>
-          <Modal.Body className='pt-0 pb-0'>This action cannot be undone!</Modal.Body>
+          <Modal.Body>This action cannot be undone!</Modal.Body>
           <Modal.Footer className='pt-0'>
             <Button
               className='mt-3 p-2 pl-3 pr-3 background-danger border-0 text-light'

@@ -7,10 +7,10 @@ export default function TagInput({ tags, updateTagState, colorTag, defaultColor,
 
   return (
     <>
-      <Col xs={3} md={2} className='p-0 pb-1 h-100'>
+      <Col xs={2} className='p-0 pb-1 h-100'>
         <Form.Control
           type='color'
-          defaultValue={colorTag || defaultColor}
+          defaultValue={tags?. color || colorTag || defaultColor}
           ref={colorRef}
           className='p-0 border-0'
           onChange={() => {
@@ -18,7 +18,7 @@ export default function TagInput({ tags, updateTagState, colorTag, defaultColor,
           }}
         />
       </Col>
-      <Col xs={3} md={2} className='pl-1 pr-1 pb-1'>
+      <Col xs={4} md={2} className='pl-1 pr-1 pb-1'>
         <Form.Control
           type='text'
           defaultValue={tags?.symbol}

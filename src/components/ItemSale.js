@@ -1,10 +1,10 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Badge, Row, Col, Alert } from 'react-bootstrap';
+import React, { useState, useContext, useRef } from 'react';
+import { Modal, Button, Form, Badge, Row, Col, Alert, Container } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import TagEditTrigger from '../pages/loot/helpers/TagEditTrigger';
+import GoldInput from '../pages/loot/helpers/GoldInput';
 
 export default function ItemSale({ item }) {
   const { currentGroup } = useContext(GroupContext);
@@ -24,14 +24,6 @@ export default function ItemSale({ item }) {
   const [allTags] = useDocumentData(tagRef);
 
   const qtyRef = useRef();
-
-  const currency1Ref = useRef();
-  const currency2Ref = useRef();
-  const currency3Ref = useRef();
-  const currency4Ref = useRef();
-  const currency5Ref = useRef();
-  const currency6Ref = useRef();
-
   const sellerRef = useRef();
 
   const [show, setShow] = useState(false);
@@ -160,11 +152,6 @@ export default function ItemSale({ item }) {
     });
   };
 
-  useEffect(() => {
-    console.log('sellState: ', sellState);
-    console.log('sellQty: ', sellQty);
-  }, [sellState]);
-
   return (
     <>
       <Badge
@@ -177,18 +164,18 @@ export default function ItemSale({ item }) {
         <img alt='Sell Item' src='APPIcons/coin.svg'></img>
       </Badge>
 
-      <Modal show={show} onHide={handleClose}>
-        <Form className='texture-backer rounded'>
+      <Modal size='lg' show={show} onHide={handleClose}>
+        <Form className=' rounded'>
           <Modal.Header closeButton>
-            <Modal.Title>Sell {item.itemName}?</Modal.Title>
+            <Modal.Title className='p-1'>Sell {item.itemName}?</Modal.Title>
           </Modal.Header>
           <Modal.Body className='pt-0 pb-0'>
-            <Row>
-              <Col className='pb-2'>This action cannot be undone!</Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group controlId='itemQty'>
+            <Container fluid>
+              <Row>
+                <Col className='p-1 pb-2'>This action cannot be undone!</Col>
+              </Row>
+              <Row className='pb-2'>
+                <Col className='p-1'>
                   <Form.Control
                     type='number'
                     ref={qtyRef}
@@ -197,128 +184,33 @@ export default function ItemSale({ item }) {
                     placeholder='Qty'
                     onChange={() => setSellQty(parseInt(qtyRef.current.value || 0))}
                   />
-                </Form.Group>
-              </Col>
-              <Col xs={3} className='pl-0'>
-                <Button
-                  className='w-100 background-dark border-0'
-                  disabled={item.itemQty <= 1 && true}
-                  variant='dark'
-                  onClick={() => maxQty(item.itemQty, qtyRef)}
-                >
-                  Sell all
-                </Button>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={2} className='pr-0'>
-                <TagEditTrigger
-                  tags={allTags?.[currencyKeys[0]]}
-                  colorTag={colorTags?.[currencyKeys[0]] || defaultColors[0]}
-                  disabled={true}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Group controlId='itemPrice1'>
-                  <Form.Control
-                    type='number'
-                    ref={currency1Ref}
-                    onChange={() => updateSellState(currencyKeys[0], currency1Ref.current.value)}
-                    placeholder='Price'
+                </Col>
+                <Col xs={3} className='p-1'>
+                  <Button
+                    className='w-100 background-dark border-0'
+                    disabled={item.itemQty <= 1 && true}
+                    variant='dark'
+                    onClick={() => maxQty(item.itemQty, qtyRef)}
+                  >
+                    Sell all
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                {currencyKeys.map((currencyKey, idx) => (
+                  <GoldInput
+                    key={idx}
+                    tags={allTags?.[currencyKey]}
+                    currencyKey={currencyKey}
+                    colorTag={colorTags?.[currencyKey]}
+                    defaultColor={defaultColors[idx]}
+                    setState={updateSellState}
+                    disabled={true}
                   />
-                </Form.Group>
-              </Col>
-              <Col xs={2} className='pr-0'>
-                <TagEditTrigger
-                  tags={allTags?.[currencyKeys[1]]}
-                  colorTag={colorTags?.[currencyKeys[1]] || defaultColors[1]}
-                  disabled={true}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Group controlId='itemPrice2'>
-                  <Form.Control
-                    type='number'
-                    ref={currency2Ref}
-                    onChange={() => updateSellState(currencyKeys[1], currency2Ref.current.value)}
-                    placeholder='Price'
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col xs={2} className='pr-0'>
-                <TagEditTrigger
-                  tags={allTags?.[currencyKeys[2]]}
-                  colorTag={colorTags?.[currencyKeys[2]] || defaultColors[2]}
-                  disabled={true}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Group controlId='itemPrice3'>
-                  <Form.Control
-                    type='number'
-                    ref={currency3Ref}
-                    onChange={() => updateSellState(currencyKeys[2], currency3Ref.current.value)}
-                    placeholder='Price'
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={2} className='pr-0'>
-                <TagEditTrigger
-                  tags={allTags?.[currencyKeys[3]]}
-                  colorTag={colorTags?.[currencyKeys[3]] || defaultColors[3]}
-                  disabled={true}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Group controlId='itemPrice4'>
-                  <Form.Control
-                    type='number'
-                    ref={currency4Ref}
-                    onChange={() => updateSellState(currencyKeys[3], currency4Ref.current.value)}
-                    placeholder='Price'
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col xs={2} className='pr-0'>
-                <TagEditTrigger
-                  tags={allTags?.[currencyKeys[4]]}
-                  colorTag={colorTags?.[currencyKeys[4]] || defaultColors[4]}
-                  disabled={true}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Group controlId='itemPrice5'>
-                  <Form.Control
-                    type='number'
-                    ref={currency5Ref}
-                    onChange={() => updateSellState(currencyKeys[4], currency5Ref.current.value)}
-                    placeholder='Price'
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={2} className='pr-0'>
-                <TagEditTrigger
-                  tags={allTags?.[currencyKeys[5]]}
-                  colorTag={colorTags?.[currencyKeys[5]] || defaultColors[5]}
-                  disabled={true}
-                />
-              </Col>
-              <Col xs={4}>
-                <Form.Group controlId='itemPrice6'>
-                  <Form.Control
-                    type='number'
-                    ref={currency6Ref}
-                    onChange={() => updateSellState(currencyKeys[5], currency6Ref.current.value)}
-                    placeholder='Price'
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group controlId='itemOwner'>
+                ))}
+              </Row>
+              <Row className='pb-2'>
+                <Col className='p-1'>
                   <Form.Label>Item seller</Form.Label>
                   <Form.Control as='select' defaultValue={item && item.owner} ref={sellerRef}>
                     <option value={'All'}>Party</option>
@@ -326,11 +218,11 @@ export default function ItemSale({ item }) {
                       partyData.party &&
                       partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
                   </Form.Control>
-                </Form.Group>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </Container>
           </Modal.Body>
-          <Modal.Footer className='pt-0'>
+          <Modal.Footer className='pt-0 texture-backer'>
             {errorMessage && (
               <Alert variant='warning' className='w-100'>
                 {errorMessage}

@@ -1,19 +1,34 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Col, Form } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import TagEditTrigger from './TagEditTrigger';
 
-export default function GoldInput({ tags, currency, handleShow, colorTag, currencyRef, defaultColor }) {
+export default function GoldInput({
+  tags,
+  currency,
+  currencyKey,
+  handleShow,
+  colorTag,
+  defaultColor,
+  setState,
+  disabled,
+}) {
   const { db } = useContext(AuthContext);
   const { currentGroup, sortBy } = useContext(GroupContext);
 
+  useEffect(() => {
+    currencyRef.current.value = currency;
+  }, [currency]);
+
+  const currencyRef = useRef();
+
   const currencyDataRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
 
-  const updateCurrency = (currency, currencyValueRef) => {
+  const updateCurrency = (currencyKey, currencyValueRef) => {
     currencyDataRef.set(
       {
-        [sortBy]: { [currency]: currencyValueRef.current.value },
+        [sortBy]: { [currencyKey]: currencyValueRef.current.value },
       },
       { merge: true }
     );
@@ -21,15 +36,20 @@ export default function GoldInput({ tags, currency, handleShow, colorTag, curren
 
   return (
     <>
-      <Col xs={1} className='p-0 pb-1 h-100'>
-        <TagEditTrigger tags={tags} handleShow={handleShow} colorTag={colorTag || defaultColor} />
+      <Col xs={2} className='p-1'>
+        <TagEditTrigger tags={tags} handleShow={handleShow} colorTag={colorTag || defaultColor} disabled={disabled} />
       </Col>
-      <Col xs={5} md={3} className='pl-1 pr-1 pb-1'>
+      <Col xs={4} md={2} className='p-1'>
         <Form.Control
+          defaultValue={currency || 0}
           type='number'
           ref={currencyRef}
           onChange={() => {
-            updateCurrency(currency, currencyRef);
+            if (setState) {
+              setState(currencyKey, currencyRef.current.value);
+            } else {
+              updateCurrency(currencyKey, currencyRef);
+            }
           }}
         />
       </Col>

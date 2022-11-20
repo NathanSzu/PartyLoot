@@ -22,7 +22,7 @@ export default function ModalEditUsername({ loading, userData }) {
             <Button variant='dark' className='p-2 mb-2 w-100 background-dark border-0' onClick={handleShow}>Change Username</Button>
 
             <Modal show={show} onHide={() => { handleClose() }}>
-                <Form className='texture-backer rounded'>
+                <Form className='rounded'>
                     <Modal.Header closeButton>
                         <Modal.Title>Change Username</Modal.Title>
                     </Modal.Header>
@@ -33,7 +33,7 @@ export default function ModalEditUsername({ loading, userData }) {
                         </Form.Group>
                     </Modal.Body>
 
-                    <Modal.Footer className='justify-content-between'>
+                    <Modal.Footer>
                         <Button disabled={loading} variant="dark" className='background-dark border-0' type="submit" onClick={save} >
                             Save
                         </Button>

@@ -165,7 +165,7 @@ export default function EditGroup({ name, id, owner, members }) {
           setFalse();
         }}
       >
-        <div className='texture-backer rounded'>
+        <div className='rounded'>
           <Form>
             <Modal.Header closeButton>
               <Modal.Title className='groups-overflow'>

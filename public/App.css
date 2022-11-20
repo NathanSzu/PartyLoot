@@ -48,10 +48,6 @@
     font-size: 24px;
 }
 
-.texture-backer {
-    background-image: url(ravenna.png);
-}
-
 .clear-background {
     background-color: unset;
 }
