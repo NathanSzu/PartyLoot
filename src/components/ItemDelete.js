@@ -3,7 +3,7 @@ import { Modal, Button, Form, Badge } from 'react-bootstrap';
 import { GroupContext } from '../utils/contexts/GroupContext';
 import { AuthContext } from '../utils/contexts/AuthContext';
 
-export default function ModalLoot({ item }) {
+export default function ItemDelete({ item }) {
   const { currentGroup } = useContext(GroupContext);
   const { db } = useContext(AuthContext);
 
@@ -35,7 +35,7 @@ export default function ModalLoot({ item }) {
     <>
       <Badge
         as='button'
-        className='mt-3 mr-2 p-0 pl-3 pr-3 background-danger border-0'
+        className='mt-3 mr-0 p-0 pl-3 pr-3 background-danger border-0'
         disabled={loading}
         type='button'
         onClick={handleShow}

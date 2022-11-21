@@ -13,14 +13,13 @@ import { GlobalFeaturesProvider } from './utils/contexts/GlobalFeatures';
 import Home from './pages/Home';
 import Groups from './pages/groups/Groups';
 import Loot from './pages/loot/Loot';
-import Settings from './pages/Settings';
+import Settings from './pages/settings/Settings';
 import History from './pages/History';
 import ItemCompendium from './pages/ItemCompendium';
 import PasswordReset from './pages/PasswordReset';
 
 // DOM Components
 import BootNav from './components/BootNav';
-import ModalAppRequest from './components/ModalAppRequest';
 import BootToast from './components/BootToast';
 
 // Routing Components
@@ -33,7 +32,6 @@ function App() {
     <AuthProvider>
       <GroupProvider>
         <GlobalFeaturesProvider>
-          <ModalAppRequest />
           <BootToast />
           <Router>
             <header>

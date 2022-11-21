@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
-import ModalEditUser from '../components/ModalEditUsername';
-import ModalAppRequestTrigger from '../components/ModalAppRequestTrigger';
+import ModalEditUsername from './helpers/ModalEditUsername';
+import ModalAppRequest from './helpers/ModalAppRequest';
 import { Row, Col, Alert, Button, Container } from 'react-bootstrap';
-import { AuthContext } from '../utils/contexts/AuthContext';
-import { GroupContext } from '../utils/contexts/GroupContext';
+import { AuthContext } from '../../utils/contexts/AuthContext';
+import { GroupContext } from '../../utils/contexts/GroupContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import metadata from '../utils/metadata.json';
-import app from '../utils/firebase';
-import ButtonShareLink from './common/ButtonShareLink';
+import metadata from '../../utils/metadata.json';
+import firebaseApp from '../../utils/firebase';
+import ButtonShareLink from '../common/ButtonShareLink';
 
 export default function Settings() {
   const { currentUser, userRef } = useContext(AuthContext);
@@ -23,17 +23,15 @@ export default function Settings() {
 
   const passwordReset = (email) => {
     setLoading(true);
-    app
+    firebaseApp
       .auth()
       .sendPasswordResetEmail(email)
       .then(function () {
-        // Email sent.
         setResetEmailSent(true);
         setLoading(false);
       })
-      .catch(function (error) {
-        // An error happened.
-        setLoading(false);
+      .catch(function (err) {
+        console.error(err);
       });
   };
 
@@ -55,7 +53,7 @@ export default function Settings() {
           </Col>
 
           <Col md={8} className='mr-auto ml-auto'>
-            <ModalEditUser loading={loading} setLoading={setLoading} userData={userData} />
+            <ModalEditUsername loading={loading} setLoading={setLoading} userData={userData} />
           </Col>
 
           <Col md={8} className='mr-auto ml-auto'>
@@ -72,7 +70,7 @@ export default function Settings() {
               Reset Password
             </Button>
             {!resetEmailSent ? null : (
-              <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
+              <Alert variant={'success'}>Your email has been sent. Please check your inbox and spam folder!</Alert>
             )}
           </Col>
         </div>
@@ -93,13 +91,15 @@ export default function Settings() {
             </a>
           </Col>
           <Col md={8} className='mr-auto ml-auto'>
-            <ModalAppRequestTrigger />
+            <ModalAppRequest />
           </Col>
         </div>
       </Row>
 
       <Row>
-        <Col className='text-right p-2'>Version: {metadata.buildMajor}.{metadata.buildMinor}.{metadata.buildRevision} {metadata.buildTag}</Col>
+        <Col className='text-right p-2'>
+          Version: {metadata.buildMajor}.{metadata.buildMinor}.{metadata.buildRevision} {metadata.buildTag}
+        </Col>
       </Row>
     </Container>
   );

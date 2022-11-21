@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Card, Col, Row, Badge, Container } from 'react-bootstrap';
+import { Accordion, Card, Col, Row, Container } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 import HeldBySection from './HeldBySection';
 
@@ -23,31 +23,33 @@ export default function AccordionLoot({ filteredItems }) {
             </Container>
           </Accordion.Toggle>
           <Accordion.Collapse eventKey={item.id}>
-            <div className=''>
-              <Card.Body className='background-light'>
+            <Card.Body className='background-light pt-2'>
+              <Container className='pl-2 pr-2 pt-0'>
                 <Row className='pt-1 pb-1'>
-                  <Col className='d-flex align-items-center border-bottom border-dark'>
+                  <Col className='d-flex align-items-center border-bottom border-dark pl-0'>
                     <h2 className='item-h2 m-0'>Description</h2>
                   </Col>
                   {item.currCharges && item.maxCharges && (
-                    <Col className='d-flex align-items-center border-bottom border-dark'>
+                    <Col className='d-flex align-items-center border-bottom border-dark pl-0'>
                       <h2 className='item-h2 mb-1 mt-1'>
                         {item.currCharges} / {item.maxCharges} <img alt='Charges' src='APPIcons/charge.svg' />
                       </h2>
                     </Col>
                   )}
-                  <Col xs={2} className='text-right'>
+                  <Col xs={2} className='text-right pl-2 pr-0'>
                     <ModalLoot item={item} idx={idx} />
                   </Col>
                 </Row>
+
                 <Row>
-                  <Col>
+                  <Col className='p-0'>
                     <pre>{item.itemDesc}</pre>
                   </Col>
                 </Row>
+
                 <HeldBySection item={item} />
-              </Card.Body>
-            </div>
+              </Container>
+            </Card.Body>
           </Accordion.Collapse>
         </Card>
       ))}

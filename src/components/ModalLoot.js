@@ -115,7 +115,7 @@ export default function ModalLoot({ item }) {
   return (
     <>
       {item ? (
-        <Button variant='dark' className='p-2 m-0 background-dark border-0' onClick={handleShow}>
+        <Button variant='dark' className='p-2 m-0 background-dark border-0 w-100' onClick={handleShow}>
           <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
         </Button>
       ) : (

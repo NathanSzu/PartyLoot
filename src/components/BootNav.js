@@ -4,12 +4,10 @@ import { Navbar, Nav } from 'react-bootstrap';
 import firebaseApp from '../utils/firebase';
 import { AuthContext } from '../utils/contexts/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
-import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
 
 export default function BootNav() {
   const location = useLocation();
   const { currentUser } = useContext(AuthContext);
-  const { handleShowRequestModal } = useContext(GlobalFeatures);
 
   const logOut = () => {
     firebaseApp
@@ -20,7 +18,7 @@ export default function BootNav() {
       })
       .catch((err) => {
         // An error happened.
-        console.error(err)
+        console.error(err);
       });
   };
 
@@ -55,12 +53,6 @@ export default function BootNav() {
               <Nav.Link href='/' onClick={logOut} data-cy='navbar-logout'>
                 Sign Out
               </Nav.Link>
-              {/* Hides the Request Feature / Report Bug link if on the user setting page */}
-              {location.pathname === '/user-settings' ? null : (
-                <LinkContainer to='/user-settings'>
-                  <Nav.Link onClick={handleShowRequestModal}>Request Feature / Report Bug</Nav.Link>
-                </LinkContainer>
-              )}
             </Nav>
           </Navbar.Collapse>
         </>
