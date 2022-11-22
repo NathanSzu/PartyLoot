@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function FavoriteIcon({ currentGroupData, member, groupRef }) {
     const { currentUser } = useContext(AuthContext);

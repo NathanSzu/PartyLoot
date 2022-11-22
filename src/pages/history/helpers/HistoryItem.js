@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function HistoryItem({ event }) {
   const { db } = useContext(AuthContext);

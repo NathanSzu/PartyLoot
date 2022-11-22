@@ -3,7 +3,7 @@ import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 // Importing and initializing firebase from utils/firebase config file.
-import firebaseApp from '../utils/firebase';
+import firebaseApp from '../../../utils/firebase';
 
 export default function BootLogin({ login, setLogin }) {
 	const [ email, setEmail ] = useState(null);

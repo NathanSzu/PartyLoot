@@ -1,9 +1,9 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { GroupContext } from '../utils/contexts/GroupContext';
-import { AuthContext } from '../utils/contexts/AuthContext';
-import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';

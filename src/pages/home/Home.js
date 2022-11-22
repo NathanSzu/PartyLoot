@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Jumbotron from '../components/JumbotronWelcome';
-import Login from '../components/BootLogin';
+import Jumbotron from './helpers/JumbotronWelcome';
+import Login from './helpers/BootLogin';
 import { Row, Col } from 'react-bootstrap';
 
 export default function Home() {

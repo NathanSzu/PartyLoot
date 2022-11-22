@@ -1,7 +1,7 @@
 import React, { useRef, useContext, useEffect } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
-import ModalParty from '../../../components/ModalParty';
+import ModalParty from './ModalParty';
 
 export default function OwnerFilter({ partyData }) {
   const { setSortBy } = useContext(GroupContext);

@@ -4,11 +4,11 @@ import { Card, Navbar, Row, Col, Container, Spinner, Button } from 'react-bootst
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import { AuthContext } from '../../utils/contexts/AuthContext';
-import ModalLoot from '../../components/ModalLoot';
+import ModalLoot from './helpers/ModalLoot';
 import GoldTracker from './helpers/GoldTracker';
-import ItemSearch from '../../components/ItemSearch';
+import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
-import LootAccordion from '../../components/AccordionLoot';
+import LootAccordion from './helpers/AccordionLoot';
 import { gsap } from 'gsap';
 
 export default function Loot() {

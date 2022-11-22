@@ -10,17 +10,17 @@ import { GroupProvider } from './utils/contexts/GroupContext';
 import { GlobalFeaturesProvider } from './utils/contexts/GlobalFeatures';
 
 // Pages
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import Groups from './pages/groups/Groups';
 import Loot from './pages/loot/Loot';
 import Settings from './pages/settings/Settings';
-import History from './pages/History';
-import ItemCompendium from './pages/ItemCompendium';
-import PasswordReset from './pages/PasswordReset';
+import History from './pages/history/History';
+import Compendium from './pages/compendium/Compendium';
+import PasswordReset from './pages/passwordReset/PasswordReset';
 
 // DOM Components
-import BootNav from './components/BootNav';
-import BootToast from './components/BootToast';
+import BootNav from './pages/common/BootNav';
+import BootToast from './pages/common/BootToast';
 
 // Routing Components
 import SecuredRoute from './utils/routingComponents/SecuredRoute';
@@ -55,8 +55,8 @@ function App() {
                       <SecuredRoute exact path='/user-settings' component={Settings} />
                       {/* <SecuredRoute
                       exact
-                      path="/item-compendium"
-                      component={ItemCompendium}
+                      path="/compendium"
+                      component={Compendium}
                     /> */}
                       <GroupRoute exact path='/loot' component={Loot} />
                       <GroupRoute exact path='/history' component={History} />

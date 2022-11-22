@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Toast } from 'react-bootstrap';
-import { GlobalFeatures } from '../utils/contexts/GlobalFeatures';
+import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 
 export default function BootToast() {
     const { showToast, toggleShowToast, toastContent, toastHeader } = useContext(GlobalFeatures)

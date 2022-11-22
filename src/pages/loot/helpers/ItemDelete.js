@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Modal, Button, Form, Badge } from 'react-bootstrap';
-import { GroupContext } from '../utils/contexts/GroupContext';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function ItemDelete({ item }) {
   const { currentGroup } = useContext(GroupContext);

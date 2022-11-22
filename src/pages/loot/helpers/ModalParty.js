@@ -2,8 +2,8 @@ import React, { useContext, useState, useRef } from 'react';
 import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
-import { GroupContext } from '../utils/contexts/GroupContext';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 import FavoriteIcon from './FavoriteIcon';
 
 export default function ModalParty() {

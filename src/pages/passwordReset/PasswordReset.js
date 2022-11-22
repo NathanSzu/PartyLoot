@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 
 // Importing and initializing firebase from utils/firebase config file.
-import app from '../utils/firebase';
+import app from '../../utils/firebase';
 
 export default function PasswordReset() {
   const [loading, setLoading] = useState(false);

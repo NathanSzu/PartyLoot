@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
-import { GroupContext } from '../utils/contexts/GroupContext';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
 
 export default function ItemSearch({ items, setFilteredItems, setLoading }) {
   const { sortBy } = useContext(GroupContext);

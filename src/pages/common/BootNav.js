@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
-import firebaseApp from '../utils/firebase';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import firebaseApp from '../../utils/firebase';
+import { AuthContext } from '../../utils/contexts/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
 
 export default function BootNav() {

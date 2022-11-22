@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Container, Row, Col, ListGroup, Button } from 'react-bootstrap';
-import { GroupContext } from '../utils/contexts/GroupContext';
-import { AuthContext } from '../utils/contexts/AuthContext';
+import { GroupContext } from '../../utils/contexts/GroupContext';
+import { AuthContext } from '../../utils/contexts/AuthContext';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import HistoryItem from '../components/HistoryItem';
+import HistoryItem from './helpers/HistoryItem';
 
 export default function History() {
   const { currentGroup } = useContext(GroupContext);
