@@ -10,7 +10,6 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
   const { currentGroup } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
-  const colorDataRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
   const tagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('tags');
 
   const [tagState, setTagState] = useState({});
@@ -31,34 +30,15 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
     handleClose();
   };
 
-  const updateColor = (currency, color) => {
-    colorDataRef.set(
-      {
-        [currency]: color,
-      },
-      { merge: true }
-    );
-  };
-
   const updateTags = async (tagState) => {
     setLoading(true);
     tagRef.set(tagState, { merge: true }).catch((err) => console.error(err));
   };
 
-  const updateColorTags = async (tagState) => {
-    let keys = Object.keys(tagState);
-    let values = Object.values(tagState);
-    keys.forEach((key, idx) => {
-      values[idx].color && updateColor(key, values[idx].color);
-    });
-  };
-
   const updateTagData = (tagState) => {
     updateTags(tagState).then(() => {
-      updateColorTags(tagState).then(() => {
-        clearStateAndClose();
-        setLoading(false);
-      });
+      clearStateAndClose();
+      setLoading(false);
     });
   };
 
