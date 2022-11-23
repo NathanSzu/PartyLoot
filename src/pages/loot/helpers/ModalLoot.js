@@ -8,7 +8,7 @@ import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
 
-export default function ModalLoot({ item }) {
+export default function ModalLoot({ item = '' }) {
   const { currentGroup } = useContext(GroupContext);
   const { db, currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);

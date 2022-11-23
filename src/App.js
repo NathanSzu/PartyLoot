@@ -46,7 +46,6 @@ function App() {
             <main>
               <Container>
                 <Row>
-                  {/* Constraining the max-width with Col md=8 */}
                   <Col md={10} className='ml-auto mr-auto p-0'>
                     <Switch>
                       <SkippedRoute exact path='/' component={Home} />

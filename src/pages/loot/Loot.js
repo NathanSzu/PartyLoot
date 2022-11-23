@@ -62,8 +62,7 @@ export default function Loot() {
             </Card>
             <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
               <Card.Header className='border-0 d-flex'>
-                {/* Item should be empty string to prevent error */}
-                <ModalLoot item={''} />
+                <ModalLoot />
                 <LinkContainer to='/history' data-cy='button-history'>
                   <Button variant='dark' className='background-dark ml-2'>
                     <img className='m-1' alt='History' src='APPIcons/clock-fill.svg' />
