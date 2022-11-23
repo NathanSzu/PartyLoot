@@ -165,7 +165,7 @@ export default function EditGroup({ name, id, owner, members }) {
           setFalse();
         }}
       >
-        <div className='texture-backer rounded'>
+        <div className='rounded'>
           <Form>
             <Modal.Header closeButton>
               <Modal.Title className='groups-overflow'>
@@ -174,7 +174,7 @@ export default function EditGroup({ name, id, owner, members }) {
             </Modal.Header>
 
             <Modal.Body>
-              <Form.Group controlId='groupName'>
+              <Form.Group controlId='groupName' className='m-0'>
                 <Form.Control
                   ref={nameRef}
                   disabled={currentUser.uid === owner ? false : true}
@@ -186,6 +186,14 @@ export default function EditGroup({ name, id, owner, members }) {
             </Modal.Body>
 
             <Modal.Footer className='justify-content-between border-0 pt-0'>
+              {deleteConfirmation ? (
+                <Col xs={12} className='p-0'>
+                  <Alert key='danger' variant='danger' className='w-100'>
+                    Be careful! Delete will permanently remove all group members and data.
+                  </Alert>
+                </Col>
+              ) : null}
+
               {currentUser.uid === owner ? (
                 <Button
                   as='input'
@@ -199,9 +207,7 @@ export default function EditGroup({ name, id, owner, members }) {
                     editGroup();
                   }}
                 />
-              ) : (
-                <div></div>
-              )}
+              ) : null}
 
               {deleteConfirmation ? (
                 <Button

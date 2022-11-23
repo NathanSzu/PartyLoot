@@ -11,15 +11,15 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
   const historyRef = db.collection('groups').doc(currentGroup).collection('history');
 
-  const [showRequestModal, setShowRequestModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState('Notification content');
   const [toastHeader, setToastHeader] = useState('Notification');
   const [expandNavbar, setExpandNavbar] = useState('false');
 
+  const defaultColors = ['#ffbb00', '#bdbdbd', '#d27e1e', '#ffffff', '#ffffff', '#ffffff'];
+  const currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
+
   const toggleShowToast = () => setShowToast(!showToast);
-  const handleCloseRequestModal = () => setShowRequestModal(false);
-  const handleShowRequestModal = () => setShowRequestModal(true);
 
   const writeHistoryEvent = (completedBy, action, data = {}) => {
     let summary = '';
@@ -51,10 +51,9 @@ export const GlobalFeaturesProvider = ({ children }) => {
   return (
     <GlobalFeatures.Provider
       value={{
-        showRequestModal,
-        handleCloseRequestModal,
-        handleShowRequestModal,
         showToast,
+        defaultColors,
+        currencyKeys,
         toggleShowToast,
         toastContent,
         setToastContent,
