@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Modal, Container, Row, Button } from 'react-bootstrap';
+import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import TagInput from './TagInput';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
@@ -49,7 +49,18 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Row>
+          <Row className='text-center'>
+            <Col xs={1} className='p-0 pb-1 h-100'>
+              <img alt='Edit Group' src='/APPIcons/palette.svg'></img>
+            </Col>
+            <Col xs={2} md={1} className='pl-1 pr-1 pb-1'>
+              <img alt='Edit Group' src='/APPIcons/type.svg'></img>
+            </Col>
+            <Col xs={3} md={2} className='pl-1 pr-1 pb-1'>
+              <img alt='Edit Group' src='/APPIcons/type-theme.svg'></img>
+            </Col>
+          </Row>
+          <Row className='pb-2'>
             {currencyKeys.map((currencyKey, idx) => (
               <TagInput
                 key={idx}
