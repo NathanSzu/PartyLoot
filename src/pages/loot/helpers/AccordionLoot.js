@@ -3,7 +3,8 @@ import { Accordion, Card, Col, Row, Container } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 import HeldBySection from './HeldBySection';
 
-export default function AccordionLoot({ filteredItems }) {
+export default function AccordionLoot({ filteredItems, itemOwners }) {
+
   return (
     <Accordion className='m-0'>
       {filteredItems.map((item, idx) => (
@@ -47,7 +48,7 @@ export default function AccordionLoot({ filteredItems }) {
                   </Col>
                 </Row>
 
-                <HeldBySection item={item} />
+                <HeldBySection item={item} itemOwners={itemOwners} />
               </Container>
             </Card.Body>
           </Accordion.Collapse>

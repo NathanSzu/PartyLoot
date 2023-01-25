@@ -9,6 +9,7 @@ import GoldTracker from './helpers/GoldTracker';
 import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
 import LootAccordion from './helpers/AccordionLoot';
+import fb from 'firebase';
 import { gsap } from 'gsap';
 
 export default function Loot() {
@@ -16,23 +17,87 @@ export default function Loot() {
   const { db, currentUser } = useContext(AuthContext);
 
   const groupRef = db.collection('groups').doc(currentGroup);
+  const itemOwnersRef = groupRef.collection('itemOwners');
   const lootRef = groupRef.collection('loot');
   const query = lootRef.orderBy('itemName');
 
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [itemOwnerName, setItemOwnerName] = useState('Party')
 
-  const [lootItems] = useCollectionData(query, { idField: 'id' });
+  const [lootItems, loadingItems] = useCollectionData(query, { idField: 'id' });
   const [partyData, loadingPartyData] = useDocumentData(groupRef);
+  const [itemOwners, loadingItemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
-  const setDefaultMember = (member, party) => {
-    if (party.party.includes(party.favorites[member])) {
-      document.getElementById('defaultMember').value = party.favorites[member];
-      setSortBy(party.favorites[member]);
-    } else {
-      setSortBy('All');
+  const setDefaultItemOwner = (member, party) => {
+    document.getElementById('defaultMember').value = party.favorites[member];
+    setSortBy(party?.favorites[member] || 'All');
+  };
+
+  // This function is necessary to migrate all party data to a new itemOwner collection to set the stage for users to edit owner names and to support other planned features.
+  const updatePartyData = (party) => {
+    party &&
+      itemOwnersRef
+        .add({
+          name: party[0],
+          type: 'party',
+          createdOn: fb.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(() => {
+          party.shift();
+
+          if (party.length === 0) {
+            groupRef
+              .update({
+                party: fb.firestore.FieldValue.delete(),
+              })
+              .catch((err) => {
+                console.error('Error deleting item: ', err);
+              });
+          }
+
+          if (party.length > 0) {
+            groupRef
+              .update({
+                party,
+              })
+              .catch((err) => {
+                console.error('Error deleting item: ', err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.error('Error migrating data: ', err);
+        });
+  };
+
+  const updateItemData = (items, loadingItems, itemOwners, loadingItemOwners) => {
+    if (!loadingItems && !loadingItemOwners) {
+      const noOwnerItems = items.filter((item) => item.owner && !item.ownerId);
+
+      if (noOwnerItems.length === 0) return;
+
+      itemOwners.forEach((itemOwner) => {
+        itemOwner.name === noOwnerItems[0].owner &&
+          lootRef
+            .doc(`${noOwnerItems[0].id}`)
+            .update({
+              ownerId: itemOwner.id,
+            })
+            .catch((err) => {
+              console.error('Error updating item: ', err);
+            });
+      });
     }
   };
+
+  useEffect(() => {
+    !loadingPartyData && updatePartyData(partyData.party);
+  }, [partyData]);
+
+  useEffect(() => {
+    itemOwners && updateItemData(lootItems, loadingItems, itemOwners, loadingItemOwners);
+  }, [lootItems, itemOwners]);
 
   useEffect(() => {
     if (filteredItems.length > 0) {
@@ -45,9 +110,9 @@ export default function Loot() {
       partyData &&
       partyData.favorites &&
       partyData.favorites[currentUser.uid] &&
-      setDefaultMember(currentUser.uid, partyData);
-  }, [partyData]);
-
+      setDefaultItemOwner(currentUser.uid, partyData);
+  }, [partyData, itemOwners]);
+  
   return (
     <Container className='pb-5'>
       <Row>
@@ -57,7 +122,7 @@ export default function Loot() {
             <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
               <Card.Header className='border-0'>
                 <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
-                <OwnerFilter partyData={partyData} />
+                <OwnerFilter itemOwners={itemOwners} />
               </Card.Header>
             </Card>
             <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
@@ -82,7 +147,7 @@ export default function Loot() {
               variant='light'
             />
           )}
-          <LootAccordion filteredItems={filteredItems} />
+          <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
         </Col>
         {filteredItems.length > 0 || loading ? null : (
           <Col xs={12} className='pt-4 pb-4 pl-5 pr-5 background-unset add-background-dark'>

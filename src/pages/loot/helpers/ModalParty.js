@@ -6,12 +6,13 @@ import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import FavoriteIcon from './FavoriteIcon';
 
-export default function ModalParty() {
+export default function ModalParty({ itemOwners }) {
   const { currentGroup } = useContext(GroupContext);
   const { db } = useContext(AuthContext);
 
   const groupRef = db.collection('groups').doc(currentGroup);
-  const addPartyMemberRef = useRef('');
+  const itemOwnersRef = groupRef.collection('itemOwners');
+  const addItemOwnerRef = useRef('');
 
   const [partyData] = useDocumentData(groupRef);
 
@@ -21,18 +22,20 @@ export default function ModalParty() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const addPartyMember = () => {
-    if (!addPartyMemberRef.current.value) {
+  const addItemOwner = () => {
+    if (!addItemOwnerRef.current.value) {
       console.error('Enter a name first');
       return;
     }
     setLoading(true);
-    groupRef
-      .update({
-        party: fb.firestore.FieldValue.arrayUnion(addPartyMemberRef.current.value.trim()),
+    itemOwnersRef
+      .add({
+        name: addItemOwnerRef.current.value,
+        type: 'party',
+        createdOn: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        addPartyMemberRef.current.value = '';
+        addItemOwnerRef.current.value = '';
         setLoading(false);
       })
       .catch((err) => {
@@ -41,11 +44,12 @@ export default function ModalParty() {
       });
   };
 
-  const removePartyMember = (partyMember) => {
+  const removeItemOwner = (itemOwnerId) => {
     setLoading(true);
-    groupRef
+    itemOwnersRef
+      .doc(itemOwnerId)
       .update({
-        party: fb.firestore.FieldValue.arrayRemove(partyMember),
+        type: 'deleted',
       })
       .then(() => {
         setLoading(false);
@@ -76,10 +80,10 @@ export default function ModalParty() {
             >
               <Row>
                 <Col className='pl-0' xs={10}>
-                  <Form.Control type='input' placeholder='Add Party Members' ref={addPartyMemberRef}></Form.Control>
+                  <Form.Control type='input' placeholder='Add Party Members' ref={addItemOwnerRef}></Form.Control>
                 </Col>
                 <Col className='pl-2' xs={2}>
-                  <Button disabled={loading} variant='dark' type='submit' onClick={addPartyMember}>
+                  <Button disabled={loading} variant='dark' type='submit' onClick={addItemOwner}>
                     <img alt='Add Party Member' src='APPIcons/add-user.svg' />
                   </Button>
                 </Col>
@@ -89,15 +93,14 @@ export default function ModalParty() {
         </Modal.Body>
 
         <Modal.Footer>
-          {partyData &&
-            partyData.party &&
-            partyData.party.map((member, idx) => (
-              <Container key={idx}>
+          {itemOwners &&
+            itemOwners.map((itemOwner) => (
+              <Container key={itemOwner.id}>
                 <Row>
                   <Col className='pl-0' xs={10}>
                     <p className='vertical-center'>
-                      <FavoriteIcon groupRef={groupRef} currentGroupData={partyData} member={member} />
-                      {member}
+                      <FavoriteIcon groupRef={groupRef} currentGroupData={partyData} itemOwnerId={itemOwner.id} />
+                      {itemOwner.name}
                     </p>
                   </Col>
                   <Col className='pl-2' xs={2}>
@@ -105,8 +108,8 @@ export default function ModalParty() {
                       disabled={loading}
                       variant='danger'
                       type='button'
-                      onClick={(e) => {
-                        removePartyMember(member);
+                      onClick={() => {
+                        removeItemOwner(itemOwner.id);
                       }}
                     >
                       <img alt='Delete Group' src='APPIcons/remove-user.svg'></img>

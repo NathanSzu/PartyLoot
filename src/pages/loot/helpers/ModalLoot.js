@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
@@ -15,6 +15,7 @@ export default function ModalLoot({ item = '' }) {
 
   const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
   const groupRef = db.collection('groups').doc(currentGroup);
+  const itemOwnersRef = groupRef.collection('itemOwners');
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ export default function ModalLoot({ item = '' }) {
   const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
 
-  const [partyData] = useDocumentData(groupRef);
+  const [itemOwners, loadingItemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
   const nameRef = useRef();
   const descRef = useRef();
@@ -45,11 +46,11 @@ export default function ModalLoot({ item = '' }) {
     if (!nameRef.current.value || !descRef.current.value) {
       setItemValidations('Item name and description are required!');
       return;
-    };
+    }
     if (!/^\d+$/.test(qtyRef.current.value) && qtyRef.current.value !== '') {
       setItemValidations('Item quantity must be a positive number!');
       return false;
-    };
+    }
     setItemValidations('');
     return true;
   };
@@ -60,7 +61,7 @@ export default function ModalLoot({ item = '' }) {
 
     let historyData = {
       itemName: nameRef.current.value,
-      owner: ownerRef.current.value === 'Select owner' ? 'the party' : ownerRef.current.value
+      owner: ownerRef.current.value === 'Select owner' ? 'the party' : ownerRef.current.value,
     };
 
     groupRef
@@ -72,7 +73,7 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value,
+        ownerId: ownerRef.current.value,
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
@@ -98,7 +99,7 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value,
+        ownerId: ownerRef.current.value,
       })
       .then(() => {
         handleClose();
@@ -217,11 +218,15 @@ export default function ModalLoot({ item = '' }) {
                 </Form.Group>
 
                 <Form.Group controlId='itemOwner'>
-                  <Form.Control as='select' defaultValue={item && item.owner} ref={ownerRef}>
-                    <option>Select owner</option>
-                    {partyData &&
-                      partyData.party &&
-                      partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
+                  <Form.Control as='select' defaultValue={item && item.ownerId} ref={ownerRef}>
+                    <option value={''}>Select owner</option>
+                    {!loadingItemOwners &&
+                      itemOwners &&
+                      itemOwners.map((itemOwner) => (
+                        <option key={itemOwner.id} value={itemOwner.id}>
+                          {itemOwner.name}
+                        </option>
+                      ))}
                   </Form.Control>
                 </Form.Group>
                 {itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}

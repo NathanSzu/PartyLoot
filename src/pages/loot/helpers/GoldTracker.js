@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Row, Card, Accordion, Col, Container } from 'react-bootstrap';
+import { Row, Card, Accordion, Col, Container, Spinner } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
@@ -16,14 +16,17 @@ export default function GoldTracker() {
 
   const [showTagEditor, setShowTagEditor] = useState(false);
   const [open, setOpen] = useState(false);
+  const [itemOwnerName, setItemOwnerName] = useState('Party');
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => setShowTagEditor(false);
   const handleShow = () => setShowTagEditor(true);
 
-  const currencyRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
-  const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
+  const groupRef = db.collection('groups').doc(currentGroup);
+  const currencyRef = groupRef.collection('currency').doc('currency');
+  const colorTagRef = groupRef.collection('currency').doc('colorTags');
   // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
-  const tagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('tags');
+  const tagRef = groupRef.collection('currency').doc('tags');
 
   const [currency, loadingCurrency] = useDocumentData(currencyRef);
   const [colorTags] = useDocumentData(colorTagRef);
@@ -33,6 +36,25 @@ export default function GoldTracker() {
     gsap.fromTo('.chevron-left', { rotate: 180 }, { rotate: 0, duration: 0.35 });
     gsap.fromTo('.chevron-right', { rotate: -180 }, { rotate: 0, duration: 0.35 });
   }, [open]);
+
+  useEffect(() => {
+    setLoading(true);
+    groupRef
+      .collection('itemOwners')
+      .doc(sortBy)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setItemOwnerName(doc.data().name);
+        } else {
+          setItemOwnerName('Party');
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error getting document:', error);
+      });
+  }, [sortBy]);
 
   return (
     <Accordion>
@@ -49,7 +71,17 @@ export default function GoldTracker() {
           <Row>
             <Chevron open={open} />
             <Col>
-              <h1 className='item-h1 m-0 text-center'>{sortBy === 'All' ? 'Party' : sortBy} Gold</h1>
+              {loading ? (
+                <Spinner
+                  as='div'
+                  className='d-flex ml-auto mr-auto loading-spinner-xs'
+                  animation='border'
+                  role='status'
+                  variant='light'
+                />
+              ) : (
+                <h1 className='item-h1 m-0 text-center'>{itemOwnerName} Gold</h1>
+              )}
             </Col>
             <Chevron open={open} reverse={true} />
           </Row>

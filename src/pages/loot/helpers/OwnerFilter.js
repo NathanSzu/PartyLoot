@@ -3,7 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import ModalParty from './ModalParty';
 
-export default function OwnerFilter({ partyData }) {
+export default function OwnerFilter({ itemOwners }) {
   const { setSortBy } = useContext(GroupContext);
 
   const sortRef = useRef('');
@@ -26,17 +26,16 @@ export default function OwnerFilter({ partyData }) {
             id='defaultMember'
           >
             <option>All</option>
-            {partyData &&
-              partyData.party &&
-              partyData.party.map((partyMember, idx) => (
-                <option key={idx}>{partyMember}</option>
+            {itemOwners &&
+              itemOwners.map((owner) => (
+                <option value={owner.id} key={owner.id}>{owner.name}</option>
               ))}
           </Form.Control>
         </Form>
       </Col>
 
       <Col xs={2} className='pl-0'>
-        <ModalParty />
+        <ModalParty itemOwners={itemOwners} />
       </Col>
     </Row>
   );
