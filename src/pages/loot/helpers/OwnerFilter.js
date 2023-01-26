@@ -2,9 +2,10 @@ import React, { useRef, useContext, useEffect } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import ModalParty from './ModalParty';
+import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
 export default function OwnerFilter({ itemOwners }) {
-  const { setSortBy } = useContext(GroupContext);
+  const { setSortBy, sortBy } = useContext(GroupContext);
 
   const sortRef = useRef('');
 
@@ -17,20 +18,7 @@ export default function OwnerFilter({ itemOwners }) {
             setSortBy(sortRef.current.value);
           }}
         >
-          <Form.Control
-            as='select'
-            ref={sortRef}
-            onChange={() => {
-              setSortBy(sortRef.current.value);
-            }}
-            id='defaultMember'
-          >
-            <option>All</option>
-            {itemOwners &&
-              itemOwners.map((owner) => (
-                <option value={owner.id} key={owner.id}>{owner.name}</option>
-              ))}
-          </Form.Control>
+          <ItemOwnerSelect itemOwners={itemOwners} setState={setSortBy} value={sortBy} />
         </Form>
       </Col>
 

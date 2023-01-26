@@ -19,22 +19,20 @@ export default function Loot() {
   const groupRef = db.collection('groups').doc(currentGroup);
   const itemOwnersRef = groupRef.collection('itemOwners');
   const lootRef = groupRef.collection('loot');
+  const currencyRef = groupRef.collection('currency').doc('currency');
   const query = lootRef.orderBy('itemName');
 
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [itemOwnerName, setItemOwnerName] = useState('Party')
 
   const [lootItems, loadingItems] = useCollectionData(query, { idField: 'id' });
   const [partyData, loadingPartyData] = useDocumentData(groupRef);
   const [itemOwners, loadingItemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
+  // Used for transferring currency to be stored under new id's
+  const [currency, loadingCurrency] = useDocumentData(currencyRef);
 
-  const setDefaultItemOwner = (member, party) => {
-    document.getElementById('defaultMember').value = party.favorites[member];
-    setSortBy(party?.favorites[member] || 'All');
-  };
-
-  // This function is necessary to migrate all party data to a new itemOwner collection to set the stage for users to edit owner names and to support other planned features.
+  // Updates all party member data from an array on the group document to new documents with unique id's.
+  // This will support itemOwner name changes, categorization, and other planned features.
   const updatePartyData = (party) => {
     party &&
       itemOwnersRef
@@ -71,6 +69,7 @@ export default function Loot() {
         });
   };
 
+    // Updates item data from being stored under a name to storage under an itemOwner.id.
   const updateItemData = (items, loadingItems, itemOwners, loadingItemOwners) => {
     if (!loadingItems && !loadingItemOwners) {
       const noOwnerItems = items.filter((item) => item.owner && !item.ownerId);
@@ -91,6 +90,24 @@ export default function Loot() {
     }
   };
 
+  // Updates currency from being stored under a name to storage under an itemOwner.id.
+  const updateCurrency = (currencyValues, itemOwnerId, itemOwnerName) => {
+    currencyRef
+      .set(
+        {
+          [itemOwnerId]: currencyValues,
+        },
+        { merge: true }
+      )
+      .then(() => {
+        currencyRef.update(
+          {
+            [itemOwnerName]: fb.firestore.FieldValue.delete(),
+          }
+        );
+      });
+  };
+
   useEffect(() => {
     !loadingPartyData && updatePartyData(partyData.party);
   }, [partyData]);
@@ -107,12 +124,25 @@ export default function Loot() {
 
   useEffect(() => {
     !loadingPartyData &&
-      partyData &&
-      partyData.favorites &&
-      partyData.favorites[currentUser.uid] &&
-      setDefaultItemOwner(currentUser.uid, partyData);
+      partyData?.favorites &&
+      partyData?.favorites[currentUser.uid] &&
+      setSortBy(partyData.favorites[currentUser.uid]);
   }, [partyData, itemOwners]);
-  
+
+  useEffect(() => {
+    !loadingItemOwners && !loadingCurrency &&
+      itemOwners.forEach((itemOwner) => {
+        if (currency[itemOwner?.name]) {
+          console.log('currency exists: ', currency[itemOwner.name]);
+          updateCurrency(currency[itemOwner.name], itemOwner.id, itemOwner.name);
+        }
+      });
+      if (currency?.All) {
+        console.log('currency exists: ', currency.All);
+          updateCurrency(currency.All, 'party', 'All');
+      }
+  }, [currency]);
+
   return (
     <Container className='pb-5'>
       <Row>

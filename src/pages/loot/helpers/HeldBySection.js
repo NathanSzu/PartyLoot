@@ -20,7 +20,7 @@ export default function HeldBySection({ item, itemOwners }) {
           </Badge>
         </Col>
         <Col className='d-flex justify-content-end pr-0'>
-          <ItemSale item={item} />
+          <ItemSale item={item} itemOwners={itemOwners} />
           <ItemDelete item={item} />
         </Col>
       </Row>

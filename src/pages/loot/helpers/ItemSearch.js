@@ -30,7 +30,7 @@ export default function ItemSearch({ items, setFilteredItems, setLoading }) {
 
   const search = (item) => {
     const { itemName, itemDesc, itemTags, ownerId } = item;
-    if (ownerId !== sortBy && sortBy !== 'All')
+    if (ownerId !== sortBy && sortBy !== 'party')
       return;
     if (
       itemName

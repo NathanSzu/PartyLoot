@@ -1,36 +1,36 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Badge, Row, Col, Alert, Container } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import GoldInput from './GoldInput';
+import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
-export default function ItemSale({ item }) {
+export default function ItemSale({ item, itemOwners }) {
   const { currentGroup } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { db, currentUser } = useContext(AuthContext);
 
   const groupRef = db.collection('groups').doc(currentGroup);
-  const currencyRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
+  const currencyRef = groupRef.collection('currency').doc('currency');
   const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
-  const colorTagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('colorTags');
+  const colorTagRef = groupRef.collection('currency').doc('colorTags');
   // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
-  const tagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('tags');
+  const tagRef = groupRef.collection('currency').doc('tags');
 
-  const [partyData] = useDocumentData(groupRef);
   const [colorTags] = useDocumentData(colorTagRef);
   const [currency] = useDocumentData(currencyRef);
   const [allTags] = useDocumentData(tagRef);
 
   const qtyRef = useRef();
-  const sellerRef = useRef();
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [sellState, setSellState] = useState({});
   const [sellQty, setSellQty] = useState(1);
+  const [sellerId, setSellerId] = useState('party');
 
   const handleClose = () => {
     setShow(false);
@@ -52,11 +52,11 @@ export default function ItemSale({ item }) {
     });
   };
 
-  const calculateSale = (seller, currency, sellState, currencyKeys) => {
+  const calculateSale = (sellerId, currency, sellState, currencyKeys) => {
     let output = {};
     currencyKeys.forEach((currencyKey) => {
       output[currencyKey] =
-        parseInt(currency?.[seller]?.[currencyKey] || 0) + (sellState?.[currencyKey] || 0) * sellQty;
+        parseInt(currency?.[sellerId]?.[currencyKey] || 0) + (sellState?.[currencyKey] || 0) * sellQty;
     });
     return output;
   };
@@ -108,11 +108,11 @@ export default function ItemSale({ item }) {
     return true;
   };
 
-  const writeSaleTotals = async (seller, total) => {
+  const writeSaleTotals = async (sellerId, total) => {
     currencyRef
       .set(
         {
-          [seller]: total,
+          [sellerId]: total,
         },
         { merge: true }
       )
@@ -124,7 +124,7 @@ export default function ItemSale({ item }) {
       qty: parseInt(sellQty),
       itemName: item.itemName,
       currency: [],
-      seller: seller === 'All' ? 'the party' : seller,
+      seller: seller === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === seller).name,
     };
     currencyKeys.forEach((currencyKey) => {
       data.currency.push((sellState[currencyKey] || 0) * sellQty);
@@ -135,9 +135,9 @@ export default function ItemSale({ item }) {
   const sellItem = () => {
     if (!checkSellValidations(currencyKeys, sellState, sellQty)) return;
     setLoading(true);
-    let totals = calculateSale(sellerRef.current.value, currency, sellState, currencyKeys);
-    writeSaleTotals(sellerRef.current.value, totals).then(() => {
-      compileHistoryData(sellerRef.current.value, sellQty, item, sellState, currencyKeys);
+    let totals = calculateSale(sellerId, currency, sellState, currencyKeys);
+    writeSaleTotals(sellerId, totals).then(() => {
+      compileHistoryData(sellerId, sellQty, item, sellState, currencyKeys);
       if (item.itemQty >= 2) {
         if (item.itemQty <= sellQty) {
           deleteItem();
@@ -151,6 +151,10 @@ export default function ItemSale({ item }) {
       }
     });
   };
+
+  useEffect(() => {
+    item && setSellerId(item.ownerId);
+  }, [item]);
 
   return (
     <>
@@ -212,12 +216,7 @@ export default function ItemSale({ item }) {
               <Row className='pb-2'>
                 <Col className='p-1'>
                   <Form.Label>Item seller</Form.Label>
-                  <Form.Control as='select' defaultValue={item && item.owner} ref={sellerRef}>
-                    <option value={'All'}>Party</option>
-                    {partyData &&
-                      partyData.party &&
-                      partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
-                  </Form.Control>
+                  <ItemOwnerSelect itemOwners={itemOwners} setState={setSellerId} value={sellerId} />
                 </Col>
               </Row>
             </Container>

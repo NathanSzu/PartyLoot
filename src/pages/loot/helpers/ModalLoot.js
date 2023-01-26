@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
@@ -7,6 +7,7 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
+import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
 export default function ModalLoot({ item = '' }) {
   const { currentGroup } = useContext(GroupContext);
@@ -22,16 +23,20 @@ export default function ModalLoot({ item = '' }) {
   const [searchSRD, setSearchSRD] = useState(false);
   const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
+  const [itemOwner, setItemOwner] = useState('party');
 
-  const [itemOwners, loadingItemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
+  const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
   const nameRef = useRef();
   const descRef = useRef();
   const chargeRef = useRef();
   const chargesRef = useRef();
   const tagsRef = useRef();
-  const ownerRef = useRef();
   const qtyRef = useRef();
+
+  useEffect(() => {
+    item && setItemOwner(item.ownerId);
+  }, [item]);
 
   const handleClose = () => {
     setItemValidations('');
@@ -61,7 +66,7 @@ export default function ModalLoot({ item = '' }) {
 
     let historyData = {
       itemName: nameRef.current.value,
-      owner: ownerRef.current.value === 'Select owner' ? 'the party' : ownerRef.current.value,
+      owner: itemOwner === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === itemOwner).name,
     };
 
     groupRef
@@ -73,7 +78,7 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        ownerId: ownerRef.current.value,
+        ownerId: itemOwner,
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
@@ -99,7 +104,7 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        ownerId: ownerRef.current.value,
+        ownerId: itemOwner,
       })
       .then(() => {
         handleClose();
@@ -218,16 +223,7 @@ export default function ModalLoot({ item = '' }) {
                 </Form.Group>
 
                 <Form.Group controlId='itemOwner'>
-                  <Form.Control as='select' defaultValue={item && item.ownerId} ref={ownerRef}>
-                    <option value={''}>Select owner</option>
-                    {!loadingItemOwners &&
-                      itemOwners &&
-                      itemOwners.map((itemOwner) => (
-                        <option key={itemOwner.id} value={itemOwner.id}>
-                          {itemOwner.name}
-                        </option>
-                      ))}
-                  </Form.Control>
+                  <ItemOwnerSelect itemOwners={itemOwners} setState={setItemOwner} value={itemOwner} />
                 </Form.Group>
                 {itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}
               </Modal.Body>
@@ -235,17 +231,17 @@ export default function ModalLoot({ item = '' }) {
               <Modal.Footer className='justify-content-end'>
                 {item ? (
                   <Button
-                    as='input'
                     disabled={loading}
                     className='background-dark border-0'
-                    value='Save'
                     variant='dark'
                     type='submit'
                     onClick={(e) => {
                       e.preventDefault();
                       editLoot();
                     }}
-                  />
+                  >
+                    Save
+                  </Button>
                 ) : (
                   <Button
                     disabled={loading}
