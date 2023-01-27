@@ -13,6 +13,11 @@
     font-size: 12px
 }
 
+.itemOwner-h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px
+}
+
 .vertical-center {
     position: absolute;
     top: 50%;

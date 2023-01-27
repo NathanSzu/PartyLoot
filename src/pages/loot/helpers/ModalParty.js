@@ -1,10 +1,11 @@
-import React, { useContext, useState, useRef } from 'react';
-import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
+import React, { useContext, useState, useRef, useEffect } from 'react';
+import { Form, Row, Col, Button, Modal, Container, Accordion } from 'react-bootstrap';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import FavoriteIcon from './FavoriteIcon';
+import EditItemOwnerAccordion from './EditItemOwnerAccordion';
 
 export default function ModalParty({ itemOwners }) {
   const { currentGroup } = useContext(GroupContext);
@@ -18,6 +19,16 @@ export default function ModalParty({ itemOwners }) {
 
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
+  const [noDeletedOwners, setNoDeletedOwners] = useState([]);
+
+  useEffect(() => {
+    itemOwners &&
+      setNoDeletedOwners(
+        itemOwners.filter((itemOwner) => {
+          return itemOwner.type !== 'deleted';
+        })
+      );
+  }, [itemOwners]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -36,22 +47,6 @@ export default function ModalParty({ itemOwners }) {
       })
       .then(() => {
         addItemOwnerRef.current.value = '';
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err.code);
-        console.error(err.message);
-      });
-  };
-
-  const removeItemOwner = (itemOwnerId) => {
-    setLoading(true);
-    itemOwnersRef
-      .doc(itemOwnerId)
-      .update({
-        type: 'deleted',
-      })
-      .then(() => {
         setLoading(false);
       })
       .catch((err) => {
@@ -93,10 +88,15 @@ export default function ModalParty({ itemOwners }) {
         </Modal.Body>
 
         <Modal.Footer>
-          {itemOwners &&
-            itemOwners.map((itemOwner) => (
-              <Container key={itemOwner.id}>
-                <Row>
+          <Container className='p-0'>
+            <Accordion className='m-0'>
+              {noDeletedOwners.map((itemOwner) => (
+                <EditItemOwnerAccordion itemOwner={itemOwner} />
+              ))}
+            </Accordion>
+            {/* {noDeletedOwners &&
+              noDeletedOwners.map((itemOwner) => (
+                <Row key={itemOwner.id}>
                   <Col className='pl-0' xs={10}>
                     <p className='vertical-center'>
                       <FavoriteIcon groupRef={groupRef} currentGroupData={partyData} itemOwnerId={itemOwner.id} />
@@ -116,8 +116,8 @@ export default function ModalParty({ itemOwners }) {
                     </Button>
                   </Col>
                 </Row>
-              </Container>
-            ))}
+              ))} */}
+          </Container>
         </Modal.Footer>
       </Modal>
     </div>
