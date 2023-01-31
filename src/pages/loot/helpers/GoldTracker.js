@@ -38,22 +38,28 @@ export default function GoldTracker() {
   }, [open]);
 
   useEffect(() => {
+    let isMounted = true;
     setLoading(true);
     groupRef
       .collection('itemOwners')
       .doc(sortBy)
       .get()
       .then((doc) => {
-        if (doc.exists) {
-          setItemOwnerName(doc.data().name);
-        } else {
-          setItemOwnerName('Party');
+        if (isMounted) {
+          if (doc.exists) {
+            setItemOwnerName(doc.data().name);
+          } else {
+            setItemOwnerName('Party');
+          }
+          setLoading(false);
         }
-        setLoading(false);
       })
       .catch((error) => {
         console.error('Error getting document:', error);
       });
+    return () => {
+      isMounted = false;
+    };
   }, [sortBy]);
 
   return (

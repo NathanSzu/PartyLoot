@@ -119,7 +119,7 @@ export default function ItemSale({ item, itemOwners }) {
       .catch((err) => console.error(err));
   };
 
-  const compileHistoryData = (seller, sellQty, item, sellState, currencyKeys) => {
+  const compileHistoryData = (seller = 'party', sellQty, item, sellState, currencyKeys) => {
     let data = {
       qty: parseInt(sellQty),
       itemName: item.itemName,

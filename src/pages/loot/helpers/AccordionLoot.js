@@ -15,7 +15,7 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
                 <Col className='pl-0 pr-0'>
                   <h1 className='item-h1 m-0 pt-1 pb-1'>{item.itemName}</h1>
                 </Col>
-                {item.itemQty && item.itemQty > 1 && (
+                {item?.itemQty > 1 && (
                   <Col xs={2} className='p-0 border-left border-dark'>
                     <p className='m-0 vertical-center pl-1 pr-1 w-100 text-center'>x{item.itemQty}</p>
                   </Col>

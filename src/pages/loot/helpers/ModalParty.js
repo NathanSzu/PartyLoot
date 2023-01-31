@@ -1,10 +1,8 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Form, Row, Col, Button, Modal, Container, Accordion } from 'react-bootstrap';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import FavoriteIcon from './FavoriteIcon';
 import EditItemOwnerAccordion from './EditItemOwnerAccordion';
 
 export default function ModalParty({ itemOwners }) {
@@ -14,8 +12,6 @@ export default function ModalParty({ itemOwners }) {
   const groupRef = db.collection('groups').doc(currentGroup);
   const itemOwnersRef = groupRef.collection('itemOwners');
   const addItemOwnerRef = useRef('');
-
-  const [partyData] = useDocumentData(groupRef);
 
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
@@ -61,7 +57,7 @@ export default function ModalParty({ itemOwners }) {
         <img alt='Edit Party' src='APPIcons/view-users.svg' />
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal size='lg' show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Party Members</Modal.Title>
         </Modal.Header>
@@ -91,32 +87,9 @@ export default function ModalParty({ itemOwners }) {
           <Container className='p-0'>
             <Accordion className='m-0'>
               {noDeletedOwners.map((itemOwner) => (
-                <EditItemOwnerAccordion itemOwner={itemOwner} />
+                <EditItemOwnerAccordion key={itemOwner.id} itemOwner={itemOwner} />
               ))}
             </Accordion>
-            {/* {noDeletedOwners &&
-              noDeletedOwners.map((itemOwner) => (
-                <Row key={itemOwner.id}>
-                  <Col className='pl-0' xs={10}>
-                    <p className='vertical-center'>
-                      <FavoriteIcon groupRef={groupRef} currentGroupData={partyData} itemOwnerId={itemOwner.id} />
-                      {itemOwner.name}
-                    </p>
-                  </Col>
-                  <Col className='pl-2' xs={2}>
-                    <Button
-                      disabled={loading}
-                      variant='danger'
-                      type='button'
-                      onClick={() => {
-                        removeItemOwner(itemOwner.id);
-                      }}
-                    >
-                      <img alt='Delete Group' src='APPIcons/remove-user.svg'></img>
-                    </Button>
-                  </Col>
-                </Row>
-              ))} */}
           </Container>
         </Modal.Footer>
       </Modal>

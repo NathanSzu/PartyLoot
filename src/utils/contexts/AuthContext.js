@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import firebaseApp from '../firebase';
+import fb from '../firebase';
+import metadata from '../../utils/metadata.json';
 
 export const AuthContext = React.createContext();
 
@@ -8,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const db = firebaseApp.firestore();
+  const db = fb.firestore();
   const userRef = db.collection('users').doc(currentUser.uid);
 
   const randomAttr = ['Angry', 'Frustrated', 'Sad', 'Excited', 'Frightened', 'Prideful', 'Gloomy'];
@@ -86,11 +87,32 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
+  const recordVersion = (user) => {
+    db.collection('users')
+      .doc(user.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          db.collection('users')
+            .doc(user.uid)
+            .update({
+              version: `${metadata.buildMajor}.${metadata.buildMinor}.${metadata.buildRevision}`,
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.error('Error getting user:', err);
+      });
+  };
+
   useEffect(() => {
-    const unsubscribe = firebaseApp.auth().onAuthStateChanged(function (user) {
+    const unsubscribe = fb.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-
+        recordVersion(user);
         setCurrentUser(user);
         setLoading(false);
       } else {
@@ -112,6 +134,7 @@ export const AuthProvider = ({ children }) => {
         randomUsername,
         userRef,
         db,
+        recordVersion,
       }}
     >
       {!loading && children}

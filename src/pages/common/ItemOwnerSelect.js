@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 
-export default function ItemOwnerSelect({ itemOwners, setState, value = null }) {
+export default function ItemOwnerSelect({ itemOwners, setState, value = 'party' }) {
   const [noDeletedOwners, setNoDeletedOwners] = useState([]);
 
   useEffect(() => {

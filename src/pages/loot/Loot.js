@@ -69,7 +69,7 @@ export default function Loot() {
         });
   };
 
-    // Updates item data from being stored under a name to storage under an itemOwner.id.
+  // Updates item data from being stored under a name to storage under an itemOwner.id.
   const updateItemData = (items, loadingItems, itemOwners, loadingItemOwners) => {
     if (!loadingItems && !loadingItemOwners) {
       const noOwnerItems = items.filter((item) => item.owner && !item.ownerId);
@@ -100,11 +100,9 @@ export default function Loot() {
         { merge: true }
       )
       .then(() => {
-        currencyRef.update(
-          {
-            [itemOwnerName]: fb.firestore.FieldValue.delete(),
-          }
-        );
+        currencyRef.update({
+          [itemOwnerName]: fb.firestore.FieldValue.delete(),
+        });
       });
   };
 
@@ -123,24 +121,20 @@ export default function Loot() {
   }, [filteredItems]);
 
   useEffect(() => {
-    !loadingPartyData &&
-      partyData?.favorites &&
-      partyData?.favorites[currentUser.uid] &&
-      setSortBy(partyData.favorites[currentUser.uid]);
+    !loadingPartyData && setSortBy(partyData?.favorites?.[currentUser.uid] || 'party');
   }, [partyData, itemOwners]);
 
   useEffect(() => {
-    !loadingItemOwners && !loadingCurrency &&
+    !loadingItemOwners &&
+      !loadingCurrency &&
       itemOwners.forEach((itemOwner) => {
         if (currency[itemOwner?.name]) {
-          console.log('currency exists: ', currency[itemOwner.name]);
           updateCurrency(currency[itemOwner.name], itemOwner.id, itemOwner.name);
         }
       });
-      if (currency?.All) {
-        console.log('currency exists: ', currency.All);
-          updateCurrency(currency.All, 'party', 'All');
-      }
+    if (currency?.All) {
+      updateCurrency(currency.All, 'party', 'All');
+    }
   }, [currency]);
 
   return (

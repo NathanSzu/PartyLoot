@@ -104,7 +104,7 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        ownerId: itemOwner,
+        ownerId: itemOwner || 'party',
       })
       .then(() => {
         handleClose();
