@@ -82,9 +82,10 @@ export default function ModalLoot({ item = '' }) {
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        writeHistoryEvent(currentUser.uid, 'createItem', historyData);
-        handleClose();
-        setLoading(false);
+        writeHistoryEvent(currentUser.uid, 'createItem', historyData).then(() => {
+          handleClose();
+          setLoading(false);
+        });
       })
       .catch((error) => {
         console.error('Error creating new group: ', error);

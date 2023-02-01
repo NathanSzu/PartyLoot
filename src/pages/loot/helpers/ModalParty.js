@@ -3,11 +3,13 @@ import { Form, Row, Col, Button, Modal, Container, Accordion } from 'react-boots
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import EditItemOwnerAccordion from './EditItemOwnerAccordion';
 
 export default function ModalParty({ itemOwners }) {
   const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { db, currentUser } = useContext(AuthContext);
+  const { writeHistoryEvent } = useContext(GlobalFeatures);
 
   const groupRef = db.collection('groups').doc(currentGroup);
   const itemOwnersRef = groupRef.collection('itemOwners');
@@ -42,8 +44,10 @@ export default function ModalParty({ itemOwners }) {
         createdOn: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        addItemOwnerRef.current.value = '';
-        setLoading(false);
+        writeHistoryEvent(currentUser.uid, 'addPartyMember', { name: addItemOwnerRef.current.value }).then(() => {
+          addItemOwnerRef.current.value = '';
+          setLoading(false);
+        });
       })
       .catch((err) => {
         console.error(err.code);

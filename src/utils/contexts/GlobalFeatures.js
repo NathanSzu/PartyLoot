@@ -21,7 +21,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
   const toggleShowToast = () => setShowToast(!showToast);
 
-  const writeHistoryEvent = (completedBy, action, data = {}) => {
+  const writeHistoryEvent = async (completedBy, action, data = {}) => {
     let summary = '';
 
     switch (action) {
@@ -34,6 +34,18 @@ export const GlobalFeaturesProvider = ({ children }) => {
           `sold ${data.qty} ${data.itemName}(s) for ${data.currency[0]}, ${data.currency[1]}, ` +
           `${data.currency[2]}, ${data.currency[3]}, ${data.currency[4]}, ${data.currency[5]} ` +
           `and gave the money to ${data.seller}`;
+        break;
+
+      case 'addPartyMember':
+        summary = `added ${data.name} to the party`;
+        break;
+
+      case 'deletePartyMember':
+        summary = `removed ${data.name} from the party`;
+        break;
+
+      case 'editPartyMember':
+        summary = `changed ${data.oldName}'s name to ${data.name}`;
         break;
 
       default:

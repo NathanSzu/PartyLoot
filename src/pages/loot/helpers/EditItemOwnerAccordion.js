@@ -2,11 +2,13 @@ import React, { useState, useRef, useContext } from 'react';
 import { Accordion, Card, Col, Row, Container, Button, Alert, Form, useAccordionToggle } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export default function EditItemOwnerAccordion({ itemOwner }) {
   const { currentGroup } = useContext(GroupContext);
   const { db, currentUser } = useContext(AuthContext);
+  const { writeHistoryEvent } = useContext(GlobalFeatures);
 
   const groupRef = db.collection('groups').doc(currentGroup);
   const itemOwnersRef = groupRef.collection('itemOwners');
@@ -27,8 +29,10 @@ export default function EditItemOwnerAccordion({ itemOwner }) {
         type: 'deleted',
       })
       .then(() => {
-        setLoadingDelete(false);
-        setFavoriteItemOwner(itemOwner);
+        writeHistoryEvent(currentUser.uid, 'deletePartyMember', { name: itemOwner.name }).then(() => {
+          setLoadingDelete(false);
+          setFavoriteItemOwner(itemOwner);
+        });
       })
       .catch((err) => {
         console.error(err.code);
@@ -37,6 +41,7 @@ export default function EditItemOwnerAccordion({ itemOwner }) {
   };
 
   const saveNameChange = (itemOwnerId) => {
+    let itemOwnerName = itemOwner.name;
     setLoadingSave(true);
     itemOwnersRef
       .doc(itemOwnerId)
@@ -44,8 +49,13 @@ export default function EditItemOwnerAccordion({ itemOwner }) {
         name: nameRef.current.value,
       })
       .then(() => {
-        setLoadingSave(false);
-        toggleAccordion();
+        writeHistoryEvent(currentUser.uid, 'editPartyMember', {
+          name: nameRef.current.value,
+          oldName: itemOwnerName,
+        }).then(() => {
+          setLoadingSave(false);
+          toggleAccordion();
+        });
       })
       .catch((err) => {
         console.error(err.code);
