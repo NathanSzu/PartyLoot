@@ -40,6 +40,7 @@ export default function ModalLoot({ item = '' }) {
 
   const handleClose = () => {
     setItemValidations('');
+    setItemOwner('party');
     setShow(false);
     setSRDContent({});
     setSearchSRD(false);
@@ -122,11 +123,21 @@ export default function ModalLoot({ item = '' }) {
   return (
     <>
       {item ? (
-        <Button variant='dark' className='p-2 m-0 background-dark border-0 w-100' onClick={handleShow}>
+        <Button
+          data-cy='edit-item'
+          variant='dark'
+          className='p-2 m-0 background-dark border-0 w-100'
+          onClick={handleShow}
+        >
           <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
         </Button>
       ) : (
-        <Button variant='dark' onClick={handleShow} className='m-0 p-0 background-dark border-0 fg-3'>
+        <Button
+          data-cy='add-item'
+          variant='dark'
+          onClick={handleShow}
+          className='m-0 p-0 background-dark border-0 fg-3'
+        >
           Add Item
         </Button>
       )}
@@ -151,6 +162,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col>
                     <Form.Group controlId='itemName'>
                       <Form.Control
+                        data-cy='item-name'
                         ref={nameRef}
                         defaultValue={(item && item.itemName) || SRDContent.name}
                         type='text'
@@ -161,6 +173,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col xs={3} className='pl-0'>
                     <Form.Group controlId='itemQty'>
                       <Form.Control
+                        data-cy='item-qty'
                         className='text-center'
                         ref={qtyRef}
                         defaultValue={item && item.itemQty}
@@ -176,6 +189,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col xs={5}>
                     <Form.Group controlId='itemCharge'>
                       <Form.Control
+                        data-cy='charge'
                         className='text-center'
                         ref={chargeRef}
                         defaultValue={item && item.currCharges}
@@ -193,6 +207,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col xs={5}>
                     <Form.Group controlId='itemCharges'>
                       <Form.Control
+                        data-cy='charge-max'
                         className='text-center'
                         ref={chargesRef}
                         defaultValue={item && item.maxCharges}
@@ -206,6 +221,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Form.Group controlId='itemDesc'>
                   <Form.Control
+                    data-cy='item-desc'
                     ref={descRef}
                     as='textarea'
                     rows={4}
@@ -216,6 +232,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Form.Group controlId='itemTags'>
                   <Form.Control
+                    data-cy='item-tags'
                     ref={tagsRef}
                     type='text'
                     defaultValue={(item && item.itemTags) || SRDContent.type}
@@ -232,6 +249,7 @@ export default function ModalLoot({ item = '' }) {
               <Modal.Footer className='justify-content-end'>
                 {item ? (
                   <Button
+                    data-cy='save-item'
                     disabled={loading}
                     className='background-dark border-0'
                     variant='dark'
@@ -245,6 +263,7 @@ export default function ModalLoot({ item = '' }) {
                   </Button>
                 ) : (
                   <Button
+                    data-cy='create-item'
                     disabled={loading}
                     className='background-dark border-0'
                     variant='dark'

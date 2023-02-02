@@ -12,12 +12,12 @@ export const GroupProvider = ({ children }) => {
   const [groupData, loading] = useDocumentData(db.collection('groups').doc(currentGroup));
 
   // Used in GoldTracker, ItemSearch, and OwnerFilter
-  const [sortBy, setSortBy] = useState('All');
+  const [sortBy, setSortBy] = useState('party');
 
   // Resets sortBy when no group is selected
   useEffect(() => {
     if (currentGroup === ' ') {
-      setSortBy('All');
+      setSortBy('party');
     }
   }, [currentGroup]);
 

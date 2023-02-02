@@ -31,7 +31,7 @@ export default function EditItemOwnerAccordion({ itemOwner }) {
       .then(() => {
         writeHistoryEvent(currentUser.uid, 'deletePartyMember', { name: itemOwner.name }).then(() => {
           setLoadingDelete(false);
-          setFavoriteItemOwner(itemOwner);
+          checkFavorite(party, itemOwner) && setFavoriteItemOwner(itemOwner)
         });
       })
       .catch((err) => {
@@ -66,11 +66,7 @@ export default function EditItemOwnerAccordion({ itemOwner }) {
   const toggleAccordion = useAccordionToggle(itemOwner.id);
 
   const checkFavorite = (party, itemOwner) => {
-    if (party?.favorites && party?.favorites[currentUser.uid] === itemOwner.id) {
-      return true;
-    } else {
-      return false;
-    }
+    return party?.favorites?.[currentUser.uid] === itemOwner?.id;
   };
 
   const setFavoriteItemOwner = (itemOwner) => {
@@ -149,7 +145,7 @@ export default function EditItemOwnerAccordion({ itemOwner }) {
                     variant='danger'
                     className='background-danger'
                   >
-                    <img alt='Confirm delete item' src='/APPIcons/person-x-fill.svg' />
+                    <img alt='Confirm delete member' src='/APPIcons/person-x-fill.svg' />
                   </Button>
                 )}
               </Col>

@@ -159,6 +159,7 @@ export default function ItemSale({ item, itemOwners }) {
   return (
     <>
       <Badge
+        data-cy='sell-item'
         as='button'
         className='mt-3 mr-2 p-0 pl-3 pr-3 background-success border-0'
         disabled={loading}
@@ -181,6 +182,7 @@ export default function ItemSale({ item, itemOwners }) {
               <Row className='pb-2'>
                 <Col className='p-1'>
                   <Form.Control
+                    data-cy='sell-qty'
                     type='number'
                     ref={qtyRef}
                     disabled={item.itemQty <= 1 && true}
@@ -191,6 +193,7 @@ export default function ItemSale({ item, itemOwners }) {
                 </Col>
                 <Col xs={3} className='p-1'>
                   <Button
+                    data-cy='sell-max-qty'
                     className='w-100 background-dark border-0'
                     disabled={item.itemQty <= 1 && true}
                     variant='dark'
@@ -228,6 +231,7 @@ export default function ItemSale({ item, itemOwners }) {
               </Alert>
             )}
             <Button
+              data-cy='confirm-sell-item'
               className='mt-3 p-2 pl-3 pr-3 background-success border-0 text-light'
               disabled={loading}
               variant='success'

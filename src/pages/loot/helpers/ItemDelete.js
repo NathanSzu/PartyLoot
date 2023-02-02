@@ -34,6 +34,7 @@ export default function ItemDelete({ item }) {
   return (
     <>
       <Badge
+        data-cy='delete-item'
         as='button'
         className='mt-3 mr-0 p-0 pl-3 pr-3 background-danger border-0'
         disabled={loading}
@@ -51,6 +52,7 @@ export default function ItemDelete({ item }) {
           <Modal.Body>This action cannot be undone!</Modal.Body>
           <Modal.Footer className='pt-0'>
             <Button
+              data-cy='confirm-item-delete'
               className='mt-3 p-2 pl-3 pr-3 background-danger border-0 text-light'
               disabled={loading}
               variant='danger'

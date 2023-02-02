@@ -48,6 +48,7 @@ export default function Loot() {
             groupRef
               .update({
                 party: fb.firestore.FieldValue.delete(),
+                favorites: fb.firestore.FieldValue.delete(),
               })
               .catch((err) => {
                 console.error('Error deleting item: ', err);
