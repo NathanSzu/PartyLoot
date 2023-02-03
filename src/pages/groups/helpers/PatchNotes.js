@@ -24,7 +24,7 @@ export default function PatchNotes() {
       .where('id', '==', currentUser.uid)
       .get()
       .then((confirmSnap) => {
-        if (confirmSnap.docs.length === 0) setShow(true) ;
+        if (confirmSnap.docs.length === 0) setShow(true);
       })
       .catch((error) => {
         console.error('Error getting confirmations: ', error);
@@ -72,6 +72,7 @@ export default function PatchNotes() {
       <Modal.Body>
         <div>
           <p>{data.description}</p>
+          {data.warning && <p><strong>{data.warning}</strong></p>}
           {data.bullets && (
             <ul>
               {data.bullets.map((bullet, idx) => (
