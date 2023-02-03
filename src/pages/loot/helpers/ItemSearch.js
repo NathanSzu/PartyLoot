@@ -29,8 +29,8 @@ export default function ItemSearch({ items, setFilteredItems, setLoading }) {
   }, [sortBy, setFilteredItems]);
 
   const search = (item) => {
-    const { itemName, itemDesc, itemTags, owner } = item;
-    if (owner.toLowerCase() !== sortBy.toLowerCase() && sortBy !== 'All')
+    const { itemName, itemDesc, itemTags, ownerId } = item;
+    if (ownerId !== sortBy && sortBy !== 'party')
       return;
     if (
       itemName

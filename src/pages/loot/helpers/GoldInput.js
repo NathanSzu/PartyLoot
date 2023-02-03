@@ -41,6 +41,7 @@ export default function GoldInput({
       </Col>
       <Col xs={4} md={2} className='p-1'>
         <Form.Control
+          data-cy={currencyKey}
           defaultValue={currency || 0}
           type='number'
           ref={currencyRef}

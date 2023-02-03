@@ -35,12 +35,12 @@ export default function History() {
       </Row>
       <Row>
         <ListGroup className='w-100'>
-          {historyEvents && historyEvents.length === 0 && (
+          {historyEvents?.length === 0 && (
             <p className='text-center pt-3 text-light'>History is empty!</p>
           )}
           {historyEvents && historyEvents.map((event, idx) => <HistoryItem event={event} key={idx} />)}
         </ListGroup>
-        {historyEvents && historyEvents.length >= 10 && (
+        {historyEvents?.length >= 10 && (
           <Col xs={12} className='background-light d-flex flex-row-reverse p-0'>
             <Button variant='link' className='pt-0 pb-0 pl-1 pr-1' onClick={() => setResultQty(50)}>
               50

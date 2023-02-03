@@ -1,54 +1,53 @@
-import React, { useContext, useState, useRef } from 'react';
-import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import React, { useContext, useState, useRef, useEffect } from 'react';
+import { Form, Row, Col, Button, Modal, Container, Accordion } from 'react-bootstrap';
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import FavoriteIcon from './FavoriteIcon';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
+import EditItemOwnerAccordion from './EditItemOwnerAccordion';
 
-export default function ModalParty() {
+export default function ModalParty({ itemOwners }) {
   const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { db, currentUser } = useContext(AuthContext);
+  const { writeHistoryEvent } = useContext(GlobalFeatures);
 
   const groupRef = db.collection('groups').doc(currentGroup);
-  const addPartyMemberRef = useRef('');
-
-  const [partyData] = useDocumentData(groupRef);
+  const itemOwnersRef = groupRef.collection('itemOwners');
+  const addItemOwnerRef = useRef('');
 
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
+  const [noDeletedOwners, setNoDeletedOwners] = useState([]);
+
+  useEffect(() => {
+    itemOwners &&
+      setNoDeletedOwners(
+        itemOwners.filter((itemOwner) => {
+          return itemOwner.type !== 'deleted';
+        })
+      );
+  }, [itemOwners]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const addPartyMember = () => {
-    if (!addPartyMemberRef.current.value) {
+  const addItemOwner = () => {
+    if (!addItemOwnerRef.current.value) {
       console.error('Enter a name first');
       return;
     }
     setLoading(true);
-    groupRef
-      .update({
-        party: fb.firestore.FieldValue.arrayUnion(addPartyMemberRef.current.value.trim()),
+    itemOwnersRef
+      .add({
+        name: addItemOwnerRef.current.value,
+        type: 'party',
+        createdOn: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        addPartyMemberRef.current.value = '';
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err.code);
-        console.error(err.message);
-      });
-  };
-
-  const removePartyMember = (partyMember) => {
-    setLoading(true);
-    groupRef
-      .update({
-        party: fb.firestore.FieldValue.arrayRemove(partyMember),
-      })
-      .then(() => {
-        setLoading(false);
+        writeHistoryEvent(currentUser.uid, 'addPartyMember', { name: addItemOwnerRef.current.value }).then(() => {
+          addItemOwnerRef.current.value = '';
+          setLoading(false);
+        });
       })
       .catch((err) => {
         console.error(err.code);
@@ -62,7 +61,7 @@ export default function ModalParty() {
         <img alt='Edit Party' src='APPIcons/view-users.svg' />
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal size='lg' show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Party Members</Modal.Title>
         </Modal.Header>
@@ -76,10 +75,10 @@ export default function ModalParty() {
             >
               <Row>
                 <Col className='pl-0' xs={10}>
-                  <Form.Control type='input' placeholder='Add Party Members' ref={addPartyMemberRef}></Form.Control>
+                  <Form.Control type='input' placeholder='Add Party Members' ref={addItemOwnerRef}></Form.Control>
                 </Col>
                 <Col className='pl-2' xs={2}>
-                  <Button disabled={loading} variant='dark' type='submit' onClick={addPartyMember}>
+                  <Button disabled={loading} variant='dark' type='submit' onClick={addItemOwner}>
                     <img alt='Add Party Member' src='APPIcons/add-user.svg' />
                   </Button>
                 </Col>
@@ -89,32 +88,13 @@ export default function ModalParty() {
         </Modal.Body>
 
         <Modal.Footer>
-          {partyData &&
-            partyData.party &&
-            partyData.party.map((member, idx) => (
-              <Container key={idx}>
-                <Row>
-                  <Col className='pl-0' xs={10}>
-                    <p className='vertical-center'>
-                      <FavoriteIcon groupRef={groupRef} currentGroupData={partyData} member={member} />
-                      {member}
-                    </p>
-                  </Col>
-                  <Col className='pl-2' xs={2}>
-                    <Button
-                      disabled={loading}
-                      variant='danger'
-                      type='button'
-                      onClick={(e) => {
-                        removePartyMember(member);
-                      }}
-                    >
-                      <img alt='Delete Group' src='APPIcons/remove-user.svg'></img>
-                    </Button>
-                  </Col>
-                </Row>
-              </Container>
-            ))}
+          <Container className='p-0'>
+            <Accordion className='m-0'>
+              {noDeletedOwners.map((itemOwner) => (
+                <EditItemOwnerAccordion key={itemOwner.id} itemOwner={itemOwner} />
+              ))}
+            </Accordion>
+          </Container>
         </Modal.Footer>
       </Modal>
     </div>

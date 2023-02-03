@@ -50,3 +50,12 @@ Cypress.Commands.add('removeGroup', () => {
     cy.contains('button', 'Cool group').should('not.exist');
     cy.contains('button', 'Better group name').should('not.exist');
 });
+
+Cypress.Commands.add('fillItemFields', () => {
+  cy.get('[data-cy=item-name]').type('New item');
+  cy.get('[data-cy=item-qty]').type(20);
+  cy.get('[data-cy=charge]').type(5);
+  cy.get('[data-cy=charge-max]').type(7);
+  cy.get('[data-cy=item-desc]').type('A grand item description! 1234567890');
+  cy.get('[data-cy=item-tags]').type('scroll, consumable');
+});

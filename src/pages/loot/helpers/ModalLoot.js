@@ -1,12 +1,13 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
+import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
 export default function ModalLoot({ item = '' }) {
   const { currentGroup } = useContext(GroupContext);
@@ -15,25 +16,31 @@ export default function ModalLoot({ item = '' }) {
 
   const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
   const groupRef = db.collection('groups').doc(currentGroup);
+  const itemOwnersRef = groupRef.collection('itemOwners');
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchSRD, setSearchSRD] = useState(false);
   const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
+  const [itemOwner, setItemOwner] = useState('party');
 
-  const [partyData] = useDocumentData(groupRef);
+  const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
   const nameRef = useRef();
   const descRef = useRef();
   const chargeRef = useRef();
   const chargesRef = useRef();
   const tagsRef = useRef();
-  const ownerRef = useRef();
   const qtyRef = useRef();
+
+  useEffect(() => {
+    item && setItemOwner(item.ownerId);
+  }, [item]);
 
   const handleClose = () => {
     setItemValidations('');
+    setItemOwner('party');
     setShow(false);
     setSRDContent({});
     setSearchSRD(false);
@@ -45,11 +52,11 @@ export default function ModalLoot({ item = '' }) {
     if (!nameRef.current.value || !descRef.current.value) {
       setItemValidations('Item name and description are required!');
       return;
-    };
+    }
     if (!/^\d+$/.test(qtyRef.current.value) && qtyRef.current.value !== '') {
       setItemValidations('Item quantity must be a positive number!');
       return false;
-    };
+    }
     setItemValidations('');
     return true;
   };
@@ -60,7 +67,7 @@ export default function ModalLoot({ item = '' }) {
 
     let historyData = {
       itemName: nameRef.current.value,
-      owner: ownerRef.current.value === 'Select owner' ? 'the party' : ownerRef.current.value
+      owner: itemOwner === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === itemOwner).name,
     };
 
     groupRef
@@ -72,13 +79,14 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value,
+        ownerId: itemOwner,
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        writeHistoryEvent(currentUser.uid, 'createItem', historyData);
-        handleClose();
-        setLoading(false);
+        writeHistoryEvent(currentUser.uid, 'createItem', historyData).then(() => {
+          handleClose();
+          setLoading(false);
+        });
       })
       .catch((error) => {
         console.error('Error creating new group: ', error);
@@ -98,7 +106,7 @@ export default function ModalLoot({ item = '' }) {
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
-        owner: ownerRef.current.value === 'Select owner' ? '' : ownerRef.current.value,
+        ownerId: itemOwner || 'party',
       })
       .then(() => {
         handleClose();
@@ -115,11 +123,21 @@ export default function ModalLoot({ item = '' }) {
   return (
     <>
       {item ? (
-        <Button variant='dark' className='p-2 m-0 background-dark border-0 w-100' onClick={handleShow}>
+        <Button
+          data-cy='edit-item'
+          variant='dark'
+          className='p-2 m-0 background-dark border-0 w-100'
+          onClick={handleShow}
+        >
           <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
         </Button>
       ) : (
-        <Button variant='dark' onClick={handleShow} className='m-0 p-0 background-dark border-0 fg-3'>
+        <Button
+          data-cy='add-item'
+          variant='dark'
+          onClick={handleShow}
+          className='m-0 p-0 background-dark border-0 fg-3'
+        >
           Add Item
         </Button>
       )}
@@ -144,6 +162,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col>
                     <Form.Group controlId='itemName'>
                       <Form.Control
+                        data-cy='item-name'
                         ref={nameRef}
                         defaultValue={(item && item.itemName) || SRDContent.name}
                         type='text'
@@ -154,6 +173,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col xs={3} className='pl-0'>
                     <Form.Group controlId='itemQty'>
                       <Form.Control
+                        data-cy='item-qty'
                         className='text-center'
                         ref={qtyRef}
                         defaultValue={item && item.itemQty}
@@ -169,6 +189,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col xs={5}>
                     <Form.Group controlId='itemCharge'>
                       <Form.Control
+                        data-cy='charge'
                         className='text-center'
                         ref={chargeRef}
                         defaultValue={item && item.currCharges}
@@ -186,6 +207,7 @@ export default function ModalLoot({ item = '' }) {
                   <Col xs={5}>
                     <Form.Group controlId='itemCharges'>
                       <Form.Control
+                        data-cy='charge-max'
                         className='text-center'
                         ref={chargesRef}
                         defaultValue={item && item.maxCharges}
@@ -199,6 +221,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Form.Group controlId='itemDesc'>
                   <Form.Control
+                    data-cy='item-desc'
                     ref={descRef}
                     as='textarea'
                     rows={4}
@@ -209,6 +232,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Form.Group controlId='itemTags'>
                   <Form.Control
+                    data-cy='item-tags'
                     ref={tagsRef}
                     type='text'
                     defaultValue={(item && item.itemTags) || SRDContent.type}
@@ -217,12 +241,7 @@ export default function ModalLoot({ item = '' }) {
                 </Form.Group>
 
                 <Form.Group controlId='itemOwner'>
-                  <Form.Control as='select' defaultValue={item && item.owner} ref={ownerRef}>
-                    <option>Select owner</option>
-                    {partyData &&
-                      partyData.party &&
-                      partyData.party.map((partyMember, idx) => <option key={idx}>{partyMember}</option>)}
-                  </Form.Control>
+                  <ItemOwnerSelect itemOwners={itemOwners} setState={setItemOwner} value={itemOwner} />
                 </Form.Group>
                 {itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}
               </Modal.Body>
@@ -230,19 +249,21 @@ export default function ModalLoot({ item = '' }) {
               <Modal.Footer className='justify-content-end'>
                 {item ? (
                   <Button
-                    as='input'
+                    data-cy='save-item'
                     disabled={loading}
                     className='background-dark border-0'
-                    value='Save'
                     variant='dark'
                     type='submit'
                     onClick={(e) => {
                       e.preventDefault();
                       editLoot();
                     }}
-                  />
+                  >
+                    Save
+                  </Button>
                 ) : (
                   <Button
+                    data-cy='create-item'
                     disabled={loading}
                     className='background-dark border-0'
                     variant='dark'
