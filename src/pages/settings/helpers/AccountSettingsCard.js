@@ -44,7 +44,7 @@ export default function AccountSettingsCard() {
             member.
           </Card.Text>
           <Col md={8} className='mr-auto ml-auto'>
-            <ModalEditUsername loading={loading} setLoading={setLoading} userData={userData} />
+            <ModalEditUsername userData={userData} />
           </Col>
           <Col md={8} className='mr-auto ml-auto'>
             <Button

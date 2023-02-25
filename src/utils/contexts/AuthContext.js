@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     'Ranger',
   ];
 
-  const setUsername = (username) => {
+  const setUsername = async (username) => {
     userRef
       .set(
         {

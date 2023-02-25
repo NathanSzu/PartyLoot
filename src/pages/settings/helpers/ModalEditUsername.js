@@ -1,20 +1,48 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal, Alert } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
-export default function ModalEditUsername({ loading, userData }) {
-  const { setUsername, currentUser } = useContext(AuthContext);
+export default function ModalEditUsername({ userData }) {
+  const { db, setUsername } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
+  const [alert, setAlert] = useState('');
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setAlert('');
+    setShow(true);
+  };
   const usernameRef = useRef(null);
+
+  const uniqueNameCheck = (value) => {
+    db.collection('users')
+      .where('displayName', '==', value)
+      .limit(1)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.docs.length === 0) {
+          setUsername(value).then(() => {
+            handleClose();
+            setLoading(false);
+          });
+        } else {
+          setAlert('Username taken!');
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Error checking username: ', err);
+      });
+  };
 
   const save = (e) => {
     e.preventDefault();
-    if (usernameRef.current.value !== currentUser.displayName) {
-      setUsername(usernameRef.current.value);
+    let value = usernameRef?.current?.value.trim();
+    if (value === userData?.displayName?.trim()) {
+      return;
     }
-    handleClose();
+    setLoading(true);
+    uniqueNameCheck(value);
   };
 
   return (
@@ -36,8 +64,9 @@ export default function ModalEditUsername({ loading, userData }) {
 
           <Modal.Body>
             <Form.Group controlId='Username'>
-              <Form.Control type='text' ref={usernameRef} defaultValue={userData && userData.displayName} />
+              <Form.Control type='text' ref={usernameRef} defaultValue={userData?.displayName} />
             </Form.Group>
+            {alert && <Alert variant={'warning'}>{alert}</Alert>}
           </Modal.Body>
 
           <Modal.Footer>
