@@ -4,7 +4,6 @@ import ModalLoot from './ModalLoot';
 import HeldBySection from './HeldBySection';
 
 export default function AccordionLoot({ filteredItems, itemOwners }) {
-
   return (
     <Accordion className='m-0'>
       {filteredItems.map((item, idx) => (
@@ -15,9 +14,9 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
                 <Col className='pl-0 pr-0'>
                   <h1 className='item-h1 m-0 pt-1 pb-1'>{item.itemName}</h1>
                 </Col>
-                {item?.itemQty > 1 && (
+                {item?.itemQty > 0 && (
                   <Col xs={2} className='p-0 border-left border-dark'>
-                    <p className='m-0 vertical-center pl-1 pr-1 w-100 text-center'>x{item.itemQty}</p>
+                    <p className='m-0 vertical-center pl-1 pr-1 w-100 text-center'>x{item?.itemQty || 1}</p>
                   </Col>
                 )}
               </Row>

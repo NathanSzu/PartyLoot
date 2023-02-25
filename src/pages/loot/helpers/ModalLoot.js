@@ -34,19 +34,17 @@ export default function ModalLoot({ item = '' }) {
   const tagsRef = useRef();
   const qtyRef = useRef();
 
-  useEffect(() => {
-    item && setItemOwner(item.ownerId);
-  }, [item]);
-
   const handleClose = () => {
     setItemValidations('');
-    setItemOwner('party');
     setShow(false);
     setSRDContent({});
     setSearchSRD(false);
   };
 
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    item && setItemOwner(item.ownerId);
+    setShow(true);
+  };
 
   const checkItemValidations = () => {
     if (!nameRef.current.value || !descRef.current.value) {
