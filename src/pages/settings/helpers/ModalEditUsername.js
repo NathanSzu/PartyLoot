@@ -4,12 +4,14 @@ import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function ModalEditUsername({ userData }) {
   const { db, setUsername } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
   const [alert, setAlert] = useState('');
+  const [validationMsg, setValidationMsg] = useState('');
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setAlert('');
+    setValidationMsg('');
     setShow(true);
   };
   const usernameRef = useRef(null);
@@ -35,14 +37,36 @@ export default function ModalEditUsername({ userData }) {
       });
   };
 
+  const usernameIsValid = (value) => {
+    setLoading(true);
+    let regex = new RegExp('^[A-z0-9-_]{5,15}$');
+    if (value === userData?.displayName?.trim()) return false;
+    if (value.length < 5) {
+      setValidationMsg('Username must contain at least 5 characters');
+      return false;
+    }
+    if (value.length > 15) {
+      setValidationMsg('Username must contain fewer than 15 characters');
+      return false;
+    }
+    console.log(regex.test(value));
+    if (!regex.test(value)) {
+      setValidationMsg('Username cannot contain spaces or special characters');
+      return false;
+    }
+    setValidationMsg('');
+    setLoading(false);
+    return true;
+  };
+
   const save = (e) => {
     e.preventDefault();
     let value = usernameRef?.current?.value.trim();
-    if (value === userData?.displayName?.trim()) {
-      return;
+
+    if (usernameIsValid(value)) {
+      setLoading(true);
+      uniqueNameCheck(value);
     }
-    setLoading(true);
-    uniqueNameCheck(value);
   };
 
   return (
@@ -57,15 +81,34 @@ export default function ModalEditUsername({ userData }) {
           handleClose();
         }}
       >
-        <Form className='rounded'>
+        <Form className='rounded' autoComplete='off'>
           <Modal.Header closeButton>
             <Modal.Title>Change Username</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            <Form.Group controlId='Username'>
-              <Form.Control type='text' ref={usernameRef} defaultValue={userData?.displayName} />
+            <Form.Group controlId='Screen-name'>
+              <Form.Label>
+                <small>
+                  This username will be publicly visible so please keep it clean! By setting a custom username you
+                  acknowledge that any profane or offensive language is grounds for removal of community features from
+                  your account.
+                </small>
+              </Form.Label>
+
+              <Form.Control
+                type='text'
+                ref={usernameRef}
+                defaultValue={userData?.displayName}
+                onChange={() => usernameIsValid(usernameRef?.current?.value)}
+              />
+              {validationMsg && (
+                <Form.Label className='text-danger'>
+                  <small>{validationMsg}</small>
+                </Form.Label>
+              )}
             </Form.Group>
+
             {alert && <Alert variant={'warning'}>{alert}</Alert>}
           </Modal.Body>
 
