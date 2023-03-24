@@ -33,15 +33,16 @@ export default function BootNav() {
           <Navbar.Toggle aria-controls='basic-navbar-nav' data-cy='navbar-toggle' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ml-auto'>
-              {/* <LinkContainer to='/item-compendium' data-cy='navbar-compendium'>
-                <Nav.Link>Item Compendium</Nav.Link>
-              </LinkContainer> */}
               {/* Hides the groups nav link if on the groups page */}
               {location.pathname === '/groups' ? null : (
                 <LinkContainer to='/groups' data-cy='navbar-groups'>
                   <Nav.Link>Groups</Nav.Link>
                 </LinkContainer>
               )}
+
+              {/* <LinkContainer to='/item-compendium' data-cy='navbar-compendium'>
+                <Nav.Link>Compendium</Nav.Link>
+              </LinkContainer> */}
 
               {/* Hides the user setting nav link if on the user setting page */}
               {location.pathname === '/user-settings' ? null : (

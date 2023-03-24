@@ -52,11 +52,7 @@ function App() {
                       <SkippedRoute exact path='/forgot-password' component={PasswordReset} />
                       <SecuredRoute exact path='/groups' component={Groups} />
                       <SecuredRoute exact path='/user-settings' component={Settings} />
-                      {/* <SecuredRoute
-                      exact
-                      path="/compendium"
-                      component={Compendium}
-                    /> */}
+                      <SecuredRoute exact path='/item-compendium' component={Compendium} />
                       <GroupRoute exact path='/loot' component={Loot} />
                       <GroupRoute exact path='/history' component={History} />
                       <Redirect from='*' to='/groups' />
