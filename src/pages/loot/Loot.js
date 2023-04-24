@@ -139,7 +139,7 @@ export default function Loot() {
   }, [currency]);
 
   return (
-    <Container className='pb-5'>
+    <Container className='lazy-scroll-container'>
       <Row>
         <Navbar sticky='top' className='w-100 p-0 theme1-backer' id='sticky-filter'>
           <div className='d-block w-100'>
@@ -162,6 +162,10 @@ export default function Loot() {
             </Card>
           </div>
         </Navbar>
+      </Row>
+  
+      <Row>
+        
         <Col xs={12} className='pl-1 pr-1 pt-1'>
           {loading && (
             <Spinner
@@ -192,7 +196,9 @@ export default function Loot() {
             </p>
           </Col>
         )}
+        
       </Row>
+
     </Container>
   );
 }

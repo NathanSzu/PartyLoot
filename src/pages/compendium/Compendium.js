@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 // import fb from 'firebase';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
+import CompendiumList from './CompendiumList';
 
 export default function Compendium() {
   const { db } = useContext(AuthContext);
@@ -11,6 +12,8 @@ export default function Compendium() {
   const [startAfter, setStartAfter] = useState(0);
 
   const queryRef = db.collection('compendium').orderBy(orderBy).orderBy('created').startAfter(startAfter).limit(50);
+
+  const container = document
 
   // const seedCompendium = () => {
   //   for (let i = 0; i < 200; i++) {
@@ -58,9 +61,10 @@ export default function Compendium() {
   }, [compendium]);
 
   return (
-    <div>
-      ItemCompendium
-      <Button onClick={() => getCompendium()}>more</Button>
-    </div>
+    <Container className='lazy-scroll-container pl-1 pr-1' onScroll={() => console.log('scroll')}>
+      {/* ItemCompendium */}
+      {/* <Button onClick={() => getCompendium()}>more</Button> */}
+      <CompendiumList compendium={compendium} />
+    </Container>
   );
 }

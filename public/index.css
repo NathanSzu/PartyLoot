@@ -7,6 +7,7 @@
   --danger-theme: #ce6060;
   --success-theme: #5cc251;
   background-color: var(--theme1);
+  overflow: hidden;
 }
 
 body {
@@ -56,6 +57,16 @@ pre {
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+}
+
+.lazy-scroll-container {
+  max-height: 90vh;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.lazy-scroll-container::-webkit-scrollbar {
+  display: none;
 }
 
 .top-layer {
