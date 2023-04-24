@@ -19,9 +19,9 @@ describe('Group actions', () => {
     cy.get('[data-cy=edit-group]').eq(0).click();
     cy.get('[data-cy=enter-group-code]').type('Q2U0C8');
     cy.get('[data-cy=add-member]').click();
-    cy.contains('div', 'Excited Bard').should('exist');
+    cy.contains('div', 'Cool_Guy1').should('exist');
     cy.get('[data-cy=remove-member]').click();
-    cy.contains('div', 'Excited Bard').should('not.exist');
+    cy.contains('div', 'Cool_Guy1').should('not.exist');
   });
 
   it('remove test group', () => {
