@@ -56,6 +56,6 @@ Cypress.Commands.add('fillItemFields', () => {
   cy.get('[data-cy=item-qty]').type(20);
   cy.get('[data-cy=charge]').type(5);
   cy.get('[data-cy=charge-max]').type(7);
-  cy.get('[data-cy=item-desc]').type('A grand item description! 1234567890');
+  cy.get('.ql-editor').type('A grand item description! 1234567890');
   cy.get('[data-cy=item-tags]').type('scroll, consumable');
 });

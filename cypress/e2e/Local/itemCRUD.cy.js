@@ -42,7 +42,12 @@ describe('Item actions', () => {
     });
     cy.get('[data-cy=confirm-sell-item]').click();
     cy.contains('.card-header', 'Party Gold').click();
-    cy.get('[value=1]').should('have.length', 6);
+    cy.get('[data-cy=currency1]').should('have.value', 1);
+    cy.get('[data-cy=currency2]').should('have.value', 1);
+    cy.get('[data-cy=currency3]').should('have.value', 1);
+    cy.get('[data-cy=currency4]').should('have.value', 1);
+    cy.get('[data-cy=currency5]').should('have.value', 1);
+    cy.get('[data-cy=currency6]').should('have.value', 1);
     cy.contains('.card-header', 'x19');
   });
 
