@@ -49,14 +49,9 @@ code {
     monospace;
 }
 
-/* CSS to allow text-wrapping for <pre> tags */
-pre {
-  overflow-x: auto;
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -pre-wrap;
-  white-space: -o-pre-wrap;
-  word-wrap: break-word;
+.quill-display > .ql-container > .ql-editor {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .lazy-scroll-container {

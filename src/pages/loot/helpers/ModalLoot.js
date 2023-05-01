@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
@@ -8,6 +8,7 @@ import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from './SearchOpen5E';
 import ItemOwnerSelect from '../../common/ItemOwnerSelect';
+import QuillInput from '../../common/QuillInput';
 
 export default function ModalLoot({ item = '' }) {
   const { currentGroup } = useContext(GroupContext);
@@ -24,11 +25,11 @@ export default function ModalLoot({ item = '' }) {
   const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
   const [itemOwner, setItemOwner] = useState('party');
+  const [quillValue, setQuillValue] = useState(item?.itemDesc);
 
   const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
   const nameRef = useRef();
-  const descRef = useRef();
   const chargeRef = useRef();
   const chargesRef = useRef();
   const tagsRef = useRef();
@@ -47,7 +48,7 @@ export default function ModalLoot({ item = '' }) {
   };
 
   const checkItemValidations = () => {
-    if (!nameRef.current.value || !descRef.current.value) {
+    if (!nameRef.current.value || !quillValue) {
       setItemValidations('Item name and description are required!');
       return;
     }
@@ -73,7 +74,7 @@ export default function ModalLoot({ item = '' }) {
       .add({
         itemName: nameRef.current.value,
         itemQty: qtyRef.current.value,
-        itemDesc: descRef.current.value,
+        itemDesc: quillValue,
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
@@ -100,7 +101,7 @@ export default function ModalLoot({ item = '' }) {
       .update({
         itemName: nameRef.current.value,
         itemQty: qtyRef.current.value,
-        itemDesc: descRef.current.value,
+        itemDesc: quillValue,
         currCharges: chargeRef.current.value,
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
@@ -218,12 +219,10 @@ export default function ModalLoot({ item = '' }) {
                 </Row>
 
                 <Form.Group controlId='itemDesc'>
-                  <Form.Control
-                    data-cy='item-desc'
-                    ref={descRef}
-                    as='textarea'
-                    rows={4}
-                    defaultValue={(item && item.itemDesc) || SRDContent.desc}
+                  <QuillInput
+                    defaultValue={SRDContent?.desc || ''}
+                    value={quillValue}
+                    setValue={setQuillValue}
                     placeholder='Item description'
                   />
                 </Form.Group>

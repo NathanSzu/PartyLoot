@@ -2,6 +2,7 @@ import React from 'react';
 import { Accordion, Card, Col, Row, Container } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 import HeldBySection from './HeldBySection';
+import QuillDisplay from '../../common/QuillDisplay';
 
 export default function AccordionLoot({ filteredItems, itemOwners }) {
   return (
@@ -43,7 +44,7 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
 
                 <Row>
                   <Col className='p-0'>
-                    <pre>{item.itemDesc}</pre>
+                    <QuillDisplay className='p-0' value={item.itemDesc} />
                   </Col>
                 </Row>
 
