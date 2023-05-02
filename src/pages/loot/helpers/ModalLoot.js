@@ -25,7 +25,7 @@ export default function ModalLoot({ item = '' }) {
   const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
   const [itemOwner, setItemOwner] = useState('party');
-  const [quillValue, setQuillValue] = useState(item?.itemDesc);
+  const [quillValue, setQuillValue] = useState(item?.itemDesc || '');
 
   const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
@@ -48,8 +48,8 @@ export default function ModalLoot({ item = '' }) {
   };
 
   const checkItemValidations = () => {
-    if (!nameRef.current.value || !quillValue) {
-      setItemValidations('Item name and description are required!');
+    if (!nameRef.current.value) {
+      setItemValidations('Item name is required!');
       return;
     }
     if (!/^\d+$/.test(qtyRef.current.value) && qtyRef.current.value !== '') {
