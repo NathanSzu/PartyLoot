@@ -5,7 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 export default function QuillInput({ defaultValue, value, setValue, placeholder }) {
   const modules = {
     toolbar: [
-      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ size: [false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
       [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
     ],
