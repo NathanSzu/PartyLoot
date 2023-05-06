@@ -13,7 +13,7 @@ export default function Settings() {
   });
 
   return (
-    <Container>
+    <Container className='lazy-scroll-container'>
       <Row className='background-unset add-background-light border-top border-dark'>
         <AccountSettingsCard />
       </Row>
