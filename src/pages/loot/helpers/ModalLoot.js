@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
@@ -127,6 +127,11 @@ export default function ModalLoot({ item = '' }) {
       });
   };
 
+  useEffect(() => {
+    setQuillValue(item?.itemDesc)
+  }, [item])
+  
+
   return (
     <>
       {item ? (
@@ -228,7 +233,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Form.Group controlId='itemDesc'>
                   <QuillInput
-                    defaultValue={SRDContent?.desc || ''}
+                    defaultValue={SRDContent?.desc}
                     value={quillValue}
                     setValue={setQuillValue}
                     placeholder='Item description'

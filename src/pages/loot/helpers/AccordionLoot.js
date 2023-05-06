@@ -44,7 +44,7 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
 
                 <Row>
                   <Col className='p-0'>
-                    <QuillDisplay className='p-0' value={item.itemDesc} />
+                    <QuillDisplay className='p-0' value={item?.itemDesc} />
                   </Col>
                 </Row>
 
