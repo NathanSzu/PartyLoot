@@ -49,7 +49,6 @@ export default function ModalEditUsername({ userData }) {
       setValidationMsg('Username must contain fewer than 15 characters');
       return false;
     }
-    console.log(regex.test(value));
     if (!regex.test(value)) {
       setValidationMsg('Username cannot contain spaces or special characters');
       return false;

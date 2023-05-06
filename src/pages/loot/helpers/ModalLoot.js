@@ -56,6 +56,14 @@ export default function ModalLoot({ item = '' }) {
       setItemValidations('Item quantity must be a positive number!');
       return false;
     }
+    if (!/^\d+$/.test(chargeRef.current.value) && chargeRef.current.value !== '') {
+      setItemValidations('Item charge values must be a positive number!');
+      return false;
+    }
+    if (!/^\d+$/.test(chargesRef.current.value) && chargesRef.current.value !== '') {
+      setItemValidations('Item charge values must be a positive number!');
+      return false;
+    }
     setItemValidations('');
     return true;
   };

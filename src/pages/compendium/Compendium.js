@@ -48,7 +48,7 @@ export default function Compendium() {
         lastVisible && setCompendium([...compendium, ...results]);
       })
       .catch((error) => {
-        console.log('Error viewing compendium: ', error);
+        console.error('Error viewing compendium: ', error);
       });
   };
 
