@@ -21,6 +21,23 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
   const toggleShowToast = () => setShowToast(!showToast);
 
+  const isVisible = (elementSelector) => {
+    if (!elementSelector) {
+      console.log(false);
+      return false
+    }
+    const element = document.querySelector(elementSelector);
+    const rect = element.getBoundingClientRect();
+
+    const isInViewport =
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+
+    return isInViewport;
+  };
+
   const writeHistoryEvent = async (completedBy, action, data = {}) => {
     let summary = '';
 
@@ -67,6 +84,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
         defaultColors,
         currencyKeys,
         toggleShowToast,
+        isVisible,
         toastContent,
         setToastContent,
         toastHeader,
