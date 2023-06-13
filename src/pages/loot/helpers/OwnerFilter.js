@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect } from 'react';
+import React, { useRef, useContext } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import ModalParty from './ModalParty';
@@ -11,7 +11,7 @@ export default function OwnerFilter({ itemOwners }) {
 
   return (
     <Row className='mt-2'>
-      <Col xs={10} className='pr-2'>
+      <Col xs={9} className='pe-0'>
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -22,7 +22,7 @@ export default function OwnerFilter({ itemOwners }) {
         </Form>
       </Col>
 
-      <Col xs={2} className='pl-0'>
+      <Col xs={3}>
         <ModalParty itemOwners={itemOwners} />
       </Col>
     </Row>

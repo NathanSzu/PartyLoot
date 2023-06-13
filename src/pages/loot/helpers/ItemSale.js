@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Badge, Row, Col, Alert, Container } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Alert, Container } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
@@ -158,16 +158,15 @@ export default function ItemSale({ item, itemOwners }) {
 
   return (
     <>
-      <Badge
+      <Button
         data-cy='sell-item'
-        as='button'
-        className='mt-3 mr-2 p-0 pl-3 pr-3 background-success border-0'
+        className='mt-3 me-2 p-0 px-3 btn-success background-success border-0'
         disabled={loading}
         type='button'
         onClick={handleShow}
       >
         <img alt='Sell Item' src='APPIcons/coin.svg'></img>
-      </Badge>
+      </Button>
 
       <Modal size='lg' show={show} onHide={handleClose}>
         <Form className=' rounded'>
@@ -232,7 +231,7 @@ export default function ItemSale({ item, itemOwners }) {
             )}
             <Button
               data-cy='confirm-sell-item'
-              className='mt-3 p-2 pl-3 pr-3 background-success border-0 text-light'
+              className='mt-3 p-2 px-3 background-success border-0 text-light'
               disabled={loading}
               variant='success'
               type='button'

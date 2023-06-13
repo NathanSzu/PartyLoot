@@ -4,5 +4,6 @@
     "prod": "party-loot-tracker",
     "dev": "plt-dev"
   },
-  "targets": {}
+  "targets": {},
+  "etags": {}
 }

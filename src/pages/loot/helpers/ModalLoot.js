@@ -44,6 +44,7 @@ export default function ModalLoot({ item = '' }) {
 
   const handleShow = () => {
     item && setItemOwner(item.ownerId);
+    setQuillValue(item?.itemDesc || '');
     setShow(true);
   };
 
@@ -128,7 +129,7 @@ export default function ModalLoot({ item = '' }) {
   };
 
   useEffect(() => {
-    setQuillValue(item?.itemDesc)
+    setQuillValue(item?.itemDesc || '')
   }, [item])
   
 
@@ -148,7 +149,7 @@ export default function ModalLoot({ item = '' }) {
           data-cy='add-item'
           variant='dark'
           onClick={handleShow}
-          className='m-0 p-0 background-dark border-0 fg-3'
+          className='m-0 w-100 background-dark border-0 fg-3'
         >
           Add Item
         </Button>

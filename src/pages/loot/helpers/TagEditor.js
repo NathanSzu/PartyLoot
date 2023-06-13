@@ -49,18 +49,17 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
       </Modal.Header>
       <Modal.Body>
         <Container>
-          <Row className='text-center'>
-            <Col xs={1} className='p-0 pb-1 h-100'>
-              <img alt='Edit Group' src='/APPIcons/palette.svg'></img>
+          <Row className='text-left pb-2 justify-content-center'>
+            <Col xs={2} md={1} className='ps-0'>
+              <img alt='Palette' src='/APPIcons/palette.svg'></img>
             </Col>
-            <Col xs={2} md={1} className='pl-1 pr-1 pb-1'>
-              <img alt='Edit Group' src='/APPIcons/type.svg'></img>
+            <Col xs={3}>
+              <img alt='Symbol' src='/APPIcons/type.svg'></img>
             </Col>
-            <Col xs={3} md={2} className='pl-1 pr-1 pb-1'>
-              <img alt='Edit Group' src='/APPIcons/type-theme.svg'></img>
+            <Col xs={6}>
+              <img alt='Theme' src='/APPIcons/type-theme.svg'></img>
             </Col>
           </Row>
-          <Row className='pb-2'>
             {currencyKeys.map((currencyKey, idx) => (
               <TagInput
                 key={idx}
@@ -71,7 +70,6 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
                 currencyKey={currencyKey}
               />
             ))}
-          </Row>
         </Container>
       </Modal.Body>
 

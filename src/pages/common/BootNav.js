@@ -23,7 +23,7 @@ export default function BootNav() {
   };
 
   return (
-    <Navbar bg='light' expand='false' collapseOnSelect>
+    <Navbar className='p-2' bg='light' expand='false' collapseOnSelect>
       <LinkContainer to='/groups'>
         <Navbar.Brand className='fancy-font'>Party Loot</Navbar.Brand>
       </LinkContainer>

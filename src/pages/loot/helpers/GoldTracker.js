@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Row, Card, Accordion, Col, Container, Spinner } from 'react-bootstrap';
+import { Row, Spinner } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import GoldInput from './GoldInput';
-import Chevron from './Chevron';
 import TagEditor from './TagEditor';
 import { gsap } from 'gsap';
 
@@ -63,20 +62,19 @@ export default function GoldTracker() {
   }, [sortBy]);
 
   return (
-    <Accordion>
+    <>
       <TagEditor allTags={allTags} colorTags={colorTags} show={showTagEditor} handleClose={handleClose} />
-      <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
-        <Accordion.Toggle
-          as={Card.Header}
-          variant='link'
-          eventKey='0'
-          onClick={() => {
-            setOpen(!open);
-          }}
-        >
-          <Row>
-            <Chevron open={open} />
-            <Col>
+      <div class='accordion accordion-flush' id='gold-tracker-accordion'>
+        <div class='accordion-item clear-background'>
+          <h2 class='accordion-header' id='goldTrackerHeading'>
+            <button
+              class='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed'
+              type='button'
+              data-bs-toggle='collapse'
+              data-bs-target='#collapseOne'
+              aria-expanded='false'
+              aria-controls='collapseOne'
+            >
               {loading ? (
                 <Spinner
                   as='div'
@@ -88,28 +86,32 @@ export default function GoldTracker() {
               ) : (
                 <h1 className='item-h1 m-0 text-center'>{itemOwnerName} Gold</h1>
               )}
-            </Col>
-            <Chevron open={open} reverse={true} />
-          </Row>
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey='0'>
-          <Card.Body className='p-3'>
-            <Container fluid className='p-0'>
-              {currencyKeys.map((currencyKey, idx) => (
-                <GoldInput
-                  key={idx}
-                  tags={allTags?.[currencyKey]}
-                  currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
-                  currencyKey={currencyKey}
-                  handleShow={handleShow}
-                  colorTag={colorTags?.[currencyKey]}
-                  defaultColor={defaultColors[idx]}
-                />
-              ))}
-            </Container>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+            </button>
+          </h2>
+          <div
+            id='collapseOne'
+            class='accordion-collapse collapse'
+            aria-labelledby='goldTrackerHeading'
+            data-bs-parent='#gold-tracker-accordion'
+          >
+            <div class='accordion-body background-light'>
+              <Row>
+                {currencyKeys.map((currencyKey, idx) => (
+                  <GoldInput
+                    key={idx}
+                    tags={allTags?.[currencyKey]}
+                    currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
+                    currencyKey={currencyKey}
+                    handleShow={handleShow}
+                    colorTag={colorTags?.[currencyKey]}
+                    defaultColor={defaultColors[idx]}
+                  />
+                ))}
+              </Row>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

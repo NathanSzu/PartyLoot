@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Modal, Button, Form, Badge } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
@@ -33,16 +33,15 @@ export default function ItemDelete({ item }) {
 
   return (
     <>
-      <Badge
+      <Button
         data-cy='delete-item'
-        as='button'
-        className='mt-3 mr-0 p-0 pl-3 pr-3 background-danger border-0'
+        className='mt-3 me-0 p-0 px-3 btn-danger background-danger border-0'
         disabled={loading}
         type='button'
         onClick={handleShow}
       >
         <img alt='Sell Item' src='APPIcons/trash-fill.svg'></img>
-      </Badge>
+      </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Form className='rounded'>
@@ -53,7 +52,7 @@ export default function ItemDelete({ item }) {
           <Modal.Footer className='pt-0'>
             <Button
               data-cy='confirm-item-delete'
-              className='mt-3 p-2 pl-3 pr-3 background-danger border-0 text-light'
+              className='mt-3 p-2 px-3 background-danger border-0 text-light'
               disabled={loading}
               variant='danger'
               type='button'

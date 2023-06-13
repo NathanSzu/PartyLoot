@@ -140,33 +140,38 @@ export default function Loot() {
 
   return (
     <Container className='lazy-scroll-container'>
-      <Row>
-        <Navbar sticky='top' className='w-100 p-0 theme1-backer' id='sticky-filter'>
-          <div className='d-block w-100'>
-            <GoldTracker />
-            <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
-              <Card.Header className='border-0'>
+      <Navbar sticky='top' className='w-100 p-0' id='sticky-filter'>
+        <div className='d-block w-100 mx-0 my-2 shadow'>
+          <GoldTracker />
+          <Card className='background-light rounded-0 border-dark border-bottom-0 border-end-0 border-start-0'>
+            <Card.Header className='border-0'>
+              <Container>
                 <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
                 <OwnerFilter itemOwners={itemOwners} />
-              </Card.Header>
-            </Card>
-            <Card className='background-light rounded-0 border-dark border-left-0 border-right-0 border-bottom-0'>
-              <Card.Header className='border-0 d-flex'>
-                <ModalLoot />
-                <LinkContainer to='/history' data-cy='button-history'>
-                  <Button variant='dark' className='background-dark ml-2'>
-                    <img className='m-1' alt='History' src='APPIcons/clock-fill.svg' />
-                  </Button>
-                </LinkContainer>
-              </Card.Header>
-            </Card>
-          </div>
-        </Navbar>
-      </Row>
-  
-      <Row>
-        
-        <Col xs={12} className='pl-1 pr-1 pt-1'>
+              </Container>
+            </Card.Header>
+          </Card>
+          <Card className='background-light rounded-0 rounded-bottom border-dark border-start-0 border-end-0 border-bottom-0'>
+            <Card.Header className='border-0 d-flex'>
+              <Container>
+                <Row>
+                  <Col xs={9} className='pe-0'>
+                    <ModalLoot />
+                  </Col>
+                  <Col xs={3}>
+                    <LinkContainer to='/history' data-cy='button-history'>
+                      <Button variant='dark' className='background-dark w-100'>
+                        <img alt='History' src='APPIcons/clock-fill.svg' />
+                      </Button>
+                    </LinkContainer>
+                  </Col>
+                </Row>
+              </Container>
+            </Card.Header>
+          </Card>
+        </div>
+      </Navbar>
+      <Row className='mx-1'>
           {loading && (
             <Spinner
               as='div'
@@ -177,7 +182,6 @@ export default function Loot() {
             />
           )}
           <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
-        </Col>
         {filteredItems.length > 0 || loading ? null : (
           <Col xs={12} className='pt-4 pb-4 pl-5 pr-5 background-unset add-background-dark'>
             <p className='text-center font-weight-bold text-light'>
@@ -196,9 +200,7 @@ export default function Loot() {
             </p>
           </Col>
         )}
-        
       </Row>
-
     </Container>
   );
 }

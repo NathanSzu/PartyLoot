@@ -1,12 +1,12 @@
 import React, { useEffect, useContext } from 'react';
-import { Row, Col, Button, Spinner, Container } from 'react-bootstrap';
+import { Row, Col, Button, Spinner, Container, Navbar } from 'react-bootstrap';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import ModalAdd from './helpers/AddGroup';
-import ModalEdit from './helpers/EditGroup';
+import AddGroup from './helpers/AddGroup';
+import EditGroup from './helpers/EditGroup';
 import PatchNotes from './helpers/PatchNotes';
 
 export default function Groups() {
@@ -52,27 +52,36 @@ export default function Groups() {
   }, [currentUser]);
 
   return (
-    <Container>
+    <Container className='lazy-scroll-container'>
       <PatchNotes />
+
+      <Navbar sticky='top' className='theme1-backer rounded my-2' id='sticky-group-add'>
+        <Col>
+          <p className='text-center fancy-font text-light m-0'>
+            Tap <AddGroup /> to create a new group.
+          </p>
+        </Col>
+      </Navbar>
+
       {loading ? (
         <Spinner
           as='div'
-          className='d-flex mt-4 ml-auto mr-auto loading-spinner'
+          className='d-flex mt-4 loading-spinner'
           animation='border'
           role='status'
           variant='light'
         />
       ) : (
-        <div>
+        <>
           {sortedGroups.map((group, idx) => (
-            <Row key={idx} className='p-0 border-top border-dark background-light'>
-              <Col className='p-0 groups-overflow'>
+            <Row key={idx} className='border-top border-dark background-light mx-1 rounded'>
+              <Col className='groups-overflow'>
                 <Link to='/loot'>
                   <Button
                     id={group.id}
                     data-cy={`group${idx}`}
                     variant='outline'
-                    className='w-100 text-left p-3 groups-h1 fancy-font'
+                    className='w-100 text-start p-3 groups-h1 fancy-font'
                     onClick={(e) => {
                       setCurrentGroup(e.target.id);
                     }}
@@ -82,21 +91,12 @@ export default function Groups() {
                 </Link>
               </Col>
               <Col xs='auto d-flex align-items-center'>
-                <ModalEdit name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
+                <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
               </Col>
             </Row>
           ))}
-        </div>
+        </>
       )}
-
-      <Row className='justify-content-center border-0 pt-1 pb-2 clear-background'>
-        <ModalAdd />
-      </Row>
-      <Row>
-        <Col>
-          <p className='text-center fancy-font text-light'>Tap + to create a new group.</p>
-        </Col>
-      </Row>
     </Container>
   );
 }

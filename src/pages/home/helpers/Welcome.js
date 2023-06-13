@@ -1,16 +1,15 @@
 import React from 'react';
-import { Jumbotron, Container, Button, Row, Col } from 'react-bootstrap';
+import { Container, Button, Row, Col } from 'react-bootstrap';
 
-export default function BootJumbo({ setWelcome, setLogin }) {
+export default function Welcome({ setWelcome, setLogin }) {
 	const showForms = () => {
 		setWelcome(false);
 		setLogin(true);
 	};
 
 	return (
-		<Jumbotron fluid className="background-unset rounded-bottom pt-3" data-cy='welcome-message'>
-			<Container>
-				<Row className="justify-content-around mb-3">
+			<Container fluid className="background-light rounded-bottom p-3" data-cy='welcome-message'>
+				<Row className="p-3">
 					<Col>
 						<a href="https://www.patreon.com/dndnathan?fan_landing=true" target="blank">
 							<Button variant='light' className="w-100 border-0">
@@ -26,7 +25,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 				</Row>
 				<Row border="dark">
 					<Col xs={12} className="mr-auto ml-auto">
-						<div className="add-background-light mt-3">
+						<div className="p-3 fs-5">
 							<h1 className="text-center mb-4 background-dark rounded text-light p-2">
 								Welcome to Party Loot
 							</h1>
@@ -41,7 +40,7 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 						</div>
 					</Col>
 					<Col xs={12} className="mr-auto ml-auto">
-						<div className="add-background-light mt-3">
+						<div className="p-3  fs-5">
 							<h2 className="text-center mb-4 background-dark rounded text-light p-2">
 								This is a Progressive Web Application
 							</h2>
@@ -53,6 +52,5 @@ export default function BootJumbo({ setWelcome, setLogin }) {
 					</Col>
 				</Row>
 			</Container>
-		</Jumbotron>
 	);
 }

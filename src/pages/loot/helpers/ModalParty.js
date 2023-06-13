@@ -56,8 +56,8 @@ export default function ModalParty({ itemOwners }) {
   };
 
   return (
-    <div>
-      <Button className='w-100 pl-0 pr-0 background-dark border-0' variant='dark' onClick={handleShow}>
+    <>
+      <Button className='w-100 background-dark border-0' variant='dark' onClick={handleShow}>
         <img alt='Edit Party' src='APPIcons/view-users.svg' />
       </Button>
 
@@ -74,11 +74,11 @@ export default function ModalParty({ itemOwners }) {
               }}
             >
               <Row>
-                <Col className='pl-0' xs={10}>
+                <Col className='ps-0' xs={10}>
                   <Form.Control type='input' placeholder='Add Party Members' ref={addItemOwnerRef}></Form.Control>
                 </Col>
-                <Col className='pl-2' xs={2}>
-                  <Button disabled={loading} variant='dark' type='submit' onClick={addItemOwner}>
+                <Col className='px-0 text-end' xs={2}>
+                  <Button disabled={loading} className='w-100 background-dark' variant='dark' type='submit' onClick={addItemOwner}>
                     <img alt='Add Party Member' src='APPIcons/add-user.svg' />
                   </Button>
                 </Col>
@@ -88,15 +88,15 @@ export default function ModalParty({ itemOwners }) {
         </Modal.Body>
 
         <Modal.Footer>
-          <Container className='p-0'>
-            <Accordion className='m-0'>
+          <Container className='px-0'>
+            <div class='accordion' id='partyAccordion'>
               {noDeletedOwners.map((itemOwner) => (
-                <EditItemOwnerAccordion key={itemOwner.id} itemOwner={itemOwner} />
+                <EditItemOwnerAccordion key={itemOwner.id} itemOwner={itemOwner} handleClose={handleClose}/>
               ))}
-            </Accordion>
+            </div>
           </Container>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 }

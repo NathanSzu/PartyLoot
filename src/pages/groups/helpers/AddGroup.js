@@ -34,7 +34,7 @@ export default function AddGroup() {
 
     return (
         <>
-            <Button variant='light' onClick={handleShow} className='w-100 m-2' data-cy='create-group'>
+            <Button variant='light' onClick={handleShow} className='m-2' data-cy='create-group'>
                 +
             </Button>
 

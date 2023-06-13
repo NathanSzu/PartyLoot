@@ -8,18 +8,18 @@ export default function HeldBySection({ item, itemOwners }) {
 
   return (
     <>
-      <Row className='border-bottom border-dark pt-1 pb-1'>
-        <Col className='d-flex align-items-center pl-0'>
+      <Row className='border-bottom border-dark py-1'>
+        <Col className='d-flex align-items-center px-0'>
           <h2 className='item-h2 mb-1 mt-1'>Held By</h2>
         </Col>
       </Row>
       <Row>
-        <Col className='pl-0'>
-          <Badge variant='dark' className='mt-3 p-2 pl-3 pr-3'>
+        <Col className='ps-0'>
+          <Badge bg='dark' className='mt-3 p-2 px-3'>
             {owner?.name || 'Party'}
           </Badge>
         </Col>
-        <Col className='d-flex justify-content-end pr-0'>
+        <Col className='d-flex justify-content-end pe-0'>
           <ItemSale item={item} itemOwners={itemOwners} />
           <ItemDelete item={item} />
         </Col>

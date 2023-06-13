@@ -42,47 +42,45 @@ export default function PasswordReset() {
   };
 
   return (
-    <Row className='justify-content-md-center pl-3 pr-3'>
-      <Col xs={12} className='add-background-light rounded-bottom'>
-        <Form className='p-3'>
-          <Form.Group controlId='Email'>
-            <Form.Label>Email address</Form.Label>
-            {emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert>}
+    <Col xs={12} className='background-light rounded-bottom p-5'>
+      <Form>
+        <Form.Group controlId='Email'>
+          <Form.Label>Email address</Form.Label>
+          {emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert>}
 
-            {!resetEmailSent ? null : (
-              <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
-            )}
-            <Form.Control
-              ref={emailRef}
-              type='email'
-              placeholder='Enter email'
-              onChange={(e) => {
-                setEmail(e.target.value);
-                validateEmail(e);
+          {!resetEmailSent ? null : (
+            <Alert variant={'success'}>Your email has been sent. Please check your inbox!</Alert>
+          )}
+          <Form.Control
+            ref={emailRef}
+            type='email'
+            placeholder='Enter email'
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e);
+            }}
+          />
+          <Form.Text className='text-dark'>
+            If we have an account with this email, we will send a link to reset your password.
+          </Form.Text>
+        </Form.Group>
+
+        <Row>
+          <Col className='text-center mt-3'>
+            <Button
+              disabled={loading}
+              variant='dark'
+              type='submit'
+              onClick={(e) => {
+                e.preventDefault();
+                passwordReset(email);
               }}
-            />
-            <Form.Text className='text-dark text-center'>
-              If we have an account with this email, we will send a link to reset your password.
-            </Form.Text>
-          </Form.Group>
-
-          <Row className='justify-content-center'>
-            <Col className='text-center mt-3'>
-              <Button
-                disabled={loading}
-                variant='dark'
-                type='submit'
-                onClick={(e) => {
-                  e.preventDefault();
-                  passwordReset(email);
-                }}
-              >
-                Reset password!
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Col>
-    </Row>
+            >
+              Reset password!
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </Col>
   );
 }

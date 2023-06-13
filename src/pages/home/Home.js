@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Jumbotron from './helpers/JumbotronWelcome';
+import Welcome from './helpers/Welcome';
 import Login from './helpers/BootLogin';
 import { Row, Col } from 'react-bootstrap';
 
@@ -9,10 +9,15 @@ export default function Home() {
 
   return (
     <div className='p-0'>
-      {welcome ? <Jumbotron setLogin={setLogin} setWelcome={setWelcome} /> : null}
-      <Row className='justify-content-md-center pl-3 pr-3'>
-        <Col>{!welcome ? <Login login={login} setLogin={setLogin} /> : null}</Col>
-      </Row>
+      {welcome ? (
+        <Welcome setLogin={setLogin} setWelcome={setWelcome} />
+      ) : (
+        <Row className='justify-content-md-center'>
+          <Col>
+            <Login login={login} setLogin={setLogin} />
+          </Col>
+        </Row>
+      )}
     </div>
   );
 }
