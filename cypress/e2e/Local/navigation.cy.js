@@ -1,21 +1,24 @@
 /// <reference types='cypress' />
+import { v4 as uuidv4 } from 'uuid'
+let uid = uuidv4();
+let uid2 = uuidv4();
 
 describe('routing protection', () => {
   before(() => {
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   it('re-route from /groups to /root if user is not logged in', () => {
-    cy.visit('http://localhost:3000/groups');
+    cy.visit('/groups');
     cy.url().should('eq', 'http://localhost:3000/');
   });
   it('re-route from /user-settings to /root if user is not logged in', () => {
-    cy.visit('http://localhost:3000/user-settings');
+    cy.visit('/user-settings');
     cy.url().should('eq', 'http://localhost:3000/');
   });
   it('re-route from /loot to /root if user is not logged in', () => {
-    cy.visit('http://localhost:3000/loot');
+    cy.visit('/loot');
     cy.url().should('eq', 'http://localhost:3000/');
   });
 });
@@ -23,7 +26,7 @@ describe('routing protection', () => {
 describe('check login views', () => {
   before(() => {
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
   });
 
   it('welcome message displayed', () => {
@@ -47,9 +50,9 @@ describe('check navigation', () => {
   });
 
   it('re-route from /root to /groups if user is logged in', () => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
     cy.url().should('include', '/groups');
-    cy.get('.close').click();
+    cy.get('.btn-close').click();
   });
 
   it('check navbar options', () => {
@@ -59,7 +62,7 @@ describe('check navigation', () => {
   });
 
   it('add test group', () => {
-    cy.addGroup();
+    cy.addGroup(uid);
   });
 
   it('view loot', () => {
@@ -88,6 +91,6 @@ describe('check navigation', () => {
   });
 
   it('remove test group', () => {
-    cy.removeGroup();
+    cy.removeGroup(uid, uid2);
   });
 });

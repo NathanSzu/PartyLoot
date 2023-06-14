@@ -1,4 +1,7 @@
 /// <reference types='cypress' />
+import { v4 as uuidv4 } from 'uuid'
+let uid = uuidv4();
+let uid2 = uuidv4();
 
 describe('Group actions', () => {
   before(() => {
@@ -6,13 +9,13 @@ describe('Group actions', () => {
   });
 
   it('add test group', () => {
-    cy.addGroup();
+    cy.addGroup(uid);
   });
 
   it('edit group', () => {
     cy.get('[data-cy=edit-group]').eq(0).click();
-    cy.get('[data-cy=edit-group-name]').clear().type('Better group name{enter}');
-    cy.contains('button', 'Better group name').should('have.length', 1);
+    cy.get('[data-cy=edit-group-name]').clear().type(`${uid2}{enter}`);
+    cy.contains('button', uid2).should('have.length', 1);
   });
 
   it('add and remove group member', () => {
@@ -25,6 +28,6 @@ describe('Group actions', () => {
   });
 
   it('remove test group', () => {
-    cy.removeGroup();
+    cy.removeGroup(uid, uid2);
   });
 });

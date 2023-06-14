@@ -6,10 +6,10 @@ import QuillDisplay from '../../common/QuillDisplay';
 
 export default function AccordionLoot({ filteredItems, itemOwners }) {
   return (
-    <div class='accordion accordion-flush p-0' id='gold-tracker-accordion'>
+    <div class='accordion accordion-flush p-0' id='loot-accordion'>
       {filteredItems.map((item) => (
         <div class='accordion-item rounded' key={item.id}>
-          <h2 class='accordion-header' id='goldTrackerHeading'>
+          <h2 class='accordion-header' id='lootAccordionHeading'>
             <button
               class='rounded border-top border-dark accordion-button accordion-button-loot accordion-icon-hide collapsed'
               type='button'
@@ -35,8 +35,8 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
           <div
             id={`collapse${item.id}`}
             class='accordion-collapse collapse'
-            aria-labelledby='goldTrackerHeading'
-            data-bs-parent='#gold-tracker-accordion'
+            aria-labelledby='lootAccordionHeading'
+            data-bs-parent='#loot-accordion'
           >
             <div class='accordion-body background-light rounded-bottom'>
               <Container>

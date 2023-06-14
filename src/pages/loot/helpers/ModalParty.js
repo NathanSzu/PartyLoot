@@ -57,7 +57,7 @@ export default function ModalParty({ itemOwners }) {
 
   return (
     <>
-      <Button className='w-100 background-dark border-0' variant='dark' onClick={handleShow}>
+      <Button data-cy='modal-party' className='w-100 background-dark border-0' variant='dark' onClick={handleShow}>
         <img alt='Edit Party' src='APPIcons/view-users.svg' />
       </Button>
 
@@ -75,10 +75,10 @@ export default function ModalParty({ itemOwners }) {
             >
               <Row>
                 <Col className='ps-0' xs={10}>
-                  <Form.Control type='input' placeholder='Add Party Members' ref={addItemOwnerRef}></Form.Control>
+                  <Form.Control data-cy='new-member-input' type='input' placeholder='Add Party Members' ref={addItemOwnerRef}></Form.Control>
                 </Col>
                 <Col className='px-0 text-end' xs={2}>
-                  <Button disabled={loading} className='w-100 background-dark' variant='dark' type='submit' onClick={addItemOwner}>
+                  <Button data-cy='save-new-member' disabled={loading} className='w-100 background-dark' variant='dark' type='submit' onClick={addItemOwner}>
                     <img alt='Add Party Member' src='APPIcons/add-user.svg' />
                   </Button>
                 </Col>

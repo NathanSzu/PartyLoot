@@ -88,6 +88,7 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
     <div class='accordion-item'>
       <h2 class='accordion-header' id={`partyHeading${itemOwner.id}`}>
         <button
+          data-cy={itemOwner.name}
           class='accordion-button accordion-button-loot collapsed'
           type='button'
           data-bs-toggle='collapse'
@@ -110,6 +111,7 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
             <Col xs={2} lg={1} className='p-0 d-flex justify-content-start'>
               {checkFavorite(party, itemOwner) ? (
                 <Button
+                  data-cy='set-unfavorite'
                   className='background-dark'
                   disabled={loadingSave}
                   onClick={() => setFavoriteItemOwner(itemOwner)}
@@ -118,16 +120,28 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
                   <img alt='Favorited' src='APPIcons/star-fill.svg' className='mb-1' />
                 </Button>
               ) : (
-                <Button disabled={loadingSave} onClick={() => setFavoriteItemOwner(itemOwner)} variant='outline-dark'>
+                <Button
+                  data-cy='set-favorite'
+                  disabled={loadingSave}
+                  onClick={() => setFavoriteItemOwner(itemOwner)}
+                  variant='outline-dark'
+                >
                   <img alt='Not favorited' src='APPIcons/star.svg' className='mb-1' />
                 </Button>
               )}
             </Col>
             <Col className='p-0'>
-              <Form.Control ref={nameRef} disabled={loadingSave} type='text' defaultValue={itemOwner.name} />
+              <Form.Control
+                data-cy='edit-member-input'
+                ref={nameRef}
+                disabled={loadingSave}
+                type='text'
+                defaultValue={itemOwner.name}
+              />
             </Col>
             <Col xs={2} lg={1} className='p-0 d-flex justify-content-end'>
               <Button
+                data-cy='save-member-input'
                 disabled={loadingSave}
                 className='background-success'
                 onClick={() => saveNameChange(itemOwner.id)}
@@ -138,11 +152,17 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
             </Col>
             <Col xs={2} lg={1} className='p-0 d-flex justify-content-end'>
               {!showConfirmation ? (
-                <Button variant='danger' className='background-danger' onClick={() => setShowConfirmation(true)}>
+                <Button
+                  data-cy='delete-member'
+                  variant='danger'
+                  className='background-danger'
+                  onClick={() => setShowConfirmation(true)}
+                >
                   <img alt='Delete member' src='/APPIcons/remove-user.svg' />
                 </Button>
               ) : (
                 <Button
+                  data-cy='confirm-delete-member'
                   disabled={loadingDelete}
                   onClick={() => removeItemOwner(itemOwner.id)}
                   variant='danger'

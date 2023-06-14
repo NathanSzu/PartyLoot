@@ -26,29 +26,29 @@
 
 Cypress.Commands.add('login', (email = 'test@test.com', password = 'password') => {
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
-  cy.visit('http://localhost:3000/');
+  cy.visit('/');
   cy.get('[data-cy=get-started]').click();
   cy.get('[data-cy=login-email]').type(email);
   cy.get('[data-cy=login-password]').type(password);
   cy.get('[data-cy=login]').click();
   cy.url().should('include', '/groups');
-  cy.get('.close').click();
+  cy.get('.btn-close').click();
 });
 
-Cypress.Commands.add('addGroup', () => {
+Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
   cy.get('[data-cy=create-group]').click();
-  cy.get('[data-cy=new-group-name]').type('Cool group{enter}');
-  cy.contains('button', 'Cool group').should('have.length', 1);
+  cy.get('[data-cy=new-group-name]').type(`${uid}{enter}`);
+  cy.contains('button', uid).should('have.length', 1);
 });
 
-Cypress.Commands.add('removeGroup', () => {
-    cy.visit('http://localhost:3000/groups');
-    cy.get('.close').click();
+Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2') => {
+    cy.visit('/groups');
+    cy.get('.btn-close').click();
     cy.get('[data-cy=edit-group]').eq(0).click();
     cy.get('[data-cy=delete]').click();
     cy.get('[data-cy=confirm-delete]').click();
-    cy.contains('button', 'Cool group').should('not.exist');
-    cy.contains('button', 'Better group name').should('not.exist');
+    cy.contains('button', uid).should('not.exist');
+    cy.contains('button', uid2).should('not.exist');
 });
 
 Cypress.Commands.add('fillItemFields', () => {
