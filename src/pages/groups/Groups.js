@@ -2,12 +2,12 @@ import React, { useEffect, useContext } from 'react';
 import { Row, Col, Button, Spinner, Container, Navbar } from 'react-bootstrap';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GroupContext } from '../../utils/contexts/GroupContext';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import AddGroup from './helpers/AddGroup';
 import EditGroup from './helpers/EditGroup';
 import PatchNotes from './helpers/PatchNotes';
+import { LinkContainer } from 'react-router-bootstrap';
 
 export default function Groups() {
   const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);
@@ -76,19 +76,19 @@ export default function Groups() {
           {sortedGroups.map((group, idx) => (
             <Row key={idx} className='border-top border-dark background-light mx-1 rounded'>
               <Col className='groups-overflow'>
-                <Link to='/loot'>
+                <LinkContainer to='/loot'>
                   <Button
                     id={group.id}
                     data-cy={`group${idx}`}
                     variant='outline'
-                    className='w-100 text-start p-3 groups-h1 fancy-font'
+                    className='w-100 text-start p-3 groups-h1 fancy-font border-0'
                     onClick={(e) => {
                       setCurrentGroup(e.target.id);
                     }}
                   >
                     {group.groupName}
                   </Button>
-                </Link>
+                </LinkContainer>
               </Col>
               <Col xs='auto d-flex align-items-center'>
                 <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
