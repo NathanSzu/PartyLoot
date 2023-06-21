@@ -27,7 +27,7 @@ export default function AccountSettingsCard() {
   };
 
   return (
-    <Col md={8} className='p-3 mr-auto ml-auto'>
+    <Col md={8} className='mx-auto'>
       <Card>
         <Card.Header>
           <h1 className='text-center settings-h1'>Account Settings</h1>
@@ -43,10 +43,10 @@ export default function AccountSettingsCard() {
             This is a unique code specific to your account. Party owners will need to use this code to add you as a
             member.
           </Card.Text>
-          <Col md={8} className='mr-auto ml-auto'>
+          <Col md={8} className='mx-auto'>
             <ModalEditUsername userData={userData} />
           </Col>
-          <Col md={8} className='mr-auto ml-auto'>
+          <Col md={8} className='mx-auto'>
             <Button
               className='w-100 background-dark border-0'
               disabled={loading}
