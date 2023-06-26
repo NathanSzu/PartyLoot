@@ -13,7 +13,7 @@ export default function Compendium() {
   const [orderBy, setOrderBy] = useState('likeCount');
   const [startAfter, setStartAfter] = useState(0);
 
-  const queryRef = db.collection('compendium').orderBy(orderBy).orderBy('created').startAfter(startAfter).limit(50);
+  const queryRef = db.collection('compendium').orderBy(orderBy).orderBy('created').startAfter(startAfter).limit(25);
 
   // const seedCompendium = () => {
   //   for (let i = 0; i < 200; i++) {
@@ -53,7 +53,7 @@ export default function Compendium() {
   };
 
   const loadMore = (length) => {
-    isVisible(`#item${length - 5}`) && getCompendium();
+    isVisible(`#item${length - 3}`) && getCompendium();
   }
 
   useEffect(() => {
