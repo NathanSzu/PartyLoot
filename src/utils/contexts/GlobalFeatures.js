@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { GroupContext } from './GroupContext';
 import fb from 'firebase';
@@ -15,6 +15,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
   const [toastContent, setToastContent] = useState('Notification content');
   const [toastHeader, setToastHeader] = useState('Notification');
   const [expandNavbar, setExpandNavbar] = useState('false');
+  const [itemMetadata, setItemMetadata] = useState({});
 
   const defaultColors = ['#ffbb00', '#bdbdbd', '#d27e1e', '#ffffff', '#ffffff', '#ffffff'];
   const currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
@@ -23,7 +24,6 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
   const isVisible = (elementSelector) => {
     if (!elementSelector) {
-      console.log(false);
       return false
     }
     const element = document.querySelector(elementSelector);
@@ -36,6 +36,15 @@ export const GlobalFeaturesProvider = ({ children }) => {
       rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 
     return isInViewport;
+  };
+
+  const getItemMetadata = () => {
+    db.collection('metadata')
+      .doc('items')
+      .get()
+      .then((doc) => {
+        setItemMetadata(doc.data());
+      });
   };
 
   const writeHistoryEvent = async (completedBy, action, data = {}) => {
@@ -77,6 +86,10 @@ export const GlobalFeaturesProvider = ({ children }) => {
     });
   };
 
+  useEffect(() => {
+    getItemMetadata();
+  }, []);
+
   return (
     <GlobalFeatures.Provider
       value={{
@@ -92,6 +105,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
         setExpandNavbar,
         setToastHeader,
         writeHistoryEvent,
+        itemMetadata
       }}
     >
       {children}

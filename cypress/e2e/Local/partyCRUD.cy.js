@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 let uid = uuidv4();
 let uid2 = uuidv4();
 
-describe('Item actions', () => {
+describe('Party actions', () => {
   before(() => {
     cy.login();
   });

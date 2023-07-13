@@ -50,7 +50,7 @@ function App() {
                     <Route element={<SecuredRoutes />}>
                       <Route element={<Groups />} path='/groups' exact />
                       <Route element={<Settings />} path='/user-settings' exact />
-                      <Route element={<Compendium />} path='/item-compendium' exact />
+                      {/* <Route element={<Compendium />} path='/item-compendium' exact /> */}
                     </Route>
                     <Route element={<SkippedRoutes />}>
                       <Route element={<Home />} path='/' exact />

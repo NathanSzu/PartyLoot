@@ -1,127 +1,175 @@
 .item-h1 {
-    font-family: 'Akbaal', sans-serif;
-    font-size: 16px;                                    
+  font-family: 'Akbaal', sans-serif;
+  font-size: 16px;
 }
 
 .item-h2 {
-    font-family: 'Akbaal', sans-serif;
-    font-size: 14px; 
+  font-family: 'Akbaal', sans-serif;
+  font-size: 14px;
 }
 
 .item-p {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
 }
 
 .itemOwner-h1 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
 }
 
 .vertical-center {
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .text-position-end {
-    right: 24px;
+  right: 24px;
 }
 
 .accordion-button-loot:not(.collapsed) {
-    color: var(--border-color-1);
-    background-color: white;
-  }
-  
-  .accordion-button-loot:focus {
-    outline: 0;
-    box-shadow: none;
-  }
+  color: var(--border-color-1);
+  background-color: white;
+}
 
-  .accordion-button-loot-dark:not(.collapsed) {
-    color: white;
-    background-color: var(--theme1);
-  }
-  
-  .accordion-button-loot-dark:focus {
-    outline: 0;
-    box-shadow: none;
-  }
+.accordion-button-loot:focus {
+  outline: 0;
+  box-shadow: none;
+}
 
-  .accordion-button-loot-dark {
-    color: white;
-    background-color: var(--theme1);
-  }
+.accordion-button-loot-dark:not(.collapsed) {
+  color: white;
+  background-color: var(--theme1);
+}
 
-  .accordion-icon-alt::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-  }
+.accordion-button-loot-dark:focus {
+  outline: 0;
+  box-shadow: none;
+}
 
-  .accordion-icon-alt:not(.collapsed)::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+.accordion-button-loot-dark {
+  color: white;
+  background-color: var(--theme1);
+}
+
+.accordion-icon-alt::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-icon-alt:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-icon-hide::after {
+  display: none !important;
+}
+
+.load-container {
+    height: 20px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .15);
+}
+.load-wraper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  z-index: 44;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.activity {
+    overflow: hidden;
+  position: absolute;
+  left: 0%;
+  height: 100%;
+  width: 30%;
+  background-image: linear-gradient(
+    to left,
+    rgba(251, 251, 251, 0.05),
+    rgba(251, 251, 251, 0.3),
+    rgba(251, 251, 251, 0.6),
+    rgba(251, 251, 251, 0.3),
+    rgba(251, 251, 251, 0.05)
+  );
+  background-image: -moz-linear-gradient(
+    to left,
+    rgba(251, 251, 251, 0.05),
+    rgba(251, 251, 251, 0.3),
+    rgba(251, 251, 251, 0.6),
+    rgba(251, 251, 251, 0.3),
+    rgba(251, 251, 251, 0.05)
+  );
+  animation: loading 1s infinite;
+  z-index: 45;
+}
+
+@keyframes loading {
+  0% {
+    left: 0%;
   }
-  
-  .accordion-icon-hide::after {
-    display: none !important;
+  100% {
+    left: 80%;
   }
+}
 
 /* Settings Page */
 
 .settings-h1 {
-    font-size: 28px;
+  font-size: 28px;
 }
 
 .settings-h2 {
-    font-size: 22px;
+  font-size: 22px;
 }
 
 .settings-p {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 /* Groups Page */
 
 .groups-h1 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .groups-overflow {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .groups-h2 {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 .clear-background {
-    background-color: unset;
+  background-color: unset;
 }
 
 .theme1-backer {
-    background-color: var(--theme1);
+  background-color: var(--theme1);
 }
 
 .fancy-font {
-    font-family: 'Akbaal', sans-serif;
+  font-family: 'Akbaal', sans-serif;
 }
 
 .fg-3 {
-    flex-grow: 3;
+  flex-grow: 3;
 }
 
 .space-between {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .z-1051 {
-    z-index: 1051;
+  z-index: 1051;
 }
 
 .mh-36 {
-    min-height: 36px;
+  min-height: 36px;
 }
 
 .disabled-opacity-100:disabled {
-    opacity: 100%;
+  opacity: 100%;
 }

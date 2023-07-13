@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 // import fb from 'firebase';
@@ -12,8 +12,9 @@ export default function Compendium() {
   const [compendium, setCompendium] = useState([]);
   const [orderBy, setOrderBy] = useState('likeCount');
   const [startAfter, setStartAfter] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const queryRef = db.collection('compendium').orderBy(orderBy).orderBy('created').startAfter(startAfter).limit(25);
+  const queryRef = db.collection('compendium').orderBy(orderBy).orderBy('created').startAfter(startAfter).limit(15);
 
   // const seedCompendium = () => {
   //   for (let i = 0; i < 200; i++) {
@@ -43,6 +44,9 @@ export default function Compendium() {
             id: doc.id,
           });
         });
+        if (results.length < 15) {
+          setLoading(false);
+        }
         var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         lastVisible && setStartAfter(lastVisible);
         lastVisible && setCompendium([...compendium, ...results]);
@@ -54,7 +58,7 @@ export default function Compendium() {
 
   const loadMore = (length) => {
     isVisible(`#item${length - 3}`) && getCompendium();
-  }
+  };
 
   useEffect(() => {
     getCompendium();
@@ -62,7 +66,7 @@ export default function Compendium() {
 
   return (
     <Container className='lazy-scroll-container pl-1 pr-1' onScroll={() => loadMore(compendium.length)}>
-      <CompendiumList compendium={compendium} />
+      <CompendiumList compendium={compendium} loading={loading} />
     </Container>
   );
 }
