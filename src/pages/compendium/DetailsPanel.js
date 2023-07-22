@@ -61,7 +61,7 @@ export function DetailsPanelDisplay({ show, setShow, item }) {
               Types: <br />
               {item.category &&
                 item.category.map((type) => (
-                  <span key={type} class='badge rounded-pill background-dark me-1'>
+                  <span key={type} className='badge rounded-pill background-dark me-1'>
                     {itemMetadata.categories[type]}
                   </span>
                 ))}
@@ -70,7 +70,7 @@ export function DetailsPanelDisplay({ show, setShow, item }) {
           <Col className='border-end'>
             <p className='m-0'>
               Setting: <br />
-              <span class='badge rounded-pill background-dark'>
+              <span className='badge rounded-pill background-dark'>
                 {item.setting && itemMetadata?.settings?.[item?.setting].setting}
               </span>
             </p>
@@ -78,7 +78,7 @@ export function DetailsPanelDisplay({ show, setShow, item }) {
           <Col>
             <p className='m-0'>
               Author: <br />
-              <span class='badge rounded-pill background-dark'>{creator}</span>
+              <span className='badge rounded-pill background-dark'>{creator}</span>
             </p>
           </Col>
         </Row>

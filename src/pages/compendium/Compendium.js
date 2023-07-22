@@ -2,24 +2,61 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 // import fb from 'firebase';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col, Navbar, Card } from 'react-bootstrap';
 import CompendiumList from './CompendiumList';
+import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
+import { Filter, SettingFilter } from './helpers/Filter';
 
 export default function Compendium() {
-  const { db } = useContext(AuthContext);
-  const { isVisible } = useContext(GlobalFeatures);
+  const { db, userRef, currentUser } = useContext(AuthContext);
+  const { isVisible, itemMetadata } = useContext(GlobalFeatures);
 
   const [compendium, setCompendium] = useState([]);
+  const [showMyDiscoveries, setShowMyDiscoveries] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState(['abc']);
+  const [settingFilter, setSettingFilter] = useState(null);
   const [orderBy, setOrderBy] = useState('likeCount');
   const [startAfter, setStartAfter] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [userData] = useDocumentDataOnce(userRef);
 
-  const queryRef = db.collection('compendium').orderBy(orderBy).orderBy('created').startAfter(startAfter).limit(15);
+  const queryRef = db
+    .collection('compendium')
+    .where('category', 'array-contains-any', categoryFilter)
+    .orderBy(orderBy, 'desc');
+
+  const complexQueryRef = db
+    .collection('compendium')
+    .where('category', 'array-contains-any', categoryFilter)
+    .where('setting', '==', settingFilter)
+    .orderBy(orderBy, 'desc');
+
+  const authorQueryRef = db
+    .collection('compendium')
+    .where('category', 'array-contains-any', categoryFilter)
+    .where('creatorId', '==', currentUser.uid)
+    .orderBy(orderBy, 'desc');
+
+  const authorComplexQueryRef = db
+    .collection('compendium')
+    .where('category', 'array-contains-any', categoryFilter)
+    .where('setting', '==', settingFilter)
+    .where('creatorId', '==', currentUser.uid)
+    .orderBy(orderBy, 'desc');
+
+  const defineQuery = () => {
+    if (showMyDiscoveries) {
+      return settingFilter ? authorComplexQueryRef : authorQueryRef;
+    }
+    if (!showMyDiscoveries) {
+      return settingFilter ? complexQueryRef : queryRef;
+    }
+  };
 
   // const seedCompendium = () => {
   //   for (let i = 0; i < 200; i++) {
   //     let data = {
-  //       category: [Math.ceil(Math.random() * 5)],
+  // category: [Math.ceil(Math.random() * 5).toString()],
   //       created: fb.firestore.FieldValue.serverTimestamp(),
   //       creatorId: 'FSoy7RhYIwMOBvgxpH9lMns7aNf1',
   //       itemDesc: `Item description ${i}!`,
@@ -34,7 +71,33 @@ export default function Compendium() {
   // };
 
   const getCompendium = () => {
-    return queryRef
+    return defineQuery()
+      .limit(15)
+      .get()
+      .then((querySnapshot) => {
+        let results = [];
+        querySnapshot.forEach((doc) => {
+          results.push({
+            ...doc.data(),
+            id: doc.id,
+          });
+        });
+        if (results.length < 15) {
+          setLoading(false);
+        }
+        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        lastVisible && setStartAfter(lastVisible);
+        lastVisible ? setCompendium([...results]) : setCompendium([]);
+      })
+      .catch((error) => {
+        console.error('Error viewing compendium: ', error);
+      });
+  };
+
+  const getNextPage = () => {
+    return defineQuery()
+      .startAfter(startAfter)
+      .limit(15)
       .get()
       .then((querySnapshot) => {
         let results = [];
@@ -57,15 +120,80 @@ export default function Compendium() {
   };
 
   const loadMore = (length) => {
-    isVisible(`#item${length - 3}`) && getCompendium();
+    isVisible(`#item${length - 3}`) && getNextPage();
   };
 
   useEffect(() => {
-    getCompendium();
-  }, []);
+    itemMetadata?.categories && setCategoryFilter(Object.keys(itemMetadata.categories));
+  }, [itemMetadata]);
+
+  useEffect(() => {
+    categoryFilter && getCompendium();
+    settingFilter && getCompendium();
+    showMyDiscoveries && getCompendium();
+  }, [categoryFilter, settingFilter, showMyDiscoveries]);
 
   return (
     <Container className='lazy-scroll-container pl-1 pr-1' onScroll={() => loadMore(compendium.length)}>
+      <Navbar sticky='top' className='w-100 p-0' id='sticky-compendium-filter'>
+        <div className='d-block w-100 mx-0 mt-2 shadow background-light rounded'>
+          <div className='accordion accordion-flush' id='gold-tracker-accordion'>
+            <div className='accordion-item clear-background'>
+              <h2 className='accordion-header' id='goldTrackerHeading'>
+                <button
+                  className='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed fancy-font'
+                  type='button'
+                  data-bs-toggle='collapse'
+                  data-bs-target='#collapseOne'
+                  aria-expanded='false'
+                  aria-controls='collapseOne'
+                >
+                  Filter / search
+                </button>
+              </h2>
+              <div
+                id='collapseOne'
+                className='accordion-collapse collapse rounded-0'
+                aria-labelledby='goldTrackerHeading'
+                data-bs-parent='#gold-tracker-accordion'
+              >
+                <div className='accordion-body background-light'>
+                  <Row>
+                    <Col xs={6}>
+                      <Filter metadata={itemMetadata?.categories} setState={setCategoryFilter} />
+                    </Col>
+                    <Col xs={6}>
+                      <SettingFilter metadata={itemMetadata?.settings} setState={setSettingFilter} />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Card className='rounded-0 rounded-bottom background-light border-dark border-bottom-0 border-end-0 border-start-0'>
+            <Card.Header className=''>
+              <Row>
+                <Col>
+                  <p className='vertical-center'>
+                    <span className='p-2 badge rounded-pill bg-light text-dark me-1'>
+                      User | {userData?.displayName}
+                    </span>
+                  </p>
+                </Col>
+                <Col className='text-end'>
+                  <Button
+                    variant='dark'
+                    className='background-dark'
+                    onClick={() => setShowMyDiscoveries(!showMyDiscoveries)}
+                  >
+                    {showMyDiscoveries ? 'All discoveries' : 'My discoveries'}
+                  </Button>
+                </Col>
+              </Row>
+            </Card.Header>
+          </Card>
+        </div>
+      </Navbar>
       <CompendiumList compendium={compendium} loading={loading} />
     </Container>
   );

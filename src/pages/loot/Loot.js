@@ -172,16 +172,16 @@ export default function Loot() {
         </div>
       </Navbar>
       <Row className='mx-1'>
-          {loading && (
-            <Spinner
-              as='div'
-              className='d-flex mt-4 ml-auto mr-auto loading-spinner'
-              animation='border'
-              role='status'
-              variant='light'
-            />
-          )}
-          <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
+        {loading && (
+          <Spinner
+            as='div'
+            className='d-flex mt-4 ml-auto mr-auto loading-spinner'
+            animation='border'
+            role='status'
+            variant='light'
+          />
+        )}
+        <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
         {filteredItems.length > 0 || loading ? null : (
           <Col xs={12} className='pt-4 pb-4 pl-5 pr-5 background-unset add-background-dark'>
             <p className='text-center font-weight-bold text-light'>
