@@ -64,13 +64,7 @@ export default function Groups() {
       </Navbar>
 
       {loading ? (
-        <Spinner
-          as='div'
-          className='d-flex mt-4 loading-spinner'
-          animation='border'
-          role='status'
-          variant='light'
-        />
+        <Spinner as='div' className='d-flex mt-4 loading-spinner' animation='border' role='status' variant='light' />
       ) : (
         <>
           {sortedGroups.map((group, idx) => (

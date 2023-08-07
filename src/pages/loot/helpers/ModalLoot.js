@@ -49,9 +49,9 @@ export default function ModalLoot({ item = '' }) {
   };
 
   const checkItemValidations = () => {
-    if (!nameRef.current.value) {
+    if (!nameRef.current.value.trim()) {
       setItemValidations('Item name is required!');
-      return;
+      return false;
     }
     if (!/^\d+$/.test(qtyRef.current.value) && qtyRef.current.value !== '') {
       setItemValidations('Item quantity must be a positive number!');
@@ -129,10 +129,9 @@ export default function ModalLoot({ item = '' }) {
   };
 
   useEffect(() => {
-    setQuillValue(item?.itemDesc || '')
-  }, [item])
+    setQuillValue(item?.itemDesc || '');
+  }, [item]);
   
-
   return (
     <>
       {item ? (
@@ -166,7 +165,7 @@ export default function ModalLoot({ item = '' }) {
           ) : (
             <div>
               <Modal.Body>
-                <Row>
+                <Row className='mb-2'>
                   {!item && (
                     <Col xs={2} className='pr-0'>
                       <DropdownAddItem setSearchSRD={setSearchSRD} />
@@ -198,7 +197,7 @@ export default function ModalLoot({ item = '' }) {
                   </Col>
                 </Row>
 
-                <Row>
+                <Row className='mb-2'>
                   <Col xs={5}>
                     <Form.Group controlId='itemCharge'>
                       <Form.Control
@@ -232,29 +231,35 @@ export default function ModalLoot({ item = '' }) {
                   </Col>
                 </Row>
 
-                <Form.Group controlId='itemDesc'>
-                  <QuillInput
-                    defaultValue={SRDContent?.desc}
-                    value={quillValue}
-                    setValue={setQuillValue}
-                    placeholder='Item description'
-                  />
-                </Form.Group>
+                <Row className='mb-2'>
+                  <Form.Group controlId='itemDesc'>
+                    <QuillInput
+                      defaultValue={SRDContent?.desc}
+                      value={quillValue}
+                      setValue={setQuillValue}
+                      placeholder='Item description'
+                    />
+                  </Form.Group>
+                </Row>
 
-                <Form.Group controlId='itemTags'>
-                  <Form.Control
-                    data-cy='item-tags'
-                    ref={tagsRef}
-                    type='text'
-                    defaultValue={(item && item.itemTags) || SRDContent.type}
-                    placeholder='Enter searchable item tags here'
-                  />
-                </Form.Group>
+                <Row className='mb-2'>
+                  <Form.Group controlId='itemTags'>
+                    <Form.Control
+                      data-cy='item-tags'
+                      ref={tagsRef}
+                      type='text'
+                      defaultValue={(item && item.itemTags) || SRDContent.type}
+                      placeholder='Enter searchable item tags here'
+                    />
+                  </Form.Group>
+                </Row>
 
-                <Form.Group controlId='itemOwner'>
-                  <ItemOwnerSelect itemOwners={itemOwners} setState={setItemOwner} value={itemOwner} />
-                </Form.Group>
-                {itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}
+                <Row className='mb-2'>
+                  <Form.Group controlId='itemOwner'>
+                    <ItemOwnerSelect itemOwners={itemOwners} setState={setItemOwner} value={itemOwner} />
+                  </Form.Group>
+                  <Col className='mt-2'>{itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}</Col>
+                </Row>
               </Modal.Body>
 
               <Modal.Footer className='justify-content-end'>

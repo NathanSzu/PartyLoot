@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Col, Offcanvas, Row } from 'react-bootstrap';
-import QuillDisplay from '../common/QuillDisplay';
-import { AuthContext } from '../../utils/contexts/AuthContext';
-import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
+import QuillDisplay from '../../common/QuillDisplay';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export function DetailsPanelTrigger({ item, setShow, setItem }) {
   const show = () => {
@@ -58,9 +58,9 @@ export function DetailsPanelDisplay({ show, setShow, item }) {
         <Row>
           <Col className='border-end'>
             <p className='m-0'>
-              Types: <br />
-              {item.category &&
-                item.category.map((type) => (
+              Categories: <br />
+              {item.categories &&
+                item.categories.map((type) => (
                   <span key={type} className='badge rounded-pill background-dark me-1'>
                     {itemMetadata.categories[type]}
                   </span>

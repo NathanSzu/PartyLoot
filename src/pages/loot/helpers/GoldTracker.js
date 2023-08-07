@@ -64,11 +64,11 @@ export default function GoldTracker() {
   return (
     <>
       <TagEditor allTags={allTags} colorTags={colorTags} show={showTagEditor} handleClose={handleClose} />
-      <div class='accordion accordion-flush' id='gold-tracker-accordion'>
-        <div class='accordion-item clear-background'>
-          <h2 class='accordion-header' id='goldTrackerHeading'>
+      <div className='accordion accordion-flush' id='gold-tracker-accordion'>
+        <div className='accordion-item clear-background'>
+          <h2 className='accordion-header' id='goldTrackerHeading'>
             <button
-              class='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed'
+              className='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed'
               type='button'
               data-bs-toggle='collapse'
               data-bs-target='#collapseOne'
@@ -90,11 +90,11 @@ export default function GoldTracker() {
           </h2>
           <div
             id='collapseOne'
-            class='accordion-collapse collapse'
+            className='accordion-collapse collapse'
             aria-labelledby='goldTrackerHeading'
             data-bs-parent='#gold-tracker-accordion'
           >
-            <div class='accordion-body background-light'>
+            <div className='accordion-body background-light'>
               <Row>
                 {currencyKeys.map((currencyKey, idx) => (
                   <GoldInput

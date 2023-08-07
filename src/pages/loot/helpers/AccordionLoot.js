@@ -6,12 +6,12 @@ import QuillDisplay from '../../common/QuillDisplay';
 
 export default function AccordionLoot({ filteredItems, itemOwners }) {
   return (
-    <div class='accordion accordion-flush p-0' id='loot-accordion'>
+    <div className='accordion accordion-flush p-0' id='loot-accordion'>
       {filteredItems.map((item) => (
-        <div class='accordion-item rounded' key={item.id}>
-          <h2 class='accordion-header' id='lootAccordionHeading'>
+        <div className='accordion-item rounded' key={item.id}>
+          <h2 className='accordion-header' id='lootAccordionHeading'>
             <button
-              class='rounded border-top border-dark accordion-button accordion-button-loot accordion-icon-hide collapsed'
+              className='rounded border-top border-dark accordion-button accordion-button-loot accordion-icon-hide collapsed'
               type='button'
               data-bs-toggle='collapse'
               data-bs-target={`#collapse${item.id}`}
@@ -34,11 +34,11 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
           </h2>
           <div
             id={`collapse${item.id}`}
-            class='accordion-collapse collapse'
+            className='accordion-collapse collapse'
             aria-labelledby='lootAccordionHeading'
             data-bs-parent='#loot-accordion'
           >
-            <div class='accordion-body background-light rounded-bottom'>
+            <div className='accordion-body background-light rounded-bottom'>
               <Container>
                 <Row className='pt-1 pb-1'>
                   <Col className='d-flex align-items-center border-bottom border-dark px-0'>

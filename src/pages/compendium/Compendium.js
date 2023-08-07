@@ -3,9 +3,10 @@ import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 // import fb from 'firebase';
 import { Button, Container, Row, Col, Navbar, Card } from 'react-bootstrap';
-import CompendiumList from './CompendiumList';
+import CompendiumList from './helpers/CompendiumList';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import { Filter, SettingFilter } from './helpers/Filter';
+import UserDiscoveriesControls from './helpers/UserDiscoveriesControls';
 
 export default function Compendium() {
   const { db, userRef, currentUser } = useContext(AuthContext);
@@ -22,24 +23,24 @@ export default function Compendium() {
 
   const queryRef = db
     .collection('compendium')
-    .where('category', 'array-contains-any', categoryFilter)
+    .where('categories', 'array-contains-any', categoryFilter)
     .orderBy(orderBy, 'desc');
 
   const complexQueryRef = db
     .collection('compendium')
-    .where('category', 'array-contains-any', categoryFilter)
+    .where('categories', 'array-contains-any', categoryFilter)
     .where('setting', '==', settingFilter)
     .orderBy(orderBy, 'desc');
 
   const authorQueryRef = db
     .collection('compendium')
-    .where('category', 'array-contains-any', categoryFilter)
+    .where('categories', 'array-contains-any', categoryFilter)
     .where('creatorId', '==', currentUser.uid)
     .orderBy(orderBy, 'desc');
 
   const authorComplexQueryRef = db
     .collection('compendium')
-    .where('category', 'array-contains-any', categoryFilter)
+    .where('categories', 'array-contains-any', categoryFilter)
     .where('setting', '==', settingFilter)
     .where('creatorId', '==', currentUser.uid)
     .orderBy(orderBy, 'desc');
@@ -71,6 +72,7 @@ export default function Compendium() {
   // };
 
   const getCompendium = () => {
+    setLoading(true);
     return defineQuery()
       .limit(15)
       .get()
@@ -128,6 +130,7 @@ export default function Compendium() {
   }, [itemMetadata]);
 
   useEffect(() => {
+    setCompendium([]);
     categoryFilter && getCompendium();
     settingFilter && getCompendium();
     showMyDiscoveries && getCompendium();
@@ -170,28 +173,11 @@ export default function Compendium() {
               </div>
             </div>
           </div>
-          <Card className='rounded-0 rounded-bottom background-light border-dark border-bottom-0 border-end-0 border-start-0'>
-            <Card.Header className=''>
-              <Row>
-                <Col>
-                  <p className='vertical-center'>
-                    <span className='p-2 badge rounded-pill bg-light text-dark me-1'>
-                      User | {userData?.displayName}
-                    </span>
-                  </p>
-                </Col>
-                <Col className='text-end'>
-                  <Button
-                    variant='dark'
-                    className='background-dark'
-                    onClick={() => setShowMyDiscoveries(!showMyDiscoveries)}
-                  >
-                    {showMyDiscoveries ? 'All discoveries' : 'My discoveries'}
-                  </Button>
-                </Col>
-              </Row>
-            </Card.Header>
-          </Card>
+          <UserDiscoveriesControls
+            show={showMyDiscoveries}
+            setShow={setShowMyDiscoveries}
+            displayName={userData?.displayName}
+          />
         </div>
       </Navbar>
       <CompendiumList compendium={compendium} loading={loading} />

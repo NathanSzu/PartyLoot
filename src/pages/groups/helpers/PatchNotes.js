@@ -8,7 +8,14 @@ export default function PatchNotes() {
   const { currentUser, db } = useContext(AuthContext);
 
   useEffect(() => {
-    getPatchNotes();
+    let mounted = true;
+    setTimeout(() => {
+      if (mounted) {
+        getPatchNotes();
+      }
+    }, 4000);
+
+    return () => (mounted = false);
   }, []);
 
   const [show, setShow] = useState(false);
@@ -72,7 +79,11 @@ export default function PatchNotes() {
       <Modal.Body>
         <div>
           <p>{data.description}</p>
-          {data.warning && <p><strong>{data.warning}</strong></p>}
+          {data.warning && (
+            <p>
+              <strong>{data.warning}</strong>
+            </p>
+          )}
           {data.bullets && (
             <ul>
               {data.bullets.map((bullet, idx) => (

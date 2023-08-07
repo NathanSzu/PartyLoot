@@ -10,11 +10,6 @@ export function Filter({ metadata, setState }) {
     metadata && setKeys(getKeys());
   }, [metadata]);
 
-  useEffect(() => {
-    keys && console.log(keys)
-  }, [keys])
-  
-
   return (
     <Form>
       <Form.Label>Category</Form.Label>
@@ -44,14 +39,7 @@ export function SettingFilter({ metadata, setState }) {
 
   useEffect(() => {
     metadata && setKeys(getKeys());
-    console.log(keys);
-    console.log(metadata);
   }, [metadata]);
-
-  useEffect(() => {
-    keys && console.log(keys)
-  }, [keys])
-  
 
   return (
     <Form>

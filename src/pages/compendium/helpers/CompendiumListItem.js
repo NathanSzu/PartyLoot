@@ -1,32 +1,32 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ListGroupItem, Col, Row, Button } from 'react-bootstrap';
-import { AuthContext } from '../../utils/contexts/AuthContext';
+import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { MemoizedPanelTrigger } from './DetailsPanel';
 import LikeDisplay from './LikeDisplay';
-import { SingleLineLoading } from '../common/LoadingIndicators';
+import { SingleLineLoading } from '../../common/LoadingIndicators';
 
 export function CompendiumListItem({ item, idx, setShow, setItem }) {
   const { currentUser, db } = useContext(AuthContext);
   const compendiumRef = db.collection('compendium').doc(item.id).collection('likes').doc(currentUser.uid);
 
+  const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
+    let unsubscribe;
     if (item?.id) {
-      compendiumRef
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setLiked(true);
-          } else {
-            // doc.data() will be undefined in this case
-            console.warn('No such document!');
-          }
-        })
-        .catch((error) => {
-          console.log('Error getting document:', error);
-        });
+      setLoading(true);
+      unsubscribe = compendiumRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          setLiked(true);
+        } else {
+          setLiked(false);
+        }
+        setLoading(false);
+      });
     }
+
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -34,7 +34,7 @@ export function CompendiumListItem({ item, idx, setShow, setItem }) {
       <Row>
         <Col>
           <h1 className='item-h1 m-0'>{item.itemName}</h1>
-          <LikeDisplay likeCount={item?.likeCount} fill={liked ? 'solid' : 'regular'} />
+          <LikeDisplay likeCount={item?.likeCount} liked={liked} loading={loading} setLoading={setLoading} item={item} />
         </Col>
         <MemoizedPanelTrigger item={item} setShow={setShow} setItem={setItem} />
       </Row>
@@ -48,7 +48,7 @@ export function LoadingListItem() {
       <Row>
         <Col>
           <SingleLineLoading />
-          <SingleLineLoading classProps='w-50 mt-1'/>
+          <SingleLineLoading classProps='w-50 mt-1' />
         </Col>
         <Col xs={3} className='text-end'>
           <Button className='h-100 background-dark' variant='dark' disabled>
