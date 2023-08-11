@@ -40,9 +40,9 @@ export default function BootNav() {
                 </LinkContainer>
               )}
 
-              {/* <LinkContainer to='/item-compendium' data-cy='navbar-compendium'>
+              <LinkContainer to='/item-compendium' data-cy='navbar-compendium'>
                 <Nav.Link>Compendium</Nav.Link>
-              </LinkContainer> */}
+              </LinkContainer>
 
               {/* Hides the user setting nav link if on the user setting page */}
               {location.pathname === '/user-settings' ? null : (

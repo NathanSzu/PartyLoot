@@ -28,13 +28,19 @@ export function CompendiumListItem({ item, idx, setShow, setItem }) {
 
     return () => unsubscribe();
   }, []);
-
+  
   return (
     <ListGroupItem className='rounded border-dark' key={item.id} id={`item${idx}`}>
       <Row>
         <Col>
           <h1 className='item-h1 m-0'>{item.itemName}</h1>
-          <LikeDisplay likeCount={item?.likeCount} liked={liked} loading={loading} setLoading={setLoading} item={item} />
+          <LikeDisplay
+            likeCount={item?.likeCount}
+            liked={liked}
+            loading={loading}
+            setLoading={setLoading}
+            item={item}
+          />
         </Col>
         <MemoizedPanelTrigger item={item} setShow={setShow} setItem={setItem} />
       </Row>

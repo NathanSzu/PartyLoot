@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col, Button, Card } from 'react-bootstrap';
-import RecordDiscoveryModal from './RecordDiscoveryModal';
+import { AddDiscovery } from './RecordDiscovery';
 
-export default function UserDiscoveriesControls({ show, setShow, displayName }) {
+export default function UserDiscoveriesControls({ show, setShow, displayName, getCompendium }) {
   return (
     <>
       <Card className='rounded-0 rounded-bottom background-light border-dark border-bottom-0 border-end-0 border-start-0'>
@@ -27,7 +27,7 @@ export default function UserDiscoveriesControls({ show, setShow, displayName }) 
             <Row>
               <Col>
                 <p className='m-0 text-center mx-auto fancy-font text-dark'>
-                  Tap <RecordDiscoveryModal /> to record a discovery.
+                  Tap <AddDiscovery getCompendium={getCompendium} /> to record a discovery.
                 </p>
               </Col>
             </Row>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Form, FormLabel } from 'react-bootstrap';
 
-export default function CategorySelect({ metadata, setState }) {
+export default function CategorySelect({ metadata, categories, setState }) {
   const [keys, setKeys] = useState([]);
   const [categoryArr, setCategoryArr] = useState([]);
 
@@ -20,7 +20,12 @@ export default function CategorySelect({ metadata, setState }) {
   }, [metadata]);
 
   useEffect(() => {
+    categories && setCategoryArr(categories);
+  }, [categories]);
+
+  useEffect(() => {
     setState(categoryArr);
+    console.log(categoryArr);
   }, [categoryArr]);
 
   return (
@@ -31,7 +36,12 @@ export default function CategorySelect({ metadata, setState }) {
       {keys &&
         keys.map((key) => (
           <Col key={key} xs={6}>
-            <Form.Check onChange={(e) => handleCategoryCheck(e, key)} value={key} label={metadata[key]} />
+            <Form.Check
+              defaultChecked={categoryArr.includes(key)}
+              onChange={(e) => handleCategoryCheck(e, key)}
+              value={key}
+              label={metadata[key]}
+            />
           </Col>
         ))}
     </Row>

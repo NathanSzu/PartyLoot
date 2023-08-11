@@ -2,7 +2,6 @@ import React from 'react';
 
 export default function ItemIcon({ type }) {
   const chooseIcon = () => {
-    console.log(type)
     if (type == 1) return 'fa-flask-round-potion';
     if (type == 2) return 'fa-sword';
     if (type == 3) return 'fa-bow-arrow';

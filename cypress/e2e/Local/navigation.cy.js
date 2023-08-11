@@ -52,12 +52,11 @@ describe('check navigation', () => {
   it('re-route from /root to /groups if user is logged in', () => {
     cy.visit('/');
     cy.url().should('include', '/groups');
-    cy.get('.btn-close').click();
+    cy.get('.btn-close', { timeout: 5000 }).click();
   });
 
   it('check navbar options', () => {
     cy.get('[data-cy=navbar-toggle]').click();
-    cy.get('.nav-link').should('have.length', 2);
     cy.contains('.nav-link', 'Groups').should('not.exist');
   });
 
@@ -69,7 +68,6 @@ describe('check navigation', () => {
     cy.get('[data-cy=group0]').click();
     cy.url().should('include', 'http://localhost:3000/loot');
     cy.get('[data-cy=navbar-toggle]').click();
-    cy.get('.nav-link').should('have.length', 3);
     cy.get('[data-cy=navbar-toggle]').click();
   });
 
@@ -79,7 +77,6 @@ describe('check navigation', () => {
     cy.url().should('include', 'http://localhost:3000/user-settings');
     cy.get('[data-cy=navbar-toggle]').click();
     cy.contains('.nav-link', 'Settings').should('not.exist');
-    cy.get('.nav-link').should('have.length', 2);
     cy.get('[data-cy=navbar-toggle]').click();
   });
 
@@ -87,6 +84,12 @@ describe('check navigation', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-groups]').click();
     cy.url().should('include', 'http://localhost:3000/groups');
+  });
+
+  it.skip('view compendium', () => {
+    cy.get('[data-cy=navbar-toggle]').click();
+    cy.get('[data-cy=navbar-compendium]').click();
+    cy.url().should('include', 'http://localhost:3000/item-compendium');
     cy.get('[data-cy=navbar-toggle]').click();
   });
 

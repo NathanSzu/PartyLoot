@@ -15,16 +15,19 @@ export default function LikeDisplay({
   const { currentUser, db } = useContext(AuthContext);
 
   const [fill, setFill] = useState('regular');
+  const [likeModifier, setLikeModifier] = useState(0);
 
   const itemRef = db.collection('compendium').doc(item.id);
   const collectionRef = itemRef.collection('likes');
 
   const setLikeStatus = () => {
+    setLoading(true);
     liked ? removeLike() : addLike();
   };
 
   const addLike = () => {
-    setLoading(true);
+    likeModifier === 0 ? setLikeModifier(1) : setLikeModifier(0);
+    setFill('solid');
     collectionRef
       .doc(currentUser.uid)
       .set({ timestamp: fb.firestore.FieldValue.serverTimestamp() })
@@ -37,7 +40,8 @@ export default function LikeDisplay({
   };
 
   const removeLike = () => {
-    setLoading(true);
+    likeModifier === 0 ? setLikeModifier(-1) : setLikeModifier(0);
+    setFill('regular');
     collectionRef
       .doc(currentUser.uid)
       .delete()
@@ -60,7 +64,8 @@ export default function LikeDisplay({
         variant='link text-decoration-none text-dark px-0 pt-1 pb-0'
         onClick={() => setLikeStatus()}
       >
-        <i className={`fa-${fill} fa-heart`} style={{ color: color }} /> {likeCount} {badges.length > 0 && '| Category'}
+        <i className={`fa-${fill} fa-heart`} style={{ color: color }} /> {likeCount + likeModifier}{' '}
+        {badges.length > 0 && '| Category'}
       </Button>
     </p>
   );

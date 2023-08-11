@@ -3,7 +3,7 @@ import { ListGroup } from 'react-bootstrap';
 import { MemoizedListItem, LoadingListItem, EndOfList } from './CompendiumListItem';
 import { DetailsPanelDisplay } from './DetailsPanel';
 
-export default function CompendiumList({ compendium, loading }) {
+export default function CompendiumList({ compendium, loading, getCompendium }) {
   const [show, setShow] = useState(false);
   const [item, setItem] = useState({});
   
@@ -11,7 +11,7 @@ export default function CompendiumList({ compendium, loading }) {
   return (
     <ListGroup className='pt-2'>
       {compendium?.map((item, idx) => (
-        <MemoizedListItem key={idx} idx={idx} item={item} show={show} setShow={setShow} setItem={setItem} />
+        <MemoizedListItem key={idx} idx={idx} item={item} setShow={setShow} setItem={setItem} />
       ))}
       {loading ? (
         <>
@@ -22,7 +22,7 @@ export default function CompendiumList({ compendium, loading }) {
       ) : (
         <EndOfList />
       )}
-      <DetailsPanelDisplay show={show} setShow={setShow} item={item} />
+      <DetailsPanelDisplay show={show} setShow={setShow} item={item} getCompendium={getCompendium} />
     </ListGroup>
   );
 }

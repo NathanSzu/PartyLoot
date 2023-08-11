@@ -32,7 +32,7 @@ Cypress.Commands.add('login', (email = 'test@test.com', password = 'password') =
   cy.get('[data-cy=login-password]').type(password);
   cy.get('[data-cy=login]').click();
   cy.url().should('include', '/groups');
-  cy.get('.btn-close').click();
+  cy.get('.btn-close', { timeout: 10000 }).click();
 });
 
 Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
@@ -43,7 +43,7 @@ Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
 
 Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2') => {
     cy.visit('/groups');
-    cy.get('.btn-close').click();
+    cy.get('.btn-close', { timeout: 10000 }).click();
     cy.get('[data-cy=edit-group]').eq(0).click();
     cy.get('[data-cy=delete]').click();
     cy.get('[data-cy=confirm-delete]').click();

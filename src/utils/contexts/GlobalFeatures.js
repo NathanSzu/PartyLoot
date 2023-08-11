@@ -24,9 +24,10 @@ export const GlobalFeaturesProvider = ({ children }) => {
 
   const isVisible = (elementSelector) => {
     if (!elementSelector) {
-      return false
+      return false;
     }
     const element = document.querySelector(elementSelector);
+    if (!element) return;
     const rect = element.getBoundingClientRect();
 
     const isInViewport =
@@ -105,7 +106,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
         setExpandNavbar,
         setToastHeader,
         writeHistoryEvent,
-        itemMetadata
+        itemMetadata,
       }}
     >
       {children}

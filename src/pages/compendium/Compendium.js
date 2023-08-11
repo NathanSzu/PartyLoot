@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 // import fb from 'firebase';
-import { Button, Container, Row, Col, Navbar, Card } from 'react-bootstrap';
+import { Container, Row, Col, Navbar } from 'react-bootstrap';
 import CompendiumList from './helpers/CompendiumList';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import { Filter, SettingFilter } from './helpers/Filter';
@@ -54,23 +54,6 @@ export default function Compendium() {
     }
   };
 
-  // const seedCompendium = () => {
-  //   for (let i = 0; i < 200; i++) {
-  //     let data = {
-  // category: [Math.ceil(Math.random() * 5).toString()],
-  //       created: fb.firestore.FieldValue.serverTimestamp(),
-  //       creatorId: 'FSoy7RhYIwMOBvgxpH9lMns7aNf1',
-  //       itemDesc: `Item description ${i}!`,
-  //       itemName: `Item name ${i}`,
-  //       likeCount: 1,
-  //       setting: '2345hdgj',
-
-  //     };
-  //     db.collection('compendium').add(data);
-  //   }
-
-  // };
-
   const getCompendium = () => {
     setLoading(true);
     return defineQuery()
@@ -90,9 +73,6 @@ export default function Compendium() {
         var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         lastVisible && setStartAfter(lastVisible);
         lastVisible ? setCompendium([...results]) : setCompendium([]);
-      })
-      .catch((error) => {
-        console.error('Error viewing compendium: ', error);
       });
   };
 
@@ -115,9 +95,6 @@ export default function Compendium() {
         var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         lastVisible && setStartAfter(lastVisible);
         lastVisible && setCompendium([...compendium, ...results]);
-      })
-      .catch((error) => {
-        console.error('Error viewing compendium: ', error);
       });
   };
 
@@ -177,10 +154,11 @@ export default function Compendium() {
             show={showMyDiscoveries}
             setShow={setShowMyDiscoveries}
             displayName={userData?.displayName}
+            getCompendium={getCompendium}
           />
         </div>
       </Navbar>
-      <CompendiumList compendium={compendium} loading={loading} />
+      <CompendiumList compendium={compendium} loading={loading} getCompendium={getCompendium} />
     </Container>
   );
 }

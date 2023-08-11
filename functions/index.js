@@ -3,18 +3,13 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-const {
-  onDocumentWritten,
-  // onDocumentCreated,
-  // onDocumentUpdated,
-  // onDocumentDeleted,
-} = require('firebase-functions/v2/firestore');
-
-const { onRequest } = require('firebase-functions/v2/https');
-const logger = require('firebase-functions/logger');
+const { logger } = require('firebase-functions');
+// const { onRequest } = require('firebase-functions/v2/https');
+const { onDocumentCreated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 initializeApp();
 const db = getFirestore();
@@ -22,22 +17,40 @@ const db = getFirestore();
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
 
-exports.helloWorld = onRequest((request, response) => {
-  logger.info('Hello logs!', { structuredData: true });
-  console.log('HELLO THERE')
-  response.send('Hello from Firebase!');
+exports.docCreatedTest = onDocumentCreated('compendium/{item}/likes/{like}', (event) => {
+  const snapshot = event.data;
+  if (!snapshot) {
+    logger.log('No data associated with the event');
+    return;
+  }
+
+  const ref = snapshot.ref;
+  const itemRef = ref.parent.parent;
+  const itemRefId = itemRef.id;
+
+  db.doc(`compendium/${itemRefId}`)
+    .set({ likeCount: FieldValue.increment(1) }, { merge: true })
+    .catch((err) => {
+      logger.error(err);
+      return null;
+    });
 });
 
-exports.recordLikeWrite = onDocumentWritten('compendium/{item}/likes/{like}', (event) => {
-  const data = event.data.after.data();
+exports.docRemovedTest = onDocumentDeleted('compendium/{item}/likes/{like}', (event) => {
+  const snapshot = event.data;
+  if (!snapshot) {
+    logger.log('No data associated with the event');
+    return;
+  }
 
-  logger.info('Afterdata');
-  logger.info(data);
-  console.log(data);
-  db.doc('testLog/testDocWrite').set({ count: 0 });
-});
+  const ref = snapshot.ref;
+  const itemRef = ref.parent.parent;
+  const itemRefId = itemRef.id;
 
-exports.logTest = onDocumentWritten('compendium/{item}', (event) => {
-  console.log('console log');
-  logger.info('logger info');
+  db.doc(`compendium/${itemRefId}`)
+    .set({ likeCount: FieldValue.increment(-1) }, { merge: true })
+    .catch((err) => {
+      logger.error(err);
+      return null;
+    });
 });
