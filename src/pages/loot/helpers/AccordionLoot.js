@@ -20,8 +20,8 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
             >
               <Container>
                 <Row className='justify-content-end'>
-                  <Col className=''>
-                    <h1 className='item-h1 m-0 pt-1 pb-1'>{item.itemName}</h1>
+                  <Col className='ps-0'>
+                    <h1 className='fancy-font fs-sm-deco m-0 py-0'>{item.itemName}</h1>
                   </Col>
                   {item?.itemQty > 0 && (
                     <Col xs={2} className='p-0'>
@@ -42,11 +42,11 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
               <Container>
                 <Row className='pt-1 pb-1'>
                   <Col className='d-flex align-items-center border-bottom border-dark px-0'>
-                    <h2 className='item-h2 m-0'>Description</h2>
+                    <h2 className='fancy-font fs-sm-deco m-0'>Description</h2>
                   </Col>
                   {item.currCharges && item.maxCharges && (
                     <Col className='d-flex align-items-center border-bottom border-dark pl-0'>
-                      <h2 className='item-h2 mb-1 mt-1'>
+                      <h2 className='fancy-font fs-sm-deco mb-1 mt-1'>
                         {item.currCharges} / {item.maxCharges} <img alt='Charges' src='APPIcons/charge.svg' />
                       </h2>
                     </Col>

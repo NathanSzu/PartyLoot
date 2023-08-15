@@ -25,14 +25,14 @@ export default function BootNav() {
   return (
     <Navbar className='p-2' bg='light' expand='false' collapseOnSelect>
       <LinkContainer to='/groups'>
-        <Navbar.Brand className='fancy-font'>Party Loot</Navbar.Brand>
+        <Navbar.Brand className='fancy-font ps-2 py-0 fs-lg-deco'>Party Loot</Navbar.Brand>
       </LinkContainer>
       {/* Hides the nav links if no user is logged in */}
       {!currentUser ? null : (
         <>
           <Navbar.Toggle aria-controls='basic-navbar-nav' data-cy='navbar-toggle' />
           <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='ml-auto'>
+            <Nav className='ps-2'>
               {/* Hides the groups nav link if on the groups page */}
               {location.pathname === '/groups' ? null : (
                 <LinkContainer to='/groups' data-cy='navbar-groups'>

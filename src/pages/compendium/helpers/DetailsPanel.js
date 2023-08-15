@@ -56,7 +56,7 @@ export function DetailsPanelDisplay({ show, setShow, item, getCompendium }) {
   return (
     <Offcanvas show={show} onHide={() => setShow(false)}>
       <Offcanvas.Header closeButton>
-        <Offcanvas.Title>{item?.itemName}</Offcanvas.Title>
+        <Offcanvas.Title className='fancy-font fs-lg-deco'>{item?.itemName}</Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
         {showEditTrigger && !showEditSection && <EditDiscoveryTrigger setShow={setShowEditSection} />}

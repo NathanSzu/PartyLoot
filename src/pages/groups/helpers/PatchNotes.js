@@ -73,7 +73,7 @@ export default function PatchNotes() {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <h2 className='groups-h2 mb-0'>{data.title}</h2>
+        <h2 className='fs-md-deco mb-0'>{data.title}</h2>
       </Modal.Header>
 
       <Modal.Body>

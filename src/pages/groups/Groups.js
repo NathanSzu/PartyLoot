@@ -57,7 +57,7 @@ export default function Groups() {
 
       <Navbar sticky='top' className='theme1-backer rounded my-2' id='sticky-group-add'>
         <Col>
-          <p className='text-center fancy-font text-light m-0'>
+          <p className='text-center fancy-font fs-md-deco text-light m-0'>
             Tap <AddGroup /> to create a new group.
           </p>
         </Col>
@@ -69,13 +69,13 @@ export default function Groups() {
         <>
           {sortedGroups.map((group, idx) => (
             <Row key={idx} className='border-top border-dark background-light mx-1 rounded'>
-              <Col className='groups-overflow'>
-                <LinkContainer to='/loot'>
+              <Col className='groups-overflow px-3 py-2'>
+                <LinkContainer to='/loot' className='p-0'>
                   <Button
                     id={group.id}
                     data-cy={`group${idx}`}
                     variant='outline'
-                    className='w-100 text-start p-3 groups-h1 fancy-font border-0'
+                    className='w-100 text-start fs-md-deco fancy-font border-0'
                     onClick={(e) => {
                       setCurrentGroup(e.target.id);
                     }}

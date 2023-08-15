@@ -26,7 +26,7 @@ export default function UserDiscoveriesControls({ show, setShow, displayName, ge
           <Card.Header>
             <Row>
               <Col>
-                <p className='m-0 text-center mx-auto fancy-font text-dark'>
+                <p className='m-0 text-center fs-md-deco mx-auto fancy-font text-dark'>
                   Tap <AddDiscovery getCompendium={getCompendium} /> to record a discovery.
                 </p>
               </Col>

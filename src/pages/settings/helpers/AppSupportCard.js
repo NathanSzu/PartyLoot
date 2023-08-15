@@ -8,7 +8,7 @@ export default function AccountSettingsCard() {
     <Col md={8} className='mx-auto'>
       <Card>
         <Card.Header>
-          <h1 className='text-center settings-h1'>Help support us!</h1>
+          <h1 className='text-center fancy-font fs-md-deco m-0'>Help support us!</h1>
         </Card.Header>
         <Card.Body>
           <Card.Text>Here are some awesome ways you can help us make this application the best it can be!</Card.Text>

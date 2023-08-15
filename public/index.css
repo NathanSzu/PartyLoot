@@ -7,6 +7,9 @@
   --danger-theme: #ce6060;
   --success-theme: #5cc251;
   --border-color-1: rgb(33, 37, 41);
+  --fs-md-deco: 24px;
+  --fs-lg-deco: 32px;
+  --fs-sm-deco: 20px;
   background-color: var(--theme1);
   overflow: hidden;
 }
@@ -48,6 +51,18 @@ body::after {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.fs-md-deco {
+  font-size: var(--fs-md-deco);
+}
+
+.fs-lg-deco {
+  font-size: var(--fs-lg-deco);
+}
+
+.fs-sm-deco {
+  font-size: var(--fs-sm-deco);
 }
 
 .quill-display > .ql-container > .ql-editor {

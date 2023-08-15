@@ -21,7 +21,7 @@ export default function History() {
     <Container className='lazy-scroll-container'>
       <Navbar sticky='top' className='theme1-backer rounded p-3 my-2' id='sticky-history-menu'>
         <Col>
-          <h1 className='groups-h1 m-0 text-light fancy-font'>History</h1>
+          <h1 className='m-0 text-light fancy-font fs-md-deco'>History</h1>
         </Col>
         <Col xs={2} className='text-end'>
           <LinkContainer to='/loot' data-cy='button-loot'>

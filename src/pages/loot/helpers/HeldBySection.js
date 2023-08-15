@@ -10,7 +10,7 @@ export default function HeldBySection({ item, itemOwners }) {
     <>
       <Row className='border-bottom border-dark py-1'>
         <Col className='d-flex align-items-center px-0'>
-          <h2 className='item-h2 mb-1 mt-1'>Held By</h2>
+          <h2 className='fancy-font fs-sm-deco mb-1 mt-1'>Held By</h2>
         </Col>
       </Row>
       <Row>

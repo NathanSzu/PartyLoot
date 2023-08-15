@@ -30,7 +30,7 @@ export default function AccountSettingsCard() {
     <Col md={8} className='mx-auto'>
       <Card>
         <Card.Header>
-          <h1 className='text-center settings-h1'>Account Settings</h1>
+          <h1 className='text-center fancy-font fs-md-deco m-0'>Account Settings</h1>
         </Card.Header>
         <Card.Body>
           <Card.Title>Username: {userData?.displayName}</Card.Title>

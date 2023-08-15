@@ -84,7 +84,7 @@ export default function GoldTracker() {
                   variant='light'
                 />
               ) : (
-                <h1 className='item-h1 m-0 text-center'>{itemOwnerName} Gold</h1>
+                <h1 className='fancy-font fs-md-deco m-0 text-center'>{itemOwnerName} Gold</h1>
               )}
             </button>
           </h2>

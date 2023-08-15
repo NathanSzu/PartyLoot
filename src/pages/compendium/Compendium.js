@@ -121,7 +121,7 @@ export default function Compendium() {
             <div className='accordion-item clear-background'>
               <h2 className='accordion-header' id='goldTrackerHeading'>
                 <button
-                  className='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed fancy-font'
+                  className='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed fancy-font fs-md-deco'
                   type='button'
                   data-bs-toggle='collapse'
                   data-bs-target='#collapseOne'

@@ -33,7 +33,7 @@ export function CompendiumListItem({ item, idx, setShow, setItem }) {
     <ListGroupItem className='rounded border-dark' key={item.id} id={`item${idx}`}>
       <Row>
         <Col>
-          <h1 className='item-h1 m-0'>{item.itemName}</h1>
+          <h1 className='fancy-font fs-sm-deco m-0'>{item.itemName}</h1>
           <LikeDisplay
             likeCount={item?.likeCount}
             liked={liked}
@@ -71,7 +71,7 @@ export function EndOfList() {
     <ListGroupItem className='rounded border-dark my-2'>
       <Row>
         <Col>
-          <h1 className='item-h1 m-0 text-center'>No more items</h1>
+          <h1 className='fancy-font fs-sm-deco m-0 text-center'>No more items</h1>
         </Col>
       </Row>
     </ListGroupItem>
