@@ -23,11 +23,13 @@ export default function Compendium() {
 
   const queryRef = db
     .collection('compendium')
+    .where('itemStatus', '==', 'published')
     .where('categories', 'array-contains-any', categoryFilter)
     .orderBy(orderBy, 'desc');
 
   const complexQueryRef = db
     .collection('compendium')
+    .where('itemStatus', '==', 'published')
     .where('categories', 'array-contains-any', categoryFilter)
     .where('setting', '==', settingFilter)
     .orderBy(orderBy, 'desc');

@@ -33,10 +33,6 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
     item && setDiscoveryCategories(item.categories);
   }, [item]);
 
-  useEffect(() => {
-    console.log(discoveryRecord);
-  }, [discoveryRecord]);
-
   const nameRef = useRef();
   const chargeRef = useRef();
 
@@ -85,15 +81,6 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
           />
         </Form.Group>
       </Row>
-      {itemValidations && (
-        <Row>
-          <Col>
-            <Alert className='mb-2' variant='warning'>
-              {itemValidations}
-            </Alert>
-          </Col>
-        </Row>
-      )}
       <CategorySelect
         metadata={itemMetadata?.categories}
         categories={item?.categories}
@@ -112,6 +99,15 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
           </Alert>
         </Col>
       </Row>
+      {itemValidations && (
+        <Row>
+          <Col>
+            <Alert className='mb-2' variant='warning'>
+              {itemValidations}
+            </Alert>
+          </Col>
+        </Row>
+      )}
     </>
   );
 }
@@ -168,19 +164,21 @@ export function AddDiscovery({ getCompendium }) {
     return true;
   };
 
-  const addDiscovery = (e) => {
+  const addDiscovery = (e, publish = false) => {
     e.preventDefault();
     if (!checkItemValidations()) return;
     setLoading(true);
     db.collection('compendium')
       .add({
         ...discoveryRecord,
+        itemStatus: publish ? 'published' : 'draft',
         creatorId: currentUser.uid,
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
         setLoading(false);
         handleClose();
+        getCompendium();
         setToastHeader('Item recorded');
         setToastContent(`You have successfully recorded your item "${discoveryRecord.itemName}" in the compendium.`);
         toggleShowToast();
@@ -213,9 +211,16 @@ export function AddDiscovery({ getCompendium }) {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button disabled={loading} variant='dark' type='submit' onClick={(e) => addDiscovery(e)}>
-              Add to compendium
-            </Button>
+            <Col>
+              <Button disabled={loading} className='background-success w-100' variant='success' type='submit' onClick={(e) => addDiscovery(e, true)}>
+                Add to compendium
+              </Button>
+            </Col>
+            <Col>
+              <Button disabled={loading} className='w-100' variant='warning' type='submit' onClick={(e) => addDiscovery(e)}>
+                Save draft
+              </Button>
+            </Col>
           </Modal.Footer>
         </Form>
       </Modal>
@@ -226,7 +231,7 @@ export function AddDiscovery({ getCompendium }) {
 export function EditDiscoveryTrigger({ setShow }) {
   return (
     <Row>
-      <Col className='px-0 mx-1 text-center'>
+      <Col className='px-0 mx-2 text-center'>
         <Alert className='py-2'>
           <p className='mb-0'>You reported this discovery!</p>
           <Button variant='link' onClick={() => setShow(true)}>
@@ -238,8 +243,9 @@ export function EditDiscoveryTrigger({ setShow }) {
   );
 }
 
-export function EditDiscoverySection({ item, setShow, getCompendium }) {
+export function EditDiscoverySection({ item, getCompendium }) {
   const { db } = useContext(AuthContext);
+  const { setToastHeader, setToastContent, toggleShowToast } = useContext(GlobalFeatures);
 
   const [itemValidations, setItemValidations] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -276,7 +282,7 @@ export function EditDiscoverySection({ item, setShow, getCompendium }) {
     return true;
   };
 
-  const editDiscovery = (e) => {
+  const editDiscovery = (e, publish = false) => {
     e.preventDefault();
     if (!checkItemValidations()) return;
     setLoading(true);
@@ -285,14 +291,21 @@ export function EditDiscoverySection({ item, setShow, getCompendium }) {
       .set(
         {
           ...discoveryRecord,
+          itemStatus: publish ? 'published' : 'draft',
           lastUpdate: fb.firestore.FieldValue.serverTimestamp(),
         },
         { merge: true }
       )
       .then(() => {
         getCompendium();
-        setShow(false);
         setLoading(false);
+        setToastHeader('Item changes recorded');
+        setToastContent(
+          `Changes to your item "${discoveryRecord.itemName}" have been recorded and it has been ${
+            publish ? 'published to the compendium' : 'saved as a draft'
+          }.`
+        );
+        toggleShowToast();
       })
       .catch((err) => {
         setLoading(false);
@@ -308,10 +321,27 @@ export function EditDiscoverySection({ item, setShow, getCompendium }) {
         setDiscoveryRecord={setDiscoveryRecord}
         item={item}
       />
-      <Row>
+      <Row className='pt-2'>
         <Col>
-          <Button disabled={loading} variant='dark' type='submit' onClick={(e) => editDiscovery(e)}>
-            Save changes
+          <Button
+            disabled={loading}
+            className='w-100 background-success'
+            variant='success'
+            type='submit'
+            onClick={(e) => editDiscovery(e, true)}
+          >
+            Save and publish
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            disabled={loading}
+            className='w-100'
+            variant='warning'
+            type='submit'
+            onClick={(e) => editDiscovery(e)}
+          >
+            Save draft
           </Button>
         </Col>
       </Row>

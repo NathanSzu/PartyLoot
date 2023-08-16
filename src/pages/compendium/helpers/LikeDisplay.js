@@ -57,6 +57,10 @@ export default function LikeDisplay({
     liked ? setFill('solid') : setFill('regular');
   }, [liked]);
 
+  useEffect(() => {
+    setLikeModifier(0);
+  }, [item])
+
   return (
     <p className='m-0'>
       <Button

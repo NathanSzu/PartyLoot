@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ListGroupItem, Col, Row, Button } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import { MemoizedPanelTrigger } from './DetailsPanel';
+import { MemoizedPanel } from './DetailsPanel';
 import LikeDisplay from './LikeDisplay';
 import { SingleLineLoading } from '../../common/LoadingIndicators';
 
-export function CompendiumListItem({ item, idx, setShow, setItem }) {
+export function CompendiumListItem({ item, idx, getCompendium }) {
   const { currentUser, db } = useContext(AuthContext);
   const compendiumRef = db.collection('compendium').doc(item.id).collection('likes').doc(currentUser.uid);
 
@@ -28,7 +28,7 @@ export function CompendiumListItem({ item, idx, setShow, setItem }) {
 
     return () => unsubscribe();
   }, []);
-  
+
   return (
     <ListGroupItem className='rounded border-dark' key={item.id} id={`item${idx}`}>
       <Row>
@@ -42,7 +42,7 @@ export function CompendiumListItem({ item, idx, setShow, setItem }) {
             item={item}
           />
         </Col>
-        <MemoizedPanelTrigger item={item} setShow={setShow} setItem={setItem} />
+        <MemoizedPanel item={item} getCompendium={getCompendium} />
       </Row>
     </ListGroupItem>
   );

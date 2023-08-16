@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Form, FormLabel } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
 
 export default function CategorySelect({ metadata, categories, setState }) {
   const [keys, setKeys] = useState([]);
@@ -25,7 +25,6 @@ export default function CategorySelect({ metadata, categories, setState }) {
 
   useEffect(() => {
     setState(categoryArr);
-    console.log(categoryArr);
   }, [categoryArr]);
 
   return (
