@@ -171,6 +171,7 @@ export function AddDiscovery({ getCompendium }) {
     db.collection('compendium')
       .add({
         ...discoveryRecord,
+        itemNameLower: discoveryRecord.itemName.toLowerCase(),
         itemStatus: publish ? 'published' : 'draft',
         creatorId: currentUser.uid,
         created: fb.firestore.FieldValue.serverTimestamp(),
@@ -291,6 +292,7 @@ export function EditDiscoverySection({ item, getCompendium }) {
       .set(
         {
           ...discoveryRecord,
+          itemNameLower: discoveryRecord.itemName.toLowerCase(),
           itemStatus: publish ? 'published' : 'draft',
           lastUpdate: fb.firestore.FieldValue.serverTimestamp(),
         },
