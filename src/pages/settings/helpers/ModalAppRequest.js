@@ -83,7 +83,7 @@ export default function ModalAppRequest() {
           clearModal();
         }}
       >
-        <Form className='rounded'>
+        <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
             <Modal.Title>Request Feature / Report Bug</Modal.Title>
           </Modal.Header>

@@ -169,7 +169,7 @@ export default function ItemSale({ item, itemOwners }) {
       </Button>
 
       <Modal size='lg' show={show} onHide={handleClose}>
-        <Form className=' rounded'>
+        <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
             <Modal.Title className='p-1'>Sell {item.itemName}?</Modal.Title>
           </Modal.Header>

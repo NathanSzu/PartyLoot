@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Form, Button, Col, Row, Card, ListGroup, Spinner } from 'react-bootstrap';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const searchRef = useRef('');
+  const { formatItemDescription } = useContext(GlobalFeatures);
 
   let timer;
 
@@ -36,27 +38,9 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
   const selectItem = (selection) => {
     setSRDContent({
       name: selection.name,
-      desc: formatDescription(selection),
+      desc: formatItemDescription(selection),
     });
     setSearchSRD(false);
-  };
-
-  const formatDescription = (selection) => {
-    if (selection?.itemDesc) return selection.itemDesc;
-    if (selection?.desc) {
-      let modifiedStr = selection.desc
-        .replace('**_Curse_**. ', '</p><br><p><strong>Cursed: </strong>')
-        .replace('_remove curse_', '<u>remove curse</u>');
-
-      return `<p><em>${selection.type} ${selection.requires_attunement}</em></p><br><p>${modifiedStr}</p>`;
-    }
-    if (selection?.ac_string) {
-      return `<p><em>${selection.category}</em></p><br><p><strong>AC:</strong> ${selection.ac_string}</p>`;
-    }
-    if (selection?.damage_type) {
-      let properties = selection.properties.length > 0 ? selection.properties.join(', ') : '';
-      return `<p><em>${selection.category}</em></p><p><em>${properties}</em></p><br><p>${selection.damage_dice} ${selection.damage_type} damage</p>`;
-    }
   };
 
   const formatSource = (source) => {
@@ -66,7 +50,7 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
   };
 
   return (
-    <Form className='my-3'>
+    <Form className='my-3' onSubmitCapture={(e) => e.preventDefault()}>
       <Row className='px-3'>
         <Col>
           <Form.Group className='mb-3' controlId='formBasicEmail'>
@@ -87,7 +71,7 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
               <Col className='text-end'>Source</Col>
             </Row>
           </ListGroup.Item>
-          {items.length < 1 && (
+          {items.length < 1 && !loading && (
             <ListGroup.Item variant='secondary' className='text-center'>
               No results found...
             </ListGroup.Item>

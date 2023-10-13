@@ -65,8 +65,8 @@ export function DetailsPanel({ item, getCompendium }) {
           {!showEditSection ? (
             <>
               <Row>
-                <Col className='bg-secondary bg-gradient bg-opacity-25 shadow-sm rounded mb-4 mx-2'>
-                  <QuillDisplay className='p-0' value={item?.itemDesc} />
+                <Col className='p-3 bg-secondary bg-gradient bg-opacity-25 shadow-sm rounded mb-4 mx-2'>
+                  <QuillDisplay value={item?.itemDesc} />
                 </Col>
               </Row>
               {showEditTrigger && !showEditSection && <EditDiscoveryTrigger setShow={setShowEditSection} />}
@@ -108,4 +108,57 @@ export function DetailsPanel({ item, getCompendium }) {
   );
 }
 
+export function OglDetailsPanel({ item }) {
+  const { formatItemDescription } = useContext(GlobalFeatures);
+  
+
+  return (
+    <>
+      <Col xs={3} className='text-end'>
+        <Button
+          className='h-100 background-dark'
+          variant='dark'
+          data-bs-toggle='offcanvas'
+          data-bs-target={`#canvas-${item.slug}`}
+          aria-controls={`canvas-${item.slug}`}
+        >
+          View
+        </Button>
+      </Col>
+      <div
+        className='offcanvas offcanvas-start'
+        data-bs-backdrop='static'
+        tabIndex='-1'
+        id={`canvas-${item.slug}`}
+        aria-labelledby='staticBackdropLabel'
+      >
+        <div className='offcanvas-header'>
+          <h5 className='offcanvas-title fancy-font fs-md-deco' id='staticBackdropLabel'>
+            {item?.name}
+          </h5>
+          <button type='button' className='btn-close' data-bs-dismiss='offcanvas' aria-label='Close'></button>
+        </div>
+        <div className='offcanvas-body'>
+          <Row>
+            <Col className='p-3 bg-secondary bg-gradient bg-opacity-25 shadow-sm rounded mb-4 mx-2'>
+              <QuillDisplay value={formatItemDescription(item)} />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <p className='m-0'>
+                Source: <br />
+                <span className='badge rounded-pill background-dark'>{item?.document__title}</span>
+              </p>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export const MemoizedPanel = React.memo(DetailsPanel);
+
+export const MemoizedOglPanel = React.memo(OglDetailsPanel);

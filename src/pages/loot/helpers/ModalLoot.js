@@ -131,7 +131,7 @@ export default function ModalLoot({ item = '' }) {
   useEffect(() => {
     setQuillValue(item?.itemDesc || '');
   }, [item]);
-  
+
   return (
     <>
       {item ? (
@@ -155,7 +155,7 @@ export default function ModalLoot({ item = '' }) {
       )}
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='rounded'>
+        <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
             {item ? <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title> : <Modal.Title>Add an item!</Modal.Title>}
           </Modal.Header>
@@ -269,11 +269,8 @@ export default function ModalLoot({ item = '' }) {
                     disabled={loading}
                     className='background-dark border-0'
                     variant='dark'
-                    type='submit'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      editLoot();
-                    }}
+                    type='button'
+                    onClick={() => editLoot()}
                   >
                     Save
                   </Button>
@@ -283,11 +280,8 @@ export default function ModalLoot({ item = '' }) {
                     disabled={loading}
                     className='background-dark border-0'
                     variant='dark'
-                    type='submit'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      addLoot();
-                    }}
+                    type='button'
+                    onClick={() => addLoot()}
                   >
                     Create
                   </Button>

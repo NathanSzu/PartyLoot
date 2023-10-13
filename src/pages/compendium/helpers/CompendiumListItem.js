@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ListGroupItem, Col, Row, Button } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import { MemoizedPanel } from './DetailsPanel';
+import { MemoizedPanel, MemoizedOglPanel } from './DetailsPanel';
 import LikeDisplay from './LikeDisplay';
 import { SingleLineLoading } from '../../common/LoadingIndicators';
 
@@ -78,4 +78,34 @@ export function EndOfList() {
   );
 }
 
+export function OglPageinationButtons({ oglResults, getOglResults }) {
+  return (
+    <ListGroupItem className='rounded border-dark my-2'>
+      <Row>
+        <Col>
+          <Button className='w-100 background-dark' variant='dark' disabled={!oglResults?.previous} onClick={() => getOglResults(oglResults.previous)}>Previous page</Button>
+        </Col>
+        <Col>
+          <Button className='w-100 background-dark' variant='dark' disabled={!oglResults?.next} onClick={() => getOglResults(oglResults.next)}>Next page</Button>
+        </Col>
+      </Row>
+    </ListGroupItem>
+  );
+}
+
+export function OglListItem({ item, idx }) {
+  return (
+    <ListGroupItem className='rounded border-dark' key={item.slug} id={`item${idx}`}>
+      <Row>
+        <Col>
+          <h1 className='fancy-font fs-sm-deco m-0'>{item.name}</h1>
+        </Col>
+        <MemoizedOglPanel item={item} />
+      </Row>
+    </ListGroupItem>
+  );
+}
+
 export const MemoizedListItem = React.memo(CompendiumListItem);
+
+export const MemoizedOglListItem = React.memo(OglListItem);

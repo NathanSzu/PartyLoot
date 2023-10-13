@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Button, Card } from 'react-bootstrap';
 import { AddDiscovery } from './RecordDiscovery';
 
-export default function UserDiscoveriesControls({ show, setShow, displayName, getCompendium }) {
+export default function UserDiscoveriesControls({ show, setShow, displayName, getCompendium, setOglTabActive }) {
   return (
     <>
       <Card className='rounded-0 rounded-bottom background-light border-dark border-bottom-0 border-end-0 border-start-0'>
@@ -14,7 +14,7 @@ export default function UserDiscoveriesControls({ show, setShow, displayName, ge
               </p>
             </Col>
             <Col className='text-end'>
-              <Button variant='dark' className='background-dark' onClick={() => setShow(!show)}>
+              <Button variant='dark' className='background-dark' onClick={() => {setShow(!show); setOglTabActive(false);}}>
                 {show ? 'All discoveries' : 'My discoveries'}
               </Button>
             </Col>

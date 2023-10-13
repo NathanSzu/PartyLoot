@@ -166,7 +166,7 @@ export default function EditGroup({ name, id, owner, members }) {
         }}
       >
         <div className='rounded'>
-          <Form>
+          <Form onSubmitCapture={(e) => e.preventDefault()}>
             <Modal.Header closeButton>
               <Modal.Title className='groups-overflow'>
                 {currentUser.uid === owner ? 'Edit: ' : null} {name}
@@ -201,11 +201,8 @@ export default function EditGroup({ name, id, owner, members }) {
                   disabled={loading}
                   variant='dark'
                   className='background-dark border-0'
-                  type='submit'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    editGroup();
-                  }}
+                  type='button'
+                  onClick={() => editGroup()}
                 />
               ) : null}
 
@@ -217,10 +214,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   variant='danger'
                   className='background-danger border-0'
                   type='button'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    deleteGroup();
-                  }}
+                  onClick={() => deleteGroup()}
                   data-cy='confirm-delete'
                 />
               ) : null}
@@ -233,10 +227,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   variant='danger'
                   className='background-danger border-0'
                   type='button'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    leaveGroup(currentUser.uid);
-                  }}
+                  onClick={() => leaveGroup(currentUser.uid)}
                 />
               ) : null}
 
@@ -249,7 +240,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   variant='danger'
                   className='background-danger border-0'
                   type='button'
-                  onClick={(e) => {
+                  onClick={() => {
                     setDeleteConfirmation(true);
                   }}
                   data-cy='delete'
@@ -265,7 +256,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   variant='danger'
                   className='background-danger border-0'
                   type='button'
-                  onClick={(e) => {
+                  onClick={() => {
                     setLeaveConfirmation(true);
                   }}
                 />
@@ -310,7 +301,7 @@ export default function EditGroup({ name, id, owner, members }) {
               <Modal.Header>
                 <Modal.Title>Add Members</Modal.Title>
               </Modal.Header>
-              <Form className='w-100 mt-3'>
+              <Form className='w-100 mt-3' onSubmitCapture={(e) => e.preventDefault()}>
                 <Container>
                   <Row className='p-2'>
                     <Col>
@@ -329,7 +320,7 @@ export default function EditGroup({ name, id, owner, members }) {
                         disabled={loading}
                         variant='dark'
                         className='background-dark border-0'
-                        type='submit'
+                        type='button'
                         onClick={(e) => {
                           e.preventDefault();
                           addMember();

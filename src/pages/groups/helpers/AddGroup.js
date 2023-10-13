@@ -42,7 +42,7 @@ export default function AddGroup() {
       </Button>
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='rounded'>
+        <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
             <Modal.Title>Start a new group!</Modal.Title>
           </Modal.Header>
@@ -54,15 +54,7 @@ export default function AddGroup() {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button
-              disabled={loading}
-              variant='dark'
-              type='submit'
-              onClick={(e) => {
-                e.preventDefault();
-                addGroup();
-              }}
-            >
+            <Button disabled={loading} variant='dark' type='button' onClick={() => addGroup()}>
               Create
             </Button>
           </Modal.Footer>

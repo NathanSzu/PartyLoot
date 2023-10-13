@@ -44,7 +44,7 @@ export default function ItemDelete({ item }) {
       </Button>
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='rounded'>
+        <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
             <Modal.Title>Delete item?</Modal.Title>
           </Modal.Header>

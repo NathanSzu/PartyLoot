@@ -37,7 +37,8 @@ Cypress.Commands.add('login', (email = 'test@test.com', password = 'password') =
 
 Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
   cy.get('[data-cy=create-group]').click();
-  cy.get('[data-cy=new-group-name]').type(`${uid}{enter}`);
+  cy.get('[data-cy=new-group-name]').type(uid);
+  cy.contains('button', 'Create').click();
   cy.contains('a', uid).should('have.length', 1);
 });
 

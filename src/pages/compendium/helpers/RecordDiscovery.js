@@ -164,8 +164,7 @@ export function AddDiscovery({ getCompendium }) {
     return true;
   };
 
-  const addDiscovery = (e, publish = false) => {
-    e.preventDefault();
+  const addDiscovery = (publish = false) => {
     if (!checkItemValidations()) return;
     setLoading(true);
     db.collection('compendium')
@@ -198,7 +197,7 @@ export function AddDiscovery({ getCompendium }) {
       </Button>
 
       <Modal show={show} onHide={handleClose}>
-        <Form className='rounded'>
+        <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
             <Modal.Title>Record a discovery</Modal.Title>
           </Modal.Header>
@@ -213,12 +212,12 @@ export function AddDiscovery({ getCompendium }) {
 
           <Modal.Footer>
             <Col>
-              <Button disabled={loading} className='background-success w-100' variant='success' type='submit' onClick={(e) => addDiscovery(e, true)}>
+              <Button disabled={loading} className='background-success w-100' variant='success' type='button' onClick={() => addDiscovery(true)}>
                 Add to compendium
               </Button>
             </Col>
             <Col>
-              <Button disabled={loading} className='w-100' variant='warning' type='submit' onClick={(e) => addDiscovery(e)}>
+              <Button disabled={loading} className='w-100' variant='warning' type='button' onClick={() => addDiscovery()}>
                 Save draft
               </Button>
             </Col>
@@ -283,8 +282,7 @@ export function EditDiscoverySection({ item, getCompendium }) {
     return true;
   };
 
-  const editDiscovery = (e, publish = false) => {
-    e.preventDefault();
+  const editDiscovery = (publish = false) => {
     if (!checkItemValidations()) return;
     setLoading(true);
     db.collection('compendium')
@@ -329,8 +327,8 @@ export function EditDiscoverySection({ item, getCompendium }) {
             disabled={loading}
             className='w-100 background-success'
             variant='success'
-            type='submit'
-            onClick={(e) => editDiscovery(e, true)}
+            type='button'
+            onClick={() => editDiscovery(true)}
           >
             Save and publish
           </Button>
@@ -340,8 +338,8 @@ export function EditDiscoverySection({ item, getCompendium }) {
             disabled={loading}
             className='w-100'
             variant='warning'
-            type='submit'
-            onClick={(e) => editDiscovery(e)}
+            type='button'
+            onClick={() => editDiscovery()}
           >
             Save draft
           </Button>

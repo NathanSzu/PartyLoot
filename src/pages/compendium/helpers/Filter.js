@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 
-export function Filter({ metadata, setState }) {
+export function Filter({ metadata, setState, oglTabActive }) {
   const [keys, setKeys] = useState([]);
 
-  const getKeys = () => Object.keys(metadata);
-
   useEffect(() => {
-    metadata && setKeys(getKeys());
+    metadata && setKeys(Object.keys(metadata));
   }, [metadata]);
 
   return (
     <Form>
       <Form.Label>Category</Form.Label>
       <Form.Control
+        disabled={oglTabActive}
         as='select'
         onChange={(e) => {
           e.target.value ? setState([e.target.value]) : setState(keys);
@@ -31,20 +30,18 @@ export function Filter({ metadata, setState }) {
   );
 }
 
-
-export function SettingFilter({ metadata, setState }) {
+export function SettingFilter({ metadata, setState, oglTabActive }) {
   const [keys, setKeys] = useState([]);
 
-  const getKeys = () => Object.keys(metadata);
-
   useEffect(() => {
-    metadata && setKeys(getKeys());
+    metadata && setKeys(Object.keys(metadata));
   }, [metadata]);
 
   return (
     <Form>
       <Form.Label>Campaign Setting</Form.Label>
       <Form.Control
+        disabled={oglTabActive}
         as='select'
         onChange={(e) => {
           e.target.value ? setState(e.target.value) : setState(null);

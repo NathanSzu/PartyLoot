@@ -62,8 +62,6 @@ exports.itemSearch = onRequest({ cors: true }, async (req, res) => {
 
   axios
     .all([
-      axios.get(`https://api.open5e.com/v1/weapons/?search=${req.body}`),
-      axios.get(`https://api.open5e.com/v1/armor/?search=${req.body}`),
       axios.get(`https://api.open5e.com/v1/magicitems/?search=${req.body}`),
     ])
     .then((resArr) => {

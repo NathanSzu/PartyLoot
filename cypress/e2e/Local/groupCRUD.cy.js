@@ -14,7 +14,8 @@ describe('Group actions', () => {
 
   it('edit group', () => {
     cy.get('[data-cy=edit-group]').eq(0).click();
-    cy.get('[data-cy=edit-group-name]').clear().type(`${uid2}{enter}`);
+    cy.get('[data-cy=edit-group-name]').clear().type(uid2);
+    cy.get('[value=Save]').click();
     cy.contains('a', uid2).should('have.length', 1);
   });
 
