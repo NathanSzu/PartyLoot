@@ -4,11 +4,15 @@ import { AuthContext } from './AuthContext';
 
 export const GroupContext = React.createContext();
 
+// const query = groups.where('members', 'array-contains', `${currentUser.uid}`);
+// const [groupList, loading] = useCollectionData(query, { idField: 'id' });
+
 export const GroupProvider = ({ children }) => {
-  const { db } = useContext(AuthContext);
+  const { db, currentUser } = useContext(AuthContext);
 
   // Default setting is ' ' so the app will initiate react-firebase-hooks useDocumentData call
   const [currentGroup, setCurrentGroup] = useState(' ');
+  const [groupList, setGroupList] = useState([]);
 
   // Query declarations
   const groups = db.collection('groups');
@@ -24,8 +28,26 @@ export const GroupProvider = ({ children }) => {
     }
   }, [currentGroup]);
 
+  useEffect(() => {
+    const unsubscribe = groups
+      .where('members', 'array-contains', currentUser.uid)
+      .orderBy('groupName')
+      .onSnapshot((querySnapshot) => {
+        let groupList = [];
+        querySnapshot.forEach((doc) => {
+          groupList.push({ id: doc.id, ...doc.data() });
+        });
+
+        setGroupList(groupList);
+      });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [currentUser]);
+
   return (
-    <GroupContext.Provider value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy, groups, groupDoc }}>
+    <GroupContext.Provider value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy, groups, groupDoc, groupList }}>
       {!loading && children}
     </GroupContext.Provider>
   );

@@ -2,8 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import { Row, Col, Button, Spinner, Container, Navbar } from 'react-bootstrap';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GroupContext } from '../../utils/contexts/GroupContext';
-import { useState } from 'react';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import AddGroup from './helpers/AddGroup';
 import EditGroup from './helpers/EditGroup';
 import PatchNotes from './helpers/PatchNotes';
@@ -11,23 +9,9 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 export default function Groups() {
   const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);
-  const { setCurrentGroup, groups } = useContext(GroupContext);
-  const [sortedGroups, setSortedGroups] = useState([]);
+  const { setCurrentGroup, groupList } = useContext(GroupContext);
 
-  const query = groups.where('members', 'array-contains', `${currentUser.uid}`);
   const userRef = db.collection('users').doc(currentUser.uid);
-  const [groupList, loading] = useCollectionData(query, { idField: 'id' });
-
-  useEffect(() => {
-    setCurrentGroup(' ');
-    groupList &&
-      setSortedGroups(() => {
-        let sorted = groupList.sort((a, b) => {
-          return b.created - a.created;
-        });
-        return sorted;
-      });
-  }, [groupList]);
 
   useEffect(() => {
     userRef
@@ -59,11 +43,11 @@ export default function Groups() {
         </Col>
       </Navbar>
 
-      {loading ? (
+      {!groupList.length ? (
         <Spinner as='div' className='d-flex mt-4 loading-spinner' animation='border' role='status' variant='light' />
       ) : (
         <>
-          {sortedGroups.map((group, idx) => (
+          {groupList.map((group, idx) => (
             <Row key={idx} className='border-top border-dark background-light mx-1 rounded'>
               <Col className='groups-overflow px-3 py-2'>
                 <LinkContainer to='/loot' className='p-0'>
