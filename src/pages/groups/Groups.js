@@ -1,6 +1,5 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Row, Col, Button, Spinner, Container, Navbar } from 'react-bootstrap';
-import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import AddGroup from './helpers/AddGroup';
 import EditGroup from './helpers/EditGroup';
@@ -8,28 +7,7 @@ import PatchNotes from './helpers/PatchNotes';
 import { LinkContainer } from 'react-router-bootstrap';
 
 export default function Groups() {
-  const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);
   const { setCurrentGroup, groupList } = useContext(GroupContext);
-
-  const userRef = db.collection('users').doc(currentUser.uid);
-
-  useEffect(() => {
-    userRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          // Do nothing unless missing data
-          if (!doc.data().displayName) setUsername(currentUser.displayName || randomUsername());
-          if (!doc.data().code) setGroupCode();
-        } else {
-          setUsername(currentUser.displayName || randomUsername());
-          setGroupCode();
-        }
-      })
-      .catch((error) => {
-        console.error('Error getting document:', error);
-      });
-  }, [currentUser]);
 
   return (
     <Container className='lazy-scroll-container'>
@@ -43,7 +21,7 @@ export default function Groups() {
         </Col>
       </Navbar>
 
-      {!groupList.length ? (
+      {!groupList ? (
         <Spinner as='div' className='d-flex mt-4 loading-spinner' animation='border' role='status' variant='light' />
       ) : (
         <>

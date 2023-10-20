@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import fb from '../firebase';
+import firebase from 'firebase';
 import metadata from '../../utils/metadata.json';
 
 export const AuthContext = React.createContext();
@@ -50,13 +51,19 @@ export const AuthProvider = ({ children }) => {
     }`;
   };
 
-  const setGroupCode = () => {
+  const generateGroupCode = () => {
     const alphabet = 'ABCDEFGHIJKLMNPQRSTUVWXYZ1234567890';
     let code = '';
     for (let i = 0; i < 3; i++) {
       code += alphabet[Math.floor(Math.random() * alphabet.length)];
       code += Math.floor(Math.random() * 10);
     }
+
+    return code;
+  };
+
+  const setGroupCode = () => {
+    let code = generateGroupCode();
 
     db.collection('users')
       .where('code', '==', code)
@@ -75,33 +82,33 @@ export const AuthProvider = ({ children }) => {
               },
               { merge: true }
             )
-            .then(() => {})
             .catch((error) => {
-              console.error('Error creating code: ', error);
+              console.error('Error assigning code: ', error);
             });
         }
         if (!check) setGroupCode();
       })
       .catch((error) => {
-        console.error('Error getting documents: ', error);
+        console.error('Error checking for code match: ', error);
       });
   };
 
-  const recordVersion = (user) => {
+  const recordActivity = () => {
     db.collection('users')
-      .doc(user.uid)
+      .doc(currentUser.uid)
       .get()
       .then((doc) => {
-        if (doc.exists) {
-          db.collection('users')
-            .doc(user.uid)
-            .update({
-              version: `${metadata.buildMajor}.${metadata.buildMinor}.${metadata.buildRevision}`,
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        }
+        let visitCount = doc.data()?.visitCount;
+        db.collection('users')
+          .doc(currentUser.uid)
+          .update({
+            version: `${metadata.buildMajor}.${metadata.buildMinor}.${metadata.buildRevision}`,
+            latestActivity: firebase.firestore.FieldValue.serverTimestamp(),
+            visitCount: visitCount ? firebase.firestore.FieldValue.increment(1) : 1,
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       })
       .catch((err) => {
         console.error('Error getting user:', err);
@@ -109,14 +116,26 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    currentUser &&
+      userRef
+        .get()
+        .then((doc) => {
+          // Do nothing unless missing data
+          if (!doc.data()?.displayName) setUsername(randomUsername());
+          if (!doc.data()?.code) setGroupCode();
+          recordActivity();
+        })
+        .catch((error) => {
+          console.error('Error checking for existing code or username:', error);
+        });
+  }, [currentUser]);
+
+  useEffect(() => {
     const unsubscribe = fb.auth().onAuthStateChanged(function (user) {
       if (user) {
-        // User is signed in.
-        recordVersion(user);
         setCurrentUser(user);
         setLoading(false);
       } else {
-        // No user is signed in.
         setCurrentUser('');
         setLoading(false);
       }
@@ -129,12 +148,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         currentUser,
         randomName,
-        setUsername,
-        setGroupCode,
-        randomUsername,
         userRef,
         db,
-        recordVersion,
       }}
     >
       {!loading && children}

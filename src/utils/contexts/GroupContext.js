@@ -29,25 +29,24 @@ export const GroupProvider = ({ children }) => {
   }, [currentGroup]);
 
   useEffect(() => {
-    const unsubscribe = groups
-      .where('members', 'array-contains', currentUser.uid)
-      .orderBy('groupName')
-      .onSnapshot((querySnapshot) => {
-        let groupList = [];
-        querySnapshot.forEach((doc) => {
-          groupList.push({ id: doc.id, ...doc.data() });
+    currentUser &&
+      groups
+        .where('members', 'array-contains', currentUser.uid)
+        .orderBy('groupName')
+        .onSnapshot((querySnapshot) => {
+          let groupList = [];
+          querySnapshot.forEach((doc) => {
+            groupList.push({ id: doc.id, ...doc.data() });
+          });
+
+          setGroupList(groupList);
         });
-
-        setGroupList(groupList);
-      });
-
-    return () => {
-      unsubscribe();
-    };
   }, [currentUser]);
 
   return (
-    <GroupContext.Provider value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy, groups, groupDoc, groupList }}>
+    <GroupContext.Provider
+      value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy, groups, groupDoc, groupList }}
+    >
       {!loading && children}
     </GroupContext.Provider>
   );
