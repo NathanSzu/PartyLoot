@@ -3,14 +3,12 @@ import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import TagInput from './TagInput';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function TagEditor({ allTags, colorTags, show, handleClose }) {
-  const { db } = useContext(AuthContext);
-  const { currentGroup } = useContext(GroupContext);
+  const { groupDoc } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
-  const tagRef = db.collection('groups').doc(currentGroup).collection('currency').doc('tags');
+  const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [tagState, setTagState] = useState({});
   const [loading, setLoading] = useState(false);

@@ -13,20 +13,19 @@ import fb from 'firebase';
 import { gsap } from 'gsap';
 
 export default function Loot() {
-  const { currentGroup, setSortBy } = useContext(GroupContext);
-  const { db, currentUser } = useContext(AuthContext);
+  const { setSortBy, groupDoc } = useContext(GroupContext);
+  const { currentUser } = useContext(AuthContext);
 
-  const groupRef = db.collection('groups').doc(currentGroup);
-  const itemOwnersRef = groupRef.collection('itemOwners');
-  const lootRef = groupRef.collection('loot');
-  const currencyRef = groupRef.collection('currency').doc('currency');
+  const itemOwnersRef = groupDoc.collection('itemOwners');
+  const lootRef = groupDoc.collection('loot');
+  const currencyRef = groupDoc.collection('currency').doc('currency');
   const query = lootRef.orderBy('itemName');
 
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [lootItems, loadingItems] = useCollectionData(query, { idField: 'id' });
-  const [partyData, loadingPartyData] = useDocumentData(groupRef);
+  const [partyData, loadingPartyData] = useDocumentData(groupDoc);
   const [itemOwners, loadingItemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
   // Used for transferring currency to be stored under new id's
   const [currency, loadingCurrency] = useDocumentData(currencyRef);
@@ -45,7 +44,7 @@ export default function Loot() {
           party.shift();
 
           if (party.length === 0) {
-            groupRef
+            groupDoc
               .update({
                 party: fb.firestore.FieldValue.delete(),
                 favorites: fb.firestore.FieldValue.delete(),
@@ -56,7 +55,7 @@ export default function Loot() {
           }
 
           if (party.length > 0) {
-            groupRef
+            groupDoc
               .update({
                 party,
               })

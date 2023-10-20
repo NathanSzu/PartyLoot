@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Row, Spinner } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import GoldInput from './GoldInput';
@@ -9,8 +8,7 @@ import TagEditor from './TagEditor';
 import { gsap } from 'gsap';
 
 export default function GoldTracker() {
-  const { db } = useContext(AuthContext);
-  const { currentGroup, sortBy } = useContext(GroupContext);
+  const { sortBy, groupDoc } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
   const [showTagEditor, setShowTagEditor] = useState(false);
@@ -21,11 +19,10 @@ export default function GoldTracker() {
   const handleClose = () => setShowTagEditor(false);
   const handleShow = () => setShowTagEditor(true);
 
-  const groupRef = db.collection('groups').doc(currentGroup);
-  const currencyRef = groupRef.collection('currency').doc('currency');
-  const colorTagRef = groupRef.collection('currency').doc('colorTags');
+  const currencyRef = groupDoc.collection('currency').doc('currency');
+  const colorTagRef = groupDoc.collection('currency').doc('colorTags');
   // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
-  const tagRef = groupRef.collection('currency').doc('tags');
+  const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [currency, loadingCurrency] = useDocumentData(currencyRef);
   const [colorTags] = useDocumentData(colorTagRef);
@@ -39,7 +36,7 @@ export default function GoldTracker() {
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    groupRef
+    groupDoc
       .collection('itemOwners')
       .doc(sortBy)
       .get()

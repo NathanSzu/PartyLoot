@@ -11,11 +11,10 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 export default function Groups() {
   const { currentUser, setUsername, setGroupCode, randomUsername, db } = useContext(AuthContext);
-  const { setCurrentGroup } = useContext(GroupContext);
+  const { setCurrentGroup, groups } = useContext(GroupContext);
   const [sortedGroups, setSortedGroups] = useState([]);
 
-  const groupRef = db.collection('groups');
-  const query = groupRef.where('members', 'array-contains', `${currentUser.uid}`);
+  const query = groups.where('members', 'array-contains', `${currentUser.uid}`);
   const userRef = db.collection('users').doc(currentUser.uid);
   const [groupList, loading] = useCollectionData(query, { idField: 'id' });
 
@@ -39,10 +38,7 @@ export default function Groups() {
           if (!doc.data().displayName) setUsername(currentUser.displayName || randomUsername());
           if (!doc.data().code) setGroupCode();
         } else {
-          // doc.data() will be undefined in this case
-          // Generate a random username
           setUsername(currentUser.displayName || randomUsername());
-          // Generate a random group code
           setGroupCode();
         }
       })

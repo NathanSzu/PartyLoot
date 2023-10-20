@@ -9,9 +9,12 @@ export const GroupProvider = ({ children }) => {
 
   // Default setting is ' ' so the app will initiate react-firebase-hooks useDocumentData call
   const [currentGroup, setCurrentGroup] = useState(' ');
-  const [groupData, loading] = useDocumentData(db.collection('groups').doc(currentGroup));
 
-  // Used in GoldTracker, ItemSearch, and OwnerFilter
+  // Query declarations
+  const groups = db.collection('groups');
+  const groupDoc = groups.doc(currentGroup);
+
+  const [groupData, loading] = useDocumentData(groupDoc);
   const [sortBy, setSortBy] = useState('party');
 
   // Resets sortBy when no group is selected
@@ -22,7 +25,7 @@ export const GroupProvider = ({ children }) => {
   }, [currentGroup]);
 
   return (
-    <GroupContext.Provider value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy }}>
+    <GroupContext.Provider value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy, groups, groupDoc }}>
       {!loading && children}
     </GroupContext.Provider>
   );

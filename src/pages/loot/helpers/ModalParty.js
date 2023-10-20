@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Form, Row, Col, Button, Modal, Container, Accordion } from 'react-bootstrap';
+import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
@@ -7,12 +7,11 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import EditItemOwnerAccordion from './EditItemOwnerAccordion';
 
 export default function ModalParty({ itemOwners }) {
-  const { currentGroup } = useContext(GroupContext);
-  const { db, currentUser } = useContext(AuthContext);
+  const { groupDoc } = useContext(GroupContext);
+  const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
-  const groupRef = db.collection('groups').doc(currentGroup);
-  const itemOwnersRef = groupRef.collection('itemOwners');
+  const itemOwnersRef = groupDoc.collection('itemOwners');
   const addItemOwnerRef = useRef('');
 
   const [loading, setLoading] = useState(false);

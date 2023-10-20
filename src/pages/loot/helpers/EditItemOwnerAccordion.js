@@ -6,14 +6,13 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
-  const { currentGroup } = useContext(GroupContext);
-  const { db, currentUser } = useContext(AuthContext);
+  const { groupDoc } = useContext(GroupContext);
+  const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
-  const groupRef = db.collection('groups').doc(currentGroup);
-  const itemOwnersRef = groupRef.collection('itemOwners');
+  const itemOwnersRef = groupDoc.collection('itemOwners');
 
-  const [party] = useDocumentData(groupRef);
+  const [party] = useDocumentData(groupDoc);
 
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -70,7 +69,7 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
 
   const setFavoriteItemOwner = (itemOwner) => {
     setLoadingSave(true);
-    groupRef
+    groupDoc
       .update({
         [`favorites.${currentUser.uid}`]: checkFavorite(party, itemOwner) ? 'party' : itemOwner.id,
       })

@@ -1,13 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function ItemDelete({ item }) {
-  const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { groupDoc } = useContext(GroupContext);
 
-  const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
+  const itemRef = groupDoc.collection('loot').doc(`${item.id}`);
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);

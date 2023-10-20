@@ -2,17 +2,15 @@ import React, { useContext, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Container, Row, Col, ListGroup, Button, Navbar } from 'react-bootstrap';
 import { GroupContext } from '../../utils/contexts/GroupContext';
-import { AuthContext } from '../../utils/contexts/AuthContext';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import HistoryItem from './helpers/HistoryItem';
 
 export default function History() {
-  const { currentGroup } = useContext(GroupContext);
-  const { db } = useContext(AuthContext);
+  const { groupDoc } = useContext(GroupContext);
 
   const [resultQty, setResultQty] = useState(25);
 
-  const historyRef = db.collection('groups').doc(currentGroup).collection('history');
+  const historyRef = groupDoc.collection('history');
   const query = historyRef.orderBy('timestamp', 'desc').limit(resultQty);
 
   const [historyEvents] = useCollectionData(query);

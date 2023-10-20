@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Col, Form } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { AuthContext } from '../../../utils/contexts/AuthContext';
 import TagEditTrigger from './TagEditTrigger';
 
 export default function GoldInput({
@@ -14,8 +13,7 @@ export default function GoldInput({
   setState,
   disabled,
 }) {
-  const { db } = useContext(AuthContext);
-  const { currentGroup, sortBy } = useContext(GroupContext);
+  const { sortBy, groupDoc } = useContext(GroupContext);
 
   useEffect(() => {
     currencyRef.current.value = currency;
@@ -23,7 +21,7 @@ export default function GoldInput({
 
   const currencyRef = useRef();
 
-  const currencyDataRef = db.collection('groups').doc(currentGroup).collection('currency').doc('currency');
+  const currencyDataRef = groupDoc.collection('currency').doc('currency');
 
   const updateCurrency = (currencyKey, currencyValueRef) => {
     currencyDataRef.set(

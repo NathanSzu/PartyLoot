@@ -8,16 +8,15 @@ import GoldInput from './GoldInput';
 import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
 export default function ItemSale({ item, itemOwners }) {
-  const { currentGroup } = useContext(GroupContext);
+  const { groupDoc } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
-  const { db, currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
-  const groupRef = db.collection('groups').doc(currentGroup);
-  const currencyRef = groupRef.collection('currency').doc('currency');
-  const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
-  const colorTagRef = groupRef.collection('currency').doc('colorTags');
+  const currencyRef = groupDoc.collection('currency').doc('currency');
+  const itemRef = groupDoc.collection('loot').doc(item.id);
+  const colorTagRef = groupDoc.collection('currency').doc('colorTags');
   // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
-  const tagRef = groupRef.collection('currency').doc('tags');
+  const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [colorTags] = useDocumentData(colorTagRef);
   const [currency] = useDocumentData(currencyRef);

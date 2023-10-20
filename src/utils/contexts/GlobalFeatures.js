@@ -7,9 +7,9 @@ export const GlobalFeatures = React.createContext();
 
 export const GlobalFeaturesProvider = ({ children }) => {
   const { db } = useContext(AuthContext);
-  const { currentGroup } = useContext(GroupContext);
+  const { groupDoc } = useContext(GroupContext);
 
-  const historyRef = db.collection('groups').doc(currentGroup).collection('history');
+  const historyRef = groupDoc.collection('history');
 
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState('Notification content');

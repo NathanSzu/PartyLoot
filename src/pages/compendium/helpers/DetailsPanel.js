@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import QuillDisplay from '../../common/QuillDisplay';
+import CopyToGroupSection from './CopyToGroupSection';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { EditDiscoveryTrigger, EditDiscoverySection } from './RecordDiscovery';
@@ -110,7 +111,7 @@ export function DetailsPanel({ item, getCompendium }) {
 
 export function OglDetailsPanel({ item }) {
   const { formatItemDescription } = useContext(GlobalFeatures);
-  
+  const itemDescFormatted = formatItemDescription(item);
 
   return (
     <>
@@ -141,18 +142,19 @@ export function OglDetailsPanel({ item }) {
         <div className='offcanvas-body'>
           <Row>
             <Col className='p-3 bg-secondary bg-gradient bg-opacity-25 shadow-sm rounded mb-4 mx-2'>
-              <QuillDisplay value={formatItemDescription(item)} />
+              <QuillDisplay value={itemDescFormatted} />
             </Col>
           </Row>
 
           <Row>
-            <Col>
+            <Col className='pb-3'>
               <p className='m-0'>
                 Source: <br />
                 <span className='badge rounded-pill background-dark'>{item?.document__title}</span>
               </p>
             </Col>
           </Row>
+          <CopyToGroupSection />
         </div>
       </div>
     </>

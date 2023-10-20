@@ -11,13 +11,12 @@ import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 import QuillInput from '../../common/QuillInput';
 
 export default function ModalLoot({ item = '' }) {
-  const { currentGroup } = useContext(GroupContext);
-  const { db, currentUser } = useContext(AuthContext);
+  const { groupDoc } = useContext(GroupContext);
+  const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
-  const itemRef = db.collection('groups').doc(`${currentGroup}`).collection('loot').doc(`${item.id}`);
-  const groupRef = db.collection('groups').doc(currentGroup);
-  const itemOwnersRef = groupRef.collection('itemOwners');
+  const itemRef = groupDoc.collection('loot').doc(item.id);
+  const itemOwnersRef = groupDoc.collection('itemOwners');
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,7 +77,7 @@ export default function ModalLoot({ item = '' }) {
       owner: itemOwner === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === itemOwner).name,
     };
 
-    groupRef
+    groupDoc
       .collection('loot')
       .add({
         itemName: nameRef.current.value,

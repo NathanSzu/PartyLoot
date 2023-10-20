@@ -2,10 +2,12 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function EditGroup({ name, id, owner, members }) {
   const { currentUser, db } = useContext(AuthContext);
+  const { groups } = useContext(GroupContext);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -49,8 +51,8 @@ export default function EditGroup({ name, id, owner, members }) {
       setFalse();
       return;
     }
-    db.collection('groups')
-      .doc(`${id}`)
+    groups
+      .doc(id)
       .update({
         groupName: nameRef.current.value,
       })
@@ -69,8 +71,8 @@ export default function EditGroup({ name, id, owner, members }) {
       return;
     }
     handleClose();
-    db.collection('groups')
-      .doc(`${id}`)
+    groups
+      .doc(id)
       .delete()
       .then(() => {
         setFalse();
@@ -98,12 +100,10 @@ export default function EditGroup({ name, id, owner, members }) {
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots
               if (doc.id) {
-                db.collection('groups')
-                  .doc(id)
-                  .update({
-                    // Adds the user with the entered group code to be added to the groups user array.
-                    members: fb.firestore.FieldValue.arrayUnion(doc.id),
-                  });
+                groups.doc(id).update({
+                  // Adds the user with the entered group code to be added to the groups user array.
+                  members: fb.firestore.FieldValue.arrayUnion(doc.id),
+                });
               }
             });
             memberRef.current.value = '';
@@ -117,8 +117,8 @@ export default function EditGroup({ name, id, owner, members }) {
   };
 
   const leaveGroup = () => {
-    db.collection('groups')
-      .doc(`${id}`)
+    groups
+      .doc(id)
       .update({
         members: fb.firestore.FieldValue.arrayRemove(currentUser.uid),
       })
@@ -132,8 +132,8 @@ export default function EditGroup({ name, id, owner, members }) {
   };
 
   const removeMember = (e) => {
-    db.collection('groups')
-      .doc(`${id}`)
+    groups
+      .doc(id)
       .update({
         members: fb.firestore.FieldValue.arrayRemove(e.target.id),
       })

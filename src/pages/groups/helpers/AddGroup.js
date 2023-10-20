@@ -1,10 +1,12 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import fb from 'firebase';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function AddGroup() {
-  const { currentUser, db } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+  const { groups } = useContext(GroupContext);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -17,7 +19,7 @@ export default function AddGroup() {
       return;
     }
     setLoading(true);
-    db.collection('groups')
+    groups
       .add({
         groupName: nameRef.current.value,
         owner: currentUser.uid,
