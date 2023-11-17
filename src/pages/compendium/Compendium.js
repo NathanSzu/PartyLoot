@@ -6,7 +6,7 @@ import { Container, Row, Col, Navbar } from 'react-bootstrap';
 import CompendiumList from './helpers/CompendiumList';
 import OglList from './helpers/OglList';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
-import { Filter, SettingFilter } from './helpers/Filter';
+import { Filter, SettingFilter, SearchFilter } from './helpers/Filter';
 import UserDiscoveriesControls from './helpers/UserDiscoveriesControls';
 
 export default function Compendium() {
@@ -18,35 +18,59 @@ export default function Compendium() {
   const [showMyDiscoveries, setShowMyDiscoveries] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState(['abc']);
   const [settingFilter, setSettingFilter] = useState(null);
+  const [searchFilter, setSearchFilter] = useState('');
   const [orderBy, setOrderBy] = useState('likeCount');
   const [startAfter, setStartAfter] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingOgl, setLoadingOgl] = useState(true);
   const [userData] = useDocumentDataOnce(userRef);
   const [oglTabActive, setOglTabActive] = useState(false);
+  const [timer, setTimer] = useState(0);
+
+  function delay(fn) {
+    clearTimeout(timer);
+    setTimer(setTimeout(fn, 1000));
+  }
+
+  const setOglTab = (active) => {
+    setOglTabActive(active);
+    setSearchFilter('');
+  };
 
   const queryRef = db
     .collection('compendium')
     .where('itemStatus', '==', 'published')
     .where('categories', 'array-contains-any', categoryFilter)
+    .where('itemNameLower', '>=', searchFilter.toLowerCase())
+    .where('itemNameLower', '<=', searchFilter.toLowerCase() + '\uf8ff')
+    .orderBy('itemNameLower', 'desc')
     .orderBy(orderBy, 'desc');
 
   const complexQueryRef = db
     .collection('compendium')
     .where('itemStatus', '==', 'published')
     .where('categories', 'array-contains-any', categoryFilter)
+    .where('itemNameLower', '>=', searchFilter.toLowerCase())
+    .where('itemNameLower', '<=', searchFilter.toLowerCase() + '\uf8ff')
+    .orderBy('itemNameLower', 'desc')
     .where('setting', '==', settingFilter)
     .orderBy(orderBy, 'desc');
 
   const authorQueryRef = db
     .collection('compendium')
     .where('categories', 'array-contains-any', categoryFilter)
+    .where('itemNameLower', '>=', searchFilter.toLowerCase())
+    .where('itemNameLower', '<=', searchFilter.toLowerCase() + '\uf8ff')
+    .orderBy('itemNameLower', 'desc')
     .where('creatorId', '==', currentUser.uid)
     .orderBy(orderBy, 'desc');
 
   const authorComplexQueryRef = db
     .collection('compendium')
     .where('categories', 'array-contains-any', categoryFilter)
+    .where('itemNameLower', '>=', searchFilter.toLowerCase())
+    .where('itemNameLower', '<=', searchFilter.toLowerCase() + '\uf8ff')
+    .orderBy('itemNameLower', 'desc')
     .where('setting', '==', settingFilter)
     .where('creatorId', '==', currentUser.uid)
     .orderBy(orderBy, 'desc');
@@ -62,6 +86,7 @@ export default function Compendium() {
 
   const getCompendium = () => {
     setLoading(true);
+    setCompendium([]);
     return defineQuery()
       .limit(15)
       .get()
@@ -84,10 +109,13 @@ export default function Compendium() {
 
   const getOglResults = async (changePageQuery = '', query = '', page = 1) => {
     setLoadingOgl(true);
-    const response = await fetch(changePageQuery || `https://api.open5e.com/v1/magicitems/?page=${page}&search=${query}&limit=25`, {
-      method: 'GET',
-      cache: 'default'
-    });
+    const response = await fetch(
+      changePageQuery || `https://api.open5e.com/v1/magicitems/?page=${page}&search=${query}&limit=25`,
+      {
+        method: 'GET',
+        cache: 'default',
+      }
+    );
 
     const resJson = await response.json();
     setLoadingOgl(false);
@@ -125,11 +153,14 @@ export default function Compendium() {
   }, [itemMetadata]);
 
   useEffect(() => {
-    setCompendium([]);
-    categoryFilter && getCompendium();
-    settingFilter && getCompendium();
-    showMyDiscoveries && getCompendium();
-  }, [categoryFilter, settingFilter, showMyDiscoveries]);
+    if ((categoryFilter || settingFilter || showMyDiscoveries) && !oglTabActive) {
+      setCompendium([]);
+      setLoading(true);
+      delay(() => getCompendium());
+    } else if (oglTabActive) {
+      delay(() => getOglResults(null, searchFilter));
+    }
+  }, [categoryFilter, settingFilter, showMyDiscoveries, searchFilter, oglTabActive]);
 
   useEffect(() => {
     oglTabActive && !oglResults && getOglResults();
@@ -175,6 +206,9 @@ export default function Compendium() {
                         oglTabActive={oglTabActive}
                       />
                     </Col>
+                    <Col xs={12} className='pt-2'>
+                      <SearchFilter state={searchFilter} setState={setSearchFilter} />
+                    </Col>
                   </Row>
                 </div>
               </div>
@@ -185,7 +219,7 @@ export default function Compendium() {
             setShow={setShowMyDiscoveries}
             displayName={userData?.displayName}
             getCompendium={getCompendium}
-            setOglTabActive={setOglTabActive}
+            setOglTab={setOglTab}
           />
         </div>
       </Navbar>
@@ -201,7 +235,7 @@ export default function Compendium() {
               role='tab'
               aria-controls='community'
               aria-selected={!oglTabActive}
-              onClick={() => setOglTabActive(false)}
+              onClick={() => setOglTab(false)}
             >
               Community
             </button>
@@ -214,7 +248,7 @@ export default function Compendium() {
               role='tab'
               aria-controls='ogl'
               aria-selected={oglTabActive}
-              onClick={() => setOglTabActive(true)}
+              onClick={() => setOglTab(true)}
             >
               OGL Content
             </button>

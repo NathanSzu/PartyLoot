@@ -58,3 +58,21 @@ export function SettingFilter({ metadata, setState, oglTabActive }) {
     </Form>
   );
 }
+
+export function SearchFilter({ state, setState }) {
+
+  return (
+    <Form onSubmitCapture={(e) => e.preventDefault()}>
+      <Form.Label>Search</Form.Label>
+      <Form.Control
+        as='input'
+        placeholder='Start typing to begin search...'
+        value={state}
+        onChange={(e) => {
+          e.target.value ? setState(e.target.value) : setState('');
+        }}
+      >
+      </Form.Control>
+    </Form>
+  );
+}
