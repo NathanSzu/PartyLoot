@@ -7,9 +7,7 @@ export const GlobalFeatures = React.createContext();
 
 export const GlobalFeaturesProvider = ({ children }) => {
   const { db } = useContext(AuthContext);
-  const { groupDoc } = useContext(GroupContext);
-
-  const historyRef = groupDoc.collection('history');
+  const { currentGroup } = useContext(GroupContext);
 
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState('Notification content');
@@ -48,7 +46,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
       });
   };
 
-  const writeHistoryEvent = async (completedBy, action, data = {}) => {
+  const writeHistoryEvent = async (completedBy, action, data = {}, groupId = currentGroup) => {
     let summary = '';
 
     switch (action) {
@@ -75,11 +73,15 @@ export const GlobalFeaturesProvider = ({ children }) => {
         summary = `changed ${data.oldName}'s name to ${data.name}`;
         break;
 
+      case 'addFromCompendium':
+        summary = `assigned ${data.itemName} from the compendium, to ${data.owner}`;
+        break;
+
       default:
         break;
     }
 
-    historyRef.add({
+    db.collection('groups').doc(groupId).collection('history').add({
       completedBy,
       action,
       summary,
@@ -96,7 +98,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
         .replace(/( _)/g, ' <u>')
         .replace(/(_ )/g, '</u> ')
         .replace(/(_.)/g, '</u> ')
-        .replace(/( - )/g, '<br>- ')
+        .replace(/( - )/g, '<br>- ');
 
       return `<p><em>${selection.type} ${selection.requires_attunement}</em></p><p>${modifiedStr}</p>`;
     }

@@ -96,7 +96,7 @@ export default function ModalLoot({ item = '' }) {
         });
       })
       .catch((error) => {
-        console.error('Error creating new group: ', error);
+        console.error('Error creating new item: ', error);
         setLoading(false);
         handleClose();
       });

@@ -84,11 +84,11 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
   };
 
   return (
-    <div class='accordion-item'>
-      <h2 class='accordion-header' id={`partyHeading${itemOwner.id}`}>
+    <div className='accordion-item'>
+      <h2 className='accordion-header' id={`partyHeading${itemOwner.id}`}>
         <button
           data-cy={itemOwner.name}
-          class='accordion-button accordion-button-loot collapsed'
+          className='accordion-button accordion-button-loot collapsed'
           type='button'
           data-bs-toggle='collapse'
           data-bs-target={`#partyCollapse${itemOwner.id}`}
@@ -101,7 +101,7 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
       </h2>
       <div
         id={`partyCollapse${itemOwner.id}`}
-        class='accordion-collapse collapse background-light'
+        className='accordion-collapse collapse background-light'
         aria-labelledby={`partyHeading${itemOwner.id}`}
         data-bs-parent='#partyAccordion'
       >

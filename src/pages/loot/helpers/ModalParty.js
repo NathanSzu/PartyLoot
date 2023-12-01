@@ -88,7 +88,7 @@ export default function ModalParty({ itemOwners }) {
 
         <Modal.Footer>
           <Container className='px-0'>
-            <div class='accordion' id='partyAccordion'>
+            <div className='accordion' id='partyAccordion'>
               {noDeletedOwners.map((itemOwner) => (
                 <EditItemOwnerAccordion key={itemOwner.id} itemOwner={itemOwner} handleClose={handleClose}/>
               ))}

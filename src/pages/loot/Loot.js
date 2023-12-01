@@ -10,7 +10,6 @@ import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
 import LootAccordion from './helpers/AccordionLoot';
 import fb from 'firebase';
-import { gsap } from 'gsap';
 
 export default function Loot() {
   const { setSortBy, groupDoc } = useContext(GroupContext);
@@ -113,12 +112,6 @@ export default function Loot() {
   useEffect(() => {
     itemOwners && updateItemData(lootItems, loadingItems, itemOwners, loadingItemOwners);
   }, [lootItems, itemOwners]);
-
-  useEffect(() => {
-    if (filteredItems.length > 0) {
-      gsap.fromTo('.loot-item', { opacity: 0 }, { duration: 0.3, opacity: 1, stagger: 0.03 });
-    }
-  }, [filteredItems]);
 
   useEffect(() => {
     !loadingPartyData && setSortBy(partyData?.favorites?.[currentUser.uid] || 'party');

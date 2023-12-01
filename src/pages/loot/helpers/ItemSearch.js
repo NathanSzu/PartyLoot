@@ -40,13 +40,13 @@ export default function ItemSearch({ items, setFilteredItems, setLoading }) {
       return item;
     if (
       itemDesc
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(searchRef.current.value.toLowerCase().trim())
     )
       return item;
     if (
       itemTags
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(searchRef.current.value.toLowerCase().trim())
     )
       return item;

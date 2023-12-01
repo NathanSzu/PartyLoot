@@ -71,8 +71,10 @@ export function DetailsPanel({ item, getCompendium }) {
                 </Col>
               </Row>
               {showEditTrigger && !showEditSection && <EditDiscoveryTrigger setShow={setShowEditSection} />}
-
-              <Row>
+              <Row className='border-bottom pb-3'>
+                <CopyToGroupSection item={item}/>
+              </Row>
+              <Row className='pt-3'>
                 <Col className='border-end'>
                   <p className='m-0'>
                     Categories: <br />
@@ -154,7 +156,7 @@ export function OglDetailsPanel({ item }) {
               </p>
             </Col>
           </Row>
-          <CopyToGroupSection />
+          <CopyToGroupSection item={item}/>
         </div>
       </div>
     </>

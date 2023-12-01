@@ -5,14 +5,12 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import GoldInput from './GoldInput';
 import TagEditor from './TagEditor';
-import { gsap } from 'gsap';
 
 export default function GoldTracker() {
   const { sortBy, groupDoc } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
   const [showTagEditor, setShowTagEditor] = useState(false);
-  const [open, setOpen] = useState(false);
   const [itemOwnerName, setItemOwnerName] = useState('Party');
   const [loading, setLoading] = useState(false);
 
@@ -27,11 +25,6 @@ export default function GoldTracker() {
   const [currency, loadingCurrency] = useDocumentData(currencyRef);
   const [colorTags] = useDocumentData(colorTagRef);
   const [allTags] = useDocumentData(tagRef);
-
-  useEffect(() => {
-    gsap.fromTo('.chevron-left', { rotate: 180 }, { rotate: 0, duration: 0.35 });
-    gsap.fromTo('.chevron-right', { rotate: -180 }, { rotate: 0, duration: 0.35 });
-  }, [open]);
 
   useEffect(() => {
     let isMounted = true;
