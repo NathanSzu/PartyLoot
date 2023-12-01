@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('login', (email = 'test@test.com', password = 'password') => {
+Cypress.Commands.add('login', (email = 'test@test.com', password = 'Password123!') => {
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
   cy.visit('/');
   cy.get('[data-cy=get-started]').click();
