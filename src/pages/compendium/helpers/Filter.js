@@ -66,6 +66,7 @@ export function SearchFilter({ state, setState }) {
       <Form.Label>Search</Form.Label>
       <Form.Control
         as='input'
+        data-cy='search-input'
         placeholder='Start typing to begin search...'
         value={state}
         onChange={(e) => {

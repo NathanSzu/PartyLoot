@@ -7,6 +7,8 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:3000',
     viewportHeight: 896,
     viewportWidth: 414,
+    watchForFileChanges: false,
+    defaultCommandTimeout: 10000,
     video: false,
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config);

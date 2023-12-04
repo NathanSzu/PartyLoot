@@ -15,7 +15,7 @@ export default function ItemOwnerSelect({ metadata, state, setState, value = '' 
         setState({ ...state, setting: e.target.value });
       }}
       value={state.setting}
-      data-cy='new-discovery-campaign-setting'
+      data-cy='discovery-setting'
     >
       <option value={''}>Choose setting</option>
       {keys &&

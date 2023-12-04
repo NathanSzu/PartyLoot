@@ -90,6 +90,7 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
         <Col>
           <Alert variant='info'>
             <Form.Check
+              data-cy='discovery-acknowledgement'
               onChange={() =>
                 setDiscoveryRecord({ ...discoveryRecord, acknowledgement: !discoveryRecord.acknowledgement })
               }
@@ -192,7 +193,7 @@ export function AddDiscovery({ getCompendium }) {
 
   return (
     <>
-      <Button variant='dark' onClick={handleShow} className='m-2 background-dark' data-cy='create-group'>
+      <Button variant='dark' onClick={handleShow} className='m-2 background-dark' data-cy='add-discovery'>
         +
       </Button>
 
@@ -212,12 +213,26 @@ export function AddDiscovery({ getCompendium }) {
 
           <Modal.Footer>
             <Col>
-              <Button disabled={loading} className='background-success w-100' variant='success' type='button' onClick={() => addDiscovery(true)}>
+              <Button
+                disabled={loading}
+                data-cy='add-entry'
+                className='background-success w-100'
+                variant='success'
+                type='button'
+                onClick={() => addDiscovery(true)}
+              >
                 Add to compendium
               </Button>
             </Col>
             <Col>
-              <Button disabled={loading} className='w-100' variant='warning' type='button' onClick={() => addDiscovery()}>
+              <Button
+                disabled={loading}
+                data-cy='save-draft'
+                className='w-100'
+                variant='warning'
+                type='button'
+                onClick={() => addDiscovery()}
+              >
                 Save draft
               </Button>
             </Col>
@@ -334,13 +349,7 @@ export function EditDiscoverySection({ item, getCompendium }) {
           </Button>
         </Col>
         <Col>
-          <Button
-            disabled={loading}
-            className='w-100'
-            variant='warning'
-            type='button'
-            onClick={() => editDiscovery()}
-          >
+          <Button disabled={loading} className='w-100' variant='warning' type='button' onClick={() => editDiscovery()}>
             Save draft
           </Button>
         </Col>

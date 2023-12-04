@@ -14,7 +14,7 @@ export default function UserDiscoveriesControls({ show, setShow, displayName, ge
               </p>
             </Col>
             <Col className='text-end'>
-              <Button variant='dark' className='background-dark' onClick={() => {setShow(!show); setOglTab(false);}}>
+              <Button data-cy={show ? 'all-discoveries' : 'my-discoveries'} variant='dark' className='background-dark' onClick={() => {setShow(!show); setOglTab(false);}}>
                 {show ? 'All discoveries' : 'My discoveries'}
               </Button>
             </Col>

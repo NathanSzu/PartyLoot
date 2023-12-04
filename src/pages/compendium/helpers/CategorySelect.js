@@ -36,6 +36,7 @@ export default function CategorySelect({ metadata, categories, setState }) {
         keys.map((key) => (
           <Col key={key} xs={6}>
             <Form.Check
+              data-cy={`discovery-category${key}`}
               defaultChecked={categoryArr.includes(key)}
               onChange={(e) => handleCategoryCheck(e, key)}
               value={key}
