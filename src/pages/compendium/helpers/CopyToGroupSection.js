@@ -8,7 +8,7 @@ import fb from 'firebase';
 
 export default function CopyToGroupSection({ item }) {
   const { groupList, groups } = useContext(GroupContext);
-  const { writeHistoryEvent, setToastHeader, setToastContent, toggleShowToast } = useContext(GlobalFeatures);
+  const { writeHistoryEvent, setToastHeader, setToastContent, setShowToast } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
   const [group, setGroup] = useState('');
@@ -19,7 +19,7 @@ export default function CopyToGroupSection({ item }) {
 
   const handleSaveToGroup = () => {
     let itemName = item.itemName || item.name;
-    let itemDesc = item.itemDesc || item.desc;
+    let itemDesc = item.itemDesc || item.desc || '';
     setLoading(true);
     groupLootRef
       .add({
@@ -31,7 +31,7 @@ export default function CopyToGroupSection({ item }) {
       .then(() => {
         setToastHeader('Item copied to group');
         setToastContent(`${itemName} has been saved to your group`);
-        toggleShowToast();
+        setShowToast(true);
 
         let historyData = {
           itemName,

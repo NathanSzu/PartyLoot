@@ -115,6 +115,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
         defaultColors,
         currencyKeys,
         toggleShowToast,
+        setShowToast,
         isVisible,
         toastContent,
         setToastContent,
