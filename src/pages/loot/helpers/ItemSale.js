@@ -8,7 +8,7 @@ import GoldInput from './GoldInput';
 import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
 export default function ItemSale({ item, itemOwners }) {
-  const { groupDoc } = useContext(GroupContext);
+  const { groupDoc, currentGroup } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
@@ -32,10 +32,10 @@ export default function ItemSale({ item, itemOwners }) {
   const [sellerId, setSellerId] = useState('party');
 
   const handleClose = () => {
-    setShow(false);
-    setErrorMessage('');
     setSellQty(1);
     setSellState({});
+    setErrorMessage('');
+    setShow(false);
   };
   const handleShow = () => setShow(true);
 
@@ -64,8 +64,8 @@ export default function ItemSale({ item, itemOwners }) {
     itemRef
       .delete()
       .then(() => {
-        setLoading(false);
         handleClose();
+        setLoading(false);
       })
       .catch((err) => {
         console.error('Error removing item: ', err);
@@ -118,12 +118,11 @@ export default function ItemSale({ item, itemOwners }) {
       .catch((err) => console.error(err));
   };
 
-  const compileHistoryData = (seller = 'party', sellQty, item, sellState, currencyKeys) => {
+  const compileHistoryData = (sellQty, item, sellState, currencyKeys) => {
     let data = {
       qty: parseInt(sellQty),
       itemName: item.itemName,
-      currency: [],
-      seller: seller === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === seller).name,
+      currency: []
     };
     currencyKeys.forEach((currencyKey) => {
       data.currency.push((sellState[currencyKey] || 0) * sellQty);
@@ -136,7 +135,7 @@ export default function ItemSale({ item, itemOwners }) {
     setLoading(true);
     let totals = calculateSale(sellerId, currency, sellState, currencyKeys);
     writeSaleTotals(sellerId, totals).then(() => {
-      compileHistoryData(sellerId, sellQty, item, sellState, currencyKeys);
+      compileHistoryData(sellQty, item, sellState, currencyKeys);
       if (item.itemQty >= 2) {
         if (item.itemQty <= sellQty) {
           deleteItem();
@@ -217,7 +216,7 @@ export default function ItemSale({ item, itemOwners }) {
               <Row className='pb-2'>
                 <Col className='p-1'>
                   <Form.Label>Item seller</Form.Label>
-                  <ItemOwnerSelect itemOwners={itemOwners} setState={setSellerId} value={sellerId} />
+                  <ItemOwnerSelect setState={setSellerId} group={currentGroup} state={sellerId} />
                 </Col>
               </Row>
             </Container>

@@ -11,7 +11,7 @@ import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 import QuillInput from '../../common/QuillInput';
 
 export default function ModalLoot({ item = '' }) {
-  const { groupDoc } = useContext(GroupContext);
+  const { groupDoc, currentGroup } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
@@ -255,7 +255,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Row className='mb-2'>
                   <Form.Group controlId='itemOwner'>
-                    <ItemOwnerSelect itemOwners={itemOwners} setState={setItemOwner} value={itemOwner} />
+                    <ItemOwnerSelect setState={setItemOwner} group={currentGroup} value={itemOwner} />
                   </Form.Group>
                   <Col className='mt-2'>{itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}</Col>
                 </Row>

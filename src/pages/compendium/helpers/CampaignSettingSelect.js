@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 
-export default function ItemOwnerSelect({ metadata, state, setState, value = '' }) {
+export default function CampaignSettingSelect({ metadata, state, setState, value = '' }) {
   const [keys, setKeys] = useState([]);
 
   useEffect(() => {

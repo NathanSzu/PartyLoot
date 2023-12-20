@@ -114,7 +114,7 @@ export default function Loot() {
   }, [lootItems, itemOwners]);
 
   useEffect(() => {
-    !loadingPartyData && setSortBy(partyData?.favorites?.[currentUser.uid] || 'party');
+    !loadingPartyData && partyData && setSortBy(partyData?.favorites?.[currentUser.uid] || 'party');
   }, [partyData, itemOwners]);
 
   useEffect(() => {

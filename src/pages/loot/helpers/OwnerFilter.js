@@ -5,7 +5,7 @@ import ModalParty from './ModalParty';
 import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
 export default function OwnerFilter({ itemOwners }) {
-  const { setSortBy, sortBy } = useContext(GroupContext);
+  const { setSortBy, sortBy, currentGroup } = useContext(GroupContext);
 
   const sortRef = useRef('');
 
@@ -18,7 +18,7 @@ export default function OwnerFilter({ itemOwners }) {
             setSortBy(sortRef.current.value);
           }}
         >
-          <ItemOwnerSelect itemOwners={itemOwners} setState={setSortBy} value={sortBy} />
+          <ItemOwnerSelect setState={setSortBy} group={currentGroup} state={sortBy} />
         </Form>
       </Col>
 

@@ -74,7 +74,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
         break;
 
       case 'addFromCompendium':
-        summary = `assigned ${data.itemName} from the compendium, to ${data.owner}`;
+        summary = `added ${data.itemName} from the compendium`;
         break;
 
       default:
