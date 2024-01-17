@@ -1,12 +1,8 @@
 import React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
-export default function Welcome({ setWelcome, setLogin }) {
-  const showForms = () => {
-    setWelcome(false);
-    setLogin(true);
-  };
-
+export default function Welcome() {
   return (
     <Container fluid className='background-light rounded-bottom p-3' data-cy='welcome-message'>
       <Row border='dark'>
@@ -40,9 +36,11 @@ export default function Welcome({ setWelcome, setLogin }) {
           </a>
         </Col>
         <Col xs={4} className=''>
-          <Button variant='light' className='w-100 shadow' data-cy='get-started' onClick={showForms}>
-            Get Started
-          </Button>
+          <LinkContainer to='/login'>
+            <Button variant='light' className='w-100 shadow' data-cy='get-started'>
+              Get Started
+            </Button>
+          </LinkContainer>
         </Col>
       </Row>
     </Container>

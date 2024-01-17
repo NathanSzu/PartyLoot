@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import fb from '../firebase';
 import firebase from 'firebase';
 import metadata from '../../utils/metadata.json';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const AuthContext = React.createContext();
 
@@ -12,6 +13,9 @@ export const AuthProvider = ({ children }) => {
 
   const db = fb.firestore();
   const userRef = db.collection('users').doc(currentUser.uid);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const randomAttr = ['Angry', 'Frustrated', 'Sad', 'Excited', 'Frightened', 'Prideful', 'Gloomy'];
 
@@ -30,6 +34,9 @@ export const AuthProvider = ({ children }) => {
     'Paladin',
     'Ranger',
   ];
+
+  const bypassRoutes = ['login', 'forgot-password'];
+  const securedRoutes = ['groups', 'history', 'loot', 'item-compendium', 'user-settings'];
 
   const setUsername = async (username) => {
     userRef
@@ -115,6 +122,23 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
+  const manageSession = (currentUser, pathname) => {
+    if (currentUser) {
+      bypassRoutes.forEach((route) => {
+        if (pathname.includes(route)) {
+          navigate('/groups')
+        }
+      })
+    }
+    if (!currentUser) {
+      securedRoutes.forEach((route) => {
+        if (pathname.includes(route)) {
+          navigate('/')
+        }
+      })
+    }
+  };
+
   useEffect(() => {
     currentUser &&
       userRef
@@ -142,6 +166,11 @@ export const AuthProvider = ({ children }) => {
     });
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    manageSession(currentUser, location.pathname);
+  }, [location])
+  
 
   return (
     <AuthContext.Provider

@@ -42,8 +42,8 @@ export default function PasswordReset() {
   };
 
   return (
-    <Col xs={12} className='background-light rounded-bottom p-5'>
-      <Form>
+    <Row className='background-light rounded-bottom'>
+      <Form  className='p-5 mw-form'>
         <Form.Group controlId='Email'>
           <Form.Label>Email address</Form.Label>
           {emailValid ? null : <Alert variant={'warning'}>Please enter a valid email address.</Alert>}
@@ -81,6 +81,6 @@ export default function PasswordReset() {
           </Col>
         </Row>
       </Form>
-    </Col>
+    </Row>
   );
 }

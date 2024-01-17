@@ -5,88 +5,65 @@ import PatreonButton from '../../common/PatreonButton';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function PatchNotes() {
-  const { currentUser, db } = useContext(AuthContext);
+  const { db } = useContext(AuthContext);
 
   useEffect(() => {
-    let mounted = true;
-    setTimeout(() => {
-      if (mounted) {
-        getPatchNotes();
-      }
-    }, 4000);
+    let unsubscribe;
+    unsubscribe = getLatestPatchNote();
 
-    return () => (mounted = false);
+    return () => unsubscribe();
   }, []);
 
   const [show, setShow] = useState(false);
-  const [data, setData] = useState({});
-  const [docId, setDocId] = useState('');
+
+  const [patchNoteDoc, setPatchNoteDoc] = useState(false);
 
   const handleClose = () => setShow(false);
 
   const showNoteIfNew = (doc) => {
-    db.collection('updateNotes')
-      .doc(doc.id)
-      .collection('confirmedBy')
-      .where('id', '==', currentUser.uid)
-      .get()
-      .then((confirmSnap) => {
-        if (confirmSnap.docs.length === 0) setShow(true);
-      })
-      .catch((error) => {
-        console.error('Error getting confirmations: ', error);
-      });
+    let noteId = localStorage.getItem(doc.id);
+    console.log(noteId);
+    console.log(doc);
+    if (!noteId) {
+      setPatchNoteDoc(doc);
+      setShow(true);
+    }
   };
 
-  const getPatchNotes = () => {
-    db.collection('updateNotes')
+  const getLatestPatchNote = () => {
+    return db.collection('updateNotes')
       .orderBy('posted', 'desc')
       .limit(1)
-      .get()
-      .then((noteSnap) => {
-        noteSnap.forEach((doc) => {
-          setData(doc.data());
-          setDocId(doc.id);
-          showNoteIfNew(doc);
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log({ id: doc.id, ...doc.data() });
+          showNoteIfNew({ id: doc.id, ...doc.data() });
         });
-      })
-      .catch((error) => {
-        console.error('Error getting patch notes: ', error);
       });
   };
 
-  const markNoteAsRead = (uid, docId) => {
-    db.collection('updateNotes')
-      .doc(docId)
-      .collection('confirmedBy')
-      .add({
-        id: uid,
-      })
-      .then(() => {
-        handleClose();
-      })
-      .catch((error) => {
-        console.error('Error marking note as read: ', error);
-      });
+  const markShowNote = (doc) => {
+    localStorage.setItem(doc.id, 'dismissed');
+    setShow(false);
   };
 
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <h2 className='fs-md-deco mb-0'>{data.title}</h2>
+        <h2 className='fs-md-deco mb-0'>{patchNoteDoc.title}</h2>
       </Modal.Header>
 
       <Modal.Body>
         <div>
-          <p>{data.description}</p>
-          {data.warning && (
+          <p>{patchNoteDoc.description}</p>
+          {patchNoteDoc.warning && (
             <p>
-              <strong>{data.warning}</strong>
+              <strong>{patchNoteDoc.warning}</strong>
             </p>
           )}
-          {data.bullets && (
+          {patchNoteDoc.bullets && (
             <ul>
-              {data.bullets.map((bullet, idx) => (
+              {patchNoteDoc.bullets.map((bullet, idx) => (
                 <li key={idx}>{bullet}</li>
               ))}
             </ul>
@@ -101,10 +78,10 @@ export default function PatchNotes() {
 
       <Modal.Footer className='space-between'>
         <div className='d-flex'>
-          <div className='pr-2'>Version: {data.version}</div>
+          <div className='pr-2'>Version: {patchNoteDoc.version}</div>
           <div>
             <small>
-              <em>{data.posted?.toDate().toString().substring(0, 16)}</em>
+              <em>{patchNoteDoc.posted?.toDate().toString().substring(0, 16)}</em>
             </small>
           </div>
         </div>
@@ -112,7 +89,7 @@ export default function PatchNotes() {
           variant='dark'
           className='background-dark'
           onClick={() => {
-            markNoteAsRead(currentUser.uid, docId);
+            markShowNote(patchNoteDoc);
           }}
         >
           <img alt='Mark as read' src='/APPIcons/check-lg.svg' />

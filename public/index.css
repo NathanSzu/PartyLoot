@@ -10,6 +10,7 @@
   --fs-md-deco: 24px;
   --fs-lg-deco: 32px;
   --fs-sm-deco: 20px;
+  --mw-form: 1000px;
   background-color: var(--theme1);
   overflow: hidden;
 }
@@ -161,4 +162,9 @@ code {
 
 .nav-link {
   color: var(--theme1);
+}
+
+.mw-form {
+  max-width: var(--mw-form);
+  margin: auto;
 }

@@ -34,7 +34,7 @@
     }
   ],
   "description": "A collaborative loot and inventory manager for adventuring parties.",
-  "start_url": "/",
+  "start_url": "/groups",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

@@ -28,7 +28,7 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
         itemName: item.itemName,
         maxCharges: item.maxCharges,
         categories: item.categories,
-        itemDesc: item.itemDesc,
+        itemDesc: item.itemDesc || '',
       });
     item && setDiscoveryCategories(item.categories);
   }, [item]);
@@ -313,7 +313,6 @@ export function EditDiscoverySection({ item, getCompendium }) {
       )
       .then(() => {
         getCompendium();
-        setLoading(false);
         setToastHeader('Item changes recorded');
         setToastContent(
           `Changes to your item "${discoveryRecord.itemName}" have been recorded and it has been ${
