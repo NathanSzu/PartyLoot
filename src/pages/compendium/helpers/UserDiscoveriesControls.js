@@ -4,26 +4,31 @@ import { AddDiscovery } from './RecordDiscovery';
 
 export default function UserDiscoveriesControls({ show, setShow, displayName, getCompendium, setOglTab }) {
   return (
-    <>
-      <Card className='rounded-0 rounded-bottom background-light border-dark border-bottom-0 border-end-0 border-start-0'>
-        <Card.Header>
-          <Row>
-            <Col>
-              <p className='vertical-center'>
-                <span className='p-2 badge rounded-pill bg-light text-dark me-1'>User | {displayName}</span>
-              </p>
-            </Col>
-            <Col className='text-end'>
-              <Button data-cy={show ? 'all-discoveries' : 'my-discoveries'} variant='dark' className='background-dark' onClick={() => {setShow(!show); setOglTab(false);}}>
-                {show ? 'All discoveries' : 'My discoveries'}
-              </Button>
-            </Col>
-          </Row>
-        </Card.Header>
-      </Card>
+    <Card className='rounded-0 border-0 rounded-bottom background-light'>
+      <Card.Header>
+        <Row>
+          <Col>
+            <span className='p-2 mt-1 badge rounded-pill bg-light text-dark'>User | {displayName}</span>
+          </Col>
+          <Col className='text-end'>
+            <Button
+              data-cy={show ? 'all-discoveries' : 'my-discoveries'}
+              variant='dark'
+              className='background-dark'
+              onClick={() => {
+                setShow(!show);
+                setOglTab(false);
+              }}
+            >
+              {show ? 'All discoveries' : 'My discoveries'}
+            </Button>
+          </Col>
+        </Row>
+      </Card.Header>
+
       {show && (
-        <Card>
-          <Card.Header>
+        <>
+          <Card.Footer>
             <Row>
               <Col>
                 <p className='m-0 text-center fs-md-deco mx-auto fancy-font text-dark'>
@@ -31,9 +36,9 @@ export default function UserDiscoveriesControls({ show, setShow, displayName, ge
                 </p>
               </Col>
             </Row>
-          </Card.Header>
-        </Card>
+          </Card.Footer>
+        </>
       )}
-    </>
+    </Card>
   );
 }

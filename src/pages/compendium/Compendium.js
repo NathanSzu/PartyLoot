@@ -167,15 +167,15 @@ export default function Compendium() {
   }, [oglTabActive]);
 
   return (
-    <Container className='lazy-scroll-container pl-1 pr-1' onScroll={() => loadMore(compendium.length)}>
-      <Navbar sticky='top' className='w-100 p-0' id='sticky-compendium-filter'>
-        <div className='d-block w-100 mx-0 mt-2 shadow background-light rounded'>
+    <Row className='lazy-scroll-container' onScroll={() => loadMore(compendium.length)}>
+      <Navbar sticky='top' className='w-100 p-0 background-light rounded-bottom' id='sticky-compendium-filter'>
+        <div className='d-block w-100'>
           <div className='accordion accordion-flush' id='compendium-accordion'>
             <div className='accordion-item clear-background'>
               <h2 className='accordion-header' id='compendiumHeading'>
                 <button
                   data-cy='filters-tab-toggle'
-                  className='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed fancy-font fs-md-deco'
+                  className='accordion-icon-alt accordion-button accordion-button-loot-dark collapsed fancy-font fs-md-deco'
                   type='button'
                   data-bs-toggle='collapse'
                   data-bs-target='#collapseOne'
@@ -191,7 +191,7 @@ export default function Compendium() {
                 aria-labelledby='compendiumHeading'
                 data-bs-parent='#compendium-accordion'
               >
-                <div className='accordion-body background-light'>
+                <div className='accordion-body'>
                   <Row>
                     <Col xs={6}>
                       <Filter
@@ -222,40 +222,40 @@ export default function Compendium() {
             getCompendium={getCompendium}
             setOglTab={setOglTab}
           />
+
+          {!showMyDiscoveries && (
+            <div className='nav nav-pills p-2' id='nav-tab' role='tablist'>
+              <button
+                className={`nav-link w-50 ${!oglTabActive && 'active'}`}
+                id='community-tab'
+                data-bs-toggle='tab'
+                data-bs-target='#community'
+                type='button'
+                role='tab'
+                aria-controls='community'
+                aria-selected={!oglTabActive}
+                onClick={() => setOglTab(false)}
+              >
+                Community
+              </button>
+              <button
+                className={`nav-link w-50 ${oglTabActive && 'active'}`}
+                id='ogl-tab'
+                data-bs-toggle='tab'
+                data-bs-target='#ogl'
+                type='button'
+                role='tab'
+                aria-controls='ogl'
+                aria-selected={oglTabActive}
+                onClick={() => setOglTab(true)}
+              >
+                OGL Content
+              </button>
+            </div>
+          )}
         </div>
       </Navbar>
-      {!showMyDiscoveries && (
-        <nav>
-          <div className='nav nav-pills border-0 p-2 rounded mt-2 background-light' id='nav-tab' role='tablist'>
-            <button
-              className={`nav-link w-50 ${!oglTabActive && 'active'}`}
-              id='community-tab'
-              data-bs-toggle='tab'
-              data-bs-target='#community'
-              type='button'
-              role='tab'
-              aria-controls='community'
-              aria-selected={!oglTabActive}
-              onClick={() => setOglTab(false)}
-            >
-              Community
-            </button>
-            <button
-              className={`nav-link w-50 ${oglTabActive && 'active'}`}
-              id='ogl-tab'
-              data-bs-toggle='tab'
-              data-bs-target='#ogl'
-              type='button'
-              role='tab'
-              aria-controls='ogl'
-              aria-selected={oglTabActive}
-              onClick={() => setOglTab(true)}
-            >
-              OGL Content
-            </button>
-          </div>
-        </nav>
-      )}
+
       <div className='tab-content' id='nav-tabContent'>
         <div
           className={`tab-pane fade ${!oglTabActive && 'show active'}`}
@@ -276,6 +276,6 @@ export default function Compendium() {
           <OglList oglResults={oglResults} getOglResults={getOglResults} loading={loadingOgl} />
         </div>
       </div>
-    </Container>
+    </Row>
   );
 }

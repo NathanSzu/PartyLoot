@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     manageSession(currentUser, location.pathname);
-  }, [location])
+  }, [location, currentUser])
   
 
   return (

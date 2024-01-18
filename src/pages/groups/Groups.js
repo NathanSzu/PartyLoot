@@ -41,7 +41,7 @@ export default function Groups() {
               {groupList.map((group, idx) => (
                 <Col key={idx} lg={6}>
                   <Row className='border-top border-dark background-light mx-1 rounded h-100'>
-                    <Col className='groups-overflow px-3 py-2'>{group.groupName}</Col>
+                    <Col className='groups-overflow fancy-font fs-md-deco px-3 py-2'>{group.groupName}</Col>
                     <Col xs={3} className='auto d-flex align-items-center'>
                       <div className='vstack gap-1 col-md-5 mx-auto my-2'>
                         <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />

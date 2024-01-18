@@ -58,7 +58,7 @@ export default function GoldTracker() {
         <div className='accordion-item clear-background'>
           <h2 className='accordion-header' id='goldTrackerHeading'>
             <button
-              className='accordion-icon-alt accordion-button rounded-top accordion-button-loot-dark collapsed'
+              className='accordion-icon-alt accordion-button accordion-button-loot-dark collapsed'
               type='button'
               data-bs-toggle='collapse'
               data-bs-target='#collapseOne'

@@ -131,20 +131,18 @@ export default function Loot() {
   }, [currency]);
 
   return (
-    <Container className='lazy-scroll-container'>
+    <Row className='lazy-scroll-container'>
       <Navbar sticky='top' className='w-100 p-0' id='sticky-filter'>
-        <div className='d-block w-100 mx-0 my-2 shadow'>
+        <div className='d-block w-100 mx-0 mb-2'>
           <GoldTracker />
-          <Card className='background-light rounded-0 border-dark border-bottom-0 border-end-0 border-start-0'>
-            <Card.Header className='border-0'>
+          <Card className='rounded-top-0 background-light border-dark border-bottom-0 border-end-0 border-start-0'>
+            <Card.Header>
               <Container>
                 <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
                 <OwnerFilter itemOwners={itemOwners} />
               </Container>
             </Card.Header>
-          </Card>
-          <Card className='background-light rounded-0 rounded-bottom border-dark border-start-0 border-end-0 border-bottom-0'>
-            <Card.Header className='border-0 d-flex'>
+            <Card.Footer className='border-0 d-flex'>
               <Container>
                 <Row>
                   <Col xs={9} className='pe-0'>
@@ -159,40 +157,44 @@ export default function Loot() {
                   </Col>
                 </Row>
               </Container>
-            </Card.Header>
+            </Card.Footer>
           </Card>
         </div>
       </Navbar>
-      <Row className='mx-1'>
-        {loading && (
-          <Spinner
-            as='div'
-            className='d-flex mt-4 ml-auto mr-auto loading-spinner'
-            animation='border'
-            role='status'
-            variant='light'
-          />
-        )}
-        <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
-        {filteredItems.length > 0 || loading ? null : (
-          <Col xs={12} className='pt-4 pb-4 pl-5 pr-5 background-unset add-background-dark'>
-            <p className='text-center font-weight-bold text-light'>
-              Tap Party Gold to expand. Color tags can be edited to suit your party's needs.
-            </p>
-            <p className='text-center font-weight-bold text-light'>
-              Search bar filters items as you type. This feature searches item names, descriptions, and tags.
-            </p>
-            <p className='text-center font-weight-bold text-light'>
-              Items and gold totals can be filtered by character using the dropdown menu. Click the button to the right
-              to add or remove characters.
-            </p>
-            <p className='text-center font-weight-bold text-light'>
-              To add items click the Add Item button. A name and description are required, all other information is
-              optional.
-            </p>
+      <Container>
+        <Row>
+          <Col>
+            {loading && (
+              <Spinner
+                as='div'
+                className='d-flex mt-4 mx-auto loading-spinner'
+                animation='border'
+                role='status'
+                variant='light'
+              />
+            )}
+            <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
+            {filteredItems.length > 0 || loading ? null : (
+              <Col>
+                <p className='font-weight-bold text-light'>
+                  Tap Party Gold to expand. Color tags can be edited to suit your party's needs.
+                </p>
+                <p className='font-weight-bold text-light'>
+                  Search bar filters items as you type. This feature searches item names, descriptions, and tags.
+                </p>
+                <p className='font-weight-bold text-light'>
+                  Items and gold totals can be filtered by character using the dropdown menu. Click the button to the
+                  right to add or remove characters.
+                </p>
+                <p className='font-weight-bold text-light'>
+                  To add items click the Add Item button. A name and description are required, all other information is
+                  optional.
+                </p>
+              </Col>
+            )}
           </Col>
-        )}
-      </Row>
-    </Container>
+        </Row>
+      </Container>
+    </Row>
   );
 }
