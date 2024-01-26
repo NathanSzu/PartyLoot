@@ -148,6 +148,7 @@ export default function EditGroup({ name, id, owner, members }) {
   return (
     <>
       <Button
+        disabled={!name}
         variant='dark'
         className=' background-dark border-0'
         onClick={() => {

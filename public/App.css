@@ -47,9 +47,9 @@
 }
 
 .load-container {
-    height: 20px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, .15);
+  height: 20px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 .overlay-loader {
   position: absolute;
@@ -60,7 +60,7 @@
   opacity: 25%;
 }
 .activity {
-    overflow: hidden;
+  overflow: hidden;
   position: absolute;
   left: 0%;
   height: 100%;
@@ -130,4 +130,24 @@
 
 .disabled-opacity-100:disabled {
   opacity: 100%;
+}
+
+/* Breakpoint specific settings */
+
+@media only screen and (max-width: 1199px) {
+  .bs-fixed-col {
+    width: 456px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .bs-fixed-col {
+    width: 546px;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .bs-fixed-col {
+    width: 636px;
+  }
 }

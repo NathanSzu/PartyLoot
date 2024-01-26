@@ -13,23 +13,17 @@ export default function Settings() {
   });
 
   return (
-    <Container className='lazy-scroll-container'>
-      <Row className='pt-2'>
-        <AccountSettingsCard />
-      </Row>
+    <Row className='lazy-scroll-container background-light rounded-bottom'>
+      <AccountSettingsCard />
+      <AppSupportCard />
 
-      <Row className='py-2'>
-        <AppSupportCard />
-      </Row>
-      <Row>
-        <Col md={8} className='mx-auto'>
-          <Card>
-            <Card.Body>
-              Version: {metadata.buildMajor}.{metadata.buildMinor}.{metadata.buildRevision} {metadata.buildTag}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+      <Col lg={8} className='mx-auto p-2'>
+        <Card>
+          <Card.Body>
+            Version: {metadata.buildMajor}.{metadata.buildMinor}.{metadata.buildRevision} {metadata.buildTag}
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
   );
 }

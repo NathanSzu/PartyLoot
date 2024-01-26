@@ -1,20 +1,13 @@
 import React, { useContext } from 'react';
-import { Row, Col, Button, Spinner, Container, Navbar } from 'react-bootstrap';
+import { Row, Col, Spinner, Container, Navbar } from 'react-bootstrap';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import AddGroup from './helpers/AddGroup';
-import EditGroup from './helpers/EditGroup';
 import PatchNotes from './helpers/PatchNotes';
-import { useNavigate } from 'react-router-dom';
+import GroupCard from './helpers/GroupCard';
+import IntroCard from './helpers/IntroCard';
 
 export default function Groups() {
-  const { setCurrentGroup, groupList } = useContext(GroupContext);
-
-  const navigate = useNavigate();
-
-  const handleSelectGroup = (groupId) => {
-    setCurrentGroup(groupId);
-    navigate('/loot');
-  };
+  const { groupList } = useContext(GroupContext);
 
   return (
     <Row className='lazy-scroll-container'>
@@ -38,26 +31,30 @@ export default function Groups() {
             />
           ) : (
             <>
-              {groupList.map((group, idx) => (
-                <Col key={idx} lg={6}>
-                  <Row className='border-top border-dark background-light mx-1 rounded h-100'>
-                    <Col className='groups-overflow fancy-font fs-md-deco px-3 py-2'>{group.groupName}</Col>
-                    <Col xs={3} className='auto d-flex align-items-center'>
-                      <div className='vstack gap-1 col-md-5 mx-auto my-2'>
-                        <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
-                        <Button
-                          id={group.id}
-                          onClick={(e) => {
-                            handleSelectGroup(e.target.id);
-                          }}
-                        >
-                          View
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
+              {
+                <Col className='d-none top-0 d-lg-block mx-auto'>
+                  <div className='py-3 position-fixed background-light rounded bs-fixed-col'>
+                    <Container>
+                      <Row>
+                        <Col xs={4}>
+                          <img src='/PWAIcons/PL_512.png' className='img-fluid rounded' alt='...' />
+                        </Col>
+                      </Row>
+                    </Container>
+                  </div>
                 </Col>
-              ))}
+              }
+              <Col>
+                {groupList.length < 1 ? (
+                  <IntroCard />
+                ) : (
+                  <>
+                    {groupList.map((group, idx) => (
+                      <GroupCard group={group} idx={idx} />
+                    ))}
+                  </>
+                )}
+              </Col>
             </>
           )}
         </Row>

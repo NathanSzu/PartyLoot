@@ -22,8 +22,6 @@ export default function PatchNotes() {
 
   const showNoteIfNew = (doc) => {
     let noteId = localStorage.getItem(doc.id);
-    console.log(noteId);
-    console.log(doc);
     if (!noteId) {
       setPatchNoteDoc(doc);
       setShow(true);
@@ -36,7 +34,6 @@ export default function PatchNotes() {
       .limit(1)
       .onSnapshot((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          console.log({ id: doc.id, ...doc.data() });
           showNoteIfNew({ id: doc.id, ...doc.data() });
         });
       });

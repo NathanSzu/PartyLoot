@@ -27,7 +27,7 @@ export default function AccountSettingsCard() {
   };
 
   return (
-    <Col md={8} className='mx-auto'>
+    <Col lg={8} className='mx-auto pt-2'>
       <Card>
         <Card.Header>
           <h1 className='text-center fancy-font fs-md-deco m-0'>Account Settings</h1>
