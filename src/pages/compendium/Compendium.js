@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 // import fb from 'firebase';
-import { Container, Row, Col, Navbar } from 'react-bootstrap';
+import { Row, Col, Navbar } from 'react-bootstrap';
 import CompendiumList from './helpers/CompendiumList';
 import OglList from './helpers/OglList';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';

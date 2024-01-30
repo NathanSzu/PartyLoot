@@ -26,6 +26,7 @@ export default function GroupCard({ group, idx }) {
           <Button
             disabled={!group}
             id={group?.id}
+            data-cy={`group${idx}`}
             onClick={(e) => {
               handleSelectGroup(e.target.id);
             }}

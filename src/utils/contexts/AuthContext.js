@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   ];
 
   const bypassRoutes = ['login', 'forgot-password'];
-  const securedRoutes = ['groups', 'history', 'loot', 'item-compendium', 'user-settings'];
+  const securedRoutes = ['groups', 'history', 'loot', 'compendium', 'settings'];
 
   const setUsername = async (username) => {
     userRef

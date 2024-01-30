@@ -31,7 +31,6 @@ Cypress.Commands.add('login', (email = 'test@test.com', password = 'Password123!
   cy.get('[data-cy=login-email]').type(email);
   cy.get('[data-cy=login-password]').type(password);
   cy.get('[data-cy=login]').click();
-  cy.url().should('include', '/groups');
   cy.get('.btn-close', { timeout: 10000 }).click();
 });
 
@@ -39,17 +38,18 @@ Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
   cy.get('[data-cy=create-group]').click();
   cy.get('[data-cy=new-group-name]').type(uid);
   cy.contains('button', 'Create').click();
-  cy.contains('a', uid).should('have.length', 1);
+  cy.contains('div', uid).should('have.length', 1);
 });
 
 Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2') => {
-    cy.visit('/groups');
-    cy.get('.btn-close', { timeout: 10000 }).click();
-    cy.get('[data-cy=edit-group]').eq(0).click();
-    cy.get('[data-cy=delete]').click();
-    cy.get('[data-cy=confirm-delete]').click();
-    cy.contains('button', uid).should('not.exist');
-    cy.contains('button', uid2).should('not.exist');
+  cy.get('[data-cy=navbar-toggle]').click();
+  cy.get('[data-cy=navbar-groups]').click();
+  cy.get('.btn-close', { timeout: 10000 }).click();
+  cy.get('[data-cy=edit-group]').eq(0).click();
+  cy.get('[data-cy=delete]').click();
+  cy.get('[data-cy=confirm-delete]').click();
+  cy.contains('button', uid).should('not.exist');
+  cy.contains('button', uid2).should('not.exist');
 });
 
 Cypress.Commands.add('fillItemFields', () => {

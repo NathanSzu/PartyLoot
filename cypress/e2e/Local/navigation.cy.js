@@ -1,5 +1,5 @@
 /// <reference types='cypress' />
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 let uid = uuidv4();
 let uid2 = uuidv4();
 
@@ -21,26 +21,16 @@ describe('routing protection', () => {
     cy.visit('/loot');
     cy.url().should('eq', 'http://localhost:3000/');
   });
-});
-
-describe('check login views', () => {
-  before(() => {
-    indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    cy.visit('/');
+  it('re-route from /compendium to /root if user is not logged in', () => {
+    cy.visit('/compendium');
+    cy.url().should('eq', 'http://localhost:3000/');
   });
-
-  it('welcome message displayed', () => {
-    cy.get('[data-cy=welcome-message]');
-    cy.get('[data-cy=navbar-toggle]').should('not.exist');
-  });
-
-  it('login and signup options exist', () => {
-    cy.get('[data-cy=get-started]').click();
-    cy.get('[data-cy=login-check-password]').should('not.exist');
-    cy.get('[data-cy=forgot-password]').should('exist');
-    cy.get('[data-cy=sign-up-here]').click();
-    cy.get('[data-cy=login-check-password]').should('exist');
-    cy.get('[data-cy=sign-up-here]').click();
+  it('login option exists', () => {
+    cy.get('[data-cy=navbar-toggle]').click();
+    cy.get('[data-cy=navbar-login]');
+    cy.get('#basic-navbar-nav').within(() => {
+      cy.get('a').should('have.length', 1);
+    });
   });
 });
 
@@ -49,15 +39,12 @@ describe('check navigation', () => {
     cy.login();
   });
 
-  it('re-route from /root to /groups if user is logged in', () => {
-    cy.visit('/');
-    cy.url().should('include', '/groups');
-    cy.get('.btn-close', { timeout: 5000 }).click();
-  });
-
   it('check navbar options', () => {
     cy.get('[data-cy=navbar-toggle]').click();
-    cy.contains('.nav-link', 'Groups').should('not.exist');
+    cy.contains('.nav-link', 'Groups');
+    cy.contains('.nav-link', 'Compendium');
+    cy.contains('.nav-link', 'Settings');
+    cy.contains('.nav-link', 'Logout');
   });
 
   it('add test group', () => {
@@ -66,31 +53,26 @@ describe('check navigation', () => {
 
   it('view loot', () => {
     cy.get('[data-cy=group0]').click();
-    cy.url().should('include', 'http://localhost:3000/loot');
-    cy.get('[data-cy=navbar-toggle]').click();
-    cy.get('[data-cy=navbar-toggle]').click();
+    cy.url().should('include', '/loot');
   });
 
   it('view settings', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-settings]').click();
-    cy.url().should('include', 'http://localhost:3000/user-settings');
-    cy.get('[data-cy=navbar-toggle]').click();
-    cy.contains('.nav-link', 'Settings').should('not.exist');
-    cy.get('[data-cy=navbar-toggle]').click();
+    cy.url().should('include', '/settings');
   });
 
   it('view groups', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-groups]').click();
-    cy.url().should('include', 'http://localhost:3000/groups');
+    cy.url().should('include', '/groups');
+    cy.get('.btn-close', { timeout: 10000 }).click();
   });
 
-  it.skip('view compendium', () => {
+  it('view compendium', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-compendium]').click();
-    cy.url().should('include', 'http://localhost:3000/item-compendium');
-    cy.get('[data-cy=navbar-toggle]').click();
+    cy.url().should('include', '/compendium');
   });
 
   it('remove test group', () => {

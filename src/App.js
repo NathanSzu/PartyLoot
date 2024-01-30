@@ -1,6 +1,6 @@
 // Packages
 import React from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Navigate, Routes, Route } from 'react-router-dom';
 
