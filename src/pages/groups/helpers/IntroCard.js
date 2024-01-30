@@ -10,7 +10,7 @@ export default function IntroCard() {
       <Row className='border-top border-dark background-light mx-1 rounded'>
         <Col className='groups-overflow px-3 py-2'>
           <span className='fancy-font fs-md-deco'>'Hey there first timer!'</span>
-          <p className='m-0'>Create a new group above, or share your party code to join an existing crew.</p>
+          <p className='m-0'>Create a new group above, or share your party code to join an existing crew</p>
         </Col>
         <Col xs={3} className='auto d-flex align-items-center'>
           <div className='vstack gap-1 col-md-5 mx-auto my-2'>

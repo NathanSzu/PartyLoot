@@ -23,6 +23,11 @@
       "type": "image/png"
     },
     {
+      "src": "PWAIcons/PL_144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
       "src": "PWAIcons/PL_192.png",
       "type": "image/png",
       "sizes": "192x192"
@@ -34,7 +39,7 @@
     }
   ],
   "description": "A collaborative loot and inventory manager for adventuring parties.",
-  "start_url": "/groups",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

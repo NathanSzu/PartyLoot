@@ -32,7 +32,7 @@ body::before {
   bottom: 0;
   right: 0;
   left: 0;
-  background-image: url(brick-texture.svg);
+  background-image: url(../brick-texture.svg);
   background-size: 75px;
   opacity: 15%;
 }
@@ -76,6 +76,16 @@ code {
 }
 
 .lazy-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-container {
+  max-height: 100vh;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.scroll-container::-webkit-scrollbar {
   display: none;
 }
 

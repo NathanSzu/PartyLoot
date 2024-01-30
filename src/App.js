@@ -30,13 +30,13 @@ function App() {
         <GroupProvider>
           <GlobalFeaturesProvider>
             <BootToast />
-            <Container>
+            <Container className='scroll-container'>
               <BootNav />
               <Routes>
                 <Route>
                   <Route element={<Groups />} path='/groups' exact />
-                  <Route element={<Settings />} path='/user-settings' exact />
-                  <Route element={<Compendium />} path='/item-compendium' exact />
+                  <Route element={<Settings />} path='/settings' exact />
+                  <Route element={<Compendium />} path='/compendium' exact />
                   <Route element={<Login />} path='/login' exact />
                   <Route element={<PasswordReset />} path='/forgot-password' exact />
                   <Route element={<Home />} path='/' exact />

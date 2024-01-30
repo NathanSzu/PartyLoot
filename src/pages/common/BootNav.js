@@ -1,15 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Row } from 'react-bootstrap';
 import firebaseApp from '../../utils/firebase';
 import { AuthContext } from '../../utils/contexts/AuthContext';
-import { LinkContainer } from 'react-router-bootstrap';
 
 export default function BootNav() {
   const location = useLocation();
   const { currentUser } = useContext(AuthContext);
 
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
+
   const navigate = useNavigate();
+
+  const selectLink = (page = '') => {
+    navigate(`/${page.toLowerCase()}`);
+  };
 
   const logOut = () => {
     firebaseApp
@@ -25,43 +34,51 @@ export default function BootNav() {
       });
   };
 
+  const pages = ['Groups', 'Compendium', 'Settings'];
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [location])
+  
+
   return (
     <Row>
-      <Navbar className='p-2' bg='light' expand='false' collapseOnSelect>
-        <LinkContainer to='/groups'>
-          <Navbar.Brand className='fancy-font ps-2 py-0 fs-lg-deco'>Party Loot</Navbar.Brand>
-        </LinkContainer>
-        {/* Hides the nav links if no user is logged in */}
-        {!currentUser ? null : (
-          <>
-            <Navbar.Toggle aria-controls='basic-navbar-nav' data-cy='navbar-toggle' />
-            <Navbar.Collapse id='basic-navbar-nav'>
-              <Nav className='ps-2'>
-                {/* Hides the groups nav link if on the groups page */}
-                {location.pathname === '/groups' ? null : (
-                  <LinkContainer to='/groups' data-cy='navbar-groups'>
-                    <Nav.Link>Groups</Nav.Link>
-                  </LinkContainer>
-                )}
-
-                <LinkContainer to='/item-compendium' data-cy='navbar-compendium'>
-                  <Nav.Link>Compendium</Nav.Link>
-                </LinkContainer>
-
-                {/* Hides the user setting nav link if on the user setting page */}
-                {location.pathname === '/user-settings' ? null : (
-                  <LinkContainer to='/user-settings' data-cy='navbar-settings'>
-                    <Nav.Link>Settings</Nav.Link>
-                  </LinkContainer>
-                )}
+      <Navbar className='p-2' bg='light' expand='false' expanded={expanded}>
+        <Navbar.Brand
+          as='button'
+          className='fancy-font ps-2 py-0 fs-lg-deco border-0 background-unset'
+          onClick={() => selectLink()}
+          data-cy='navbar-brand'
+        >
+          Party Loot
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls='basic-navbar-nav' data-cy='navbar-toggle' onClick={toggleExpanded} />
+        <Navbar.Collapse id='basic-navbar-nav'>
+          <Nav className='ps-2'>
+            {currentUser ? (
+              <>
+                {pages.map((page, idx) => (
+                  <Nav.Link
+                    key={idx}
+                    onClick={() => selectLink(page)}
+                    data-cy={`navbar-${page.toLowerCase()}`}
+                    className='border-bottom'
+                  >
+                    {page}
+                  </Nav.Link>
+                ))}
 
                 <Nav.Link onClick={logOut} data-cy='navbar-logout'>
-                  Sign Out
+                  Logout
                 </Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </>
-        )}
+              </>
+            ) : (
+              <Nav.Link onClick={() => selectLink('login')} data-cy='navbar-login'>
+                Login
+              </Nav.Link>
+            )}
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     </Row>
   );
