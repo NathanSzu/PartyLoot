@@ -10,6 +10,7 @@ import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
 import LootAccordion from './helpers/AccordionLoot';
 import fb from 'firebase';
+import IntroCard from './helpers/IntroCard';
 
 export default function Loot() {
   const { setSortBy, groupDoc } = useContext(GroupContext);
@@ -176,20 +177,7 @@ export default function Loot() {
             <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
             {filteredItems.length > 0 || loading ? null : (
               <Col>
-                <p className='font-weight-bold text-light'>
-                  Tap Party Gold to expand. Color tags can be edited to suit your party's needs.
-                </p>
-                <p className='font-weight-bold text-light'>
-                  Search bar filters items as you type. This feature searches item names, descriptions, and tags.
-                </p>
-                <p className='font-weight-bold text-light'>
-                  Items and gold totals can be filtered by character using the dropdown menu. Click the button to the
-                  right to add or remove characters.
-                </p>
-                <p className='font-weight-bold text-light'>
-                  To add items click the Add Item button. A name and description are required, all other information is
-                  optional.
-                </p>
+                <IntroCard />
               </Col>
             )}
           </Col>

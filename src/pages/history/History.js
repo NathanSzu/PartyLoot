@@ -16,8 +16,8 @@ export default function History() {
   const [historyEvents] = useCollectionData(query);
 
   return (
-    <Container className='lazy-scroll-container'>
-      <Navbar sticky='top' className='theme1-backer rounded p-3 my-2' id='sticky-history-menu'>
+    <Row className='lazy-scroll-container'>
+      <Navbar sticky='top' className='theme1-backer rounded-bottom p-3 mb-2' id='sticky-history-menu'>
         <Col>
           <h1 className='m-0 text-light fancy-font fs-md-deco'>History</h1>
         </Col>
@@ -29,14 +29,12 @@ export default function History() {
           </LinkContainer>
         </Col>
       </Navbar>
-      <Row>
-        <Col>
+      <Col>
         <ListGroup>
           {historyEvents?.length === 0 && <p className='text-center pt-3 text-light'>History is empty!</p>}
           {historyEvents && historyEvents.map((event, idx) => <HistoryItem event={event} key={idx} />)}
         </ListGroup>
-        </Col>
-      </Row>
-    </Container>
+      </Col>
+    </Row>
   );
 }

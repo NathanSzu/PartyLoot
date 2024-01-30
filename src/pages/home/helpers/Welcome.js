@@ -10,7 +10,7 @@ export default function Welcome() {
           <img src='/PWAIcons/PL_512.png' className='img-fluid rounded-start' alt='...' />
         </Col>
         <Col xs={8} sm={6} md={5} className='text-center background-white rounded-end d-flex align-items-center py-2'>
-          <h1 className='w-100'>Welcome to party loot</h1>
+          <h1 className='w-100'>Welcome to Party Loot</h1>
         </Col>
       </Row>
       <Row>

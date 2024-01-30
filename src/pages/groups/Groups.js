@@ -5,6 +5,7 @@ import AddGroup from './helpers/AddGroup';
 import PatchNotes from './helpers/PatchNotes';
 import GroupCard from './helpers/GroupCard';
 import IntroCard from './helpers/IntroCard';
+import ButtonShareLink from '../common/ButtonShareLink';
 
 export default function Groups() {
   const { groupList } = useContext(GroupContext);
@@ -36,8 +37,16 @@ export default function Groups() {
                   <div className='py-3 position-fixed background-light rounded bs-fixed-col'>
                     <Container>
                       <Row>
-                        <Col xs={4}>
+                        <Col xs={4} xl={5}>
                           <img src='/PWAIcons/PL_512.png' className='img-fluid rounded' alt='...' />
+                        </Col>
+                        <Col xs={8} xl={7} className='d-flex align-items-center'>
+                          <div className='w-100 text-center'>
+                            <h1 className='fs-md-deco'>Welcome to Party Loot</h1>
+                            <div className='w-75 mx-auto'>
+                              <ButtonShareLink />
+                            </div>
+                          </div>
                         </Col>
                       </Row>
                     </Container>
