@@ -5,42 +5,80 @@ import { LinkContainer } from 'react-router-bootstrap';
 export default function Welcome() {
   return (
     <Container fluid className='background-light rounded-bottom p-3' data-cy='welcome-message'>
-      <Row border='dark'>
-        <Col xs={12} sm={10} md={8} className='ms-auto me-auto'>
-          <div className='p-3 fs-5'>
-            <h1 className='text-center mb-4 background-dark rounded text-light p-2'>Welcome to Party Loot</h1>
-            <p>Track your adventuring inventory like never before!</p>
-            <ul>
-              <li>Record updates in real time</li>
-              <li>Collaboratively view party items</li>
-              <li>Track customizable currency</li>
-              <li>Access unique homebrew items</li>
-            </ul>
-            <p>
-              Tap "Get Started" to set up an account, or "Patreon" if you'd like to support this free application for
-              others.
-            </p>
-            <p className='mb-4'>
-              With this page open in your mobile browser remember to select <strong>add to home screen</strong> for the
-              full experience.
-            </p>
-          </div>
+      <Row className='justify-content-center p-3'>
+        <Col xs={4} sm={4} md={3} className='p-0'>
+          <img src='/PWAIcons/PL_512.png' className='img-fluid rounded-start' alt='...' />
+        </Col>
+        <Col xs={8} sm={6} md={5} className='text-center background-white rounded-end d-flex align-items-center py-2'>
+          <h1 className='w-100'>Welcome to party loot</h1>
         </Col>
       </Row>
-      <Row className='pb-3 justify-content-center'>
-        <Col xs={4} className=''>
-          <a href='https://www.patreon.com/dndnathan?fan_landing=true' target='blank'>
-            <Button variant='light' className='w-100 shadow'>
-              Patreon
-            </Button>
-          </a>
+      <Row>
+        <Col sm={10} md={8} className='mx-auto pt-3'>
+          <h2 className='text-center background-dark rounded text-light p-2 m-0'>Adventure awaits</h2>
         </Col>
-        <Col xs={4} className=''>
-          <LinkContainer to='/login'>
-            <Button variant='light' className='w-100 shadow' data-cy='get-started'>
-              Get Started
-            </Button>
-          </LinkContainer>
+      </Row>
+      <Row>
+        <Col sm={10} md={8} className='mx-auto pb-3'>
+          <ul class='list-group list-group-horizontal'>
+            <li class='list-group-item flex-fill d-flex align-items-center fs-sm-deco'>Record updates in real time</li>
+            <li class='list-group-item d-flex align-items-center'>
+              <img src='/APPIcons/Home/clock-fill.svg' alt='Realt time updates' width='40' height='40' />
+            </li>
+          </ul>
+          <ul class='list-group list-group-horizontal'>
+            <li class='list-group-item flex-fill d-flex align-items-center fs-sm-deco'>
+              Collaboratively view party items
+            </li>
+            <li class='list-group-item d-flex align-items-center'>
+              <img src='/APPIcons/Home/people-fill.svg' alt='Collaborative tracking' width='40' height='40' />
+            </li>
+          </ul>
+          <ul class='list-group list-group-horizontal'>
+            <li class='list-group-item flex-fill d-flex align-items-center fs-sm-deco'>Track customizable currency</li>
+            <li class='list-group-item d-flex align-items-center'>
+              <img src='/APPIcons/Home/piggy-bank-fill.svg' alt='Customizable currency' width='40' height='40' />
+            </li>
+          </ul>
+          <ul class='list-group list-group-horizontal'>
+            <li class='list-group-item flex-fill d-flex align-items-center fs-sm-deco'>Access unique homebrew items</li>
+            <li class='list-group-item d-flex align-items-center'>
+              <img src='/APPIcons/Home/shield-fill-plus.svg' alt='Homebrew library' width='40' height='40' />
+            </li>
+          </ul>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={10} md={8} className='mx-auto pt-3'>
+          <h2 className='text-center background-dark rounded text-light p-2 m-0'>Start tracking today</h2>
+          {/* <p className='mb-4'>
+            With this page open in your mobile browser remember to select <strong>add to home screen</strong> for the
+            full experience.
+          </p> */}
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={10} md={8} className='mx-auto pb-3'>
+          <ul class='list-group list-group-horizontal'>
+            <li class='list-group-item flex-fill d-flex align-items-center fs-sm-deco'>Create account/login</li>
+            <li class='list-group-item d-flex align-items-center'>
+              <LinkContainer to='/login'>
+                <Button variant='dark background-dark' className='minw-button' data-cy='get-started'>
+                  Get Started
+                </Button>
+              </LinkContainer>
+            </li>
+          </ul>
+          <ul class='list-group list-group-horizontal'>
+            <li class='list-group-item flex-fill d-flex align-items-center fs-sm-deco'>Support us on patreon</li>
+            <li class='list-group-item d-flex align-items-center'>
+              <a href='https://www.patreon.com/dndnathan?fan_landing=true' target='blank'>
+                <Button variant='dark background-dark' className='minw-button'>
+                  Patreon
+                </Button>
+              </a>
+            </li>
+          </ul>
         </Col>
       </Row>
     </Container>
