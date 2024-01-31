@@ -16,7 +16,7 @@ describe('Group actions', () => {
     cy.get('[data-cy=edit-group]').eq(0).click();
     cy.get('[data-cy=edit-group-name]').clear().type(uid2);
     cy.get('[value=Save]').click();
-    cy.contains('a', uid2).should('have.length', 1);
+    cy.contains('div', uid2).should('have.length', 1);
   });
 
   it('add and remove group member', () => {

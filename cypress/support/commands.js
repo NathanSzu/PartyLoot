@@ -42,6 +42,7 @@ Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
 });
 
 Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2') => {
+  cy.visit('/');
   cy.get('[data-cy=navbar-toggle]').click();
   cy.get('[data-cy=navbar-groups]').click();
   cy.get('.btn-close', { timeout: 10000 }).click();
