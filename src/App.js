@@ -30,7 +30,7 @@ function App() {
         <GroupProvider>
           <GlobalFeaturesProvider>
             <BootToast />
-            <Container className='lazy-scroll-container'>
+            <Container className='scroll-container'>
               <BootNav />
               <Routes>
                 <Route>
