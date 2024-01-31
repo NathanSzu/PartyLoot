@@ -79,16 +79,6 @@ code {
   display: none;
 }
 
-.scroll-container {
-  max-height: 100vh;
-  box-sizing: border-box;
-  overflow: auto;
-}
-
-.scroll-container::-webkit-scrollbar {
-  display: none;
-}
-
 .top-layer {
   z-index: 1;
 }
