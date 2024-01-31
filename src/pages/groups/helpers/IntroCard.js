@@ -25,7 +25,7 @@ export default function IntroCard() {
       <Row className='border-top border-dark background-light mx-1 rounded'>
         <Col className='groups-overflow px-3 py-2'>
           You can view your party code from the{' '}
-          <Button className='p-0 m-0' variant='link' onClick={() => navigate('/user-settings')}>
+          <Button className='p-0 m-0' variant='link' onClick={() => navigate('/settings')}>
             settings
           </Button>{' '}
           page
