@@ -14,11 +14,8 @@ export default function ItemSale({ item, itemOwners }) {
 
   const currencyRef = groupDoc.collection('currency').doc('currency');
   const itemRef = groupDoc.collection('loot').doc(item.id);
-  const colorTagRef = groupDoc.collection('currency').doc('colorTags');
-  // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
   const tagRef = groupDoc.collection('currency').doc('tags');
 
-  const [colorTags] = useDocumentData(colorTagRef);
   const [currency] = useDocumentData(currencyRef);
   const [allTags] = useDocumentData(tagRef);
 
@@ -206,7 +203,6 @@ export default function ItemSale({ item, itemOwners }) {
                     key={idx}
                     tags={allTags?.[currencyKey]}
                     currencyKey={currencyKey}
-                    colorTag={colorTags?.[currencyKey]}
                     defaultColor={defaultColors[idx]}
                     setState={updateSellState}
                     disabled={true}

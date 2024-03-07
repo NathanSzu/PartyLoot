@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 
-export default function TagInput({ tags, updateTagState, colorTag, defaultColor, currencyKey }) {
+export default function TagInput({ tags, updateTagState, defaultColor, currencyKey }) {
   const colorRef = useRef();
   const symbolRef = useRef();
 
@@ -10,7 +10,7 @@ export default function TagInput({ tags, updateTagState, colorTag, defaultColor,
       <Col xs={2} md={1} className='p-0'>
         <Form.Control
           type='color'
-          defaultValue={tags?.color || colorTag || defaultColor}
+          defaultValue={tags?.color || defaultColor}
           ref={colorRef}
           onChange={() => {
             updateTagState(currencyKey, 'color', colorRef.current.value);

@@ -4,7 +4,7 @@ import TagInput from './TagInput';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 
-export default function TagEditor({ allTags, colorTags, show, handleClose }) {
+export default function TagEditor({ allTags, show, handleClose }) {
   const { groupDoc } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
@@ -63,7 +63,6 @@ export default function TagEditor({ allTags, colorTags, show, handleClose }) {
                 key={idx}
                 tags={allTags?.[currencyKey]}
                 updateTagState={updateTagState}
-                colorTag={colorTags?.[currencyKey]}
                 defaultColor={defaultColors[idx]}
                 currencyKey={currencyKey}
               />

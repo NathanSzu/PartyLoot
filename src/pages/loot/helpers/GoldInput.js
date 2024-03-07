@@ -8,7 +8,6 @@ export default function GoldInput({
   currency,
   currencyKey,
   handleShow,
-  colorTag,
   defaultColor,
   setState,
   disabled,
@@ -35,7 +34,7 @@ export default function GoldInput({
   return (
     <>
       <Col xs={2} className='p-1'>
-        <TagEditTrigger tags={tags} handleShow={handleShow} colorTag={colorTag || defaultColor} disabled={disabled} />
+        <TagEditTrigger tags={tags} handleShow={handleShow} defaultColor={defaultColor} disabled={disabled} />
       </Col>
       <Col xs={4} md={2} className='p-1'>
         <Form.Control

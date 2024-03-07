@@ -18,12 +18,9 @@ export default function GoldTracker() {
   const handleShow = () => setShowTagEditor(true);
 
   const currencyRef = groupDoc.collection('currency').doc('currency');
-  const colorTagRef = groupDoc.collection('currency').doc('colorTags');
-  // All tag data will eventually be stored in a single tag object in DB. We are transitioning from 'colorTags'
   const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [currency, loadingCurrency] = useDocumentData(currencyRef);
-  const [colorTags] = useDocumentData(colorTagRef);
   const [allTags] = useDocumentData(tagRef);
 
   useEffect(() => {
@@ -53,7 +50,7 @@ export default function GoldTracker() {
 
   return (
     <>
-      <TagEditor allTags={allTags} colorTags={colorTags} show={showTagEditor} handleClose={handleClose} />
+      <TagEditor allTags={allTags} show={showTagEditor} handleClose={handleClose} />
       <div className='accordion accordion-flush' id='gold-tracker-accordion'>
         <div className='accordion-item clear-background'>
           <h2 className='accordion-header' id='goldTrackerHeading'>
@@ -93,7 +90,6 @@ export default function GoldTracker() {
                     currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
                     currencyKey={currencyKey}
                     handleShow={handleShow}
-                    colorTag={colorTags?.[currencyKey]}
                     defaultColor={defaultColors[idx]}
                   />
                 ))}
