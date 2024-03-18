@@ -128,8 +128,21 @@
   min-height: 36px;
 }
 
-.disabled-opacity-100:disabled {
-  opacity: 100%;
+
+.circle {
+  position: relative;
+  width: 38px !important;
+  padding: 19px;
+  border-radius: 50%;
+  border: 1px;
+  border-color: black;
+}
+.circle p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
 }
 
 /* Breakpoint specific settings */

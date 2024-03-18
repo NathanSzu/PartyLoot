@@ -26,7 +26,7 @@ export default function GoldDisplay({ tags, currency, currencyKey, handleShow, d
   return (
     <Col xs={6}>
       <Row>
-        <Col className='py-1 px-1'>
+        <Col className='py-1 pe-0'>
           <div className='d-flex bg-white rounded-pill'>
             <CurrencyIcon tags={tags} handleShow={handleShow} defaultColor={defaultColor} />
             <Form.Control

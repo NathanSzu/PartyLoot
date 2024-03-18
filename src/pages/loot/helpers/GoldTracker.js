@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Row, Spinner } from 'react-bootstrap';
+import { Row, Spinner, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import GoldInput from './GoldInput';
+import GoldDisplay from './GoldDisplay';
 import TagEditor from './TagEditor';
+import TagEditTrigger from './TagEditTrigger';
 
 export default function GoldTracker() {
   const { sortBy, groupDoc } = useContext(GroupContext);
@@ -81,18 +82,25 @@ export default function GoldTracker() {
             aria-labelledby='goldTrackerHeading'
             data-bs-parent='#gold-tracker-accordion'
           >
-            <div className='accordion-body background-light'>
-              <Row>
-                {currencyKeys.map((currencyKey, idx) => (
-                  <GoldInput
-                    key={idx}
-                    tags={allTags?.[currencyKey]}
-                    currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
-                    currencyKey={currencyKey}
-                    handleShow={handleShow}
-                    defaultColor={defaultColors[idx]}
-                  />
-                ))}
+            <div className='accordion-body'>
+              <Row className='px-2'>
+                <Col>
+                  <Row>
+                    {currencyKeys.map((currencyKey, idx) => (
+                      <GoldDisplay
+                        key={idx}
+                        tags={allTags?.[currencyKey]}
+                        currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
+                        currencyKey={currencyKey}
+                        handleShow={handleShow}
+                        defaultColor={defaultColors[idx]}
+                      />
+                    ))}
+                  </Row>
+                </Col>
+                <Col xs={2}>
+                  <TagEditTrigger handleShow={handleShow} />
+                </Col>
               </Row>
             </div>
           </div>

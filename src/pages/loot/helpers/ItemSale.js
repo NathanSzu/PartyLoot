@@ -168,7 +168,7 @@ export default function ItemSale({ item, itemOwners }) {
           <Modal.Header closeButton>
             <Modal.Title className='p-1'>Sell {item.itemName}?</Modal.Title>
           </Modal.Header>
-          <Modal.Body className='pt-0 pb-0'>
+          <Modal.Body className='pt-0 pb-0 background-light'>
             <Container fluid>
               <Row>
                 <Col className='p-1 pb-2'>This action cannot be undone!</Col>
@@ -217,7 +217,7 @@ export default function ItemSale({ item, itemOwners }) {
               </Row>
             </Container>
           </Modal.Body>
-          <Modal.Footer className='pt-0 texture-backer'>
+          <Modal.Footer className='pt-0 border-0 background-light'>
             {errorMessage && (
               <Alert variant='warning' className='w-100'>
                 {errorMessage}

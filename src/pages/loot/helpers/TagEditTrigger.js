@@ -1,16 +1,14 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 
-export default function TagEditTrigger({ tags = {}, handleShow, defaultColor, disabled = false }) {
-  // tags contains color, symbol, and symbolTheme
+export default function TagEditTrigger({ handleShow }) {
   return (
     <Button
-      disabled={disabled}
-      className='w-100 border d-flex justify-content-center mh-36 disabled-opacity-100'
-      style={{ backgroundColor: `${tags?.color || defaultColor}`, color: `${tags?.symbolTheme || 'black'}` }}
+      variant='dark'
+      className='w-100 background-dark h-100 border d-flex align-items-center justify-content-center'
       onClick={handleShow}
     >
-      {tags?.symbol}
+      <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
     </Button>
   );
 }

@@ -135,15 +135,17 @@ export default function Loot() {
     <Row className='lazy-scroll-container'>
       <Navbar sticky='top' className='w-100 p-0' id='sticky-filter'>
         <div className='d-block w-100 mx-0 mb-2'>
-          <GoldTracker />
           <Card className='rounded-top-0 background-light border-dark border-bottom-0 border-end-0 border-start-0'>
-            <Card.Header>
+            <Card.Header className='p-0'>
+              <GoldTracker />
+            </Card.Header>
+            <Card.Body>
               <Container>
                 <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
                 <OwnerFilter itemOwners={itemOwners} />
               </Container>
-            </Card.Header>
-            <Card.Footer className='border-0 d-flex'>
+            </Card.Body>
+            <Card.Footer className='d-flex'>
               <Container>
                 <Row>
                   <Col xs={9} className='pe-0'>
