@@ -1,27 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Row, Spinner, Col } from 'react-bootstrap';
-import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
+import { GroupContext } from '../../../../../utils/contexts/GroupContext';
+import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import GoldDisplay from './GoldDisplay';
-import TagEditor from './TagEditor';
-import TagEditTrigger from './TagEditTrigger';
+import CurrencyTrackerDisplay from './CurrencyTrackerDisplay';
+import CurrencyEditor from './CurrencyEditor';
 
-export default function GoldTracker() {
-  const { sortBy, groupDoc } = useContext(GroupContext);
+export default function CurrencyTracker() {
+  const { sortBy, groupDoc, currency, loadingCurrency } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
-  const [showTagEditor, setShowTagEditor] = useState(false);
   const [itemOwnerName, setItemOwnerName] = useState('Party');
   const [loading, setLoading] = useState(false);
 
-  const handleClose = () => setShowTagEditor(false);
-  const handleShow = () => setShowTagEditor(true);
-
-  const currencyRef = groupDoc.collection('currency').doc('currency');
   const tagRef = groupDoc.collection('currency').doc('tags');
 
-  const [currency, loadingCurrency] = useDocumentData(currencyRef);
   const [allTags] = useDocumentData(tagRef);
 
   useEffect(() => {
@@ -51,10 +44,9 @@ export default function GoldTracker() {
 
   return (
     <>
-      <TagEditor allTags={allTags} show={showTagEditor} handleClose={handleClose} />
       <div className='accordion accordion-flush' id='gold-tracker-accordion'>
         <div className='accordion-item clear-background'>
-          <h2 className='accordion-header' id='goldTrackerHeading'>
+          <h2 className='accordion-header' id='currencyTrackerHeading'>
             <button
               className='accordion-icon-alt accordion-button accordion-button-loot-dark collapsed'
               type='button'
@@ -79,7 +71,7 @@ export default function GoldTracker() {
           <div
             id='collapseOne'
             className='accordion-collapse collapse'
-            aria-labelledby='goldTrackerHeading'
+            aria-labelledby='currencyTrackerHeading'
             data-bs-parent='#gold-tracker-accordion'
           >
             <div className='accordion-body'>
@@ -87,19 +79,18 @@ export default function GoldTracker() {
                 <Col>
                   <Row>
                     {currencyKeys.map((currencyKey, idx) => (
-                      <GoldDisplay
+                      <CurrencyTrackerDisplay
                         key={idx}
                         tags={allTags?.[currencyKey]}
                         currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
                         currencyKey={currencyKey}
-                        handleShow={handleShow}
                         defaultColor={defaultColors[idx]}
                       />
                     ))}
                   </Row>
                 </Col>
                 <Col xs={2}>
-                  <TagEditTrigger handleShow={handleShow} />
+                  <CurrencyEditor allTags={allTags} />
                 </Col>
               </Row>
             </div>

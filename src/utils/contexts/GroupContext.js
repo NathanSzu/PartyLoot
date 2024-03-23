@@ -19,8 +19,10 @@ export const GroupProvider = ({ children }) => {
   // Query declarations
   const groups = db.collection('groups');
   const groupDoc = groups.doc(currentGroup || ' ');
+  const groupCurrency = groupDoc.collection('currency').doc('currency');
 
   const [groupData, loading] = useDocumentData(groupDoc);
+  const [currency, loadingCurrency] = useDocumentData(groupCurrency);
   const [sortBy, setSortBy] = useState('party');
 
   const manageGroupSession = (pathname) => {
@@ -30,6 +32,24 @@ export const GroupProvider = ({ children }) => {
         setSortBy('party');
       }
     });
+  };
+
+  const updateCurrency = (currencyKey, currencyQty) => {
+    groupCurrency.set(
+      {
+        [sortBy]: { [currencyKey]: Number(currencyQty) },
+      },
+      { merge: true }
+    );
+  };
+
+  const updateUserCurrency = (currencyTotals) => {
+    groupCurrency.set(
+      {
+        [sortBy]: currencyTotals,
+      },
+      { merge: true }
+    );
   };
 
   useEffect(() => {
@@ -53,7 +73,20 @@ export const GroupProvider = ({ children }) => {
 
   return (
     <GroupContext.Provider
-      value={{ currentGroup, setCurrentGroup, groupData, sortBy, setSortBy, groups, groupDoc, groupList }}
+      value={{
+        currentGroup,
+        setCurrentGroup,
+        groupData,
+        sortBy,
+        setSortBy,
+        groups,
+        groupDoc,
+        groupList,
+        currency,
+        loadingCurrency,
+        updateCurrency,
+        updateUserCurrency,
+      }}
     >
       {!loading && children}
     </GroupContext.Provider>

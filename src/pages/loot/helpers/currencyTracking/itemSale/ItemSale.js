@@ -1,11 +1,11 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, Container } from 'react-bootstrap';
-import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { AuthContext } from '../../../utils/contexts/AuthContext';
-import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
+import { GroupContext } from '../../../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-import GoldInput from './GoldInput';
-import ItemOwnerSelect from '../../common/ItemOwnerSelect';
+import ItemSaleInput from './ItemSaleInput';
+import ItemOwnerSelect from '../../../../common/ItemOwnerSelect';
 
 export default function ItemSale({ item, itemOwners }) {
   const { groupDoc, currentGroup } = useContext(GroupContext);
@@ -199,7 +199,7 @@ export default function ItemSale({ item, itemOwners }) {
               </Row>
               <Row>
                 {currencyKeys.map((currencyKey, idx) => (
-                  <GoldInput
+                  <ItemSaleInput
                     key={idx}
                     tags={allTags?.[currencyKey]}
                     currencyKey={currencyKey}

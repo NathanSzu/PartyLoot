@@ -59,7 +59,7 @@ export default function Groups() {
                 ) : (
                   <>
                     {groupList.map((group, idx) => (
-                      <GroupCard group={group} idx={idx} />
+                      <GroupCard group={group} idx={idx} key={idx}/>
                     ))}
                   </>
                 )}
