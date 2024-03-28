@@ -20,6 +20,7 @@ export const GroupProvider = ({ children }) => {
   const groups = db.collection('groups');
   const groupDoc = groups.doc(currentGroup || ' ');
   const groupCurrency = groupDoc.collection('currency').doc('currency');
+  const itemOwners = groupDoc.collection('itemOwners');
 
   const [groupData, loading] = useDocumentData(groupDoc);
   const [currency, loadingCurrency] = useDocumentData(groupCurrency);
@@ -77,6 +78,7 @@ export const GroupProvider = ({ children }) => {
         currentGroup,
         setCurrentGroup,
         groupData,
+        itemOwners,
         sortBy,
         setSortBy,
         groups,

@@ -1,13 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { GroupContext } from './GroupContext';
-import fb from 'firebase';
 
 export const GlobalFeatures = React.createContext();
 
 export const GlobalFeaturesProvider = ({ children }) => {
   const { db } = useContext(AuthContext);
-  const { currentGroup } = useContext(GroupContext);
+  const { currentGroup, groupData } = useContext(GroupContext);
 
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState('Notification content');
@@ -46,8 +45,19 @@ export const GlobalFeaturesProvider = ({ children }) => {
       });
   };
 
+  const setHistory = (history, newRecord) => {
+    if (history && history.length > 0) {
+      history = [newRecord, ...history];
+      history.length > 50 && history.pop();
+    } else {
+      history = [newRecord];
+    }
+    return history;
+  };
+
   const writeHistoryEvent = async (completedBy, action, data = {}, groupId = currentGroup) => {
     let summary = '';
+    let timestamp = new Date();
 
     switch (action) {
       case 'createItem':
@@ -59,6 +69,10 @@ export const GlobalFeaturesProvider = ({ children }) => {
           `sold ${data.qty} ${data.itemName}(s) for ${data.currency[0]}, ${data.currency[1]}, ` +
           `${data.currency[2]}, ${data.currency[3]}, ${data.currency[4]}, ${data.currency[5]} ` +
           `and gave the money to ${data.seller}`;
+        break;
+
+      case 'updateCurrency':
+        summary = `updated currency totals for ${data.itemOwner}: ${data.oldCurrency[0]} -> ${data.newCurrency[0]}, ${data.oldCurrency[1]} -> ${data.newCurrency[1]}, ${data.oldCurrency[2]} -> ${data.newCurrency[2]}, ${data.oldCurrency[3]} -> ${data.newCurrency[3]}, ${data.oldCurrency[4]} -> ${data.newCurrency[4]}, ${data.oldCurrency[5]} -> ${data.newCurrency[5]}.`;
         break;
 
       case 'addPartyMember':
@@ -81,12 +95,19 @@ export const GlobalFeaturesProvider = ({ children }) => {
         break;
     }
 
-    db.collection('groups').doc(groupId).collection('history').add({
-      completedBy,
-      action,
-      summary,
-      timestamp: fb.firestore.FieldValue.serverTimestamp(),
-    });
+    db.collection('groups')
+      .doc(groupId)
+      .set(
+        {
+          history: setHistory(groupData?.history, {
+            completedBy,
+            action,
+            summary,
+            timestamp: timestamp.toDateString(),
+          }),
+        },
+        { merge: true }
+      );
   };
 
   const formatItemDescription = (selection) => {

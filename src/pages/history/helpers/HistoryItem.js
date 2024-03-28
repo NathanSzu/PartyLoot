@@ -43,7 +43,7 @@ export default function HistoryItem({ event }) {
         <>
           <p className='m-0 pt-1 pb-1'>{displayName} {event.summary}</p>
           <p className='m-0'>
-            <em>{event.timestamp.toDate().toString().substring(0, 16)}</em>
+            <em>{event.timestamp}</em>
           </p>
         </>
       )}

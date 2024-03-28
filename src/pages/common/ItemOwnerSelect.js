@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
-export default function ItemOwnerSelect({ setState, group, state, disabled = false, type = 'party' }) {
-  const { groups } = useContext(GroupContext);
+export default function ItemOwnerSelect({ setSortBy, group, sortBy, disabled = false, type = 'party' }) {
+  const { itemOwners } = useContext(GroupContext);
   const [ownerList, setOwnerList] = useState([]);
 
-  const itemOwnersRef = groups.doc(group || 'null').collection('itemOwners');
-
   const getItemOwners = () => {
-    return itemOwnersRef
+    return itemOwners
       .orderBy('name')
       .where('type', '==', type)
       .onSnapshot((querySnapshot) => {
@@ -34,11 +32,11 @@ export default function ItemOwnerSelect({ setState, group, state, disabled = fal
   return (
     <select
       onChange={(e) => {
-        setState(e.target.value);
+        setSortBy(e.target.value);
       }}
       className='form-select'
       disabled={disabled}
-      value={state}
+      value={sortBy}
       id='ownerSelect'
       aria-label='Select owner'
     >

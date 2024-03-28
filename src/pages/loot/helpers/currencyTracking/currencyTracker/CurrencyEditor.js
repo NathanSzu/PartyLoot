@@ -3,10 +3,12 @@ import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import CurrencyTrackerInput from './CurrencyTrackerInput';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../../../utils/contexts/AuthContext';
 
 export default function CurrencyEditor({ allTags }) {
-  const { groupDoc, sortBy, currency } = useContext(GroupContext);
-  const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
+  const { currentUser } = useContext(AuthContext);
+  const { groupDoc, sortBy, currency, itemOwners } = useContext(GroupContext);
+  const { defaultColors, currencyKeys, writeHistoryEvent } = useContext(GlobalFeatures);
 
   const tagRef = groupDoc.collection('currency').doc('tags');
 
@@ -14,11 +16,26 @@ export default function CurrencyEditor({ allTags }) {
   const [loading, setLoading] = useState(false);
   const [newCurrencyTotals, setNewCurrencyTotals] = useState({});
   const [show, setShow] = useState(false);
+  const [itemOwner, setItemOwner] = useState('');
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setNewCurrencyTotals(currency[sortBy]);
     setShow(true);
+  };
+
+  const getItemOwner = (id) => {
+    if (id === 'party') {
+      setItemOwner('the party');
+    } else {
+      itemOwners
+        .doc(id)
+        .get()
+        .then((doc) => {
+          let data = doc.data();
+          setItemOwner(data.name);
+        });
+    }
   };
 
   const updateTagState = (key, tag, value) => {
@@ -47,19 +64,36 @@ export default function CurrencyEditor({ allTags }) {
     groupCurrency.set({ [sortBy]: newCurrencyTotals }, { merge: true }).catch((err) => console.error(err));
   };
 
-  const updateCurrencyData = (tagState, newCurrencyTotals) => {
-    updateTags(tagState).then(() => {
-      clearStateAndClose();
-      setLoading(false);
+  const compileHistoryData = (itemOwner, oldCurrency, newCurrency, currencyKeys) => {
+    let data = {
+      itemOwner: itemOwner,
+      oldCurrency: [],
+      newCurrency: [],
+    };
+    currencyKeys.forEach((currencyKey) => {
+      data.oldCurrency.push(oldCurrency ? oldCurrency[currencyKey] : 0);
+      data.newCurrency.push(newCurrency ? newCurrency[currencyKey] : 0);
     });
-    console.log(sortBy);
-    console.log(newCurrencyTotals);
-    updateCurrencyTotals(newCurrencyTotals);
+    writeHistoryEvent(currentUser.uid, 'updateCurrency', data);
+  };
+
+  const updateCurrencyData = (tagState, newCurrencyTotals) => {
+    updateTags(tagState)
+      .then(() => {
+        clearStateAndClose();
+        setLoading(false);
+      })
+      .catch((err) => console.error('Error updating tags: ', err));
+    updateCurrencyTotals(newCurrencyTotals)
+      .then(() => {
+        compileHistoryData(itemOwner, currency[sortBy], newCurrencyTotals, currencyKeys);
+      })
+      .catch((err) => console.error('Error updating currency: ', err));
   };
 
   useEffect(() => {
-    newCurrencyTotals && console.log('newCurrencyTotals: ', newCurrencyTotals);
-  }, [newCurrencyTotals]);
+    getItemOwner(sortBy);
+  }, [sortBy]);
 
   return (
     <>
@@ -68,7 +102,7 @@ export default function CurrencyEditor({ allTags }) {
         className='w-100 background-dark h-100 border d-flex align-items-center justify-content-center'
         onClick={handleShow}
       >
-        <img alt='Edit Item' src='APPIcons/pencil-square.svg' />
+        <img alt='Edit Currency' src='APPIcons/pencil-square.svg' />
       </Button>
       <Modal size='lg' show={show} onHide={clearStateAndClose}>
         <Modal.Header closeButton>

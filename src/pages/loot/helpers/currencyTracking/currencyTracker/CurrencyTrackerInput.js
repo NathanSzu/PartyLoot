@@ -2,7 +2,14 @@ import React, { useRef, useContext } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 
-export default function CurrencyTrackerInput({ tags, updateTagState, defaultColor, currencyKey, newCurrencyTotals, setNewCurrencyTotals }) {
+export default function CurrencyTrackerInput({
+  tags,
+  updateTagState,
+  defaultColor,
+  currencyKey,
+  newCurrencyTotals,
+  setNewCurrencyTotals,
+}) {
   const { currency, sortBy } = useContext(GroupContext);
 
   const colorRef = useRef();
@@ -10,7 +17,9 @@ export default function CurrencyTrackerInput({ tags, updateTagState, defaultColo
   const currencyRef = useRef();
 
   const findDiff = () => {
-    return newCurrencyTotals[currencyKey] - currency[sortBy][currencyKey]
+    let newTotal = newCurrencyTotals && newCurrencyTotals[currencyKey] ? newCurrencyTotals[currencyKey] : 0;
+    let oldTotal = currency && currency[sortBy] && currency[sortBy][currencyKey] ? currency[sortBy][currencyKey] : 0;
+    return newTotal - oldTotal || '';
   };
 
   return (
@@ -50,10 +59,19 @@ export default function CurrencyTrackerInput({ tags, updateTagState, defaultColo
         </Form.Control>
       </Col>
       <Col xs={3} className='px-1'>
-        <Form.Control type='number' ref={currencyRef} value={newCurrencyTotals[currencyKey]} onChange={() => setNewCurrencyTotals({...newCurrencyTotals, [currencyKey]: parseInt(currencyRef.current.value)})}/>
+        <Form.Control
+          type='number'
+          ref={currencyRef}
+          value={newCurrencyTotals ? newCurrencyTotals[currencyKey] : 0}
+          onChange={() =>
+            setNewCurrencyTotals({ ...newCurrencyTotals, [currencyKey]: parseInt(currencyRef.current.value) })
+          }
+        />
       </Col>
       <Col xs={2} className='px-1 d-flex align-items-center'>
-        <div className={findDiff() > 0 ? 'text-success' : 'text-danger'}>{findDiff() || ''}</div>
+        <div className={findDiff() > 0 ? 'text-success' : 'text-danger'}>
+          {newCurrencyTotals ? findDiff() : ''}
+        </div>
       </Col>
     </Row>
   );

@@ -18,7 +18,7 @@ export default function OwnerFilter({ itemOwners }) {
             setSortBy(sortRef.current.value);
           }}
         >
-          <ItemOwnerSelect setState={setSortBy} group={currentGroup} state={sortBy} />
+          <ItemOwnerSelect setSortBy={setSortBy} group={currentGroup} sortBy={sortBy} />
         </Form>
       </Col>
 
