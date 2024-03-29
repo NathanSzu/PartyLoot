@@ -20,7 +20,7 @@ export default function CurrencyEditor({ allTags }) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    setNewCurrencyTotals(currency[sortBy]);
+    setNewCurrencyTotals(currency?.[sortBy] || {});
     setShow(true);
   };
 
@@ -71,8 +71,8 @@ export default function CurrencyEditor({ allTags }) {
       newCurrency: [],
     };
     currencyKeys.forEach((currencyKey) => {
-      data.oldCurrency.push(oldCurrency ? oldCurrency[currencyKey] : 0);
-      data.newCurrency.push(newCurrency ? newCurrency[currencyKey] : 0);
+      data.oldCurrency.push(oldCurrency?.[currencyKey] || 0);
+      data.newCurrency.push(newCurrency?.[currencyKey] || 0);
     });
     writeHistoryEvent(currentUser.uid, 'updateCurrency', data);
   };
@@ -101,6 +101,7 @@ export default function CurrencyEditor({ allTags }) {
         variant='dark'
         className='w-100 background-dark h-100 border d-flex align-items-center justify-content-center'
         onClick={handleShow}
+        data-cy='edit-currency'
       >
         <img alt='Edit Currency' src='APPIcons/pencil-square.svg' />
       </Button>
@@ -144,6 +145,7 @@ export default function CurrencyEditor({ allTags }) {
             variant='dark'
             className='background-dark'
             onClick={() => updateCurrencyData(tagState, newCurrencyTotals)}
+            data-cy='save-currency'
           >
             Save
           </Button>
