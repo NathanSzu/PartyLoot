@@ -70,7 +70,12 @@ export default function ModalEditUsername({ userData }) {
 
   return (
     <>
-      <Button variant='dark' className='p-2 mb-2 w-100 background-dark border-0' onClick={handleShow}>
+      <Button
+        data-cy='change-username'
+        variant='dark'
+        className='p-2 mb-2 w-100 background-dark border-0'
+        onClick={handleShow}
+      >
         Change Username
       </Button>
 
@@ -96,6 +101,7 @@ export default function ModalEditUsername({ userData }) {
               </Form.Label>
 
               <Form.Control
+                data-cy='username-input'
                 type='text'
                 ref={usernameRef}
                 defaultValue={userData?.displayName}
@@ -112,7 +118,7 @@ export default function ModalEditUsername({ userData }) {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button disabled={loading} variant='dark' className='background-dark border-0' type='submit' onClick={save}>
+            <Button data-cy='save-username' disabled={loading} variant='dark' className='background-dark border-0' type='submit' onClick={save}>
               Save
             </Button>
           </Modal.Footer>

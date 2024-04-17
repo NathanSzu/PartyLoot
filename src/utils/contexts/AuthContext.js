@@ -178,6 +178,7 @@ export const AuthProvider = ({ children }) => {
         currentUser,
         randomName,
         userRef,
+        setUsername,
         db,
       }}
     >
