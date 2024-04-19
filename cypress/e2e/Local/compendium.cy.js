@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
-import { addEntry, saveDraft, fillCompendiumFields, openNewCompendiumEntry } from '../../support/features/compendium';
+import { addEntry, saveDraft, fillCompendiumFields, openNewCompendiumEntry, deleteEntry } from '../../support/features/compendium';
 let uid = uuidv4().substring(0, 8);
 let uid2 = uuidv4().substring(0, 8);
 let caseAllFields = {
@@ -34,5 +34,11 @@ describe('Compendium CRUD', () => {
     openNewCompendiumEntry();
     fillCompendiumFields(caseAllFields);
     saveDraft(uid2);
+  });
+
+  it('delete compendium entries', () => {
+    cy.get('[data-cy="my-discoveries"]').click();
+    deleteEntry(uid);
+    deleteEntry(uid2);
   });
 });

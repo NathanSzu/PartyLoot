@@ -221,7 +221,7 @@ export function AddDiscovery({ getCompendium }) {
                 type='button'
                 onClick={() => addDiscovery(true)}
               >
-                Add to compendium
+                Publish
               </Button>
             </Col>
             <Col>
@@ -249,7 +249,7 @@ export function EditDiscoveryTrigger({ setShow }) {
       <Col className='px-0 mx-2 text-center'>
         <Alert className='py-2'>
           <p className='mb-0'>You reported this discovery!</p>
-          <Button variant='link' onClick={() => setShow(true)}>
+          <Button variant='link' data-cy='edit-compendium-entry' onClick={() => setShow(true)}>
             <strong>Click here to make changes!</strong>
           </Button>
         </Alert>
@@ -264,6 +264,7 @@ export function EditDiscoverySection({ item, getCompendium }) {
 
   const [itemValidations, setItemValidations] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [discoveryRecord, setDiscoveryRecord] = useState({
     setting: '',
     itemName: '',
@@ -327,6 +328,24 @@ export function EditDiscoverySection({ item, getCompendium }) {
       });
   };
 
+  const deleteEntry = () => {
+    if (!confirmDelete) return;
+    setLoading(true);
+    db.collection('compendium')
+      .doc(item.id)
+      .delete()
+      .then(() => {
+        getCompendium();
+        setToastHeader('Item deleted');
+        setToastContent(`Your item "${discoveryRecord.itemName}" has been successfully deleted.`);
+        toggleShowToast();
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error('Error deleting entry', err);
+      });
+  };
+
   return (
     <>
       <DiscoveryFields
@@ -344,13 +363,38 @@ export function EditDiscoverySection({ item, getCompendium }) {
             type='button'
             onClick={() => editDiscovery(true)}
           >
-            Save and publish
+            Publish
           </Button>
         </Col>
         <Col>
           <Button disabled={loading} className='w-100' variant='warning' type='button' onClick={() => editDiscovery()}>
             Save draft
           </Button>
+        </Col>
+        <Col>
+          {confirmDelete ? (
+            <Button
+              disabled={loading}
+              data-cy='confirm-delete-entry'
+              className='w-100 background-danger'
+              variant='danger'
+              type='button'
+              onClick={() => deleteEntry()}
+            >
+              Confirm
+            </Button>
+          ) : (
+            <Button
+              disabled={loading}
+              data-cy='delete-entry'
+              className='w-100 background-danger'
+              variant='danger'
+              type='button'
+              onClick={() => setConfirmDelete(true)}
+            >
+              Delete
+            </Button>
+          )}
         </Col>
       </Row>
     </>

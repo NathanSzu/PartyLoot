@@ -37,9 +37,21 @@ const saveDraft = (uid) => {
   cy.contains('.list-group-item', uid).should('not.exist');
 };
 
+const deleteEntry = (uid) => {
+  cy.contains(uid).parent().siblings().within(() => {
+    cy.contains('button', 'View').click();
+  });
+  cy.get('[data-cy="edit-compendium-entry"]').filter(':visible').click();
+  cy.get('[data-cy="delete-entry"]').click();
+  cy.get('[data-cy="confirm-delete-entry"]').click();
+  cy.contains(`Your item "${uid}" has been successfully deleted.`);
+  cy.contains('.list-group-item', uid).should('not.exist');
+};
+
 module.exports = {
   fillCompendiumFields,
   openNewCompendiumEntry,
   addEntry,
   saveDraft,
+  deleteEntry
 };
