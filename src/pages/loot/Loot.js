@@ -10,10 +10,12 @@ import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
 import LootAccordion from './helpers/AccordionLoot';
 import IntroCard from './helpers/IntroCard';
+import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 
 export default function Loot() {
   const { setSortBy, groupDoc } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
+  const { checkLocalStorage } = useContext(GlobalFeatures);
 
   const itemOwnersRef = groupDoc.collection('itemOwners');
   const lootRef = groupDoc.collection('loot');
@@ -75,12 +77,8 @@ export default function Loot() {
                 variant='light'
               />
             )}
+            {!loading && !checkLocalStorage('lootIntroCard') && <IntroCard />}
             <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
-            {filteredItems.length > 0 || loading ? null : (
-              <Col>
-                <IntroCard />
-              </Col>
-            )}
           </Col>
         </Row>
       </Container>

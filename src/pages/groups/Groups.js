@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Row, Col, Spinner, Container, Navbar } from 'react-bootstrap';
 import { GroupContext } from '../../utils/contexts/GroupContext';
+import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 import AddGroup from './helpers/AddGroup';
 import PatchNotes from './helpers/PatchNotes';
 import GroupCard from './helpers/GroupCard';
@@ -9,6 +10,7 @@ import ButtonShareLink from '../common/ButtonShareLink';
 
 export default function Groups() {
   const { groupList } = useContext(GroupContext);
+  const { checkLocalStorage } = useContext(GlobalFeatures);
 
   return (
     <Row className='lazy-scroll-container'>
@@ -54,15 +56,14 @@ export default function Groups() {
                 </Col>
               }
               <Col>
-                {groupList.length < 1 ? (
-                  <IntroCard />
-                ) : (
+                {
                   <>
+                    {!checkLocalStorage('groupIntroCard') && <IntroCard />}
                     {groupList.map((group, idx) => (
-                      <GroupCard group={group} idx={idx} key={idx}/>
+                      <GroupCard group={group} idx={idx} key={idx} />
                     ))}
                   </>
-                )}
+                }
               </Col>
             </>
           )}

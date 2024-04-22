@@ -3,9 +3,11 @@ import { Modal, Button } from 'react-bootstrap';
 import ButtonShareLink from '../../common/ButtonShareLink';
 import PatreonButton from '../../common/PatreonButton';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export default function PatchNotes() {
   const { db } = useContext(AuthContext);
+  const { checkLocalStorage } = useContext(GlobalFeatures);
 
   useEffect(() => {
     let unsubscribe;
@@ -21,15 +23,15 @@ export default function PatchNotes() {
   const handleClose = () => setShow(false);
 
   const showNoteIfNew = (doc) => {
-    let noteId = localStorage.getItem(doc.id);
-    if (!noteId) {
+    if (!checkLocalStorage(doc.id)) {
       setPatchNoteDoc(doc);
       setShow(true);
     }
   };
 
   const getLatestPatchNote = () => {
-    return db.collection('updateNotes')
+    return db
+      .collection('updateNotes')
       .orderBy('posted', 'desc')
       .limit(1)
       .onSnapshot((querySnapshot) => {
@@ -40,7 +42,7 @@ export default function PatchNotes() {
   };
 
   const markShowNote = (doc) => {
-    localStorage.setItem(doc.id, 'dismissed');
+    checkLocalStorage(doc.id, true);
     setShow(false);
   };
 

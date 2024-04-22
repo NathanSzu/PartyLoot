@@ -125,6 +125,26 @@ export const GlobalFeaturesProvider = ({ children }) => {
     }
   };
 
+  const checkLocalStorage = (key, set = false) => {
+    let localStoragePLT = localStorage.getItem('plt');
+    let storageObj = JSON.parse(localStoragePLT) || {};
+    if (storageObj[key]) return true;
+    if (set) {
+      storageObj[key] = true;
+      localStorage.setItem('plt', JSON.stringify(storageObj));
+    }
+    return false;
+  };
+
+  const clearLocalStorageItems = (keysArr) => {
+    let localStoragePLT = localStorage.getItem('plt');
+    let storageObj = JSON.parse(localStoragePLT) || {};
+    keysArr.forEach((key) => {
+      delete storageObj[key]
+    });
+    localStorage.setItem('plt', JSON.stringify(storageObj));
+  };
+
   useEffect(() => {
     getItemMetadata();
   }, []);
@@ -147,6 +167,8 @@ export const GlobalFeaturesProvider = ({ children }) => {
         writeHistoryEvent,
         formatItemDescription,
         itemMetadata,
+        checkLocalStorage,
+        clearLocalStorageItems
       }}
     >
       {children}

@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { Col, Button, Card, Alert } from 'react-bootstrap';
+import { Col, Button, Card } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import firebaseApp from '../../../utils/firebase';
 import ModalEditUsername from './ModalEditUsername';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export default function AccountSettingsCard() {
   const { currentUser, userRef } = useContext(AuthContext);
+  const { setToastContent, setToastHeader, toggleShowToast, clearLocalStorageItems } = useContext(GlobalFeatures);
+
   const [loading, setLoading] = useState(false);
-  const [resetEmailSent, setResetEmailSent] = useState(false);
 
   const [userData] = useDocumentData(userRef);
 
@@ -18,12 +20,22 @@ export default function AccountSettingsCard() {
       .auth()
       .sendPasswordResetEmail(email)
       .then(function () {
-        setResetEmailSent(true);
+        setToastHeader('Reset email sent');
+        setToastContent('Your email has been sent. Please check your inbox and spam folder.');
+        toggleShowToast();
         setLoading(false);
       })
       .catch(function (err) {
         console.error(err);
       });
+  };
+
+  const handleTutorialReset = () => {
+    const tutorialCards = ['groupIntroCard', 'lootIntroCard'];
+    clearLocalStorageItems(tutorialCards);
+    setToastHeader('Tutorial reset complete');
+    setToastContent('All tutorial messages have been reset and should show again.');
+    toggleShowToast();
   };
 
   return (
@@ -51,7 +63,6 @@ export default function AccountSettingsCard() {
               className='w-100 background-dark border-0'
               disabled={loading}
               variant='dark'
-              type='submit'
               onClick={(e) => {
                 e.preventDefault();
                 passwordReset(currentUser.email);
@@ -59,9 +70,18 @@ export default function AccountSettingsCard() {
             >
               Reset Password
             </Button>
-            {!resetEmailSent ? null : (
-              <Alert variant={'success'}>Your email has been sent. Please check your inbox and spam folder!</Alert>
-            )}
+          </Col>
+          <Col md={8} className='mx-auto mt-2'>
+            <Button
+              className='w-100 background-dark border-0'
+              variant='dark'
+              onClick={(e) => {
+                e.preventDefault();
+                handleTutorialReset();
+              }}
+            >
+              Enable Tutorials
+            </Button>
           </Col>
         </Card.Body>
       </Card>

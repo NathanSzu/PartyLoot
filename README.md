@@ -2,9 +2,7 @@
 
 ## Description
 
-This project is a progressive web application intended to assist players at the game table with a collaborative notekeeping experience to track inventory, currency, and other treasures gained throughout a roleplaying adventure. Every entry can be organized by party member and searched by item name, description, or user defined tags. Planned features also include the addition of session notekeeping, and creating shared house rule documents for reference.
-
-![](https://i.imgur.com/t5BHeHp.png)
+This project is a progressive web application intended to assist players at the game table with a collaborative notekeeping experience to track inventory, currency, and other treasures gained throughout a roleplaying adventure. Every entry can be organized by party member and searched by item name, description, or user defined tags. This application also features a community contributed item compendium to share and find new content to include in your games.
 
 ## Project Setup
 
