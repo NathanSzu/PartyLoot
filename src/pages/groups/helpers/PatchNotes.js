@@ -85,6 +85,7 @@ export default function PatchNotes() {
           </div>
         </div>
         <Button
+          data-cy='dismiss-patch-notes'
           variant='dark'
           className='background-dark'
           onClick={() => {
