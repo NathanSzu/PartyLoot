@@ -60,9 +60,9 @@ export default function ModalParty({ itemOwners }) {
         <img alt='Edit Party' src='APPIcons/view-users.svg' />
       </Button>
 
-      <Modal size='lg' show={show} onHide={handleClose}>
+      <Modal size='lg' show={show} onHide={handleClose} data-cy='edit-party-dialog'>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Party Members</Modal.Title>
+          <Modal.Title>Edit party members</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>

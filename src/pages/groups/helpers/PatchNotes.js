@@ -47,7 +47,7 @@ export default function PatchNotes() {
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} data-cy='view-patchnotes-dialog'>
       <Modal.Header closeButton>
         <h2 className='fs-md-deco mb-0'>{patchNoteDoc.title}</h2>
       </Modal.Header>

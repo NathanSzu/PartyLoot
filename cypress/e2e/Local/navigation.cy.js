@@ -66,7 +66,7 @@ describe('check navigation', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-groups]').click();
     cy.url().should('include', '/groups');
-    cy.get('.btn-close', { timeout: 10000 }).click();
+    cy.closeDialog('view-patchnotes-dialog');
   });
 
   it('view compendium', () => {

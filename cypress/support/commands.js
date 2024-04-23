@@ -1,28 +1,8 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('closeDialog', (selector) => {
+  cy.get(`[data-cy=${selector}]`).within(() => {
+    cy.get('.btn-close').click();
+  });
+});
 
 Cypress.Commands.add('login', (email = 'test@test.com', password = 'Password123!') => {
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
@@ -31,7 +11,7 @@ Cypress.Commands.add('login', (email = 'test@test.com', password = 'Password123!
   cy.get('[data-cy="login-email"]').type(email);
   cy.get('[data-cy="login-password"]').type(password);
   cy.get('[data-cy="login"]').click();
-  cy.get('[data-cy="dismiss-patch-notes"]', { timeout: 10000 }).click();
+  cy.closeDialog('view-patchnotes-dialog');
 });
 
 Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
@@ -45,7 +25,7 @@ Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2')
   cy.visit('/');
   cy.get('[data-cy="navbar-toggle"]').click();
   cy.get('[data-cy="navbar-groups"]').click();
-  cy.get('[data-cy="dismiss-patch-notes"]', { timeout: 10000 }).click();
+  cy.closeDialog('view-patchnotes-dialog');
   cy.get('[data-cy="edit-group"]').eq(0).click();
   cy.get('[data-cy="delete"]').click();
   cy.get('[data-cy="confirm-delete"]').click();

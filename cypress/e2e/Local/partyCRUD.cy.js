@@ -48,7 +48,7 @@ describe('Party actions', () => {
     cy.get('#partyAccordion').within(() => {
       cy.get('.accordion-item').should('not.exist');
     });
-    cy.get('.btn-close').click();
+    cy.closeDialog('edit-party-dialog');
   });
 
   it('remove test group', () => {
