@@ -12,15 +12,16 @@ export const GroupProvider = ({ children }) => {
 
   const clearGroupRoutes = ['groups', 'login', 'forgot-password', 'item-compendium', 'user-settings'];
 
-  // Default setting is ' ' so the app will initiate react-firebase-hooks useDocumentData call
   const [currentGroup, setCurrentGroup] = useState(null);
   const [groupList, setGroupList] = useState([]);
+  const [allTags, setAllTags] = useState({});
 
   // Query declarations
   const groups = db.collection('groups');
   const groupDoc = groups.doc(currentGroup || ' ');
   const groupCurrency = groupDoc.collection('currency').doc('currency');
   const itemOwners = groupDoc.collection('itemOwners');
+  const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [groupData, loading] = useDocumentData(groupDoc);
   const [currency, loadingCurrency] = useDocumentData(groupCurrency);
@@ -69,6 +70,14 @@ export const GroupProvider = ({ children }) => {
   }, [currentUser]);
 
   useEffect(() => {
+    currentGroup &&
+      tagRef
+        .onSnapshot((querySnapshot) => {
+          setAllTags(querySnapshot.data())
+        });
+  }, [currentGroup]);
+
+  useEffect(() => {
     manageGroupSession(location.pathname);
   }, [location]);
 
@@ -79,11 +88,13 @@ export const GroupProvider = ({ children }) => {
         setCurrentGroup,
         groupData,
         itemOwners,
+        tagRef,
         sortBy,
         setSortBy,
         groups,
         groupDoc,
         groupList,
+        allTags,
         currency,
         loadingCurrency,
         updateCurrency,

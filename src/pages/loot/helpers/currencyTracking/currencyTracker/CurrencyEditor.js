@@ -5,12 +5,10 @@ import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../../utils/contexts/AuthContext';
 
-export default function CurrencyEditor({ allTags }) {
+export default function CurrencyEditor() {
   const { currentUser } = useContext(AuthContext);
-  const { groupDoc, sortBy, currency, itemOwners } = useContext(GroupContext);
+  const { groupDoc, sortBy, currency, itemOwners, tagRef, allTags } = useContext(GroupContext);
   const { defaultColors, currencyKeys, writeHistoryEvent } = useContext(GlobalFeatures);
-
-  const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [tagState, setTagState] = useState({});
   const [loading, setLoading] = useState(false);

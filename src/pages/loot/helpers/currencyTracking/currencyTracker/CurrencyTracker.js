@@ -2,20 +2,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Row, Spinner, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 import CurrencyTrackerDisplay from './CurrencyTrackerDisplay';
 import CurrencyEditor from './CurrencyEditor';
 
 export default function CurrencyTracker() {
-  const { sortBy, groupDoc, currency, loadingCurrency } = useContext(GroupContext);
+  const { sortBy, groupDoc, currency, loadingCurrency, tagRef, allTags } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
   const [itemOwnerName, setItemOwnerName] = useState('Party');
   const [loading, setLoading] = useState(false);
-
-  const tagRef = groupDoc.collection('currency').doc('tags');
-
-  const [allTags] = useDocumentData(tagRef);
 
   useEffect(() => {
     let isMounted = true;
@@ -90,7 +85,7 @@ export default function CurrencyTracker() {
                   </Row>
                 </Col>
                 <Col xs={2}>
-                  <CurrencyEditor allTags={allTags} />
+                  <CurrencyEditor />
                 </Col>
               </Row>
             </div>

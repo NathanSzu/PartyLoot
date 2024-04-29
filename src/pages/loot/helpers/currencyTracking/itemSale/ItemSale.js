@@ -7,17 +7,15 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import ItemSaleInput from './ItemSaleInput';
 import ItemOwnerSelect from '../../../../common/ItemOwnerSelect';
 
-export default function ItemSale({ item, itemOwners }) {
-  const { groupDoc, currentGroup } = useContext(GroupContext);
+export default function ItemSale({ item }) {
+  const { groupDoc, currentGroup, allTags } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
   const currencyRef = groupDoc.collection('currency').doc('currency');
   const itemRef = groupDoc.collection('loot').doc(item.id);
-  const tagRef = groupDoc.collection('currency').doc('tags');
 
   const [currency] = useDocumentData(currencyRef);
-  const [allTags] = useDocumentData(tagRef);
 
   const qtyRef = useRef();
 
@@ -34,7 +32,10 @@ export default function ItemSale({ item, itemOwners }) {
     setErrorMessage('');
     setShow(false);
   };
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setSellState(item?.value);
+    setShow(true);
+  };
 
   const maxQty = (qty, qtyRef) => {
     setSellQty(qty);
@@ -119,7 +120,7 @@ export default function ItemSale({ item, itemOwners }) {
     let data = {
       qty: parseInt(sellQty),
       itemName: item.itemName,
-      currency: []
+      currency: [],
     };
     currencyKeys.forEach((currencyKey) => {
       data.currency.push((sellState[currencyKey] || 0) * sellQty);
@@ -206,6 +207,7 @@ export default function ItemSale({ item, itemOwners }) {
                     defaultColor={defaultColors[idx]}
                     setState={updateSellState}
                     disabled={true}
+                    value={sellState?.[currencyKey]}
                   />
                 ))}
               </Row>

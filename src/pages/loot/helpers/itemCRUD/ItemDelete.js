@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { GroupContext } from '../../../utils/contexts/GroupContext';
+import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function ItemDelete({ item }) {
   const { groupDoc } = useContext(GroupContext);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 import HeldBySection from './HeldBySection';
-import QuillDisplay from '../../common/QuillDisplay';
+import QuillDisplay from '../../../common/QuillDisplay';
 
 export default function AccordionLoot({ filteredItems, itemOwners }) {
   return (

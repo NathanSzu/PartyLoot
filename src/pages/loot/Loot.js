@@ -4,11 +4,11 @@ import { Card, Navbar, Row, Col, Container, Spinner, Button } from 'react-bootst
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import { AuthContext } from '../../utils/contexts/AuthContext';
-import ModalLoot from './helpers/ModalLoot';
+import ModalLoot from './helpers/itemCRUD/ModalLoot';
 import CurrencyTracker from './helpers/currencyTracking/currencyTracker/CurrencyTracker';
 import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
-import LootAccordion from './helpers/AccordionLoot';
+import LootAccordion from './helpers/itemCRUD/AccordionLoot';
 import IntroCard from './helpers/IntroCard';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 

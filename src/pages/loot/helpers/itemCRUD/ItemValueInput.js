@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
-import CurrencyIcon from '../shared/CurrencyIcon';
+import CurrencyIcon from '../currencyTracking/shared/CurrencyIcon';
 
-export default function ItemSaleInput({ tags, currencyKey, handleShow, defaultColor, setState, value }) {
+export default function ItemValueInput({ tags, currencyKey, handleShow, defaultColor, setState, value }) {
 
   useEffect(() => {
     currencyRef.current.value = value;

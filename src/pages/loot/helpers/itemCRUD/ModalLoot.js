@@ -1,19 +1,20 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { GroupContext } from '../../../utils/contexts/GroupContext';
-import { AuthContext } from '../../../utils/contexts/AuthContext';
-import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
+import { GroupContext } from '../../../../utils/contexts/GroupContext';
+import { AuthContext } from '../../../../utils/contexts/AuthContext';
+import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
 import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
-import SearchOpen5E from './SearchOpen5E';
-import ItemOwnerSelect from '../../common/ItemOwnerSelect';
-import QuillInput from '../../common/QuillInput';
+import SearchOpen5E from '../SearchOpen5E';
+import ItemOwnerSelect from '../../../common/ItemOwnerSelect';
+import QuillInput from '../../../common/QuillInput';
+import ItemValueInput from './ItemValueInput';
 
 export default function ModalLoot({ item = '' }) {
-  const { groupDoc, currentGroup } = useContext(GroupContext);
+  const { groupDoc, currentGroup, allTags } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
-  const { writeHistoryEvent } = useContext(GlobalFeatures);
+  const { writeHistoryEvent, currencyKeys, defaultColors } = useContext(GlobalFeatures);
 
   const itemRef = groupDoc.collection('loot').doc(item.id);
   const itemOwnersRef = groupDoc.collection('itemOwners');
@@ -25,6 +26,7 @@ export default function ModalLoot({ item = '' }) {
   const [itemValidations, setItemValidations] = useState('');
   const [itemOwner, setItemOwner] = useState('party');
   const [quillValue, setQuillValue] = useState(item?.itemDesc || '');
+  const [valueState, setValueState] = useState({});
 
   const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
@@ -45,6 +47,14 @@ export default function ModalLoot({ item = '' }) {
     item && setItemOwner(item.ownerId);
     setQuillValue(item?.itemDesc || '');
     setShow(true);
+    setValueState(item?.value || {});
+  };
+
+  const updateValueState = (currencyKey, value) => {
+    setValueState({
+      ...valueState,
+      [currencyKey]: parseInt(value),
+    });
   };
 
   const checkItemValidations = () => {
@@ -88,6 +98,7 @@ export default function ModalLoot({ item = '' }) {
         itemTags: tagsRef.current.value,
         ownerId: itemOwner,
         created: fb.firestore.FieldValue.serverTimestamp(),
+        value: valueState,
       })
       .then(() => {
         writeHistoryEvent(currentUser.uid, 'createItem', historyData).then(() => {
@@ -114,13 +125,13 @@ export default function ModalLoot({ item = '' }) {
         maxCharges: chargesRef.current.value,
         itemTags: tagsRef.current.value,
         ownerId: itemOwner || 'party',
+        value: valueState,
       })
       .then(() => {
         handleClose();
         setLoading(false);
       })
       .catch((error) => {
-        // The document probably doesn't exist.
         console.error('Error updating item: ', error);
         handleClose();
         setLoading(false);
@@ -258,6 +269,23 @@ export default function ModalLoot({ item = '' }) {
                     <ItemOwnerSelect setState={setItemOwner} group={currentGroup} value={itemOwner} />
                   </Form.Group>
                   <Col className='mt-2'>{itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}</Col>
+                </Row>
+
+                <Row className='mx-1'>
+                  <h5 className='py-2 m-0 text-center border rounded-top'>Item value</h5>
+                </Row>
+                <Row className='p-2 mx-1 background-light rounded-bottom'>
+                  {currencyKeys.map((currencyKey, idx) => (
+                    <ItemValueInput
+                      key={idx}
+                      tags={allTags?.[currencyKey]}
+                      currencyKey={currencyKey}
+                      defaultColor={defaultColors[idx]}
+                      setState={updateValueState}
+                      disabled={true}
+                      value={valueState?.[currencyKey]}
+                    />
+                  ))}
                 </Row>
               </Modal.Body>
 

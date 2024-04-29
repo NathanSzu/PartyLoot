@@ -50,6 +50,34 @@ describe('Item actions', () => {
     cy.contains('#loot-accordion', 'x19');
   });
 
+  it('sell one item to a different party member', () => {
+    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy=new-member-input]').type(uid);
+    cy.get('[data-cy=save-new-member]').click();
+    cy.get('[data-cy=edit-party-dialog]').within(() => {
+      cy.get('.btn-close').click();
+    })
+    cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
+    cy.get('[data-cy=sell-item]').click();
+    cy.get('[data-cy=sell-qty]').type(1);
+    cy.get('[role=dialog]').within(() => {
+      currencyKeys.forEach((key) => {
+        cy.get(`[data-cy=${key}]`).type(1);
+        cy.get('[data-cy=owner-select]').select(uid);
+      });
+    });
+    cy.get('[data-cy=confirm-sell-item]').click();
+    cy.contains('#gold-tracker-accordion', 'Party Gold').click();
+    cy.get('[data-cy=owner-select]').select(uid);
+    currencyKeys.forEach((key) => {
+      cy.get(`[data-cy=${key}]`).within(() => {
+        cy.contains('div', '1');
+      });
+    });
+    cy.get('[data-cy=owner-select]').select('party');
+    cy.contains('#loot-accordion', 'x18');
+  });
+
   it('sell max qty item', () => {
     cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
     cy.get('[data-cy=sell-item]').click();
@@ -63,7 +91,7 @@ describe('Item actions', () => {
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
     currencyKeys.forEach((key) => {
       cy.get(`[data-cy=${key}]`).within(() => {
-        cy.contains('div', '20');
+        cy.contains('div', '19');
       });
     });
     cy.contains('#loot-accordion', 'New item').should('not.exist');
@@ -99,7 +127,7 @@ describe('Item actions', () => {
   it('check history', () => {
     cy.get('[data-cy=button-history]').click();
     cy.url().should('include', '/history');
-    cy.get('.list-group-item').should('have.length', 5);
+    cy.get('.list-group-item').should('have.length', 7);
     cy.get('[data-cy=button-loot]').click();
     cy.url().should('include', '/loot');
   });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Badge } from 'react-bootstrap';
 import ItemDelete from './ItemDelete';
-import ItemSale from './currencyTracking/itemSale/ItemSale';
+import ItemSale from '../currencyTracking/itemSale/ItemSale';
 
 export default function HeldBySection({ item, itemOwners }) {
   let owner = itemOwners && itemOwners.filter((itemOwner) => itemOwner.id === item.ownerId)[0]
