@@ -38,7 +38,7 @@ export default function Loot() {
         <div className='d-block w-100 mx-0 mb-2'>
           <Card className='rounded-top-0 background-light border-dark border-bottom-0 border-end-0 border-start-0'>
             <Card.Header className='p-0'>
-              <CurrencyTracker />
+              <CurrencyTracker filteredItems={filteredItems} />
             </Card.Header>
             <Card.Body>
               <Container>

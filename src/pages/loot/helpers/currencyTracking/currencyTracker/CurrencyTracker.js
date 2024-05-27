@@ -4,9 +4,10 @@ import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import CurrencyTrackerDisplay from './CurrencyTrackerDisplay';
 import CurrencyEditor from './CurrencyEditor';
+import ValueDisplay from '../../itemCRUD/ValueDisplay';
 
-export default function CurrencyTracker() {
-  const { sortBy, groupDoc, currency, loadingCurrency, tagRef, allTags } = useContext(GroupContext);
+export default function CurrencyTracker({ filteredItems }) {
+  const { sortBy, groupDoc, currency, loadingCurrency, allTags } = useContext(GroupContext);
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
 
   const [itemOwnerName, setItemOwnerName] = useState('Party');
@@ -88,6 +89,7 @@ export default function CurrencyTracker() {
                   <CurrencyEditor />
                 </Col>
               </Row>
+              <ValueDisplay filteredItems={filteredItems}/>
             </div>
           </div>
         </div>
