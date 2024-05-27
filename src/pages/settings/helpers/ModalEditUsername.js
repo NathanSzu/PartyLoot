@@ -73,7 +73,7 @@ export default function ModalEditUsername({ userData }) {
       <Button
         data-cy='change-username'
         variant='dark'
-        className='p-2 mb-2 w-100 background-dark border-0'
+        className='w-100 background-dark'
         onClick={handleShow}
       >
         Change Username

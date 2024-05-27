@@ -4,6 +4,7 @@ import { GroupContext } from '../../utils/contexts/GroupContext';
 import metadata from '../../utils/metadata.json';
 import AccountSettingsCard from './helpers/AccountSettingsCard';
 import AppSupportCard from './helpers/AppSupportCard';
+import ConfigurationCard from './helpers/ConfigurationsCard'
 
 export default function Settings() {
   const { setCurrentGroup } = useContext(GroupContext);
@@ -15,6 +16,7 @@ export default function Settings() {
   return (
     <Row className='background-light rounded-bottom'>
       <AccountSettingsCard />
+      <ConfigurationCard />
       <AppSupportCard />
 
       <Col lg={8} className='mx-auto p-2'>
