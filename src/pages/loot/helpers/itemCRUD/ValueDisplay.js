@@ -40,7 +40,7 @@ export default function ValueDisplay({ filteredItems }) {
 
   return (
     <Row className='px-1 pt-2'>
-      <Col xs={12} className='pb-2'><div className='ps-2 border-bottom border-secondary'>Item Values</div></Col>
+      <Col xs={12} className='pb-2 px-4'><div className='border-bottom border-secondary'>Total item values</div></Col>
       <Col>
         {!loadingTotals && (
           <Row className='px-3'>

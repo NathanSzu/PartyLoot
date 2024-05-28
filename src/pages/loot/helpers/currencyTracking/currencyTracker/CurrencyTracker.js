@@ -8,7 +8,7 @@ import ValueDisplay from '../../itemCRUD/ValueDisplay';
 
 export default function CurrencyTracker({ filteredItems }) {
   const { sortBy, groupDoc, currency, loadingCurrency, allTags } = useContext(GroupContext);
-  const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
+  const { defaultColors, currencyKeys, checkLocalStorage } = useContext(GlobalFeatures);
 
   const [itemOwnerName, setItemOwnerName] = useState('Party');
   const [loading, setLoading] = useState(false);
@@ -89,7 +89,7 @@ export default function CurrencyTracker({ filteredItems }) {
                   <CurrencyEditor />
                 </Col>
               </Row>
-              <ValueDisplay filteredItems={filteredItems}/>
+              {checkLocalStorage('lootValueEnabled') && <ValueDisplay filteredItems={filteredItems} />}
             </div>
           </div>
         </div>

@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Row, Col, Button, Card, Form } from 'react-bootstrap';
+import { Row, Col, Card, Form } from 'react-bootstrap';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export default function ConfigurationCard() {
   const tutorialCards = ['groupIntroCard', 'lootIntroCard'];
-  const { setToastContent, setToastHeader, toggleShowToast, clearLocalStorageItems, checkLocalStorage } =
-    useContext(GlobalFeatures);
+  const configurationKeys = [{ key: 'lootValueEnabled', label: 'Enable loot values in currency tracker' }];
+  const { clearLocalStorageItems, checkLocalStorage } = useContext(GlobalFeatures);
 
   const checkTutorialsEnabled = (messages) => {
     let tutorialsEnabled = true;
@@ -19,6 +19,7 @@ export default function ConfigurationCard() {
 
   const [configurations, setConfigurations] = useState({
     tutorialEnabled: checkTutorialsEnabled(tutorialCards),
+    lootValueEnabled: checkLocalStorage('lootValueEnabled'),
   });
 
   const handleUpdateConfigs = (config, value) => {
@@ -29,9 +30,6 @@ export default function ConfigurationCard() {
     handleUpdateConfigs('tutorialEnabled', e.target.checked);
     if (e.target.checked) {
       clearLocalStorageItems(tutorialCards);
-      setToastHeader('Tutorial reset complete');
-      setToastContent('All tutorial messages have been reset and should appear in the application.');
-      toggleShowToast();
     } else {
       tutorialCards.forEach((messageKey) => {
         checkLocalStorage(messageKey, true);
@@ -39,9 +37,14 @@ export default function ConfigurationCard() {
     }
   };
 
-  useEffect(() => {
-    console.log(configurations);
-  }, [configurations]);
+  const handleSettingSelection = (e, settingId) => {
+    if (e.target.checked) {
+      checkLocalStorage(settingId, true);
+    } else {
+      clearLocalStorageItems([settingId]);
+    }
+    handleUpdateConfigs(settingId, e.target.checked);
+  };
 
   return (
     <Col lg={8} className='mx-auto pt-2'>
@@ -53,7 +56,7 @@ export default function ConfigurationCard() {
           <Card.Text className='border-bottom'>
             <Row>
               <Col>
-                <Form.Label for='tutorialEnabled'>Enable tutorial messages</Form.Label>
+                <Form.Label htmlFor='tutorialEnabled'>Enable tutorial messages</Form.Label>
               </Col>
               <Col xs={2}>
                 <Form.Check
@@ -68,18 +71,25 @@ export default function ConfigurationCard() {
             </Row>
           </Card.Text>
 
-          <Col md={8} className='mx-auto mt-2'>
-            <Button
-              className='w-100 background-dark border-0'
-              variant='dark'
-              onClick={(e) => {
-                e.preventDefault();
-                handleTutorialReset(e);
-              }}
-            >
-              Enable Tutorials
-            </Button>
-          </Col>
+          {configurationKeys.map((config) => (
+            <Card.Text key={config.key} className='border-bottom'>
+              <Row>
+                <Col>
+                  <Form.Label htmlFor={config.key}>{config.label}</Form.Label>
+                </Col>
+                <Col xs={2}>
+                  <Form.Check
+                    className='text-end'
+                    id={config.key}
+                    checked={configurations[config.key]}
+                    onChange={(e) => {
+                      handleSettingSelection(e, config.key);
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Card.Text>
+          ))}
         </Card.Body>
       </Card>
     </Col>
