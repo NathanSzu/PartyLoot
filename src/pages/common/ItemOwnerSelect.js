@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
-export default function ItemOwnerSelect({ setState, group, sortBy, disabled = false, type = 'party' }) {
+export default function ItemOwnerSelect({ setState, group, state, disabled = false, type = 'party' }) {
   const { itemOwners } = useContext(GroupContext);
   const [ownerList, setOwnerList] = useState([]);
 
@@ -36,7 +36,7 @@ export default function ItemOwnerSelect({ setState, group, sortBy, disabled = fa
       }}
       className='form-select'
       disabled={disabled}
-      value={sortBy}
+      value={state}
       id='ownerSelect'
       data-cy='owner-select'
       aria-label='Select owner'

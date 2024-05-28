@@ -44,7 +44,11 @@ export default function ModalLoot({ item = '' }) {
   };
 
   const handleShow = () => {
-    item && setItemOwner(item.ownerId);
+    if (item) {
+      setItemOwner(item.ownerId);
+    } else {
+      setItemOwner('party');
+    }
     setQuillValue(item?.itemDesc || '');
     setShow(true);
     setValueState(item?.value || {});
@@ -266,7 +270,7 @@ export default function ModalLoot({ item = '' }) {
 
                 <Row className='mb-2'>
                   <Form.Group controlId='itemOwner'>
-                    <ItemOwnerSelect setState={setItemOwner} group={currentGroup} value={itemOwner} />
+                    <ItemOwnerSelect setState={setItemOwner} group={currentGroup} state={itemOwner} />
                   </Form.Group>
                   <Col className='mt-2'>{itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}</Col>
                 </Row>

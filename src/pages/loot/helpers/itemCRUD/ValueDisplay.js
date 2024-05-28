@@ -45,7 +45,7 @@ export default function ValueDisplay({ filteredItems }) {
         {!loadingTotals && (
           <Row className='px-3'>
             {currencyKeys.map((currencyKey, idx) => (
-              <Col xs={2} className='px-1'>
+              <Col key={currencyKey} xs={2} className='px-1'>
                 <div
                   className='small rounded text-center'
                   style={{

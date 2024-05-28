@@ -8,7 +8,7 @@ import ItemSaleInput from './ItemSaleInput';
 import ItemOwnerSelect from '../../../../common/ItemOwnerSelect';
 
 export default function ItemSale({ item }) {
-  const { groupDoc, currentGroup, allTags } = useContext(GroupContext);
+  const { groupDoc, currentGroup, allTags, itemOwners } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
@@ -25,6 +25,7 @@ export default function ItemSale({ item }) {
   const [sellState, setSellState] = useState({});
   const [sellQty, setSellQty] = useState(1);
   const [sellerId, setSellerId] = useState('party');
+  const [sellerName, setSellerName] = useState('the party');
 
   const handleClose = () => {
     setSellQty(1);
@@ -95,7 +96,7 @@ export default function ItemSale({ item }) {
       return false;
     }
     currencyKeys.forEach((currencyKey) => {
-      if (sellState[currencyKey]) valueCheck = true;
+      if (sellState?.[currencyKey]) valueCheck = true;
     });
     if (valueCheck === false) {
       setErrorMessage('At least one sale price must be entered');
@@ -116,11 +117,26 @@ export default function ItemSale({ item }) {
       .catch((err) => console.error(err));
   };
 
+  const getItemOwner = (itemOwnerId) => {
+    itemOwnerId &&
+      itemOwners
+        .doc(itemOwnerId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setSellerName(doc.data().name);
+          } else {
+            setSellerName('the party');
+          }
+        });
+  };
+
   const compileHistoryData = (sellQty, item, sellState, currencyKeys) => {
     let data = {
       qty: parseInt(sellQty),
       itemName: item.itemName,
       currency: [],
+      seller: sellerName,
     };
     currencyKeys.forEach((currencyKey) => {
       data.currency.push((sellState[currencyKey] || 0) * sellQty);
@@ -138,7 +154,6 @@ export default function ItemSale({ item }) {
         if (item.itemQty <= sellQty) {
           deleteItem();
         } else {
-          // In this case, just add currency and update item qty
           updateQty(item.itemQty, sellQty);
         }
       }
@@ -150,7 +165,11 @@ export default function ItemSale({ item }) {
 
   useEffect(() => {
     item && setSellerId(item.ownerId);
-  }, [item]);
+  }, []);
+
+  useEffect(() => {
+    getItemOwner(sellerId);
+  }, [sellerId]);
 
   return (
     <>
