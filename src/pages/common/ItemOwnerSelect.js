@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
 export default function ItemOwnerSelect({ setState, group, state, disabled = false, type = 'party' }) {
-  const { itemOwners } = useContext(GroupContext);
+  const { groups } = useContext(GroupContext);
   const [ownerList, setOwnerList] = useState([]);
+
+  const itemOwners = groups.doc(group || 'null').collection('itemOwners');
 
   const getItemOwners = () => {
     return itemOwners

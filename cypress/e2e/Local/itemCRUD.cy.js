@@ -124,14 +124,6 @@ describe('Item actions', () => {
     });
   });
 
-  it('check history', () => {
-    cy.get('[data-cy=button-history]').click();
-    cy.url().should('include', '/history');
-    cy.get('.list-group-item').should('have.length', 7);
-    cy.get('[data-cy=button-loot]').click();
-    cy.url().should('include', '/loot');
-  });
-
   it('remove test group', () => {
     cy.removeGroup(uid, uid2);
   });

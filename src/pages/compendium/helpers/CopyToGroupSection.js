@@ -12,7 +12,7 @@ export default function CopyToGroupSection({ item }) {
   const { currentUser } = useContext(AuthContext);
 
   const [group, setGroup] = useState('');
-  const [owner, setOwner] = useState('party');
+  const [owner, setOwner] = useState('');
   const [loading, setLoading] = useState(false);
 
   const groupLootRef = groups.doc(group || 'null').collection('loot');
@@ -24,8 +24,9 @@ export default function CopyToGroupSection({ item }) {
     groupLootRef
       .add({
         itemName,
+        itemQty: 1,
         itemDesc,
-        ownerId: owner,
+        ownerId: owner || 'party',
         created: fb.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {

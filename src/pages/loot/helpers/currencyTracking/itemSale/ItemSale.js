@@ -226,7 +226,7 @@ export default function ItemSale({ item }) {
                     defaultColor={defaultColors[idx]}
                     setState={updateSellState}
                     disabled={true}
-                    value={sellState?.[currencyKey]}
+                    value={sellState?.[currencyKey] || 0}
                   />
                 ))}
               </Row>
