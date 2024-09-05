@@ -2,6 +2,7 @@ const axios = require('axios');
 const { logger } = require('firebase-functions');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentCreated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
+const { deleteGroup } = require('./src/deleteGroup');
 
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
@@ -144,3 +145,6 @@ exports.reportNotification = onDocumentCreated('communications/{documentId}', (e
 
   send(mailOptions);
 });
+
+
+exports.deleteGroupTrigger = onRequest({ cors: true }, (req, res) => deleteGroup(req,res));

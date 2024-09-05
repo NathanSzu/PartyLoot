@@ -1,14 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
@@ -16,16 +15,16 @@ ReactDOM.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 serviceWorker.register({
-  onUpdate: registration => {
-    const waitingServiceWorker = registration.waiting
+  onUpdate: (registration) => {
+    const waitingServiceWorker = registration.waiting;
 
     if (waitingServiceWorker) {
-      waitingServiceWorker.addEventListener("statechange", event => {
-        if (event.target.state === "activated") {
-          window.location.reload()
+      waitingServiceWorker.addEventListener('statechange', (event) => {
+        if (event.target.state === 'activated') {
+          window.location.reload();
         }
       });
-      waitingServiceWorker.postMessage({ type: "SKIP_WAITING" });
+      waitingServiceWorker.postMessage({ type: 'SKIP_WAITING' });
     }
-  }
+  },
 });

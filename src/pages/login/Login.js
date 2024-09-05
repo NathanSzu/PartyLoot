@@ -126,6 +126,7 @@ export default function BootLogin() {
             ref={emailRef}
             data-cy='login-email'
             type='email'
+            autoComplete='username'
             placeholder='Enter email'
             onChange={(e) => {
               setEmail(e.target.value);
@@ -144,6 +145,7 @@ export default function BootLogin() {
             ref={passwordRef}
             data-cy='login-password'
             type='password'
+            autoComplete={login ? 'current-password' : 'new-password'}
             placeholder='Password'
             onChange={(e) => {
               setPassword(e.target.value);
@@ -161,6 +163,7 @@ export default function BootLogin() {
 
             <Form.Control
               type='password'
+              autoComplete='new-password'
               data-cy='login-check-password'
               placeholder='Confirm Password'
               onChange={(e) => {

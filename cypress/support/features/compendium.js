@@ -11,8 +11,8 @@ const fillCompendiumFields = (data) => {
 };
 
 const openNewCompendiumEntry = () => {
-  cy.get('[data-cy=my-discoveries]').click();
-  cy.get('[data-cy=add-discovery]').click();
+  cy.get('[data-cy="my-discoveries"]').click();
+  cy.get('[data-cy="add-discovery"]').click();
 };
 
 const addEntry = (uid) => {
@@ -21,7 +21,7 @@ const addEntry = (uid) => {
   cy.get('[data-dismiss="toast"]').click();
   cy.get('[data-cy="search-input"]').type(uid);
   cy.contains('.list-group-item', uid);
-  cy.get('[data-cy=all-discoveries]').click();
+  cy.get('[data-cy="all-discoveries"]').click();
   cy.get('[data-cy="search-input"]').type(uid);
   cy.contains('.list-group-item', uid);
 };
@@ -32,13 +32,13 @@ const saveDraft = (uid) => {
   cy.get('[data-dismiss="toast"]').click();
   cy.get('[data-cy="search-input"]').type(uid);
   cy.contains('.list-group-item', uid);
-  cy.get('[data-cy=all-discoveries]').click();
+  cy.get('[data-cy="all-discoveries"]').click();
   cy.get('[data-cy="search-input"]').type(uid);
   cy.contains('.list-group-item', uid).should('not.exist');
 };
 
 const deleteEntry = (uid) => {
-  cy.contains(uid).parent().siblings().within(() => {
+  cy.contains(uid).parent().parent().within(() => {
     cy.contains('button', 'View').click();
   });
   cy.get('[data-cy="edit-compendium-entry"]').filter(':visible').click();

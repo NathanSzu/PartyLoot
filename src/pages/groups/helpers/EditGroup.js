@@ -1,6 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
@@ -10,47 +9,50 @@ export default function EditGroup({ name, id, owner, members }) {
   const { groups } = useContext(GroupContext);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setFalse();
+    setShow(true);
+  };
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [leaveConfirmation, setLeaveConfirmation] = useState(false);
-  const [displayMembers, setDisplayMembers] = useState([]);
-  const [noResult, setNoResult] = useState(false);
-  const [maxReached, setMaxReached] = useState(false);
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
-  const userRef = db.collection('users');
-  const membersQuery = userRef.where(fb.firestore.FieldPath.documentId(), 'in', members);
-  const [groupMembers, loading] = useCollectionData(membersQuery, { idField: 'id' });
+  const getGroupMembers = async () => {
+    setLoading(true);
+    await db
+      .collection('users')
+      .where(fb.firestore.FieldPath.documentId(), 'in', members)
+      .onSnapshot((querySnapshot) => {
+        let results = [];
+        querySnapshot.forEach((doc) => {
+          results.push({
+            ...doc.data(),
+            id: doc.id,
+          });
+        });
+        setGroupMembers(results);
+      });
+    setLoading(false);
+  };
 
   const nameRef = useRef();
   const memberRef = useRef();
 
   useEffect(() => {
-    groupMembers &&
-      setDisplayMembers(() => {
-        let filtered = groupMembers.filter((member) => {
-          if (member.id !== currentUser.uid) {
-            return member;
-          } else {
-            return null;
-          }
-        });
-        return filtered;
-      });
-  }, [groupMembers, currentUser.uid]);
+    getGroupMembers();
+  }, [members]);
 
   const setFalse = () => {
     setDeleteConfirmation(false);
     setLeaveConfirmation(false);
-    setNoResult(false);
-    setMaxReached(false);
+    setAlert(null);
   };
 
   const editGroup = () => {
-    // Does not call update function if the group name has not been changed or is left empty.
-    if (nameRef.current.value === name || !nameRef.current.value) {
-      setFalse();
-      return;
-    }
+    if (nameRef.current.value === name || !nameRef.current.value) return;
+    setLoading(true);
     groups
       .doc(id)
       .update({
@@ -58,87 +60,63 @@ export default function EditGroup({ name, id, owner, members }) {
       })
       .then(() => {
         handleClose();
-        setFalse();
+        setLoading(false);
       })
       .catch((error) => {
-        // The document probably doesn't exist.
         console.error('Error updating document: ', error);
       });
   };
 
-  const deleteGroup = () => {
-    if (currentUser.uid !== owner) {
-      return;
-    }
+  const deleteGroup = async () => {
+    if (currentUser.uid !== owner) return;
+    setLoading(true);
+    await fetch(process.env.REACT_APP_DELETE_GROUP_URL, {
+      method: 'POST',
+      body: id,
+    });
     handleClose();
-    groups
-      .doc(id)
-      .delete()
-      .then(() => {
-        setFalse();
-      })
-      .catch((error) => {
-        console.error('Error removing document: ', error);
-      });
+    setLoading(false);
   };
 
   const addMember = () => {
-    if (memberRef.current.value) {
-      setFalse();
-      db.collection('users')
-        .where('code', '==', memberRef.current.value.toUpperCase())
-        .get()
-        .then((querySnapshot) => {
-          // Check if there are no results and display alert
-          if (querySnapshot.empty) {
-            setNoResult(true);
-          } else {
-            if (groupMembers.length > 9) {
-              setMaxReached(true);
-              return;
-            }
-            querySnapshot.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-              if (doc.id) {
-                groups.doc(id).update({
-                  // Adds the user with the entered group code to be added to the groups user array.
-                  members: fb.firestore.FieldValue.arrayUnion(doc.id),
-                });
-              }
-            });
-            memberRef.current.value = '';
-            setFalse();
-          }
-        })
-        .catch((error) => {
-          console.error('Error getting user: ', error);
-        });
+    if (!memberRef.current.value) return;
+    if (groupMembers.length > 9) {
+      setAlert('No more than 10 members can be added');
+      return;
     }
-  };
-
-  const leaveGroup = () => {
-    groups
-      .doc(id)
-      .update({
-        members: fb.firestore.FieldValue.arrayRemove(currentUser.uid),
-      })
-      .then(() => {
-        handleClose();
-        setFalse();
+    setLoading(true);
+    db.collection('users')
+      .where('code', '==', memberRef.current.value.toUpperCase())
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          setAlert('User not found!');
+        } else {
+          querySnapshot.forEach((doc) => {
+            groups.doc(id).update({
+              members: fb.firestore.FieldValue.arrayUnion(doc.id),
+            });
+          });
+          memberRef.current.value = '';
+          setFalse();
+        }
+        setLoading(false);
       })
       .catch((error) => {
-        console.error('Error removing member: ', error);
+        console.error('Error getting user: ', error);
       });
   };
 
-  const removeMember = (e) => {
+  const removeMember = (uid, close = false) => {
+    setLoading(true);
     groups
       .doc(id)
       .update({
-        members: fb.firestore.FieldValue.arrayRemove(e.target.id),
+        members: fb.firestore.FieldValue.arrayRemove(uid),
       })
       .then(() => {
-        setFalse();
+        close && handleClose();
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error removing member: ', error);
@@ -195,7 +173,7 @@ export default function EditGroup({ name, id, owner, members }) {
                 </Col>
               ) : null}
 
-              {currentUser.uid === owner ? (
+              {currentUser.uid === owner && (
                 <Button
                   as='input'
                   value='Save'
@@ -205,99 +183,72 @@ export default function EditGroup({ name, id, owner, members }) {
                   type='button'
                   onClick={() => editGroup()}
                 />
-              ) : null}
+              )}
 
-              {deleteConfirmation ? (
+              {currentUser.uid === owner ? (
                 <Button
                   as='input'
-                  value={`Yes, I'm sure. Delete!`}
-                  disabled={loading}
-                  variant='danger'
-                  className='background-danger border-0'
-                  type='button'
-                  onClick={() => deleteGroup()}
-                  data-cy='confirm-delete'
-                />
-              ) : null}
-
-              {leaveConfirmation ? (
-                <Button
-                  as='input'
-                  value={`Yes, I'm sure. Leave Group!`}
-                  disabled={loading}
-                  variant='danger'
-                  className='background-danger border-0'
-                  type='button'
-                  onClick={() => leaveGroup(currentUser.uid)}
-                />
-              ) : null}
-
-              {currentUser.uid === owner && !deleteConfirmation ? (
-                // Delete button that only shows if the current user owns the group.
-                <Button
-                  as='input'
-                  value='Delete'
+                  value={deleteConfirmation ? "Yes, I'm sure. Delete!" : 'Delete'}
                   disabled={loading}
                   variant='danger'
                   className='background-danger border-0'
                   type='button'
                   onClick={() => {
-                    setDeleteConfirmation(true);
+                    deleteConfirmation ? deleteGroup() : setDeleteConfirmation(true);
                   }}
                   data-cy='delete'
                 />
-              ) : null}
-
-              {currentUser.uid !== owner && !leaveConfirmation ? (
-                // Alternate Leave Group button that only shows if current user does not own the group.
+              ) : (
                 <Button
                   as='input'
-                  value={`Leave Group`}
+                  value={leaveConfirmation ? "Yes, I'm sure. Leave Group!" : 'Leave Group'}
                   disabled={loading}
                   variant='danger'
                   className='background-danger border-0'
                   type='button'
                   onClick={() => {
-                    setLeaveConfirmation(true);
+                    leaveConfirmation ? removeMember(currentUser.uid, true) : setLeaveConfirmation(true);
                   }}
                 />
-              ) : null}
+              )}
             </Modal.Footer>
           </Form>
 
-          {displayMembers.length === 0 ? null : (
+          {groupMembers.length > 1 && (
             <Modal.Header>
               <Modal.Title>Members</Modal.Title>
             </Modal.Header>
           )}
 
-          {displayMembers &&
-            displayMembers.map((member, idx) => (
-              <Container key={idx}>
-                <Row className='p-2'>
-                  <Col>{member.displayName}</Col>
-                  {currentUser.uid === owner ? (
-                    <Col xs='auto'>
-                      <Button
-                        disabled={loading}
-                        variant='danger'
-                        className='background-danger border-0'
-                        id={member.id}
-                        type='button'
-                        onClick={(e) => {
-                          removeMember(e);
-                        }}
-                        data-cy='remove-member'
-                      >
-                        <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg'></img>
-                      </Button>
-                    </Col>
-                  ) : null}
-                </Row>
-              </Container>
-            ))}
+          {groupMembers &&
+            groupMembers
+              .filter((member) => member.id !== currentUser.uid)
+              .map((member, idx) => (
+                <Container key={idx}>
+                  <Row className='p-2'>
+                    <Col>{member.displayName}</Col>
+                    {currentUser.uid === owner ? (
+                      <Col xs='auto'>
+                        <Button
+                          disabled={loading}
+                          variant='danger'
+                          className='background-danger border-0'
+                          id={member.id}
+                          type='button'
+                          onClick={(e) => {
+                            removeMember(e.target.id);
+                          }}
+                          data-cy='remove-member'
+                        >
+                          <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg'></img>
+                        </Button>
+                      </Col>
+                    ) : null}
+                  </Row>
+                </Container>
+              ))}
 
-          {currentUser.uid === owner ? (
+          {currentUser.uid === owner && (
             <>
               <Modal.Header>
                 <Modal.Title>Add Members</Modal.Title>
@@ -333,15 +284,12 @@ export default function EditGroup({ name, id, owner, members }) {
                     </Col>
                   </Row>
                   <Row>
-                    <Col>
-                      {noResult ? <Alert variant='warning'>User not found!</Alert> : null}
-                      {maxReached ? <Alert variant='warning'>Limit of 10 members!</Alert> : null}
-                    </Col>
+                    <Col>{alert && <Alert variant='warning'>{alert}</Alert>}</Col>
                   </Row>
                 </Container>
               </Form>
             </>
-          ) : null}
+          )}
         </div>
       </Modal>
     </>

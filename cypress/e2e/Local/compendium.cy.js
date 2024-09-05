@@ -18,7 +18,7 @@ describe('Compendium CRUD', () => {
   });
 
   it('navigate to compendium', () => {
-    cy.get('[data-cy=navbar-toggle]').click();
+    cy.get('[data-cy="navbar-toggle"]').click();
     cy.get('[data-cy="navbar-compendium"]').click();
     cy.get('[data-cy="filters-tab-toggle"]').click();
   });

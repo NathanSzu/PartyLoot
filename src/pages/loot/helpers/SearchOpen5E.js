@@ -23,7 +23,7 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
 
     async function search(query) {
       setLoading(true);
-      const response = await fetch('https://itemsearch-7kp4kvdcxq-uc.a.run.app?search', {
+      const response = await fetch(process.env.REACT_APP_ITEM_SEARCH_URL, {
         method: 'POST',
         body: query.toLowerCase(),
       });
