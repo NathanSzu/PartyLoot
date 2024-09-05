@@ -196,7 +196,7 @@ export default function EditGroup({ name, id, owner, members }) {
                   onClick={() => {
                     deleteConfirmation ? deleteGroup() : setDeleteConfirmation(true);
                   }}
-                  data-cy='delete'
+                  data-cy={deleteConfirmation ? 'confirm-delete' : 'delete'}
                 />
               ) : (
                 <Button

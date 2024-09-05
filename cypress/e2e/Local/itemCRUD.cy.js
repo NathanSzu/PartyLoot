@@ -56,7 +56,7 @@ describe('Item actions', () => {
     cy.get('[data-cy=save-new-member]').click();
     cy.get('[data-cy=edit-party-dialog]').within(() => {
       cy.get('.btn-close').click();
-    })
+    });
     cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
     cy.get('[data-cy=sell-item]').click();
     cy.get('[data-cy=sell-qty]').type(1);
@@ -116,6 +116,7 @@ describe('Item actions', () => {
       });
     });
     cy.get('[data-cy="save-currency"]').click();
+    cy.get('[data-cy="save-currency"]').should('not.exist');
     currencyKeys.forEach((key) => {
       cy.get(`[data-cy=${key}]`).within(() => {
         cy.contains('div', '20').should('not.exist');
