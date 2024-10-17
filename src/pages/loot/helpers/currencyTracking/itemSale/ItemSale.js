@@ -3,19 +3,16 @@ import { Modal, Button, Form, Row, Col, Alert, Container } from 'react-bootstrap
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 import ItemSaleInput from './ItemSaleInput';
 import ItemOwnerSelect from '../../../../common/ItemOwnerSelect';
 
 export default function ItemSale({ item }) {
-  const { groupDoc, currentGroup, allTags, itemOwners } = useContext(GroupContext);
+  const { groupDoc, getItemOwner, currentGroup, allTags, currency } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
   const currencyRef = groupDoc.collection('currency').doc('currency');
   const itemRef = groupDoc.collection('loot').doc(item.id);
-
-  const [currency] = useDocumentData(currencyRef);
 
   const qtyRef = useRef();
 
@@ -117,20 +114,6 @@ export default function ItemSale({ item }) {
       .catch((err) => console.error(err));
   };
 
-  const getItemOwner = (itemOwnerId) => {
-    itemOwnerId &&
-      itemOwners
-        .doc(itemOwnerId)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setSellerName(doc.data().name);
-          } else {
-            setSellerName('the party');
-          }
-        });
-  };
-
   const compileHistoryData = (sellQty, item, sellState, currencyKeys) => {
     let data = {
       qty: parseInt(sellQty),
@@ -168,7 +151,7 @@ export default function ItemSale({ item }) {
   }, []);
 
   useEffect(() => {
-    getItemOwner(sellerId);
+    getItemOwner(sellerId, setSellerName);
   }, [sellerId]);
 
   return (

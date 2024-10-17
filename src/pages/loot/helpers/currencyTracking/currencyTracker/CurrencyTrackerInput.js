@@ -10,7 +10,7 @@ export default function CurrencyTrackerInput({
   newCurrencyTotals,
   setNewCurrencyTotals,
 }) {
-  const { currency, sortBy } = useContext(GroupContext);
+  const { currency, itemQuery } = useContext(GroupContext);
 
   const colorRef = useRef();
   const symbolRef = useRef();
@@ -18,7 +18,7 @@ export default function CurrencyTrackerInput({
 
   const findDiff = () => {
     let newTotal = newCurrencyTotals?.[currencyKey] || 0;
-    let oldTotal = currency?.[sortBy]?.[currencyKey] || 0;
+    let oldTotal = currency?.[itemQuery.itemOwner]?.[currencyKey] || 0;
     return newTotal - oldTotal || 0;
   };
 

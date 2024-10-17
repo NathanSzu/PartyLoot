@@ -7,8 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Default setting is ' ' so the app will initiate react-firebase-hooks useDocumentData call
   const [currentUser, setCurrentUser] = useState('');
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const db = fb.firestore();
@@ -122,36 +122,48 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
+  const checkOrSetData = () => {
+    userRef
+      .get()
+      .then((doc) => {
+        // Do nothing unless missing data
+        if (!doc.data()?.displayName) setUsername(randomUsername());
+        if (!doc.data()?.code) setGroupCode();
+        recordActivity();
+      })
+      .catch((error) => {
+        console.error('Error checking for existing code or username:', error);
+      });
+  };
+
+  const getUserData = () => {
+    userRef.onSnapshot((doc) => {
+      setUserData(doc.data());
+    });
+  };
+
   const manageSession = (currentUser, pathname) => {
     if (currentUser) {
       bypassRoutes.forEach((route) => {
         if (pathname.includes(route)) {
-          navigate('/groups')
+          navigate('/groups');
         }
-      })
+      });
     }
     if (!currentUser) {
       securedRoutes.forEach((route) => {
         if (pathname.includes(route)) {
-          navigate('/')
+          navigate('/');
         }
-      })
+      });
     }
   };
 
   useEffect(() => {
-    currentUser &&
-      userRef
-        .get()
-        .then((doc) => {
-          // Do nothing unless missing data
-          if (!doc.data()?.displayName) setUsername(randomUsername());
-          if (!doc.data()?.code) setGroupCode();
-          recordActivity();
-        })
-        .catch((error) => {
-          console.error('Error checking for existing code or username:', error);
-        });
+    if (currentUser) {
+      checkOrSetData();
+      getUserData();
+    }
   }, [currentUser]);
 
   useEffect(() => {
@@ -169,13 +181,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     manageSession(currentUser, location.pathname);
-  }, [location, currentUser])
-  
+  }, [location, currentUser]);
 
   return (
     <AuthContext.Provider
       value={{
         currentUser,
+        userData,
         randomName,
         userRef,
         setUsername,

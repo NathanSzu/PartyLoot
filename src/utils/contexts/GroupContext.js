@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { AuthContext } from './AuthContext';
 import { useLocation } from 'react-router-dom';
 
@@ -15,31 +14,44 @@ export const GroupProvider = ({ children }) => {
   const [currentGroup, setCurrentGroup] = useState(null);
   const [groupList, setGroupList] = useState([]);
   const [allTags, setAllTags] = useState({});
+  const [allLoot, setAllLoot] = useState([]);
+  const [sortedLoot, setSortedLoot] = useState({
+    sorted: [],
+  });
+  const [itemQuery, setItemQuery] = useState({
+    searchQuery: '',
+    itemOwner: 'party',
+  });
+  const [itemOwners, setItemOwners] = useState([]);
+  const [groupData, setGroupData] = useState(null);
+  const [currency, setCurrency] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Query declarations
   const groups = db.collection('groups');
   const groupDoc = groups.doc(currentGroup || ' ');
   const groupCurrency = groupDoc.collection('currency').doc('currency');
-  const itemOwners = groupDoc.collection('itemOwners');
   const tagRef = groupDoc.collection('currency').doc('tags');
-
-  const [groupData, loading] = useDocumentData(groupDoc);
-  const [currency, loadingCurrency] = useDocumentData(groupCurrency);
-  const [sortBy, setSortBy] = useState('party');
 
   const manageGroupSession = (pathname) => {
     clearGroupRoutes.forEach((route) => {
       if (pathname.includes(route)) {
         setCurrentGroup(null);
-        setSortBy('party');
+        setItemQuery({ ...itemQuery, itemOwner: 'party' });
       }
+    });
+  };
+
+  const getCurrency = () => {
+    groupCurrency.onSnapshot((doc) => {
+      setCurrency(doc.data());
     });
   };
 
   const updateCurrency = (currencyKey, currencyQty) => {
     groupCurrency.set(
       {
-        [sortBy]: { [currencyKey]: Number(currencyQty) },
+        [itemQuery.itemOwner]: { [currencyKey]: Number(currencyQty) },
       },
       { merge: true }
     );
@@ -48,10 +60,90 @@ export const GroupProvider = ({ children }) => {
   const updateUserCurrency = (currencyTotals) => {
     groupCurrency.set(
       {
-        [sortBy]: currencyTotals,
+        [itemQuery.itemOwner]: currencyTotals,
       },
       { merge: true }
     );
+  };
+
+  const getLootItems = () => {
+    groupDoc
+      .collection('loot')
+      .orderBy('itemName')
+      .onSnapshot((querySnapshot) => {
+        let tempAllLoot = [];
+        querySnapshot.forEach((doc) => {
+          tempAllLoot.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setAllLoot(tempAllLoot);
+      });
+  };
+
+  const sortLootItems = () => {
+    let ownerFiltered = [];
+    let queryFiltered = [];
+    if (itemQuery.itemOwner === 'party') {
+      ownerFiltered = allLoot;
+    } else {
+      ownerFiltered = allLoot.filter((item) => item.ownerId === itemQuery.itemOwner);
+    }
+
+    if (itemQuery.searchQuery) {
+      queryFiltered = ownerFiltered.filter(
+        (item) =>
+          item.itemDesc?.search(new RegExp(`${itemQuery.searchQuery}`, 'i')) >= 0 ||
+          item.itemName?.search(new RegExp(`${itemQuery.searchQuery}`, 'i')) >= 0 ||
+          item.itemTags?.search(new RegExp(`${itemQuery.searchQuery}`, 'i')) >= 0
+      );
+    } else {
+      queryFiltered = ownerFiltered;
+    }
+    setSortedLoot({
+      ...sortedLoot,
+      sorted: queryFiltered,
+    });
+  };
+
+  const returnContainerItems = (itemArray, containerId) => {
+    let containerItems = itemArray.filter((item) => item?.container === containerId)
+    return containerItems
+  }
+
+  const getItemOwners = (dbRef = groupDoc) => {
+    dbRef
+      .collection('itemOwners')
+      .where('type', '==', 'party')
+      .onSnapshot((querySnapshot) => {
+        let tempOwners = [];
+        querySnapshot.forEach((doc) => {
+          tempOwners.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setItemOwners(tempOwners);
+      });
+  };
+
+  const getItemOwner = (itemOwnerId, setState) => {
+    const filteredOwner = itemOwners.filter((owner) => owner.id === itemOwnerId);
+    filteredOwner?.[0] ? setState(filteredOwner[0].name) : setState('the party');
+  };
+
+  const getGroupData = () => {
+    groupDoc.onSnapshot((doc) => {
+      setGroupData(doc.data());
+    });
+  };
+
+  const setOneParam = (param) => {
+    setItemQuery({
+      ...itemQuery,
+      itemOwner: param,
+    });
   };
 
   useEffect(() => {
@@ -69,13 +161,26 @@ export const GroupProvider = ({ children }) => {
         });
   }, [currentUser]);
 
+  // When a group is selected, set the tags, get the related loot items, and reset the searchQuery state
   useEffect(() => {
-    currentGroup &&
-      tagRef
-        .onSnapshot((querySnapshot) => {
-          setAllTags(querySnapshot.data())
-        });
+    if (currentGroup) {
+      tagRef.onSnapshot((querySnapshot) => {
+        setAllTags(querySnapshot.data());
+      });
+      setItemQuery({
+        searchQuery: '',
+        itemOwner: 'party',
+      });
+      getLootItems();
+      getItemOwners();
+      getGroupData();
+      getCurrency();
+    }
   }, [currentGroup]);
+
+  useEffect(() => {
+    sortLootItems();
+  }, [itemQuery, allLoot]);
 
   useEffect(() => {
     manageGroupSession(location.pathname);
@@ -89,16 +194,19 @@ export const GroupProvider = ({ children }) => {
         groupData,
         itemOwners,
         tagRef,
-        sortBy,
-        setSortBy,
         groups,
         groupDoc,
         groupList,
         allTags,
         currency,
-        loadingCurrency,
         updateCurrency,
         updateUserCurrency,
+        sortedLoot,
+        setItemQuery,
+        itemQuery,
+        setOneParam,
+        getItemOwners,
+        getItemOwner,
       }}
     >
       {!loading && children}

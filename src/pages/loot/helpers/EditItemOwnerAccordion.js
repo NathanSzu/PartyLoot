@@ -3,16 +3,13 @@ import { Col, Row, Container, Button, Alert, Form } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
-  const { groupDoc } = useContext(GroupContext);
+  const { groupDoc, groupData } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
   const itemOwnersRef = groupDoc.collection('itemOwners');
-
-  const [party] = useDocumentData(groupDoc);
 
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -30,7 +27,7 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
       .then(() => {
         writeHistoryEvent(currentUser.uid, 'deletePartyMember', { name: itemOwner.name }).then(() => {
           setLoadingDelete(false);
-          checkFavorite(party, itemOwner) && setFavoriteItemOwner(itemOwner);
+          checkFavorite(groupData, itemOwner) && setFavoriteItemOwner(itemOwner);
           handleClose();
         });
       })
@@ -63,15 +60,15 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
       });
   };
 
-  const checkFavorite = (party, itemOwner) => {
-    return party?.favorites?.[currentUser.uid] === itemOwner?.id;
+  const checkFavorite = (groupData, itemOwner) => {
+    return groupData?.favorites?.[currentUser.uid] === itemOwner?.id;
   };
 
   const setFavoriteItemOwner = (itemOwner) => {
     setLoadingSave(true);
     groupDoc
       .update({
-        [`favorites.${currentUser.uid}`]: checkFavorite(party, itemOwner) ? 'party' : itemOwner.id,
+        [`favorites.${currentUser.uid}`]: checkFavorite(groupData, itemOwner) ? 'party' : itemOwner.id,
       })
       .then(() => {
         handleClose();
@@ -108,7 +105,7 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
         <Container>
           <Row className='p-2'>
             <Col xs={2} lg={1} className='p-0 d-flex justify-content-start'>
-              {checkFavorite(party, itemOwner) ? (
+              {checkFavorite(groupData, itemOwner) ? (
                 <Button
                   data-cy='set-unfavorite'
                   className='background-dark'

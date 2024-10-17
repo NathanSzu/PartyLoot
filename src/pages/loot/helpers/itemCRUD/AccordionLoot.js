@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import ModalLoot from './ModalLoot';
 import HeldBySection from './HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
+import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
-export default function AccordionLoot({ filteredItems, itemOwners }) {
+export default function AccordionLoot() {
+  const { sortedLoot } = useContext(GroupContext);
+
   return (
     <div className='accordion accordion-flush p-0' id='loot-accordion'>
-      {filteredItems.map((item) => (
+      {sortedLoot.sorted.map((item) => (
         <div className='accordion-item rounded' key={item.id}>
           <h2 className='accordion-header' id='lootAccordionHeading'>
             <button
@@ -62,7 +65,7 @@ export default function AccordionLoot({ filteredItems, itemOwners }) {
                   </Col>
                 </Row>
 
-                <HeldBySection item={item} itemOwners={itemOwners} />
+                <HeldBySection item={item} />
               </Container>
             </div>
           </div>

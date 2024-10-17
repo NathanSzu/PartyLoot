@@ -7,7 +7,7 @@ import { AuthContext } from '../../../../../utils/contexts/AuthContext';
 
 export default function CurrencyEditor() {
   const { currentUser } = useContext(AuthContext);
-  const { groupDoc, sortBy, currency, itemOwners, tagRef, allTags } = useContext(GroupContext);
+  const { groupDoc, getItemOwner, itemQuery, currency, itemOwners, tagRef, allTags } = useContext(GroupContext);
   const { defaultColors, currencyKeys, writeHistoryEvent } = useContext(GlobalFeatures);
 
   const [tagState, setTagState] = useState({});
@@ -18,22 +18,8 @@ export default function CurrencyEditor() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    setNewCurrencyTotals(currency?.[sortBy] || {});
+    setNewCurrencyTotals(currency?.[itemQuery.itemOwner] || {});
     setShow(true);
-  };
-
-  const getItemOwner = (id) => {
-    if (id === 'party') {
-      setItemOwner('the party');
-    } else {
-      itemOwners
-        .doc(id)
-        .get()
-        .then((doc) => {
-          let data = doc.data();
-          setItemOwner(data.name);
-        });
-    }
   };
 
   const updateTagState = (key, tag, value) => {
@@ -59,7 +45,7 @@ export default function CurrencyEditor() {
   const updateCurrencyTotals = async (newCurrencyTotals) => {
     setLoading(true);
     const groupCurrency = groupDoc.collection('currency').doc('currency');
-    groupCurrency.set({ [sortBy]: newCurrencyTotals }, { merge: true }).catch((err) => console.error(err));
+    groupCurrency.set({ [itemQuery.itemOwner]: newCurrencyTotals }, { merge: true }).catch((err) => console.error(err));
   };
 
   const compileHistoryData = (itemOwner, oldCurrency, newCurrency, currencyKeys) => {
@@ -84,14 +70,14 @@ export default function CurrencyEditor() {
       .catch((err) => console.error('Error updating tags: ', err));
     updateCurrencyTotals(newCurrencyTotals)
       .then(() => {
-        compileHistoryData(itemOwner, currency[sortBy], newCurrencyTotals, currencyKeys);
+        compileHistoryData(itemOwner, currency[itemQuery.itemOwner], newCurrencyTotals, currencyKeys);
       })
       .catch((err) => console.error('Error updating currency: ', err));
   };
 
   useEffect(() => {
-    getItemOwner(sortBy);
-  }, [sortBy]);
+    getItemOwner(itemQuery.itemOwner, setItemOwner);
+  }, [itemQuery.itemOwner]);
 
   return (
     <>

@@ -6,8 +6,8 @@ import CurrencyTrackerDisplay from './CurrencyTrackerDisplay';
 import CurrencyEditor from './CurrencyEditor';
 import ValueDisplay from '../../itemCRUD/ValueDisplay';
 
-export default function CurrencyTracker({ filteredItems }) {
-  const { sortBy, groupDoc, currency, loadingCurrency, allTags } = useContext(GroupContext);
+export default function CurrencyTracker() {
+  const { itemQuery, groupDoc, currency, allTags } = useContext(GroupContext);
   const { defaultColors, currencyKeys, checkLocalStorage } = useContext(GlobalFeatures);
 
   const [itemOwnerName, setItemOwnerName] = useState('Party');
@@ -18,7 +18,7 @@ export default function CurrencyTracker({ filteredItems }) {
     setLoading(true);
     groupDoc
       .collection('itemOwners')
-      .doc(sortBy)
+      .doc(itemQuery.itemOwner)
       .get()
       .then((doc) => {
         if (isMounted) {
@@ -36,7 +36,7 @@ export default function CurrencyTracker({ filteredItems }) {
     return () => {
       isMounted = false;
     };
-  }, [sortBy]);
+  }, [itemQuery.itemOwner]);
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function CurrencyTracker({ filteredItems }) {
                       <CurrencyTrackerDisplay
                         key={idx}
                         tags={allTags?.[currencyKey]}
-                        currency={!loadingCurrency && currency && currency[sortBy]?.[currencyKey]}
+                        currency={currency && currency[itemQuery.itemOwner]?.[currencyKey]}
                         currencyKey={currencyKey}
                         defaultColor={defaultColors[idx]}
                       />
@@ -89,7 +89,7 @@ export default function CurrencyTracker({ filteredItems }) {
                   <CurrencyEditor />
                 </Col>
               </Row>
-              {checkLocalStorage('lootValueEnabled') && <ValueDisplay filteredItems={filteredItems} />}
+              {checkLocalStorage('lootValueEnabled') && <ValueDisplay />}
             </div>
           </div>
         </div>

@@ -1,13 +1,19 @@
-import React, { useRef, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import ModalParty from './ModalParty';
 import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 
-export default function OwnerFilter({ itemOwners }) {
-  const { setSortBy, sortBy, currentGroup } = useContext(GroupContext);
+export default function OwnerFilter() {
+  const { setItemQuery, itemQuery, currentGroup } = useContext(GroupContext);
 
-  const sortRef = useRef('');
+  // required because the ItemOwnerSelect is used in multiple places
+  const setOneParam = (param) => {
+    setItemQuery({
+      ...itemQuery,
+      itemOwner: param
+    })
+  }
 
   return (
     <Row className='mt-2'>
@@ -15,15 +21,14 @@ export default function OwnerFilter({ itemOwners }) {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            setSortBy(sortRef.current.value);
           }}
         >
-          <ItemOwnerSelect setState={setSortBy} group={currentGroup} state={sortBy} />
+          <ItemOwnerSelect setState={setOneParam} group={currentGroup} state={itemQuery.itemOwner} />
         </Form>
       </Col>
 
       <Col xs={3}>
-        <ModalParty itemOwners={itemOwners} />
+        <ModalParty />
       </Col>
     </Row>
   );

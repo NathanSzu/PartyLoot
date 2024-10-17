@@ -1,6 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
@@ -12,12 +11,11 @@ import QuillInput from '../../../common/QuillInput';
 import ItemValueInput from './ItemValueInput';
 
 export default function ModalLoot({ item = '' }) {
-  const { groupDoc, currentGroup, allTags } = useContext(GroupContext);
+  const { groupDoc, currentGroup, allTags, itemOwners } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent, currencyKeys, defaultColors } = useContext(GlobalFeatures);
 
   const itemRef = groupDoc.collection('loot').doc(item.id);
-  const itemOwnersRef = groupDoc.collection('itemOwners');
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,8 +25,6 @@ export default function ModalLoot({ item = '' }) {
   const [itemOwner, setItemOwner] = useState('party');
   const [quillValue, setQuillValue] = useState(item?.itemDesc || '');
   const [valueState, setValueState] = useState({});
-
-  const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
 
   const nameRef = useRef();
   const chargeRef = useRef();

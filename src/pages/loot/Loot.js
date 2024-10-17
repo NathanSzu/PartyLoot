@@ -1,9 +1,6 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Card, Navbar, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
-import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
-import { GroupContext } from '../../utils/contexts/GroupContext';
-import { AuthContext } from '../../utils/contexts/AuthContext';
+import { Card, Navbar, Row, Col, Container, Button } from 'react-bootstrap';
 import ModalLoot from './helpers/itemCRUD/ModalLoot';
 import CurrencyTracker from './helpers/currencyTracking/currencyTracker/CurrencyTracker';
 import ItemSearch from './helpers/ItemSearch';
@@ -13,24 +10,7 @@ import IntroCard from './helpers/IntroCard';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 
 export default function Loot() {
-  const { setSortBy, groupDoc } = useContext(GroupContext);
-  const { currentUser } = useContext(AuthContext);
   const { checkLocalStorage } = useContext(GlobalFeatures);
-
-  const itemOwnersRef = groupDoc.collection('itemOwners');
-  const lootRef = groupDoc.collection('loot');
-  const query = lootRef.orderBy('itemName');
-
-  const [filteredItems, setFilteredItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const [lootItems] = useCollectionData(query, { idField: 'id' });
-  const [partyData, loadingPartyData] = useDocumentData(groupDoc);
-  const [itemOwners] = useCollectionData(itemOwnersRef.orderBy('name'), { idField: 'id' });
-
-  useEffect(() => {
-    !loadingPartyData && partyData && setSortBy(partyData?.favorites?.[currentUser.uid] || 'party');
-  }, [itemOwners]);
 
   return (
     <Row className='lazy-scroll-container'>
@@ -38,12 +18,12 @@ export default function Loot() {
         <div className='d-block w-100 mx-0 mb-2'>
           <Card className='rounded-top-0 background-light border-dark border-bottom-0 border-end-0 border-start-0'>
             <Card.Header className='p-0'>
-              <CurrencyTracker filteredItems={filteredItems} />
+              <CurrencyTracker />
             </Card.Header>
             <Card.Body>
               <Container>
-                <ItemSearch items={lootItems} setFilteredItems={setFilteredItems} setLoading={setLoading} />
-                <OwnerFilter itemOwners={itemOwners} />
+                <ItemSearch />
+                <OwnerFilter />
               </Container>
             </Card.Body>
             <Card.Footer className='d-flex'>
@@ -68,17 +48,8 @@ export default function Loot() {
       <Container>
         <Row>
           <Col>
-            {loading && (
-              <Spinner
-                as='div'
-                className='d-flex mt-4 mx-auto loading-spinner'
-                animation='border'
-                role='status'
-                variant='light'
-              />
-            )}
-            {!loading && !checkLocalStorage('lootIntroCard') && <IntroCard />}
-            <LootAccordion filteredItems={filteredItems} itemOwners={itemOwners} />
+            {!checkLocalStorage('lootIntroCard') && <IntroCard />}
+            <LootAccordion />
           </Col>
         </Row>
       </Container>

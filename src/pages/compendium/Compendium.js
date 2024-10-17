@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
-// import fb from 'firebase';
 import { Row, Col, Navbar } from 'react-bootstrap';
 import CompendiumList from './helpers/CompendiumList';
 import OglList from './helpers/OglList';
-import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import { Filter, SettingFilter, SearchFilter } from './helpers/Filter';
 import UserDiscoveriesControls from './helpers/UserDiscoveriesControls';
 
 export default function Compendium() {
-  const { db, userRef, currentUser } = useContext(AuthContext);
+  const { db, currentUser, userData } = useContext(AuthContext);
   const { isVisible, itemMetadata } = useContext(GlobalFeatures);
 
   const [compendium, setCompendium] = useState([]);
@@ -23,9 +21,8 @@ export default function Compendium() {
   const [startAfter, setStartAfter] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingOgl, setLoadingOgl] = useState(true);
-  const [userData] = useDocumentDataOnce(userRef);
   const [oglTabActive, setOglTabActive] = useState(false);
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(0); 
 
   function delay(fn) {
     clearTimeout(timer);

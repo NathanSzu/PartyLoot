@@ -6,8 +6,8 @@ import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import EditItemOwnerAccordion from './EditItemOwnerAccordion';
 
-export default function ModalParty({ itemOwners }) {
-  const { groupDoc } = useContext(GroupContext);
+export default function ModalParty() {
+  const { groupDoc, itemOwners } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 

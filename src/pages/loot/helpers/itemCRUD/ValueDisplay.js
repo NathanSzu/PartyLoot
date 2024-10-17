@@ -3,9 +3,9 @@ import { Row, Col } from 'react-bootstrap';
 import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
-export default function ValueDisplay({ filteredItems }) {
+export default function ValueDisplay() {
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
-  const { allTags } = useContext(GroupContext);
+  const { allTags, sortedLoot } = useContext(GroupContext);
 
   const [itemTotals, setItemTotals] = useState({});
   const [loadingTotals, setLoadingTotals] = useState(true);
@@ -35,12 +35,12 @@ export default function ValueDisplay({ filteredItems }) {
   };
 
   useEffect(() => {
-    sumItems(filteredItems);
-  }, [filteredItems]);
+    sumItems(sortedLoot.sorted);
+  }, [sortedLoot.sorted]);
 
   return (
     <Row className='px-1 pt-2'>
-      <Col xs={12} className='pb-2 px-4'><div className='border-bottom border-secondary'>Total item values</div></Col>
+      <Col xs={12} className='pb-2 px-4'><div className='border-bottom border-secondary'>Total item values (only items shown below)</div></Col>
       <Col>
         {!loadingTotals && (
           <Row className='px-3'>

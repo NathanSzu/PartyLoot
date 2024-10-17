@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Col, Row, Badge } from 'react-bootstrap';
 import ItemDelete from './ItemDelete';
 import ItemSale from '../currencyTracking/itemSale/ItemSale';
+import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
-export default function HeldBySection({ item, itemOwners }) {
+export default function HeldBySection({ item }) {
+  const { itemOwners } = useContext(GroupContext)
   let owner = itemOwners && itemOwners.filter((itemOwner) => itemOwner.id === item.ownerId)[0]
 
   return (

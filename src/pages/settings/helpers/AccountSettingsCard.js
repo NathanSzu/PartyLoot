@@ -1,18 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { Row, Col, Button, Card } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 import firebaseApp from '../../../utils/firebase';
 import ModalEditUsername from './ModalEditUsername';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export default function AccountSettingsCard() {
-  const { currentUser, userRef } = useContext(AuthContext);
+  const { currentUser, userData } = useContext(AuthContext);
   const { setToastContent, setToastHeader, toggleShowToast } = useContext(GlobalFeatures);
 
   const [loading, setLoading] = useState(false);
-
-  const [userData] = useDocumentData(userRef);
 
   const passwordReset = (email) => {
     setLoading(true);
