@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import ModalLoot from './ModalLoot';
+import CreateLootItem from './CreateLootItem';
 import HeldBySection from './HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
@@ -55,7 +55,7 @@ export default function AccordionLoot() {
                     </Col>
                   )}
                   <Col xs={2} className='text-right pe-0'>
-                    <ModalLoot item={item} idx={item.id} />
+                    <CreateLootItem item={item} idx={item.id} />
                   </Col>
                 </Row>
 

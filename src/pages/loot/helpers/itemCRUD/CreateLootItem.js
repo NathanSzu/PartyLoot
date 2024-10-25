@@ -10,7 +10,7 @@ import ItemOwnerSelect from '../../../common/ItemOwnerSelect';
 import QuillInput from '../../../common/QuillInput';
 import ItemValueInput from './ItemValueInput';
 
-export default function ModalLoot({ item = '' }) {
+export default function CreateLootItem({ item = '' }) {
   const { groupDoc, currentGroup, allTags, itemOwners } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent, currencyKeys, defaultColors } = useContext(GlobalFeatures);
@@ -167,7 +167,7 @@ export default function ModalLoot({ item = '' }) {
       <Modal show={show} onHide={handleClose}>
         <Form className='rounded' onSubmitCapture={(e) => e.preventDefault()}>
           <Modal.Header closeButton>
-            {item ? <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title> : <Modal.Title>Add an item!</Modal.Title>}
+            {item ? <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title> : <Modal.Title>Create new item</Modal.Title>}
           </Modal.Header>
 
           {searchSRD ? (

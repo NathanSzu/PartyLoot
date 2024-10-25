@@ -60,7 +60,7 @@ export default function CopyToGroupSection({ item }) {
   };
 
   return (
-    <form className='position-relative container border-top pt-3' onSubmitCapture={(e) => e.preventDefault()}>
+    <form className='position-relative container border-top pt-3' onSubmit={(e) => e.preventDefault()}>
       <div className={loading ? 'overlay-loader' : ''}></div>
       <h2 className='fs-sm-deco'>Add to a group?</h2>
       <div className='mb-3 col-12'>

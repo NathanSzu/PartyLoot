@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Card, Navbar, Row, Col, Container, Button } from 'react-bootstrap';
-import ModalLoot from './helpers/itemCRUD/ModalLoot';
+import ModalLoot from './helpers/itemCRUD/CreateLootItem';
 import CurrencyTracker from './helpers/currencyTracking/currencyTracker/CurrencyTracker';
 import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
 import LootAccordion from './helpers/itemCRUD/AccordionLoot';
 import IntroCard from './helpers/IntroCard';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
+import CreateContainer from './helpers/containers/CreateContainer';
 
 export default function Loot() {
   const { checkLocalStorage } = useContext(GlobalFeatures);
@@ -29,10 +30,13 @@ export default function Loot() {
             <Card.Footer className='d-flex'>
               <Container>
                 <Row>
-                  <Col xs={9} className='pe-0'>
+                  <Col xs={6}>
                     <ModalLoot />
                   </Col>
-                  <Col xs={3}>
+                  <Col className='ps-0'>
+                    <CreateContainer  />
+                  </Col>
+                  <Col xs={3} className='ps-0'>
                     <LinkContainer to='/history' data-cy='button-history'>
                       <Button variant='dark' className='background-dark w-100'>
                         <img alt='History' src='APPIcons/clock-fill.svg' />
