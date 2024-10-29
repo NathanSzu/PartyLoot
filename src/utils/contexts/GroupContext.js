@@ -15,8 +15,10 @@ export const GroupProvider = ({ children }) => {
   const [groupList, setGroupList] = useState([]);
   const [allTags, setAllTags] = useState({});
   const [allLoot, setAllLoot] = useState([]);
+  const [allContainers, setAllContainers] = useState([]);
   const [sortedLoot, setSortedLoot] = useState({
     sorted: [],
+    sortedContainers: [],
   });
   const [itemQuery, setItemQuery] = useState({
     searchQuery: '',
@@ -82,6 +84,27 @@ export const GroupProvider = ({ children }) => {
       });
   };
 
+  const getLootContainers = (containerType) => {
+    groupDoc
+      .collection('containers')
+      .where('type', '==', containerType)
+      .orderBy('name')
+      .onSnapshot((querySnapshot) => {
+        let tempAllContainers = [];
+        querySnapshot.forEach((doc) => {
+          tempAllContainers.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setAllContainers(tempAllContainers);
+      });
+  };
+
+  const sortLootContainers = () => {
+    setSortedLoot({ ...sortedLoot, sortedContainers: allContainers });
+  };
+
   const sortLootItems = () => {
     let ownerFiltered = [];
     let queryFiltered = [];
@@ -108,9 +131,9 @@ export const GroupProvider = ({ children }) => {
   };
 
   const returnContainerItems = (itemArray, containerId) => {
-    let containerItems = itemArray.filter((item) => item?.container === containerId)
-    return containerItems
-  }
+    let containerItems = itemArray.filter((item) => item?.container === containerId);
+    return containerItems;
+  };
 
   const getItemOwners = (dbRef = groupDoc) => {
     dbRef
@@ -172,6 +195,7 @@ export const GroupProvider = ({ children }) => {
         itemOwner: 'party',
       });
       getLootItems();
+      getLootContainers('1');
       getItemOwners();
       getGroupData();
       getCurrency();
@@ -181,6 +205,10 @@ export const GroupProvider = ({ children }) => {
   useEffect(() => {
     sortLootItems();
   }, [itemQuery, allLoot]);
+
+  useEffect(() => {
+    sortLootContainers();
+  }, [allContainers]);
 
   useEffect(() => {
     manageGroupSession(location.pathname);

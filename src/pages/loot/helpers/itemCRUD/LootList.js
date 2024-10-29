@@ -4,13 +4,17 @@ import CreateLootItem from './CreateLootItem';
 import HeldBySection from './HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
+import ContainerListItem from '../containers/ContainerListItem';
 
-export default function AccordionLoot() {
+export default function LootList() {
   const { sortedLoot } = useContext(GroupContext);
 
   return (
     <div className='accordion accordion-flush p-0' id='loot-accordion'>
-      {sortedLoot.sorted.map((item) => (
+      {sortedLoot?.sortedContainers.map((container) => (
+        <ContainerListItem container={container}/>
+      ))}
+      {sortedLoot?.sorted.map((item) => (
         <div className='accordion-item rounded' key={item.id}>
           <h2 className='accordion-header' id='lootAccordionHeading'>
             <button
