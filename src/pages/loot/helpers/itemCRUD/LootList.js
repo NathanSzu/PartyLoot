@@ -1,20 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import CreateLootItem from './CreateLootItem';
 import HeldBySection from './HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
-import { GroupContext } from '../../../../utils/contexts/GroupContext';
-import ContainerListItem from '../containers/ContainerListItem';
 
-export default function LootList() {
-  const { sortedLoot } = useContext(GroupContext);
+export default function LootList({ lootArray }) {
 
   return (
-    <div className='accordion accordion-flush p-0' id='loot-accordion'>
-      {sortedLoot?.sortedContainers.map((container) => (
-        <ContainerListItem container={container}/>
-      ))}
-      {sortedLoot?.sorted.map((item) => (
+    <>
+      {lootArray.map((item) => (
         <div className='accordion-item rounded' key={item.id}>
           <h2 className='accordion-header' id='lootAccordionHeading'>
             <button
@@ -75,6 +69,6 @@ export default function LootList() {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }

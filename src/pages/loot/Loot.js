@@ -5,7 +5,7 @@ import ModalLoot from './helpers/itemCRUD/CreateLootItem';
 import CurrencyTracker from './helpers/currencyTracking/currencyTracker/CurrencyTracker';
 import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
-import LootAccordion from './helpers/itemCRUD/LootList';
+import LootAccordion from './helpers/itemCRUD/LootWrapper';
 import IntroCard from './helpers/IntroCard';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 import CreateContainer from './helpers/containers/CreateContainer';

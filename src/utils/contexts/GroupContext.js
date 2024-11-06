@@ -130,8 +130,8 @@ export const GroupProvider = ({ children }) => {
     });
   };
 
-  const returnContainerItems = (itemArray, containerId) => {
-    let containerItems = itemArray.filter((item) => item?.container === containerId);
+  const returnContainerItems = (containerId) => {
+    let containerItems = sortedLoot.sorted.filter((item) => item?.container === containerId);
     return containerItems;
   };
 
@@ -233,6 +233,7 @@ export const GroupProvider = ({ children }) => {
         setItemQuery,
         itemQuery,
         setOneParam,
+        returnContainerItems,
         getItemOwners,
         getItemOwner,
       }}
