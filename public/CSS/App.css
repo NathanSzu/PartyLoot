@@ -22,6 +22,7 @@
 .accordion-button-loot-dark:not(.collapsed) {
   color: white;
   background-color: var(--theme1);
+  box-shadow: none;
 }
 
 .accordion-button-loot-dark:focus {
@@ -32,6 +33,7 @@
 .accordion-button-loot-dark {
   color: white;
   background-color: var(--theme1);
+  box-shadow: none;
 }
 
 .accordion-icon-alt::after {

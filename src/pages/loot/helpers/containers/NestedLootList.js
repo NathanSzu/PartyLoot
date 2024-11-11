@@ -1,10 +1,10 @@
 import React from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
-import CreateLootItem from './CreateLootItem';
-import HeldBySection from './HeldBySection';
+import CreateLootItem from '../itemCRUD/CreateLootItem';
+import HeldBySection from '../itemCRUD/HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
 
-export default function LootList({ lootArray }) {
+export default function NestedLootList({ lootArray }) {
 
   return (
     <>
@@ -14,9 +14,9 @@ export default function LootList({ lootArray }) {
             <button
               className='rounded accordion-button accordion-button-loot accordion-icon-hide collapsed'
               data-bs-toggle='collapse'
-              data-bs-target={`#collapse${item.id}`}
+              data-bs-target={`#nestedCollapse${item.id}`}
               aria-expanded='false'
-              aria-controls={`collapse${item.id}`}
+              aria-controls={`nestedCollapse${item.id}`}
             >
               <Container>
                 <Row className='justify-content-end'>
@@ -33,12 +33,12 @@ export default function LootList({ lootArray }) {
             </button>
           </h2>
           <div
-            id={`collapse${item.id}`}
+            id={`nestedCollapse${item.id}`}
             className='accordion-collapse collapse'
             aria-labelledby={`heading${item.id}`}
-            data-bs-parent='#loot-accordion'
+            data-bs-parent='#container-accordion'
           >
-            <div className='accordion-body background-light rounded-bottom'>
+            <div className='accordion-body border-bottom border-start border-end border-white background-light rounded-bottom'>
               <Container>
                 <Row className='pt-1 pb-1'>
                   <Col className='d-flex align-items-center border-bottom border-dark px-0'>
