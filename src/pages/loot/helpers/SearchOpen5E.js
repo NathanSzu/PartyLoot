@@ -39,6 +39,7 @@ export default function SearchOpen5E({ setSRDContent, setSearchSRD }) {
     setSRDContent({
       name: selection.name,
       desc: formatItemDescription(selection),
+      type: selection.type,
     });
     setSearchSRD(false);
   };

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Card, Navbar, Row, Col, Container, Button } from 'react-bootstrap';
-import ModalLoot from './helpers/itemCRUD/CreateLootItem';
+import CreateLootItem from './helpers/itemCRUD/CreateLootItem';
 import CurrencyTracker from './helpers/currencyTracking/currencyTracker/CurrencyTracker';
 import ItemSearch from './helpers/ItemSearch';
 import OwnerFilter from './helpers/OwnerFilter';
@@ -31,7 +31,7 @@ export default function Loot() {
               <Container>
                 <Row>
                   <Col xs={6}>
-                    <ModalLoot />
+                    <CreateLootItem />
                   </Col>
                   <Col className='ps-0'>
                     <CreateContainer  />

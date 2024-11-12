@@ -1,5 +1,5 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
+import React, { useState, useContext, useEffect } from 'react';
+import { Modal, Button, Form, Row, Col, Alert, FormLabel } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
@@ -9,6 +9,7 @@ import SearchOpen5E from '../SearchOpen5E';
 import ItemOwnerSelect from '../../../common/ItemOwnerSelect';
 import QuillInput from '../../../common/QuillInput';
 import ItemValueInput from './ItemValueInput';
+import ContainerSelect from '../../../common/ContainerSelect';
 
 export default function CreateLootItem({ item = '' }) {
   const { groupDoc, currentGroup, allTags, itemOwners } = useContext(GroupContext);
@@ -26,11 +27,11 @@ export default function CreateLootItem({ item = '' }) {
   const [quillValue, setQuillValue] = useState(item?.itemDesc || '');
   const [valueState, setValueState] = useState({});
 
-  const nameRef = useRef();
-  const chargeRef = useRef();
-  const chargesRef = useRef();
-  const tagsRef = useRef();
-  const qtyRef = useRef();
+  const [itemData, setItemData] = useState(item);
+
+  const handleDescriptionChange = (value) => {
+    setItemData({...itemData, itemDesc: value})
+  }
 
   const handleClose = () => {
     setItemValidations('');
@@ -58,20 +59,8 @@ export default function CreateLootItem({ item = '' }) {
   };
 
   const checkItemValidations = () => {
-    if (!nameRef.current.value.trim()) {
+    if (!itemData?.itemName.trim()) {
       setItemValidations('Item name is required!');
-      return false;
-    }
-    if (!/^\d+$/.test(qtyRef.current.value) && qtyRef.current.value !== '') {
-      setItemValidations('Item quantity must be a positive number!');
-      return false;
-    }
-    if (!/^\d+$/.test(chargeRef.current.value) && chargeRef.current.value !== '') {
-      setItemValidations('Item charge values must be a positive number!');
-      return false;
-    }
-    if (!/^\d+$/.test(chargesRef.current.value) && chargesRef.current.value !== '') {
-      setItemValidations('Item charge values must be a positive number!');
       return false;
     }
     setItemValidations('');
@@ -83,19 +72,19 @@ export default function CreateLootItem({ item = '' }) {
     setLoading(true);
 
     let historyData = {
-      itemName: nameRef.current.value,
+      itemName: itemData?.itemName,
       owner: itemOwner === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === itemOwner).name,
     };
 
     groupDoc
       .collection('loot')
       .add({
-        itemName: nameRef.current.value,
-        itemQty: qtyRef.current.value,
+        itemName: itemData?.itemName,
+        itemQty: itemData?.itemQty,
         itemDesc: quillValue,
-        currCharges: chargeRef.current.value,
-        maxCharges: chargesRef.current.value,
-        itemTags: tagsRef.current.value,
+        currCharges: itemData?.currCharges,
+        maxCharges: itemData?.maxCharges,
+        itemTags: itemData?.itemTags,
         ownerId: itemOwner,
         created: fb.firestore.FieldValue.serverTimestamp(),
         value: valueState,
@@ -118,12 +107,12 @@ export default function CreateLootItem({ item = '' }) {
     setLoading(true);
     itemRef
       .update({
-        itemName: nameRef.current.value,
-        itemQty: qtyRef.current.value,
+        itemName: itemData?.itemName,
+        itemQty: itemData?.itemQty,
         itemDesc: quillValue,
-        currCharges: chargeRef.current.value,
-        maxCharges: chargesRef.current.value,
-        itemTags: tagsRef.current.value,
+        currCharges: itemData?.currCharges,
+        maxCharges: itemData?.maxCharges,
+        itemTags: itemData?.itemTags,
         ownerId: itemOwner || 'party',
         value: valueState,
       })
@@ -141,6 +130,10 @@ export default function CreateLootItem({ item = '' }) {
   useEffect(() => {
     setQuillValue(item?.itemDesc || '');
   }, [item]);
+
+  useEffect(() => {
+    console.log(itemData);
+  }, [itemData]);
 
   return (
     <>
@@ -185,8 +178,8 @@ export default function CreateLootItem({ item = '' }) {
                     <Form.Group controlId='itemName'>
                       <Form.Control
                         data-cy='item-name'
-                        ref={nameRef}
-                        defaultValue={(item && item.itemName) || SRDContent.name}
+                        onChange={(e) => setItemData({ ...itemData, itemName: e.target.value })}
+                        value={itemData?.itemName || SRDContent.name}
                         type='text'
                         placeholder='Item name'
                       />
@@ -197,8 +190,8 @@ export default function CreateLootItem({ item = '' }) {
                       <Form.Control
                         data-cy='item-qty'
                         className='text-center'
-                        ref={qtyRef}
-                        defaultValue={item && item.itemQty}
+                        onChange={(e) => setItemData({...itemData, itemQty: parseInt(e.target.value) || ''})}
+                        value={itemData?.itemQty}
                         type='text'
                         placeholder='Qty'
                         maxLength='3'
@@ -213,8 +206,8 @@ export default function CreateLootItem({ item = '' }) {
                       <Form.Control
                         data-cy='charge'
                         className='text-center'
-                        ref={chargeRef}
-                        defaultValue={item && item.currCharges}
+                        onChange={(e) => setItemData({ ...itemData, currCharges: parseInt(e.target.value) || '' })}
+                        value={itemData?.currCharges}
                         type='text'
                         placeholder='Charge'
                         maxLength='3'
@@ -231,8 +224,8 @@ export default function CreateLootItem({ item = '' }) {
                       <Form.Control
                         data-cy='charge-max'
                         className='text-center'
-                        ref={chargesRef}
-                        defaultValue={item && item.maxCharges}
+                        onChange={(e) => setItemData({...itemData, maxCharges: parseInt(e.target.value) || ''})}
+                        value={itemData?.maxCharges}
                         type='text'
                         placeholder='Charges'
                         maxLength='3'
@@ -256,17 +249,35 @@ export default function CreateLootItem({ item = '' }) {
                   <Form.Group controlId='itemTags'>
                     <Form.Control
                       data-cy='item-tags'
-                      ref={tagsRef}
+                      onChange={(e) => setItemData({...itemData, itemTags: e.target.value})}
                       type='text'
-                      defaultValue={(item && item.itemTags) || SRDContent.type}
+                      value={itemData?.itemTags || SRDContent.type}
                       placeholder='Enter searchable item tags here'
                     />
                   </Form.Group>
                 </Row>
 
-                <Row className='mb-2'>
+                <Row>
                   <Form.Group controlId='itemOwner'>
-                    <ItemOwnerSelect setState={setItemOwner} group={currentGroup} state={itemOwner} />
+                    <Row>
+                      <Col xs={4}>
+                        <FormLabel className='m-0 mt-1'>Item owner</FormLabel>
+                      </Col>
+                      <Col>
+                        <ItemOwnerSelect setState={setItemOwner} group={currentGroup} state={itemOwner} />
+                      </Col>
+                    </Row>
+                  </Form.Group>
+
+                  <Form.Group controlId='itemOwner'>
+                    <Row>
+                      <Col xs={4}>
+                        <FormLabel className='m-0 mt-1'>Container</FormLabel>
+                      </Col>
+                      <Col>
+                        <ContainerSelect setState={setItemOwner} state={itemOwner} />
+                      </Col>
+                    </Row>
                   </Form.Group>
                   <Col className='mt-2'>{itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}</Col>
                 </Row>

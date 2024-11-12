@@ -235,7 +235,7 @@ export const GroupProvider = ({ children }) => {
         setOneParam,
         returnContainerItems,
         getItemOwners,
-        getItemOwner,
+        getItemOwner
       }}
     >
       {!loading && children}
