@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, FormLabel } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../utils/contexts/AuthContext';
@@ -7,9 +7,9 @@ import fb from 'firebase';
 import DropdownAddItem from './DropdownAddItem';
 import SearchOpen5E from '../SearchOpen5E';
 import ItemOwnerSelect from '../../../common/ItemOwnerSelect';
-import QuillInput from '../../../common/QuillInput';
 import ItemValueInput from './ItemValueInput';
 import ContainerSelect from '../../../common/ContainerSelect';
+import QuillInput from '../../../common/QuillInput';
 
 export default function CreateLootItem({ item = '' }) {
   const { groupDoc, currentGroup, allTags, itemOwners } = useContext(GroupContext);
@@ -24,14 +24,10 @@ export default function CreateLootItem({ item = '' }) {
   const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
   const [itemOwner, setItemOwner] = useState('party');
-  const [quillValue, setQuillValue] = useState(item?.itemDesc || '');
   const [valueState, setValueState] = useState({});
+  const [itemDesc, setItemDesc] = useState();
 
   const [itemData, setItemData] = useState(item);
-
-  const handleDescriptionChange = (value) => {
-    setItemData({...itemData, itemDesc: value})
-  }
 
   const handleClose = () => {
     setItemValidations('');
@@ -46,7 +42,7 @@ export default function CreateLootItem({ item = '' }) {
     } else {
       setItemOwner('party');
     }
-    setQuillValue(item?.itemDesc || '');
+    setItemDesc(item?.itemDesc || '');
     setShow(true);
     setValueState(item?.value || {});
   };
@@ -59,7 +55,7 @@ export default function CreateLootItem({ item = '' }) {
   };
 
   const checkItemValidations = () => {
-    if (!itemData?.itemName.trim()) {
+    if (!itemData?.itemName?.trim()) {
       setItemValidations('Item name is required!');
       return false;
     }
@@ -71,24 +67,22 @@ export default function CreateLootItem({ item = '' }) {
     if (!checkItemValidations()) return;
     setLoading(true);
 
-    let historyData = {
+    const dataToWrite = {
+      ...itemData,
+      ownerId: itemOwner || 'party',
+      value: valueState,
+      itemDesc,
+      created: fb.firestore.FieldValue.serverTimestamp(),
+    };
+
+    const historyData = {
       itemName: itemData?.itemName,
       owner: itemOwner === 'party' ? 'the party' : itemOwners.find((owner) => owner.id === itemOwner).name,
     };
 
     groupDoc
       .collection('loot')
-      .add({
-        itemName: itemData?.itemName,
-        itemQty: itemData?.itemQty,
-        itemDesc: quillValue,
-        currCharges: itemData?.currCharges,
-        maxCharges: itemData?.maxCharges,
-        itemTags: itemData?.itemTags,
-        ownerId: itemOwner,
-        created: fb.firestore.FieldValue.serverTimestamp(),
-        value: valueState,
-      })
+      .add(dataToWrite)
       .then(() => {
         writeHistoryEvent(currentUser.uid, 'createItem', historyData).then(() => {
           handleClose();
@@ -105,17 +99,15 @@ export default function CreateLootItem({ item = '' }) {
   const editLoot = () => {
     if (!checkItemValidations()) return;
     setLoading(true);
+    const dataToWrite = {
+      ...itemData,
+      ownerId: itemOwner || 'party',
+      value: valueState,
+      itemDesc,
+      updated: fb.firestore.FieldValue.serverTimestamp(),
+    };
     itemRef
-      .update({
-        itemName: itemData?.itemName,
-        itemQty: itemData?.itemQty,
-        itemDesc: quillValue,
-        currCharges: itemData?.currCharges,
-        maxCharges: itemData?.maxCharges,
-        itemTags: itemData?.itemTags,
-        ownerId: itemOwner || 'party',
-        value: valueState,
-      })
+      .update(dataToWrite)
       .then(() => {
         handleClose();
         setLoading(false);
@@ -126,14 +118,6 @@ export default function CreateLootItem({ item = '' }) {
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    setQuillValue(item?.itemDesc || '');
-  }, [item]);
-
-  useEffect(() => {
-    console.log(itemData);
-  }, [itemData]);
 
   return (
     <>
@@ -190,7 +174,7 @@ export default function CreateLootItem({ item = '' }) {
                       <Form.Control
                         data-cy='item-qty'
                         className='text-center'
-                        onChange={(e) => setItemData({...itemData, itemQty: parseInt(e.target.value) || ''})}
+                        onChange={(e) => setItemData({ ...itemData, itemQty: parseInt(e.target.value) || '' })}
                         value={itemData?.itemQty}
                         type='text'
                         placeholder='Qty'
@@ -224,7 +208,7 @@ export default function CreateLootItem({ item = '' }) {
                       <Form.Control
                         data-cy='charge-max'
                         className='text-center'
-                        onChange={(e) => setItemData({...itemData, maxCharges: parseInt(e.target.value) || ''})}
+                        onChange={(e) => setItemData({ ...itemData, maxCharges: parseInt(e.target.value) || '' })}
                         value={itemData?.maxCharges}
                         type='text'
                         placeholder='Charges'
@@ -234,14 +218,9 @@ export default function CreateLootItem({ item = '' }) {
                   </Col>
                 </Row>
 
-                <Row className='mb-2'>
+                <Row>
                   <Form.Group controlId='itemDesc'>
-                    <QuillInput
-                      defaultValue={SRDContent?.desc}
-                      value={quillValue}
-                      setValue={setQuillValue}
-                      placeholder='Item description'
-                    />
+                    <QuillInput itemDesc={itemDesc || SRDContent?.desc} setItemDesc={setItemDesc} />
                   </Form.Group>
                 </Row>
 
@@ -249,7 +228,7 @@ export default function CreateLootItem({ item = '' }) {
                   <Form.Group controlId='itemTags'>
                     <Form.Control
                       data-cy='item-tags'
-                      onChange={(e) => setItemData({...itemData, itemTags: e.target.value})}
+                      onChange={(e) => setItemData({ ...itemData, itemTags: e.target.value })}
                       type='text'
                       value={itemData?.itemTags || SRDContent.type}
                       placeholder='Enter searchable item tags here'

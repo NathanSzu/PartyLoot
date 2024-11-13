@@ -3,9 +3,9 @@ import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import CampaignSettingSelect from './CampaignSettingSelect';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
-import QuillInput from '../../common/QuillInput';
 import CategorySelect from './CategorySelect';
 import fb from 'firebase';
+import QuillInput from '../../common/QuillInput';
 
 export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValidations, item }) {
   const { itemMetadata } = useContext(GlobalFeatures);
@@ -74,11 +74,7 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
       </Row>
       <Row className='mb-2'>
         <Form.Group>
-          <QuillInput
-            setValue={setDiscoveryDescription}
-            value={discoveryDescription || discoveryRecord.itemDesc}
-            placeholder='Please include a detailed description'
-          />
+          <QuillInput itemDesc={discoveryDescription || discoveryRecord.itemDesc} setItemDesc={setDiscoveryDescription} placeholder='Please include a detailed description'/>
         </Form.Group>
       </Row>
       <CategorySelect

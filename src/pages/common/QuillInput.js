@@ -1,19 +1,35 @@
 import React, { useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { Col } from 'react-bootstrap';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 
-export default function QuillInput({ defaultValue, value, setValue, placeholder }) {
+export default ({ itemDesc, setItemDesc, placeholder = 'Item description' }) => {
   const modules = {
     toolbar: [
-      [{ size: [false, 'large', 'huge'] }],
-      ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
-      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ list: 'ordered' }],
+      [{ align: [] }],
     ],
   };
 
-  useEffect(() => {
-    defaultValue && setValue(defaultValue);
-  }, []);
+  const formats = ['bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align'];
 
-  return <ReactQuill theme='snow' modules={modules} placeholder={placeholder} value={value} onChange={setValue} />;
-}
+  const { quill, quillRef } = useQuill({ modules, formats, placeholder });
+
+  useEffect(() => {
+    // Docs available at https://www.npmjs.com/package/react-quilljs
+    if (quill) {
+      itemDesc && quill.clipboard.dangerouslyPasteHTML(itemDesc);
+      quill.on('text-change', (delta, oldDelta, source) => {
+        setItemDesc(quill.root.innerHTML);
+      });
+    }
+  }, [quill]);
+
+  return (
+    <Col xs={12}>
+      <div ref={quillRef} />
+    </Col>
+  );
+};

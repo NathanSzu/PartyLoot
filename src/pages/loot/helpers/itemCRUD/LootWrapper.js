@@ -9,7 +9,7 @@ export default function LootWrapper() {
   return (
     <div className='accordion accordion-flush p-0' id='loot-accordion'>
       {sortedLoot?.sortedContainers.map((container) => (
-        <ContainerListItem container={container} />
+        <ContainerListItem container={container} key={container.id}/>
       ))}
       <LootList lootArray={sortedLoot?.sorted} />
     </div>
