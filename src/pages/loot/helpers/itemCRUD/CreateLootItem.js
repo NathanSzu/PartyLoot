@@ -254,7 +254,7 @@ export default function CreateLootItem({ item = '' }) {
                         <FormLabel className='m-0 mt-1'>Container</FormLabel>
                       </Col>
                       <Col>
-                        <ContainerSelect setState={setItemOwner} state={itemOwner} />
+                        <ContainerSelect setItemData={setItemData} itemData={itemData} />
                       </Col>
                     </Row>
                   </Form.Group>

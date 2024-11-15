@@ -15,11 +15,9 @@ export const GroupProvider = ({ children }) => {
   const [groupList, setGroupList] = useState([]);
   const [allTags, setAllTags] = useState({});
   const [allLoot, setAllLoot] = useState([]);
-  const [allContainers, setAllContainers] = useState([]);
-  const [sortedLoot, setSortedLoot] = useState({
-    sorted: [],
-    sortedContainers: [],
-  });
+  const [partyStorageContainers, setPartyStorageContainers] = useState([]);
+  const [sortedLoot, setSortedLoot] = useState([]);
+  const [filteredLoot, setFilteredLoot] = useState([]);
   const [itemQuery, setItemQuery] = useState({
     searchQuery: '',
     itemOwner: 'party',
@@ -27,7 +25,6 @@ export const GroupProvider = ({ children }) => {
   const [itemOwners, setItemOwners] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [currency, setCurrency] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   // Query declarations
   const groups = db.collection('groups');
@@ -73,14 +70,14 @@ export const GroupProvider = ({ children }) => {
       .collection('loot')
       .orderBy('itemName')
       .onSnapshot((querySnapshot) => {
-        let tempAllLoot = [];
+        let items = [];
         querySnapshot.forEach((doc) => {
-          tempAllLoot.push({
+          items.push({
             id: doc.id,
             ...doc.data(),
           });
         });
-        setAllLoot(tempAllLoot);
+        setAllLoot(items);
       });
   };
 
@@ -90,19 +87,15 @@ export const GroupProvider = ({ children }) => {
       .where('type', '==', containerType)
       .orderBy('name')
       .onSnapshot((querySnapshot) => {
-        let tempAllContainers = [];
+        let containers = [];
         querySnapshot.forEach((doc) => {
-          tempAllContainers.push({
+          containers.push({
             id: doc.id,
             ...doc.data(),
           });
         });
-        setAllContainers(tempAllContainers);
+        setPartyStorageContainers(containers);
       });
-  };
-
-  const sortLootContainers = () => {
-    setSortedLoot({ ...sortedLoot, sortedContainers: allContainers });
   };
 
   const sortLootItems = () => {
@@ -124,15 +117,18 @@ export const GroupProvider = ({ children }) => {
     } else {
       queryFiltered = ownerFiltered;
     }
-    setSortedLoot({
-      ...sortedLoot,
-      sorted: queryFiltered,
-    });
+    setSortedLoot(queryFiltered);
+    setFilteredLoot(ownerFiltered);
   };
 
   const returnContainerItems = (containerId) => {
-    let containerItems = sortedLoot.sorted.filter((item) => item?.container === containerId);
+    let containerItems = sortedLoot?.filter((item) => item?.container === containerId);
     return containerItems;
+  };
+
+  const returnContainerlessItems = () => {
+    let containerlessItems = sortedLoot?.filter((item) => !item?.container);
+    return containerlessItems;
   };
 
   const getItemOwners = (dbRef = groupDoc) => {
@@ -207,10 +203,6 @@ export const GroupProvider = ({ children }) => {
   }, [itemQuery, allLoot]);
 
   useEffect(() => {
-    sortLootContainers();
-  }, [allContainers]);
-
-  useEffect(() => {
     manageGroupSession(location.pathname);
   }, [location]);
 
@@ -230,15 +222,18 @@ export const GroupProvider = ({ children }) => {
         updateCurrency,
         updateUserCurrency,
         sortedLoot,
+        filteredLoot,
         setItemQuery,
         itemQuery,
         setOneParam,
         returnContainerItems,
+        returnContainerlessItems,
+        partyStorageContainers,
         getItemOwners,
-        getItemOwner
+        getItemOwner,
       }}
     >
-      {!loading && children}
+      {children}
     </GroupContext.Provider>
   );
 };

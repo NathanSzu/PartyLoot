@@ -4,14 +4,14 @@ import ContainerListItem from '../containers/ContainerListItem';
 import LootList from './LootList';
 
 export default function LootWrapper() {
-  const { sortedLoot } = useContext(GroupContext);
+  const { returnContainerlessItems, partyStorageContainers } = useContext(GroupContext);
 
   return (
     <div className='accordion accordion-flush p-0' id='loot-accordion'>
-      {sortedLoot?.sortedContainers.map((container) => (
+      {partyStorageContainers.map((container) => (
         <ContainerListItem container={container} key={container.id}/>
       ))}
-      <LootList lootArray={sortedLoot?.sorted} />
+      <LootList lootArray={returnContainerlessItems()} />
     </div>
   );
 }

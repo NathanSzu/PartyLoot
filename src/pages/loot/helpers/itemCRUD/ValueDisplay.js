@@ -5,7 +5,7 @@ import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function ValueDisplay() {
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
-  const { allTags, sortedLoot } = useContext(GroupContext);
+  const { allTags, filteredLoot } = useContext(GroupContext);
 
   const [itemTotals, setItemTotals] = useState({});
   const [loadingTotals, setLoadingTotals] = useState(true);
@@ -35,12 +35,12 @@ export default function ValueDisplay() {
   };
 
   useEffect(() => {
-    sumItems(sortedLoot.sorted);
-  }, [sortedLoot.sorted]);
+    sumItems(filteredLoot);
+  }, [filteredLoot]);
 
   return (
     <Row className='px-1 pt-2'>
-      <Col xs={12} className='pb-2 px-4'><div className='border-bottom border-secondary'>Total item values (only items shown below)</div></Col>
+      <Col xs={12} className='pb-2 px-4'><div className='border-bottom border-secondary'>Total item values</div></Col>
       <Col>
         {!loadingTotals && (
           <Row className='px-3'>
