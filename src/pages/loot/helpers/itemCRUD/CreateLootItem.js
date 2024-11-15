@@ -27,7 +27,7 @@ export default function CreateLootItem({ item = '' }) {
   const [valueState, setValueState] = useState({});
   const [itemDesc, setItemDesc] = useState();
 
-  const [itemData, setItemData] = useState(item);
+  const [itemData, setItemData] = useState();
 
   const handleClose = () => {
     setItemValidations('');
@@ -42,6 +42,7 @@ export default function CreateLootItem({ item = '' }) {
     } else {
       setItemOwner('party');
     }
+    setItemData(item)
     setItemDesc(item?.itemDesc || '');
     setShow(true);
     setValueState(item?.value || {});
