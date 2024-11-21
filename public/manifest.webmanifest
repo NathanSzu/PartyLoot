@@ -38,8 +38,26 @@
       "sizes": "512x512"
     }
   ],
+  "screenshots": [
+    {
+      "src": "PWAIcons/Screenshot_wide.png",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Group view showcasing a party's item inventory"
+    },
+    {
+      "src": "PWAIcons/Screenshot_narrow.png",
+      "sizes": "413x896",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Group view showcasing a party's item inventory"
+    }
+  ],
   "description": "A collaborative loot and inventory manager for adventuring parties.",
   "start_url": "/",
+  "id": "/",
+  "display_override": ["minimal-ui", "window-controls-overlay", "fullscreen"],
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
