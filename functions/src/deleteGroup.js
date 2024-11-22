@@ -5,7 +5,7 @@ const firebase_tools = require('firebase-tools');
 const deleteGroup = async (req, res) => {
   const path = `groups/${req.body}`;
 
-  logger.log(process.env.GARBAGE);
+  logger.log('Deleting group...');
 
   await firebase_tools.firestore.delete(path, {
     project: process.env.REACT_APP_PROJECT_ID,

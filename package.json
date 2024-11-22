@@ -23,7 +23,7 @@
     "start:prod": "env-cmd -f ./src/utils/.env.prod npm start",
     "quickBuild": "env-cmd -f ./src/utils/.env.dev react-scripts build && firebase deploy --only hosting --project=dev",
     "build:dev": "npm run test:dev && env-cmd -f ./src/utils/.env.dev react-scripts build && firebase deploy --only hosting --project=dev",
-    "build:prod": "env-cmd -f ./src/utils/.env.prod node generate-buildno.js && react-scripts build && firebase deploy --only hosting --project=prod",
+    "build:prod": "node generate-buildno.js && env-cmd -f ./src/utils/.env.prod react-scripts build && firebase deploy --only hosting --project=prod",
     "deploy-functions:dev": "firebase use dev && firebase deploy --only functions --project=dev",
     "deploy-functions:prod": "firebase use prod && firebase deploy --only functions --project=prod",
     "test": "react-scripts test",
