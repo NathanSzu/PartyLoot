@@ -3,6 +3,8 @@ import {
   Modal,
   Button,
   Form,
+  Row,
+  Col,
   ModalBody,
   ModalHeader,
   ModalFooter,
@@ -11,17 +13,22 @@ import {
   FormText,
   FormSelect,
   FormGroup,
-  Alert
+  Alert,
+  ModalTitle,
+  ListGroup,
+  ListGroupItem,
 } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function CreateContainer() {
-  const { groupDoc } = useContext(GroupContext);
+  const { groupDoc, partyStorageContainers } = useContext(GroupContext);
   const [show, setShow] = useState(false);
   const [containerData, setContainerData] = useState({
     type: '1',
   });
+  const [containerToEdit, setContainerToEdit] = useState(null);
   const [validationMsg, setValidationMsg] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleContainerUpdate = (field, value) => {
@@ -30,9 +37,11 @@ export default function CreateContainer() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
+    setContainerToEdit(null);
     setValidationMsg(null);
     setLoading(false);
     setContainerData({ type: '1' });
+    setDeleteConfirmation(false);
     setShow(true);
   };
 
@@ -51,6 +60,38 @@ export default function CreateContainer() {
       });
   };
 
+  const updateContainer = (containerData) => {
+    setLoading(true);
+    let tempContainerData = { ...containerData };
+    delete tempContainerData.id;
+    groupDoc
+      .collection('containers')
+      .doc(containerData.id)
+      .set(tempContainerData, { merge: true })
+      .then(() => {
+        handleClose();
+        setLoading(false);
+      });
+  };
+
+  const deleteContainer = (id) => {
+    setLoading(true);
+    if (!deleteConfirmation) {
+      setDeleteConfirmation(true);
+      setLoading(false);
+    }
+    if (deleteConfirmation) {
+      groupDoc
+        .collection('containers')
+        .doc(id)
+        .delete()
+        .then(() => {
+          handleClose();
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <>
       <Button variant='dark' className='pt-1 background-dark w-100' onClick={handleShow}>
@@ -59,7 +100,7 @@ export default function CreateContainer() {
 
       <Modal show={show} onHide={handleClose}>
         <ModalHeader closeButton>
-          <Modal.Title>Create new container</Modal.Title>
+          <ModalTitle>{containerToEdit ? `Edit: ${containerToEdit}` : 'Create new container'}</ModalTitle>
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => e.preventDefault()}>
@@ -68,6 +109,7 @@ export default function CreateContainer() {
               <FormControl
                 type='text'
                 placeholder='Enter container name (required)'
+                value={containerData?.name || ''}
                 onChange={(e) => handleContainerUpdate('name', e.target.value)}
               />
               <FormText className='text-muted'>Ex. locked chest, warhorse saddlebags, bag of holding</FormText>
@@ -80,11 +122,12 @@ export default function CreateContainer() {
                 as='textarea'
                 rows='3'
                 placeholder='Additional details'
+                value={containerData?.description || ''}
                 onChange={(e) => handleContainerUpdate('description', e.target.value)}
               />
             </FormGroup>
 
-            <FormGroup className='mb-3' controlId='formContainerType'>
+            <FormGroup controlId='formContainerType'>
               <FormLabel>Type</FormLabel>
               <FormSelect value={containerData.type} onChange={(e) => handleContainerUpdate('type', e.target.value)}>
                 <option value='1'>Party storage</option>
@@ -98,12 +141,67 @@ export default function CreateContainer() {
             </FormGroup>
           </Form>
         </ModalBody>
-        <ModalFooter>
-          {validationMsg && <Alert className='w-100' variant='danger'>{validationMsg}</Alert>}
-          <Button disabled={loading} variant='dark' className='background-dark' onClick={addContainer}>
-            Create
-          </Button>
-        </ModalFooter>
+        <ModalBody className='border-top text-end'>
+          {validationMsg && (
+            <Alert className='w-100' variant='danger'>
+              {validationMsg}
+            </Alert>
+          )}
+          {containerData?.id ? (
+            <>
+              <Button
+                disabled={loading}
+                className='me-2'
+                variant={!deleteConfirmation ? 'outline-danger' : 'danger'}
+                onClick={() => deleteContainer(containerData.id)}
+              >
+                {!deleteConfirmation ? 'Delete' : "I'm sure, delete!"}
+              </Button>
+              <Button className='me-2' onClick={() => handleShow()}>
+                Clear
+              </Button>
+              <Button
+                disabled={loading}
+                variant='dark'
+                className='background-dark'
+                onClick={() => updateContainer(containerData)}
+              >
+                Save changes
+              </Button>
+            </>
+          ) : (
+            <Button disabled={loading} variant='dark' className='background-dark' onClick={addContainer}>
+              Create container
+            </Button>
+          )}
+        </ModalBody>
+        {!containerData?.id && partyStorageContainers.length > 0 (
+          <ModalFooter>
+            <ModalTitle className='w-100'>Existing containers</ModalTitle>
+
+            <ListGroup className='w-100'>
+              {partyStorageContainers?.map((container) => (
+                <ListGroupItem key={container.id}>
+                  <Row>
+                    <Col className='align-self-center'>{container.name}</Col>
+                    <Col xs={3} className='text-end'>
+                      <Button
+                        variant='dark'
+                        className='background-dark'
+                        onClick={() => {
+                          setContainerData(container);
+                          setContainerToEdit(container.name);
+                        }}
+                      >
+                        <img alt='Edit Container' src='APPIcons/pencil-square.svg' />
+                      </Button>
+                    </Col>
+                  </Row>
+                </ListGroupItem>
+              ))}
+            </ListGroup>
+          </ModalFooter>
+        )}
       </Modal>
     </>
   );

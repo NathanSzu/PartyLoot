@@ -7,7 +7,7 @@ export default function Welcome() {
     <Container fluid className='background-light rounded-bottom p-3' data-cy='welcome-message'>
       <Row className='justify-content-center p-3'>
         <Col xs={4} sm={4} md={3} className='p-0'>
-          <img src='/PWAIcons/PL_Icon.svg' fetchPriority='high' className='img-fluid rounded-start' alt='Party loot icon' />
+          <img src='/PWAIcons/PL_Icon.svg' fetchpriority='high' className='img-fluid rounded-start' alt='Party loot icon' />
         </Col>
         <Col xs={8} sm={6} md={5} className='text-center background-white rounded-end d-flex align-items-center py-2'>
           <h1 className='w-100'>Welcome to Party Loot</h1>

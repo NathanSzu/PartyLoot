@@ -33,10 +33,10 @@ export default function Loot() {
                   <Col xs={6}>
                     <CreateLootItem />
                   </Col>
-                  {/* <Col className='ps-0'>
+                  <Col className='ps-0'>
                     <CreateContainer  />
-                  </Col> */}
-                  <Col /*xs={3}*/ className='ps-0'>
+                  </Col>
+                  <Col xs={3} className='ps-0'>
                     <LinkContainer to='/history' data-cy='button-history'>
                       <Button variant='dark' className='background-dark w-100'>
                         <img alt='History' src='APPIcons/clock-fill.svg' />

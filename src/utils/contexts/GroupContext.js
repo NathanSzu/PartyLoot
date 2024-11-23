@@ -126,8 +126,18 @@ export const GroupProvider = ({ children }) => {
     return containerItems;
   };
 
+  const containerExists = (containerList, item) => {
+    let exists = false;
+    if (item?.container) {
+      containerList.forEach((container) => {
+        if (container.id === item.container) exists = true;
+      });
+    }
+    return exists;
+  };
+
   const returnContainerlessItems = () => {
-    let containerlessItems = sortedLoot?.filter((item) => !item?.container);
+    let containerlessItems = sortedLoot?.filter((item) => !containerExists(partyStorageContainers, item));
     return containerlessItems;
   };
 
