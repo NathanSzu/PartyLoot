@@ -94,11 +94,11 @@ export default function CreateContainer() {
 
   return (
     <>
-      <Button variant='dark' className='pt-1 background-dark w-100' onClick={handleShow}>
+      <Button variant='dark' className='pt-1 background-dark w-100' onClick={handleShow} data-cy='container-modal'>
         <img alt='Add container' src='APPIcons/treasure-chest.svg' />
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} data-cy='create-container-form'>
         <ModalHeader closeButton>
           <ModalTitle>{containerToEdit ? `Edit: ${containerToEdit}` : 'Create new container'}</ModalTitle>
         </ModalHeader>
@@ -107,6 +107,7 @@ export default function CreateContainer() {
             <FormGroup className='mb-3' controlId='formContainerName'>
               <FormLabel>Name</FormLabel>
               <FormControl
+                data-cy='container-name'
                 type='text'
                 placeholder='Enter container name (required)'
                 value={containerData?.name || ''}
@@ -118,6 +119,7 @@ export default function CreateContainer() {
             <FormGroup className='mb-3' controlId='formContainerDescription'>
               <FormLabel>Description</FormLabel>
               <FormControl
+                data-cy='container-description'
                 type='text'
                 as='textarea'
                 rows='3'
@@ -150,6 +152,7 @@ export default function CreateContainer() {
           {containerData?.id ? (
             <>
               <Button
+                data-cy='delete-container'
                 disabled={loading}
                 className='me-2'
                 variant={!deleteConfirmation ? 'outline-danger' : 'danger'}
@@ -157,10 +160,11 @@ export default function CreateContainer() {
               >
                 {!deleteConfirmation ? 'Delete' : "I'm sure, delete!"}
               </Button>
-              <Button className='me-2' onClick={() => handleShow()}>
+              <Button data-cy='clear-container-fields' className='me-2' onClick={() => handleShow()}>
                 Clear
               </Button>
               <Button
+                data-cy='save-container-changes'
                 disabled={loading}
                 variant='dark'
                 className='background-dark'
@@ -170,12 +174,18 @@ export default function CreateContainer() {
               </Button>
             </>
           ) : (
-            <Button disabled={loading} variant='dark' className='background-dark' onClick={addContainer}>
+            <Button
+              data-cy='create-container'
+              disabled={loading}
+              variant='dark'
+              className='background-dark'
+              onClick={addContainer}
+            >
               Create container
             </Button>
           )}
         </ModalBody>
-        {!containerData?.id && partyStorageContainers.length > 0 (
+        {!containerData?.id && partyStorageContainers.length > 0 && (
           <ModalFooter>
             <ModalTitle className='w-100'>Existing containers</ModalTitle>
 

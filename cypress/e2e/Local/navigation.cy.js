@@ -37,6 +37,11 @@ describe('routing protection', () => {
 describe('check navigation', () => {
   before(() => {
     cy.login();
+    cy.addGroup(uid);
+  });
+
+  after(() => {
+    cy.removeGroup(uid, uid2);
   });
 
   it('check navbar options', () => {
@@ -45,10 +50,6 @@ describe('check navigation', () => {
     cy.contains('.nav-link', 'Compendium');
     cy.contains('.nav-link', 'Settings');
     cy.contains('.nav-link', 'Logout');
-  });
-
-  it('add test group', () => {
-    cy.addGroup(uid);
   });
 
   it('view loot', () => {
@@ -73,9 +74,5 @@ describe('check navigation', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-compendium]').click();
     cy.url().should('include', '/compendium');
-  });
-
-  it('remove test group', () => {
-    cy.removeGroup(uid, uid2);
   });
 });

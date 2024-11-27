@@ -8,11 +8,12 @@ let currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currenc
 describe('Item actions', () => {
   before(() => {
     cy.login();
-  });
-
-  it('add test group', () => {
     cy.addGroup(uid);
     cy.get('[data-cy=group0]').click();
+  });
+
+  after(() => {
+    cy.removeGroup(uid, uid2);
   });
 
   it('add an item', () => {
@@ -54,9 +55,7 @@ describe('Item actions', () => {
     cy.get('[data-cy=modal-party]').click();
     cy.get('[data-cy=new-member-input]').type(uid);
     cy.get('[data-cy=save-new-member]').click();
-    cy.get('[data-cy=edit-party-dialog]').within(() => {
-      cy.get('.btn-close').click();
-    });
+    cy.closeDialog('edit-party-dialog');
     cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
     cy.get('[data-cy=sell-item]').click();
     cy.get('[data-cy=sell-qty]').type(1);
@@ -123,9 +122,5 @@ describe('Item actions', () => {
         cy.contains('div', '0');
       });
     });
-  });
-
-  it('remove test group', () => {
-    cy.removeGroup(uid, uid2);
   });
 });

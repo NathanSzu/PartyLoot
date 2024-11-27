@@ -6,11 +6,12 @@ let uid2 = uuidv4();
 describe('Party actions', () => {
   before(() => {
     cy.login();
-  });
-
-  it('add test group', () => {
     cy.addGroup(uid);
     cy.get('[data-cy=group0]').click();
+  });
+
+  after(() => {
+    cy.removeGroup(uid, uid2);
   });
 
   it('add a party member', () => {
@@ -49,9 +50,5 @@ describe('Party actions', () => {
       cy.get('.accordion-item').should('not.exist');
     });
     cy.closeDialog('edit-party-dialog');
-  });
-
-  it('remove test group', () => {
-    cy.removeGroup(uid, uid2);
   });
 });

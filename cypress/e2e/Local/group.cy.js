@@ -1,15 +1,16 @@
 /// <reference types='cypress' />
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 let uid = uuidv4();
 let uid2 = uuidv4();
 
 describe('Group actions', () => {
   before(() => {
     cy.login();
+    cy.addGroup(uid);
   });
 
-  it('add test group', () => {
-    cy.addGroup(uid);
+  after(() => {
+    cy.removeGroup(uid, uid2);
   });
 
   it('edit group', () => {
@@ -26,9 +27,5 @@ describe('Group actions', () => {
     cy.contains('div', 'Cool_Guy1').should('exist');
     cy.get('[data-cy=remove-member]').click();
     cy.contains('div', 'Cool_Guy1').should('not.exist');
-  });
-
-  it('remove test group', () => {
-    cy.removeGroup(uid, uid2);
   });
 });
