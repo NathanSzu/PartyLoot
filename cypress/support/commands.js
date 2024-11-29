@@ -21,6 +21,12 @@ Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
   cy.contains('div', uid).should('have.length', 1);
 });
 
+Cypress.Commands.add('selectGroup', (uid = 'Cool group') => {
+  cy.contains('[data-cy="group-card"]', uid).within(() => {
+    cy.get('[data-cy="view-group"]').click();
+  });
+});
+
 Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2') => {
   cy.visit('/');
   cy.get('[data-cy="navbar-toggle"]').click();

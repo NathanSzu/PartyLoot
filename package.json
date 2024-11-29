@@ -27,11 +27,9 @@
     "deploy-functions:dev": "firebase use dev && firebase deploy --only functions --project=dev",
     "deploy-functions:prod": "firebase use prod && firebase deploy --only functions --project=prod",
     "test": "react-scripts test",
+    "test:dev": "run-p --race start:dev cy:run",
     "cy:run": "npx cypress run",
     "cy:open": "npx cypress open",
-    "test:dev": "run-p --race start:dev cy:run",
-    "test:prod": "run-p --race start:prod cy:run",
-    "test:open": "run-p start:dev cy:open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

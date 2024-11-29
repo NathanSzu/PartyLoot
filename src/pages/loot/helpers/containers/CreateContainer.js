@@ -47,7 +47,7 @@ export default function CreateContainer() {
 
   const addContainer = () => {
     if (!containerData?.name) {
-      setValidationMsg('Name cannot be empty');
+      setValidationMsg('Container name cannot be empty');
       return;
     }
     setLoading(true);

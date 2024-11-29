@@ -9,7 +9,7 @@ describe('Item actions', () => {
   before(() => {
     cy.login();
     cy.addGroup(uid);
-    cy.get('[data-cy=group0]').click();
+    cy.selectGroup(uid);
   });
 
   after(() => {

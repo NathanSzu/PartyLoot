@@ -25,6 +25,8 @@ export const GroupProvider = ({ children }) => {
   const [itemOwners, setItemOwners] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [currency, setCurrency] = useState(null);
+  const [loadingContainers, setLoadingContainers] = useState(true);
+  const [loadingLoot, setLoadingLoot] = useState(true);
 
   // Query declarations
   const groups = db.collection('groups');
@@ -36,6 +38,10 @@ export const GroupProvider = ({ children }) => {
     clearGroupRoutes.forEach((route) => {
       if (pathname.includes(route)) {
         setCurrentGroup(null);
+        setLoadingContainers(true);
+        setLoadingLoot(true);
+        setAllLoot([]);
+        setPartyStorageContainers([]);
         setItemQuery({ ...itemQuery, itemOwner: 'party' });
       }
     });
@@ -78,6 +84,7 @@ export const GroupProvider = ({ children }) => {
           });
         });
         setAllLoot(items);
+        setLoadingLoot(false);
       });
   };
 
@@ -95,6 +102,7 @@ export const GroupProvider = ({ children }) => {
           });
         });
         setPartyStorageContainers(containers);
+        setLoadingContainers(false);
       });
   };
 
@@ -235,6 +243,8 @@ export const GroupProvider = ({ children }) => {
         filteredLoot,
         setItemQuery,
         itemQuery,
+        loadingContainers,
+        loadingLoot,
         setOneParam,
         returnContainerItems,
         returnContainerlessItems,

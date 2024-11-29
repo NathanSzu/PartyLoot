@@ -15,7 +15,7 @@ export default function GroupCard({ group, idx }) {
   };
 
   return (
-    <Row key={idx} className='border-top border-dark background-light mx-1 rounded'>
+    <Row key={idx} className='border-top border-dark background-light mx-1 rounded' data-cy='group-card'>
       <Col className='groups-overflow px-3 py-2'>
         <span className='fancy-font fs-md-deco'>{group?.groupName}</span>
       </Col>
@@ -26,7 +26,7 @@ export default function GroupCard({ group, idx }) {
           <Button
             disabled={!group}
             id={group?.id}
-            data-cy={`group${idx}`}
+            data-cy='view-group'
             onClick={(e) => {
               handleSelectGroup(e.target.id);
             }}

@@ -53,7 +53,7 @@ describe('check navigation', () => {
   });
 
   it('view loot', () => {
-    cy.get('[data-cy=group0]').click();
+    cy.selectGroup(uid);
     cy.url().should('include', '/loot');
   });
 
