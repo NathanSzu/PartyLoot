@@ -1,29 +1,26 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
+const loot = require('../../support/features/loot');
 let uid = uuidv4();
 let uid2 = uuidv4();
+let ownerUid = uuidv4();
 
 let currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
 
 describe('Item actions', () => {
-  before(() => {
+  beforeEach(() => {
     cy.login();
     cy.addGroup(uid);
     cy.selectGroup(uid);
   });
 
-  after(() => {
+  afterEach(() => {
     cy.removeGroup(uid, uid2);
-  });
-
-  it('add an item', () => {
-    cy.get('[data-cy=add-item]').click();
-    cy.fillItemFields();
-    cy.get('[data-cy=create-item]').click();
-    cy.contains('#loot-accordion', 'New item');
+    cy.contains(uid).should('not.exist');
   });
 
   it('edit item', () => {
+    loot.addItem();
     cy.contains('#loot-accordion', 'New item').eq(0).click();
     cy.get('[data-cy=edit-item]').click();
     cy.get('[data-cy=item-name]').type(' (edited)');
@@ -33,52 +30,43 @@ describe('Item actions', () => {
   });
 
   it('sell one item', () => {
-    cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
-    cy.get('[data-cy=sell-item]').click();
-    cy.get('[data-cy=sell-qty]').type(1);
-    cy.get('[role=dialog]').within(() => {
-      currencyKeys.forEach((key) => {
-        cy.get(`[data-cy=${key}]`).type(1);
-      });
-    });
+    loot.addItem(20);
+    loot.fillSellFields(1);
     cy.get('[data-cy=confirm-sell-item]').click();
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
-    currencyKeys.forEach((key) => {
-      cy.get(`[data-cy=${key}]`).within(() => {
-        cy.contains('div', '1');
-      });
-    });
+    loot.checkCurrencyValues(1);
     cy.contains('#loot-accordion', 'x19');
   });
 
-  it('sell one item to a different party member', () => {
-    cy.get('[data-cy=modal-party]').click();
-    cy.get('[data-cy=new-member-input]').type(uid);
-    cy.get('[data-cy=save-new-member]').click();
-    cy.closeDialog('edit-party-dialog');
-    cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
-    cy.get('[data-cy=sell-item]').click();
-    cy.get('[data-cy=sell-qty]').type(1);
-    cy.get('[role=dialog]').within(() => {
-      currencyKeys.forEach((key) => {
-        cy.get(`[data-cy=${key}]`).type(1);
-        cy.get('[data-cy=owner-select]').select(uid);
-      });
-    });
+  it('sell an item with no qty', () => {
+    loot.addItem();
+    loot.fillSellFields();
     cy.get('[data-cy=confirm-sell-item]').click();
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
-    cy.get('[data-cy=owner-select]').select(uid);
-    currencyKeys.forEach((key) => {
-      cy.get(`[data-cy=${key}]`).within(() => {
-        cy.contains('div', '1');
-      });
-    });
+    loot.checkCurrencyValues(1);
+    cy.get('#loot-accordion').children().should('not.exist');
+  });
+
+  it('sell one item to a different party member', () => {
+    loot.addItem(19);
+    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy=new-member-input]').type(ownerUid);
+    cy.get('[data-cy=save-new-member]').click();
+    cy.closeDialog('edit-party-dialog');
+    loot.fillSellFields();
+    loot.selectItemOwner(ownerUid);
+    cy.get('[data-cy=confirm-sell-item]').click();
+    cy.contains('#gold-tracker-accordion', 'Party Gold').click();
+    loot.checkCurrencyValues(0);
+    cy.get('[data-cy=owner-select]').select(ownerUid);
+    loot.checkCurrencyValues(1);
     cy.get('[data-cy=owner-select]').select('party');
     cy.contains('#loot-accordion', 'x18');
   });
 
   it('sell max qty item', () => {
-    cy.contains('#loot-accordion', 'New item (edited)').eq(0).click();
+    loot.addItem(19);
+    cy.contains('#loot-accordion', 'New item').eq(0).click();
     cy.get('[data-cy=sell-item]').click();
     cy.get('[data-cy=sell-max-qty]').click();
     cy.get('[role=dialog]').within(() => {
@@ -88,39 +76,28 @@ describe('Item actions', () => {
     });
     cy.get('[data-cy=confirm-sell-item]').click();
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
-    currencyKeys.forEach((key) => {
-      cy.get(`[data-cy=${key}]`).within(() => {
-        cy.contains('div', '19');
-      });
-    });
+    loot.checkCurrencyValues(19);
     cy.contains('#loot-accordion', 'New item').should('not.exist');
   });
 
   it('delete item', () => {
-    cy.get('[data-cy=add-item]').click();
-    cy.fillItemFields();
-    cy.get('[data-cy=create-item]').click();
+    loot.addItem();
     cy.contains('#loot-accordion', 'New item').eq(0).click();
     cy.get('[data-cy=delete-item]').click();
     cy.get('[data-cy=confirm-item-delete]').click();
     cy.contains('#loot-accordion', 'New item').should('not.exist');
   });
 
-  it('reset gold totals', () => {
+  it('manually set gold totals', () => {
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
     cy.get('[data-cy="edit-currency"]').click();
     cy.get('[role=dialog]').within(() => {
       currencyKeys.forEach((key) => {
-        cy.get(`[data-cy=${key}]`).clear();
+        cy.get(`[data-cy=${key}]`).clear().type(12345);
       });
     });
     cy.get('[data-cy="save-currency"]').click();
     cy.get('[data-cy="save-currency"]').should('not.exist');
-    currencyKeys.forEach((key) => {
-      cy.get(`[data-cy=${key}]`).within(() => {
-        cy.contains('div', '20').should('not.exist');
-        cy.contains('div', '0');
-      });
-    });
+    loot.checkCurrencyValues(12345);
   });
 });

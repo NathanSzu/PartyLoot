@@ -38,12 +38,3 @@ Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2')
   cy.contains('button', uid).should('not.exist');
   cy.contains('button', uid2).should('not.exist');
 });
-
-Cypress.Commands.add('fillItemFields', () => {
-  cy.get('[data-cy="item-name"]').type('New item');
-  cy.get('[data-cy="item-qty"]').type(20);
-  cy.get('[data-cy="charge"]').type(5);
-  cy.get('[data-cy="charge-max"]').type(7);
-  cy.get('.ql-editor').type('A grand item description! 1234567890');
-  cy.get('[data-cy="item-tags"]').type('scroll, consumable');
-});

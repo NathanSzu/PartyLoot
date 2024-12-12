@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, Container } from 'react-bootstrap';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../../utils/contexts/AuthContext';
@@ -7,14 +7,12 @@ import ItemSaleInput from './ItemSaleInput';
 import ItemOwnerSelect from '../../../../common/ItemOwnerSelect';
 
 export default function ItemSale({ item }) {
-  const { groupDoc, getItemOwner, currentGroup, allTags, currency } = useContext(GroupContext);
+  const { groupDoc, getItemOwner, currentGroup, allTags, currency, checkOwnerExists } = useContext(GroupContext);
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
   const currencyRef = groupDoc.collection('currency').doc('currency');
   const itemRef = groupDoc.collection('loot').doc(item.id);
-
-  const qtyRef = useRef();
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,15 +28,21 @@ export default function ItemSale({ item }) {
     setErrorMessage('');
     setShow(false);
   };
+
   const handleShow = () => {
     setSellState(item?.value);
     setShow(true);
   };
 
-  const maxQty = (qty, qtyRef) => {
-    setSellQty(qty);
-    qtyRef.current.value = qty;
-  };
+  const handleSetSeller = (ownerId) => {
+    if (ownerId === 'party') {
+      setSellerId('party');
+      return;
+    }
+    checkOwnerExists(sellerId) ? setSellerId(ownerId) : setSellerId('party');;
+  }
+
+  const disableQty = () => item.itemQty <= 1 || !item?.itemQty;
 
   const updateSellState = (currencyKey, value) => {
     setSellState({
@@ -88,7 +92,7 @@ export default function ItemSale({ item }) {
       setErrorMessage('Quantity must be greater than 0');
       return false;
     }
-    if (sellQty > parseInt(item.itemQty || 1)) {
+    if (item?.itemQty && sellQty > parseInt(item.itemQty)) {
       setErrorMessage('Cannot sell more items than you own');
       return false;
     }
@@ -116,7 +120,7 @@ export default function ItemSale({ item }) {
 
   const compileHistoryData = (sellQty, item, sellState, currencyKeys) => {
     let data = {
-      qty: parseInt(sellQty),
+      qty: sellQty ? parseInt(sellQty) : 1,
       itemName: item.itemName,
       currency: [],
       seller: sellerName,
@@ -133,21 +137,16 @@ export default function ItemSale({ item }) {
     let totals = calculateSale(sellerId, currency, sellState, currencyKeys);
     writeSaleTotals(sellerId, totals).then(() => {
       compileHistoryData(sellQty, item, sellState, currencyKeys);
-      if (item.itemQty >= 2) {
-        if (item.itemQty <= sellQty) {
-          deleteItem();
-        } else {
-          updateQty(item.itemQty, sellQty);
-        }
-      }
-      if (item.itemQty < 2) {
+      if (item.itemQty <= sellQty || !item?.itemQty) {
         deleteItem();
+      } else {
+        updateQty(item.itemQty, sellQty);
       }
     });
   };
 
   useEffect(() => {
-    item && setSellerId(item.ownerId);
+    handleSetSeller(item?.ownerId || 'party');
   }, []);
 
   useEffect(() => {
@@ -181,22 +180,21 @@ export default function ItemSale({ item }) {
                   <Form.Control
                     data-cy='sell-qty'
                     type='number'
-                    ref={qtyRef}
-                    disabled={item.itemQty <= 1 && true}
-                    defaultValue={item.itemQty <= 1 && 1}
+                    disabled={disableQty()}
+                    value={sellQty}
                     placeholder='Qty'
-                    onChange={() => setSellQty(parseInt(qtyRef.current.value || 0))}
+                    onChange={(e) => setSellQty(e.target.value)}
                   />
                 </Col>
-                <Col xs={3} className='p-1'>
+                <Col xs={4} className='p-1'>
                   <Button
                     data-cy='sell-max-qty'
                     className='w-100 background-dark border-0'
-                    disabled={item.itemQty <= 1 && true}
+                    disabled={disableQty()}
                     variant='dark'
-                    onClick={() => maxQty(item.itemQty, qtyRef)}
+                    onClick={() => setSellQty(item.itemQty)}
                   >
-                    Sell all
+                    Sell all {item?.itemQty > 1 && `(${item?.itemQty})`}
                   </Button>
                 </Col>
               </Row>

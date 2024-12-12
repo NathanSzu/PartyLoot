@@ -53,6 +53,11 @@ export const GroupProvider = ({ children }) => {
     });
   };
 
+  const checkOwnerExists = (id) => {
+    const ownerExists = itemOwners.find(owner => owner.id === id);
+    return ownerExists;
+  };
+
   const updateCurrency = (currencyKey, currencyQty) => {
     groupCurrency.set(
       {
@@ -231,6 +236,7 @@ export const GroupProvider = ({ children }) => {
         setCurrentGroup,
         groupData,
         itemOwners,
+        checkOwnerExists,
         tagRef,
         groups,
         groupDoc,
