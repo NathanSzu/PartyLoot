@@ -3,6 +3,7 @@ import { Col, Row, Container } from 'react-bootstrap';
 import CreateLootItem from '../itemCRUD/CreateLootItem';
 import HeldBySection from '../itemCRUD/HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
+import RarityBadge from '../itemCRUD/RarityBadge';
 
 export default function NestedLootList({ lootArray }) {
 
@@ -41,8 +42,9 @@ export default function NestedLootList({ lootArray }) {
             <div className='accordion-body border-bottom border-start border-end border-white background-light rounded-bottom'>
               <Container>
                 <Row className='pt-1 pb-1'>
-                  <Col className='d-flex align-items-center border-bottom border-dark px-0'>
+                  <Col className='d-flex align-items-center justify-content-between border-bottom border-dark px-0'>
                     <h2 className='fancy-font fs-sm-deco m-0'>Description</h2>
+                    <RarityBadge itemRarity={item.rarity} />
                   </Col>
                   {item.currCharges && item.maxCharges && (
                     <Col className='d-flex align-items-center border-bottom border-dark pl-0'>

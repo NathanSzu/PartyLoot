@@ -33,7 +33,7 @@ export default function ItemDelete({ item }) {
     <>
       <Button
         data-cy='delete-item'
-        className='mt-3 me-0 p-0 px-3 btn-danger background-danger border-0'
+        className='me-0 p-0 px-3 btn-danger background-danger border-0'
         disabled={loading}
         type='button'
         onClick={handleShow}
@@ -50,7 +50,7 @@ export default function ItemDelete({ item }) {
           <Modal.Footer className='pt-0'>
             <Button
               data-cy='confirm-item-delete'
-              className='mt-3 p-2 px-3 background-danger border-0 text-light'
+              className='p-2 px-3 background-danger border-0 text-light'
               disabled={loading}
               variant='danger'
               type='button'

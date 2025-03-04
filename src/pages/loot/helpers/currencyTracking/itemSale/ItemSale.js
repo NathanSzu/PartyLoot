@@ -157,7 +157,7 @@ export default function ItemSale({ item }) {
     <>
       <Button
         data-cy='sell-item'
-        className='mt-3 me-2 p-0 px-3 btn-success background-success border-0'
+        className='me-2 p-0 px-3 btn-success background-success border-0'
         disabled={loading}
         type='button'
         onClick={handleShow}
@@ -227,7 +227,7 @@ export default function ItemSale({ item }) {
             )}
             <Button
               data-cy='confirm-sell-item'
-              className='mt-3 p-2 px-3 background-success border-0 text-light'
+              className='p-2 px-3 background-success border-0 text-light'
               disabled={loading}
               variant='success'
               type='button'

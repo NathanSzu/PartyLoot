@@ -3,9 +3,9 @@ import { Col, Row, Container } from 'react-bootstrap';
 import CreateLootItem from './CreateLootItem';
 import HeldBySection from './HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
+import RarityBadge from './RarityBadge';
 
 export default function LootList({ lootArray }) {
-
   return (
     <>
       {lootArray.map((item) => (
@@ -41,8 +41,9 @@ export default function LootList({ lootArray }) {
             <div className='accordion-body background-light rounded-bottom'>
               <Container>
                 <Row className='pt-1 pb-1'>
-                  <Col className='d-flex align-items-center border-bottom border-dark px-0'>
+                  <Col className='d-flex align-items-center justify-content-between border-bottom border-dark px-0'>
                     <h2 className='fancy-font fs-sm-deco m-0'>Description</h2>
+                    <RarityBadge itemRarity={item.rarity} />
                   </Col>
                   {item.currCharges && item.maxCharges && (
                     <Col className='d-flex align-items-center border-bottom border-dark pl-0'>
