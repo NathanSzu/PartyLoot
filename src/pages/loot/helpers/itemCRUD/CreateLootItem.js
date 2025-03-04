@@ -4,11 +4,10 @@ import { GroupContext } from '../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
 import fb from 'firebase';
-import DropdownAddItem from './DropdownAddItem';
-import SearchOpen5E from '../SearchOpen5E';
 import ItemOwnerSelect from '../../../common/ItemOwnerSelect';
 import ItemValueInput from './ItemValueInput';
 import ContainerSelect from '../../../common/ContainerSelect';
+import RaritySelect from '../../../common/RaritySelect';
 import QuillInput from '../../../common/QuillInput';
 
 export default function CreateLootItem({ item = '' }) {
@@ -20,8 +19,6 @@ export default function CreateLootItem({ item = '' }) {
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [searchSRD, setSearchSRD] = useState(false);
-  const [SRDContent, setSRDContent] = useState({});
   const [itemValidations, setItemValidations] = useState('');
   const [itemOwner, setItemOwner] = useState('party');
   const [valueState, setValueState] = useState({});
@@ -32,8 +29,6 @@ export default function CreateLootItem({ item = '' }) {
   const handleClose = () => {
     setItemValidations('');
     setShow(false);
-    setSRDContent({});
-    setSearchSRD(false);
   };
 
   const handleShow = () => {
@@ -42,7 +37,7 @@ export default function CreateLootItem({ item = '' }) {
     } else {
       setItemOwner('party');
     }
-    setItemData(item)
+    setItemData(item);
     setItemDesc(item?.itemDesc || '');
     setShow(true);
     setValueState(item?.value || {});
@@ -148,23 +143,15 @@ export default function CreateLootItem({ item = '' }) {
             {item ? <Modal.Title>{`Edit ${item.itemName}`}</Modal.Title> : <Modal.Title>Create new item</Modal.Title>}
           </Modal.Header>
 
-          {searchSRD ? (
-            <SearchOpen5E setSearchSRD={setSearchSRD} setSRDContent={setSRDContent} />
-          ) : (
             <div>
               <Modal.Body>
                 <Row className='mb-2'>
-                  {!item && (
-                    <Col xs={2} className='pr-0'>
-                      <DropdownAddItem setSearchSRD={setSearchSRD} />
-                    </Col>
-                  )}
                   <Col>
                     <Form.Group controlId='itemName'>
                       <Form.Control
                         data-cy='item-name'
                         onChange={(e) => setItemData({ ...itemData, itemName: e.target.value })}
-                        value={itemData?.itemName || SRDContent.name}
+                        value={itemData?.itemName}
                         type='text'
                         placeholder='Item name'
                       />
@@ -186,7 +173,7 @@ export default function CreateLootItem({ item = '' }) {
                 </Row>
 
                 <Row className='mb-2'>
-                  <Col xs={5}>
+                  <Col>
                     <Form.Group controlId='itemCharge'>
                       <Form.Control
                         data-cy='charge'
@@ -200,11 +187,11 @@ export default function CreateLootItem({ item = '' }) {
                     </Form.Group>
                   </Col>
 
-                  <Col xs={2} className='d-flex align-items-center justify-content-center'>
+                  <Col xs={1} className='d-flex align-items-center justify-content-center'>
                     /
                   </Col>
 
-                  <Col xs={5}>
+                  <Col>
                     <Form.Group controlId='itemCharges'>
                       <Form.Control
                         data-cy='charge-max'
@@ -221,7 +208,7 @@ export default function CreateLootItem({ item = '' }) {
 
                 <Row>
                   <Form.Group controlId='itemDesc'>
-                    <QuillInput itemDesc={itemDesc || SRDContent?.desc} setItemDesc={setItemDesc} />
+                    <QuillInput itemDesc={itemDesc} setItemDesc={setItemDesc} />
                   </Form.Group>
                 </Row>
 
@@ -231,34 +218,39 @@ export default function CreateLootItem({ item = '' }) {
                       data-cy='item-tags'
                       onChange={(e) => setItemData({ ...itemData, itemTags: e.target.value })}
                       type='text'
-                      value={itemData?.itemTags || SRDContent.type}
+                      value={itemData?.itemTags}
                       placeholder='Enter searchable item tags here'
                     />
                   </Form.Group>
                 </Row>
 
                 <Row>
-                  <Form.Group controlId='itemOwner'>
-                    <Row>
-                      <Col xs={4}>
-                        <FormLabel className='m-0 mt-1'>Item owner</FormLabel>
-                      </Col>
-                      <Col>
+                  <Col className='pe-0'>
+                    <Form.Group controlId='itemOwner'>
+                      <Col className='p-2 pt-0 border rounded'>
+                        <FormLabel className='m-0 mt-1'>Owner</FormLabel>
                         <ItemOwnerSelect setState={setItemOwner} group={currentGroup} state={itemOwner} />
                       </Col>
-                    </Row>
-                  </Form.Group>
-
-                  <Form.Group controlId='itemOwner'>
-                    <Row>
-                      <Col xs={4}>
-                        <FormLabel className='m-0 mt-1'>Container</FormLabel>
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group controlId='rarity'>
+                      <Col className='p-2 pt-0 border rounded'>
+                        <FormLabel className='m-0 mt-1'>Rarity</FormLabel>
+                        <RaritySelect setItemData={setItemData} itemData={itemData} />
                       </Col>
-                      <Col>
+                    </Form.Group>
+                  </Col>
+                  <Col className='ps-0'>
+                    <Form.Group controlId='container'>
+                      <Col className='p-2 pt-0 border rounded'>
+                        <FormLabel className='m-0 mt-1'>Container</FormLabel>
                         <ContainerSelect setItemData={setItemData} itemData={itemData} />
                       </Col>
-                    </Row>
-                  </Form.Group>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
                   <Col className='mt-2'>{itemValidations && <Alert variant='warning'>{itemValidations}</Alert>}</Col>
                 </Row>
 
@@ -306,7 +298,6 @@ export default function CreateLootItem({ item = '' }) {
                 )}
               </Modal.Footer>
             </div>
-          )}
         </Form>
       </Modal>
     </>

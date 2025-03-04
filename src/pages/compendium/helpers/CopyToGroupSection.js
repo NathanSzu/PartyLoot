@@ -20,12 +20,14 @@ export default function CopyToGroupSection({ item }) {
   const handleSaveToGroup = () => {
     let itemName = item.itemName || item.name;
     let itemDesc = item.itemDesc || item.desc || '';
+    let rarity = item.rarity;
     setLoading(true);
     groupLootRef
       .add({
         itemName,
         itemQty: 1,
         itemDesc,
+        rarity,
         ownerId: owner || 'party',
         created: fb.firestore.FieldValue.serverTimestamp(),
       })

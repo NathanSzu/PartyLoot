@@ -16,7 +16,7 @@ export default function ContainerSelect({ itemData, setItemData, disabled = fals
       data-cy='container-select'
       aria-label='Add to container'
     >
-      <option value=''>No container</option>
+      <option value=''>none</option>
       {partyStorageContainers.map((container) => (
         <option key={container.id} value={container.id}>
           {container.name}
