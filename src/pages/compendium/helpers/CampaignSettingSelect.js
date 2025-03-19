@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Form } from 'react-bootstrap';
 
-export default function CampaignSettingSelect({ metadata, state, setState, value = '' }) {
+export default function CampaignSettingSelect({ metadata, state, setState }) {
   const [keys, setKeys] = useState([]);
 
   useEffect(() => {
@@ -9,21 +8,23 @@ export default function CampaignSettingSelect({ metadata, state, setState, value
   }, [metadata]);
 
   return (
-    <Form.Control
-      as='select'
+    <select
       onChange={(e) => {
         setState({ ...state, setting: e.target.value });
       }}
-      value={state.setting}
+      value={state?.setting || ''}
+      id='settingSelect'
+      aria-label='Set item setting'
       data-cy='discovery-setting'
+      className='form-select'
     >
-      <option value={''}>Choose setting</option>
+      <option value=''>Setting</option>
       {keys &&
         keys.map((key) => (
           <option key={key} value={key}>
             {metadata?.settings[key].setting}
           </option>
         ))}
-    </Form.Control>
+    </select>
   );
 }

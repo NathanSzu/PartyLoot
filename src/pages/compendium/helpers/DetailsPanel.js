@@ -5,6 +5,7 @@ import CopyToGroupSection from './CopyToGroupSection';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { EditDiscoveryTrigger, EditDiscoverySection } from './RecordDiscovery';
+import RarityBadge from '../../loot/helpers/itemCRUD/RarityBadge';
 
 export function DetailsPanel({ item, getCompendium }) {
   const { db, currentUser } = useContext(AuthContext);
@@ -56,7 +57,7 @@ export function DetailsPanel({ item, getCompendium }) {
         id={`canvas-${item.id}`}
         aria-labelledby='staticBackdropLabel'
       >
-        <div className='offcanvas-header'>
+        <div className='offcanvas-header border-bottom'>
           <h5 className='offcanvas-title fancy-font fs-md-deco' id='staticBackdropLabel'>
             {item?.itemName}
           </h5>
@@ -65,16 +66,15 @@ export function DetailsPanel({ item, getCompendium }) {
         <div className='offcanvas-body'>
           {!showEditSection ? (
             <>
-              <Row>
-                <Col className='p-3 bg-secondary bg-gradient bg-opacity-25 shadow-sm rounded mb-4 mx-2'>
+              <Row className='border-bottom'>
+                <Col>
+                  <RarityBadge itemRarity={item?.rarity} bgColor='secondary' txtColor='text-light' />
+                </Col>
+                <Col xs={12}>
                   <QuillDisplay value={item?.itemDesc} />
                 </Col>
               </Row>
-              {showEditTrigger && !showEditSection && <EditDiscoveryTrigger setShow={setShowEditSection} />}
-              <Row className='border-bottom pb-3'>
-                <CopyToGroupSection item={item}/>
-              </Row>
-              <Row className='pt-3'>
+              <Row className='border-bottom p-2'>
                 <Col className='border-end'>
                   <p className='m-0'>
                     Categories: <br />
@@ -100,6 +100,10 @@ export function DetailsPanel({ item, getCompendium }) {
                     <span className='badge rounded-pill background-dark'>{creator}</span>
                   </p>
                 </Col>
+              </Row>
+              {showEditTrigger && !showEditSection && <EditDiscoveryTrigger setShow={setShowEditSection} />}
+              <Row className='border-bottom pb-3'>
+                <CopyToGroupSection item={item} />
               </Row>
             </>
           ) : (
@@ -135,28 +139,33 @@ export function OglDetailsPanel({ item }) {
         id={`canvas-${item.slug}`}
         aria-labelledby='staticBackdropLabel'
       >
-        <div className='offcanvas-header'>
+        <div className='offcanvas-header border-bottom'>
           <h5 className='offcanvas-title fancy-font fs-md-deco' id='staticBackdropLabel'>
             {item?.name}
           </h5>
           <button type='button' className='btn-close' data-bs-dismiss='offcanvas' aria-label='Close'></button>
         </div>
         <div className='offcanvas-body'>
-          <Row>
-            <Col className='p-3 bg-secondary bg-gradient bg-opacity-25 shadow-sm rounded mb-4 mx-2'>
+          <Row className='border-bottom'>
+            <Col>
+              <RarityBadge itemRarity={item?.rarity} bgColor='secondary' txtColor='text-light' />
+            </Col>
+            <Col xs={12}>
               <QuillDisplay value={itemDescFormatted} />
             </Col>
           </Row>
 
-          <Row>
-            <Col className='pb-3'>
+          <Row className='p-2'>
+            <Col>
               <p className='m-0'>
                 Source: <br />
                 <span className='badge rounded-pill background-dark'>{item?.document__title}</span>
               </p>
             </Col>
           </Row>
-          <CopyToGroupSection item={item}/>
+          <Row className='border-bottom pb-3'>
+                <CopyToGroupSection item={item} />
+              </Row>
         </div>
       </div>
     </>

@@ -20,7 +20,7 @@ export default function CopyToGroupSection({ item }) {
   const handleSaveToGroup = () => {
     let itemName = item.itemName || item.name;
     let itemDesc = item.itemDesc || item.desc || '';
-    let rarity = item.rarity;
+    let rarity = item?.rarity?.toLowerCase() || '';
     setLoading(true);
     groupLootRef
       .add({

@@ -13,12 +13,12 @@ export default function RaritySelect({ itemData, setItemData, disabled = false }
       data-cy='rarity-select'
       aria-label='Set item rarity'
     >
-      <option value=''>none</option>
-      <option value='Common'>Common</option>
-      <option value='Uncommon'>Uncommon</option>
-      <option value='Rare'>Rare</option>
-      <option value='Very Rare'>Very Rare</option>
-      <option value='Legendary'>Legendary</option>
+      <option value=''>Rarity</option>
+      <option value='common'>Common</option>
+      <option value='uncommon'>Uncommon</option>
+      <option value='rare'>Rare</option>
+      <option value='very rare'>Very rare</option>
+      <option value='legendary'>Legendary</option>
     </select>
   );
 }

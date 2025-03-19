@@ -6,6 +6,7 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import CategorySelect from './CategorySelect';
 import fb from 'firebase';
 import QuillInput from '../../common/QuillInput';
+import RaritySelect from '../../common/RaritySelect';
 
 export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValidations, item }) {
   const { itemMetadata } = useContext(GlobalFeatures);
@@ -29,6 +30,7 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
         maxCharges: item.maxCharges,
         categories: item.categories,
         itemDesc: item.itemDesc || '',
+        rarity: item.rarity || ''
       });
     item && setDiscoveryCategories(item.categories);
   }, [item]);
@@ -53,28 +55,35 @@ export function DiscoveryFields({ discoveryRecord, setDiscoveryRecord, itemValid
         </Col>
       </Row>
       <Row className='mb-2'>
-        <Col>
+        <Col className='pe-0'>
           <Form.Group controlId='discoveryCharges'>
             <Form.Control
               ref={chargeRef}
               onChange={() => setDiscoveryRecord({ ...discoveryRecord, maxCharges: chargeRef.current.value })}
               type='text'
-              placeholder='Charges (optional)'
+              placeholder='Charges'
               defaultValue={item && item.maxCharges}
               data-cy='new-discovery-charges'
               maxLength='3'
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col className='pe-0'>
           <Form.Group controlId='discoverySetting'>
             <CampaignSettingSelect metadata={itemMetadata} setState={setDiscoveryRecord} state={discoveryRecord} />
           </Form.Group>
         </Col>
+        <Col>
+          <RaritySelect itemData={discoveryRecord} setItemData={setDiscoveryRecord} />
+        </Col>
       </Row>
       <Row className='mb-2'>
         <Form.Group>
-          <QuillInput itemDesc={discoveryDescription || discoveryRecord.itemDesc} setItemDesc={setDiscoveryDescription} placeholder='Please include a detailed description'/>
+          <QuillInput
+            itemDesc={discoveryDescription || discoveryRecord.itemDesc}
+            setItemDesc={setDiscoveryDescription}
+            placeholder='Please include a detailed description'
+          />
         </Form.Group>
       </Row>
       <CategorySelect
@@ -242,8 +251,8 @@ export function AddDiscovery({ getCompendium }) {
 export function EditDiscoveryTrigger({ setShow }) {
   return (
     <Row>
-      <Col className='px-0 mx-2 text-center'>
-        <Alert className='py-2'>
+      <Col className='text-center p-3'>
+        <Alert className='m-0'>
           <p className='mb-0'>You reported this discovery!</p>
           <Button variant='link' data-cy='edit-compendium-entry' onClick={() => setShow(true)}>
             <strong>Click here to make changes!</strong>
