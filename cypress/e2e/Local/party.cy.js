@@ -1,7 +1,7 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
-let uid = uuidv4();
-let uid2 = uuidv4();
+let uid = uuidv4().substring(0, 8);
+let uid2 = uuidv4().substring(0, 8);
 
 describe('Party actions', () => {
   before(() => {
