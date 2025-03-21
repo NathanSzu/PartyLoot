@@ -3,28 +3,21 @@ import { v4 as uuidv4 } from 'uuid';
 let uid = uuidv4();
 let uid2 = uuidv4();
 
+const pages = ['/groups', '/user-settings', '/loot', '/compendium'];
+
 describe('routing protection', () => {
   before(() => {
     indexedDB.deleteDatabase('firebaseLocalStorageDb');
     cy.visit('/');
   });
 
-  it('re-route from /groups to /root if user is not logged in', () => {
-    cy.visit('/groups');
-    cy.url().should('eq', 'http://localhost:3000/');
+  pages.forEach(page => {
+    it(`re-route from ${page} to /root if user is not logged in`, () => {
+      cy.visit(page);
+      cy.url().should('eq', 'http://localhost:3000/');
+    });
   });
-  it('re-route from /user-settings to /root if user is not logged in', () => {
-    cy.visit('/user-settings');
-    cy.url().should('eq', 'http://localhost:3000/');
-  });
-  it('re-route from /loot to /root if user is not logged in', () => {
-    cy.visit('/loot');
-    cy.url().should('eq', 'http://localhost:3000/');
-  });
-  it('re-route from /compendium to /root if user is not logged in', () => {
-    cy.visit('/compendium');
-    cy.url().should('eq', 'http://localhost:3000/');
-  });
+
   it('login option exists', () => {
     cy.get('[data-cy=navbar-toggle]').click();
     cy.get('[data-cy=navbar-login]');

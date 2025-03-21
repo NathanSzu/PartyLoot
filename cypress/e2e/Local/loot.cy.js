@@ -1,9 +1,9 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
 const loot = require('../../support/features/loot');
-let uid = uuidv4();
-let uid2 = uuidv4();
-let ownerUid = uuidv4();
+let uid = uuidv4().substring(0, 8);
+let uid2 = uuidv4().substring(0, 8);
+let ownerUid = uuidv4().substring(0, 8);
 
 let currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
 
