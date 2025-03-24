@@ -148,7 +148,7 @@ export default function CreateLootItem({ item = '' }) {
 
           <div>
             <Modal.Body>
-              <Row className='mb-2'>
+              <Row>
                 <Col>
                   <Form.Group controlId='itemName'>
                     <Form.Control
@@ -178,31 +178,31 @@ export default function CreateLootItem({ item = '' }) {
               <Row className='mb-2'>
                 <Col>
                   <Form.Group controlId='itemCharge'>
+                    <FormLabel className='m-0 mt-1 text-secondary'>Current charge</FormLabel>
                     <Form.Control
                       data-cy='charge'
                       className='text-center'
                       onChange={(e) => updateItemData('currCharges', parseInt(e.target.value) || '')}
                       value={formState.itemData.currCharges}
                       type='text'
-                      placeholder='Charge'
                       maxLength='3'
                     />
                   </Form.Group>
                 </Col>
 
-                <Col xs={1} className='d-flex align-items-center justify-content-center'>
+                <Col xs={1} className='d-flex align-items-end justify-content-center pb-2'>
                   /
                 </Col>
 
                 <Col>
                   <Form.Group controlId='itemCharges'>
+                    <FormLabel className='m-0 mt-1 text-secondary'>Maximum charges</FormLabel>
                     <Form.Control
                       data-cy='charge-max'
                       className='text-center'
                       onChange={(e) => updateItemData('maxCharges', parseInt(e.target.value) || '')}
                       value={formState.itemData.maxCharges}
                       type='text'
-                      placeholder='Charges'
                       maxLength='3'
                     />
                   </Form.Group>
@@ -220,12 +220,13 @@ export default function CreateLootItem({ item = '' }) {
 
               <Row className='mb-2'>
                 <Form.Group controlId='itemTags'>
+                  <FormLabel className='m-0 mt-1 text-secondary'>Comma separated tags</FormLabel>
                   <Form.Control
                     data-cy='item-tags'
                     onChange={(e) => updateItemData('itemTags', e.target.value)}
                     type='text'
                     value={formState.itemData.itemTags}
-                    placeholder='Enter searchable item tags here'
+                    placeholder='Example: "scroll, consumable"'
                   />
                 </Form.Group>
               </Row>
@@ -248,7 +249,7 @@ export default function CreateLootItem({ item = '' }) {
                     <Col className='p-2 pt-0 border rounded'>
                       <FormLabel className='m-0 mt-1'>Rarity</FormLabel>
                       <RaritySelect 
-                        setItemData={(value) => updateItemData('rarity', value)} 
+                        setItemData={updateItemData} 
                         itemData={formState.itemData} 
                       />
                     </Col>

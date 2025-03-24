@@ -211,7 +211,7 @@ export const GroupProvider = ({ children }) => {
       });
       setItemQuery({
         searchQuery: '',
-        itemOwner: 'party',
+        itemOwner: groupData?.favorites?.[currentUser.uid] || 'party',
       });
       getLootItems();
       getLootContainers('1');

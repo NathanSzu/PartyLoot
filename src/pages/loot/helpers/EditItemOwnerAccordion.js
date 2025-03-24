@@ -5,7 +5,7 @@ import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
 export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
-  const { groupDoc, groupData } = useContext(GroupContext);
+  const { groupDoc, groupData, setItemQuery, itemQuery } = useContext(GroupContext);
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
@@ -66,11 +66,16 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
 
   const setFavoriteItemOwner = (itemOwner) => {
     setLoadingSave(true);
+    const newFavorite = checkFavorite(groupData, itemOwner) ? 'party' : itemOwner.id;
     groupDoc
       .update({
-        [`favorites.${currentUser.uid}`]: checkFavorite(groupData, itemOwner) ? 'party' : itemOwner.id,
+        [`favorites.${currentUser.uid}`]: newFavorite,
       })
       .then(() => {
+        setItemQuery({
+          ...itemQuery,
+          itemOwner: newFavorite,
+        });
         handleClose();
         setLoadingSave(false);
       })

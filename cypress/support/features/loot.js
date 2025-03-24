@@ -7,6 +7,7 @@ const fillItemFields = (qty) => {
   cy.get('[data-cy="charge-max"]').type(7);
   cy.get('.ql-editor').type('A grand item description! 1234567890');
   cy.get('[data-cy="item-tags"]').type('scroll, consumable');
+  cy.get('[data-cy="rarity-select"]').select('common');
 };
 
 const addItem = (qty) => {

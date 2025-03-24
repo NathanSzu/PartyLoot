@@ -1,48 +1,67 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
-let uid = uuidv4().substring(0, 8);
-let uid2 = uuidv4().substring(0, 8);
+import { addPartyMember } from '../../support/features/party';
+import { addItem } from '../../support/features/loot';
 
 describe('Party actions', () => {
-  before(() => {
+  let groupId;
+  let memberId;
+  let updatedMemberId;
+
+  beforeEach(() => {
+    groupId = uuidv4().substring(0, 8);
+    memberId = uuidv4().substring(0, 8);
+    updatedMemberId = uuidv4().substring(0, 8);
     cy.login();
-    cy.addGroup(uid);
-    cy.selectGroup(uid);
+    cy.addGroup(groupId);
+    cy.selectGroup(groupId);
   });
 
-  after(() => {
-    cy.removeGroup(uid, uid2);
-  });
-
-  it('add a party member', () => {
-    cy.get('[data-cy=modal-party]').click();
-    cy.get('[data-cy=new-member-input]').type(uid);
-    cy.get('[data-cy=save-new-member]').click();
+  afterEach(() => {
+    cy.removeGroup(groupId);
   });
 
   it('update a party member', () => {
-    cy.get(`[data-cy=${uid}]`).click();
+    // First add a member to update
+    addPartyMember(memberId);
+
+    // Then update the member
+    cy.get('[data-cy=modal-party]').click();
+    cy.get(`[data-cy=${memberId}]`).click();
     cy.get('[data-cy=edit-member-input]').clear();
-    cy.get('[data-cy=edit-member-input]').type(uid2);
+    cy.get('[data-cy=edit-member-input]').type(updatedMemberId);
     cy.get('[data-cy=save-member-input]').click();
+    cy.get(`[data-cy=${updatedMemberId}]`).should('exist');
   });
 
   it('favorite a party member', () => {
+    addItem();
+    addPartyMember(memberId);
+
+    // Then favorite the member
     cy.get('[data-cy=modal-party]').click();
-    cy.get(`[data-cy=${uid2}]`).click();
+    cy.get(`[data-cy=${memberId}]`).click();
     cy.get('[data-cy=set-unfavorite]').should('not.exist');
     cy.get('[data-cy=set-favorite]').click();
-    cy.contains('select', uid2);
+    cy.get('#loot-accordion').should('not.be.visible');
+    cy.contains('select', memberId);
+    
+    // Then unfavorite the member
     cy.get('[data-cy=modal-party]').click();
-    cy.get(`[data-cy=${uid2}]`).click();
+    cy.get(`[data-cy=${memberId}]`).click();
     cy.get('[data-cy=set-favorite]').should('not.exist');
     cy.get('[data-cy=set-unfavorite]').click();
+    cy.get('#loot-accordion').should('be.visible');
     cy.contains('select', 'Party');
   });
 
   it('delete a party member', () => {
+    // First add a member to delete
+    addPartyMember(memberId);
+
+    // Then delete the member
     cy.get('[data-cy=modal-party]').click();
-    cy.get(`[data-cy=${uid2}]`).click();
+    cy.get(`[data-cy=${memberId}]`).click();
     cy.get('[data-cy=delete-member]').click();
     cy.get('[data-cy=confirm-delete-member]').click();
     cy.get('[data-cy=modal-party]').click();

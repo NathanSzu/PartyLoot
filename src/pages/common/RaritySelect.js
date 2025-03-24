@@ -4,7 +4,7 @@ export default function RaritySelect({ itemData, setItemData, disabled = false }
   return (
     <select
       onChange={(e) => {
-        setItemData({ ...itemData, rarity: e.target.value });
+        setItemData('rarity', e.target.value );
       }}
       className='form-select'
       disabled={disabled}

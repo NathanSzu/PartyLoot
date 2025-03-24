@@ -25,6 +25,7 @@ describe('Item actions', () => {
     cy.get('[data-cy=edit-item]').click();
     cy.get('[data-cy=item-name]').type(' (edited)');
     cy.get('[data-cy=item-tags]').type(', valuable');
+    cy.get('[data-cy=rarity-select]').select('legendary');
     cy.get('[data-cy=save-item]').click();
     cy.contains('#loot-accordion', 'New item (edited)');
   });
