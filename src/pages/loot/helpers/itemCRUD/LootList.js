@@ -5,7 +5,14 @@ import HeldBySection from './HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
 import RarityBadge from './RarityBadge';
 import ItemTagDisplay from './ItemTagDisplay';
-export default function LootList({ lootArray }) {
+
+export default function LootList({ lootArray, isNested = false }) {
+  const getCollapseId = (itemId) => isNested ? `nestedCollapse${itemId}` : `collapse${itemId}`;
+  const getParentId = () => isNested ? '#container-accordion' : '#loot-accordion';
+  const getAccordionBodyClass = () => isNested 
+    ? 'accordion-body border-bottom border-start border-end border-white background-light rounded-bottom'
+    : 'accordion-body background-light rounded-bottom';
+
   return (
     <>
       {lootArray.map((item) => (
@@ -14,9 +21,9 @@ export default function LootList({ lootArray }) {
             <button
               className='rounded accordion-button accordion-button-loot accordion-icon-hide collapsed'
               data-bs-toggle='collapse'
-              data-bs-target={`#collapse${item.id}`}
+              data-bs-target={`#${getCollapseId(item.id)}`}
               aria-expanded='false'
-              aria-controls={`collapse${item.id}`}
+              aria-controls={getCollapseId(item.id)}
             >
               <Container>
                 <Row className='justify-content-end'>
@@ -33,12 +40,12 @@ export default function LootList({ lootArray }) {
             </button>
           </h2>
           <div
-            id={`collapse${item.id}`}
+            id={getCollapseId(item.id)}
             className='accordion-collapse collapse'
             aria-labelledby={`heading${item.id}`}
-            data-bs-parent='#loot-accordion'
+            data-bs-parent={getParentId()}
           >
-            <div className='accordion-body background-light rounded-bottom'>
+            <div className={getAccordionBodyClass()}>
               <Container>
                 <Row className='pt-1 pb-1'>
                   <Col className='d-flex align-items-center justify-content-between border-bottom border-dark px-0'>

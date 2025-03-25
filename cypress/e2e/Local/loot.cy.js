@@ -102,3 +102,52 @@ describe('Item actions', () => {
     loot.checkCurrencyValues(12345);
   });
 });
+
+describe.only('Search and filter functionality', () => {
+  beforeEach(() => {
+    cy.login();
+    cy.addGroup(uid);
+    cy.selectGroup(uid);
+  });
+
+  afterEach(() => {
+    cy.removeGroup(uid, uid2);
+    cy.contains(uid).should('not.exist');
+  });
+
+  it('search items by name', () => {
+    loot.addItem(1, 'Magic Sword');
+    loot.addItem(1, 'Healing Potion');
+
+    cy.get('[data-cy=search-input]').type('Magic');
+    cy.contains('.accordion-item', 'Magic Sword').should('exist');
+    cy.contains('.accordion-item', 'Healing Potion').should('not.exist');
+  });
+
+  it('search items by tag', () => {
+    loot.addItem(1, 'Magic Sword');
+    cy.contains('.accordion-item', 'Magic Sword').click();
+    cy.get('[data-cy=edit-item]').click();
+    cy.get('[data-cy=item-tags]').clear();
+    cy.get('[data-cy=save-item]').click();
+    loot.addItem(1, 'Healing Potion');
+    cy.get('[data-cy=search-input]').type('scroll');
+    cy.contains('.accordion-item', 'Healing Potion').should('exist');
+    cy.contains('.accordion-item', 'Magic Sword').should('not.exist');
+  });
+
+  it.only('search items by clicking tag button', () => {
+    loot.addItem(1, 'Magic Sword');
+    cy.contains('.accordion-item', 'Magic Sword').click();
+    cy.get('[data-cy=edit-item]').click();
+    cy.get('[data-cy=item-tags]').clear();
+    cy.get('[data-cy=save-item]').click();
+    loot.addItem(1, 'Healing Potion');
+    cy.contains('.accordion-item', 'Healing Potion').click();
+    cy.get('[data-cy=tag-button]').contains('scroll').click();
+    cy.contains('.accordion-item', 'Healing Potion').should('exist');
+    cy.contains('.accordion-item', 'Magic Sword').should('not.exist');
+  });
+});
+
+

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
-import NestedLootList from './NestedLootList';
+import LootList from '../itemCRUD/LootList';
 
 export default function ContainerListItem({ container }) {
   const { returnContainerItems, sortedLoot } = useContext(GroupContext);
@@ -46,7 +46,7 @@ export default function ContainerListItem({ container }) {
               </Row>
               <Row>
                 <div className='accordion accordion-flush p-0' id='container-accordion'>
-                  <NestedLootList lootArray={containerLoot} />
+                  <LootList lootArray={containerLoot} isNested={true} />
                 </div>
               </Row>
             </div>

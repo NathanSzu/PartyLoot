@@ -1,7 +1,7 @@
 let currencyKeys = ['currency1', 'currency2', 'currency3', 'currency4', 'currency5', 'currency6'];
 
-const fillItemFields = (qty) => {
-  cy.get('[data-cy="item-name"]').type('New item');
+const fillItemFields = (qty, itemName = 'New item') => {
+  cy.get('[data-cy="item-name"]').type(itemName);
   qty && cy.get('[data-cy="item-qty"]').type(qty);
   cy.get('[data-cy="charge"]').type(5);
   cy.get('[data-cy="charge-max"]').type(7);
@@ -10,11 +10,11 @@ const fillItemFields = (qty) => {
   cy.get('[data-cy="rarity-select"]').select('common');
 };
 
-const addItem = (qty) => {
+const addItem = (qty, itemName = 'New item') => {
   cy.get('[data-cy=add-item]').click();
-  fillItemFields(qty);
+  fillItemFields(qty, itemName);
   cy.get('[data-cy=create-item]').click();
-  cy.contains('#loot-accordion', 'New item');
+  cy.contains('#loot-accordion', itemName);
 };
 
 const fillSellFields = (qty) => {

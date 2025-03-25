@@ -26,6 +26,7 @@ const ItemTagDisplay = ({ itemTags, className = '' }) => {
       {badgeArray.map((badge, index) => (
         <button
           key={index}
+          data-cy='tag-button'
           className="btn btn-sm rounded-pill bg-dark text-white border-0 px-3 py-1 me-1 hover-opacity"
           onClick={() => handleBadgeClick(badge)}
           style={{

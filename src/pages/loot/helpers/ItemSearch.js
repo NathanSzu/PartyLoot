@@ -17,6 +17,7 @@ export default function ItemSearch() {
           <InputGroup>
             <Form.Control
               className='text-center'
+              data-cy='search-input'
               type='text'
               placeholder='Type to search items!'
               ref={searchRef}
