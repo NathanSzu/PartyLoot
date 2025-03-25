@@ -7,5 +7,5 @@ export default function RarityBadge({ itemRarity, bgColor='light', txtColor='tex
     return formattedRarity?.charAt(0).toUpperCase() + formattedRarity?.slice(1);
   };
 
-  return <>{itemRarity ? <Badge bg={bgColor} className={txtColor} pill>Item rarity: {formatRarity(itemRarity)}</Badge> : null}</>;
+  return <>{itemRarity ? <Badge bg={bgColor} className={txtColor} pill>Rarity: {formatRarity(itemRarity)}</Badge> : null}</>;
 }

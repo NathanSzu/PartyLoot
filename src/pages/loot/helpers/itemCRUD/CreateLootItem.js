@@ -260,7 +260,7 @@ export default function CreateLootItem({ item = '' }) {
                     <Col className='p-2 pt-0 border rounded'>
                       <FormLabel className='m-0 mt-1'>Container</FormLabel>
                       <ContainerSelect 
-                        setItemData={(value) => updateItemData('container', value)} 
+                        setItemData={updateItemData} 
                         itemData={formState.itemData} 
                       />
                     </Col>

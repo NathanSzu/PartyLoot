@@ -6,6 +6,7 @@ const createContainer = (containerName = name1) => {
   cy.get('[data-cy="create-container"]').click();
   openContainerModal();
   cy.contains('.modal-footer', containerName);
+  cy.closeDialog('create-container-form');
 };
 
 const openContainerModal = () => cy.get('[data-cy="container-modal"]').click();
@@ -23,7 +24,7 @@ const clearContainerFields = (containerName = name2) => {
 };
 
 const editContainer = (containerName = name1, containerName2 = name2) => {
-  openContainerFromList();
+  openContainerFromList(containerName);
   cy.contains('.modal-title', containerName);
   cy.get('[data-cy="container-name"]').should('have.value', containerName);
   cy.get('[data-cy="container-name"]').clear().type(containerName2);

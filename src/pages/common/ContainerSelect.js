@@ -7,7 +7,7 @@ export default function ContainerSelect({ itemData, setItemData, disabled = fals
   return (
     <select
       onChange={(e) => {
-        setItemData({ ...itemData, container: e.target.value });
+        setItemData('container', e.target.value );
       }}
       className='form-select'
       disabled={disabled}
