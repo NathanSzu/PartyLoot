@@ -4,7 +4,7 @@ import CreateLootItem from '../itemCRUD/CreateLootItem';
 import HeldBySection from '../itemCRUD/HeldBySection';
 import QuillDisplay from '../../../common/QuillDisplay';
 import RarityBadge from '../itemCRUD/RarityBadge';
-
+import ItemTagDisplay from '../itemCRUD/ItemTagDisplay';
 export default function NestedLootList({ lootArray }) {
 
   return (
@@ -44,11 +44,10 @@ export default function NestedLootList({ lootArray }) {
                 <Row className='pt-1 pb-1'>
                   <Col className='d-flex align-items-center justify-content-between border-bottom border-dark px-0'>
                     <h2 className='fancy-font fs-sm-deco m-0'>Description</h2>
-                    <RarityBadge itemRarity={item?.rarity} />
                   </Col>
                   {item.currCharges && item.maxCharges && (
                     <Col className='d-flex align-items-center border-bottom border-dark pl-0'>
-                      <h2 className='fancy-font fs-sm-deco mb-1 mt-1'>
+                      <h2 className='fancy-font fs-sm-deco mb-1 mt-1 ms-auto'>
                         {item.currCharges} / {item.maxCharges} <img alt='Charges' src='APPIcons/charge.svg' />
                       </h2>
                     </Col>
@@ -60,7 +59,13 @@ export default function NestedLootList({ lootArray }) {
 
                 <Row>
                   <Col className='p-0'>
+                    <RarityBadge itemRarity={item?.rarity} />
                     <QuillDisplay className='p-0' value={item?.itemDesc} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='p-0'>
+                    <ItemTagDisplay itemTags={item?.itemTags} />
                   </Col>
                 </Row>
 

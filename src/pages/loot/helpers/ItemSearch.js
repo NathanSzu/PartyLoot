@@ -1,5 +1,5 @@
 import React, { useRef, useContext } from 'react';
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 
 export default function ItemSearch() {
@@ -14,15 +14,28 @@ export default function ItemSearch() {
     >
       <Row>
         <Col xs={12}>
-          <Form.Control
-            className='text-center'
-            type='text'
-            placeholder='Type to search items!'
-            ref={searchRef}
-            onChange={() => {
-              setItemQuery({ ...itemQuery, searchQuery: searchRef.current.value });
-            }}
-          ></Form.Control>
+          <InputGroup>
+            <Form.Control
+              className='text-center'
+              type='text'
+              placeholder='Type to search items!'
+              ref={searchRef}
+              value={itemQuery.searchQuery}
+              onChange={() => {
+                setItemQuery({ ...itemQuery, searchQuery: searchRef.current.value });
+              }}
+            />
+            {itemQuery.searchQuery && (
+              <InputGroup.Text 
+                as="button" 
+                type="button"
+                onClick={() => setItemQuery({ ...itemQuery, searchQuery: '' })}
+                style={{ cursor: 'pointer' }}
+              >
+                ×
+              </InputGroup.Text>
+            )}
+          </InputGroup>
         </Col>
       </Row>
     </Form>
