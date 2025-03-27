@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 const ItemTagDisplay = ({ itemTags, className = '' }) => {
@@ -24,20 +25,16 @@ const ItemTagDisplay = ({ itemTags, className = '' }) => {
   return (
     <div className={`d-flex flex-wrap gap-1 ${className}`}>
       {badgeArray.map((badge, index) => (
-        <button
+        <Button
           key={index}
           data-cy='tag-button'
-          className="btn btn-sm rounded-pill bg-dark text-white border-0 px-3 py-1 me-1 hover-opacity"
+          variant="dark"
+          size="sm"
+          className="rounded-pill px-3 py-1 me-1 mt-1"
           onClick={() => handleBadgeClick(badge)}
-          style={{
-            transition: 'opacity 0.2s ease-in-out',
-            cursor: 'pointer'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
-          onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
         >
           {badge}
-        </button>
+        </Button>
       ))}
     </div>
   );

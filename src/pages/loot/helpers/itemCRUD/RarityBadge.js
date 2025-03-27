@@ -1,11 +1,11 @@
 import React from 'react';
-import { Badge } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
-export default function RarityBadge({ itemRarity, bgColor='light', txtColor='text-secondary' }) {
+export default function RarityBadge({ itemRarity, variant='light' }) {
   const formatRarity = (itemRarity) => {
     let formattedRarity = itemRarity.toLowerCase();
     return formattedRarity?.charAt(0).toUpperCase() + formattedRarity?.slice(1);
   };
 
-  return <>{itemRarity ? <Badge bg={bgColor} className={txtColor} pill>Rarity: {formatRarity(itemRarity)}</Badge> : null}</>;
+  return <>{itemRarity ? <Button disabled variant={variant} className='rounded-pill my-1 border-0' size="sm">Rarity: {formatRarity(itemRarity)}</Button> : null}</>;
 }

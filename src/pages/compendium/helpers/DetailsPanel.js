@@ -68,7 +68,7 @@ export function DetailsPanel({ item, getCompendium }) {
             <>
               <Row className='border-bottom'>
                 <Col>
-                  <RarityBadge itemRarity={item?.rarity} bgColor='secondary' txtColor='text-light' />
+                  <RarityBadge itemRarity={item?.rarity} variant='dark' />
                 </Col>
                 <Col xs={12}>
                   <QuillDisplay value={item?.itemDesc} />
