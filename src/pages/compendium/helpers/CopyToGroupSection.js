@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
@@ -6,7 +6,7 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import fb from 'firebase';
 
-export default function CopyToGroupSection({ item }) {
+export default function CopyToGroupSection({ itemName, itemDesc, item }) {
   const { groupList, groups } = useContext(GroupContext);
   const { writeHistoryEvent, setToastHeader, setToastContent, setShowToast } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
@@ -18,16 +18,14 @@ export default function CopyToGroupSection({ item }) {
   const groupLootRef = groups.doc(group || 'null').collection('loot');
 
   const handleSaveToGroup = () => {
-    let itemName = item.itemName || item.name;
-    let itemDesc = item.itemDesc || item.desc || '';
-    let rarity = item?.rarity?.toLowerCase() || '';
     setLoading(true);
     groupLootRef
       .add({
         itemName,
         itemQty: 1,
         itemDesc,
-        rarity,
+        rarity: item.rarity.toLowerCase(),
+        type: item.type,
         ownerId: owner || 'party',
         created: fb.firestore.FieldValue.serverTimestamp(),
       })

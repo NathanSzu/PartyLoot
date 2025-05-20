@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Col } from 'react-bootstrap';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 
-export default ({ itemDesc, setItemDesc, placeholder = 'Item description' }) => {
+export default ({ itemDesc, setItemDesc, placeholder = 'Item description', onShowModalChange }) => {
   const modules = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -20,12 +20,12 @@ export default ({ itemDesc, setItemDesc, placeholder = 'Item description' }) => 
   useEffect(() => {
     // Docs available at https://www.npmjs.com/package/react-quilljs
     if (quill) {
-      itemDesc && quill.clipboard.dangerouslyPasteHTML(itemDesc);
+      quill.clipboard.dangerouslyPasteHTML(itemDesc);
       quill.on('text-change', (delta, oldDelta, source) => {
         setItemDesc(quill.root.innerHTML);
       });
     }
-  }, [quill]);
+  }, [quill, onShowModalChange]);
 
   return (
     <Col xs={12}>

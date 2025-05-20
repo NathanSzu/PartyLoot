@@ -105,7 +105,6 @@ export default function CreateLootItem({ item = '' }) {
     setFormState(prev => ({ ...prev, loading: true }));
   
     try {
-      console.log(item.id)
       await updateLootItem(formState.itemData, currentGroup, item.id);
       handleClose();
     } catch (error) {
