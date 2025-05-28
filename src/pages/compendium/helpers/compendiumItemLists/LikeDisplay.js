@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { AuthContext } from '../../../../utils/contexts/AuthContext';
 import { isLiked, addLike, removeLike } from '../../../../controllers/compendiumController';
@@ -49,17 +49,15 @@ export function LikeDisplay({ item }) {
     <>
       {item?.id && (
         <p className='m-0'>
-          <Button
-            disabled={loading}
-            variant='link text-decoration-none text-dark px-0 pt-1 pb-0'
-            onClick={() => setLikeStatus()}
-          >
+          <Button disabled={loading} variant='link text-decoration-none text-dark p-0' onClick={() => setLikeStatus()}>
             {fill === 'solid' ? (
-              <img src='APPIcons/heart-fill.svg' alt="Liked" width="16" height="16" />
+              <img src='APPIcons/heart-fill.svg' alt='Liked' width='16' height='16' />
             ) : (
-              <img src='APPIcons/heart.svg' alt="Not Liked" width="16" height="16" />
-            )} {item?.likeCount || 0}
+              <img src='APPIcons/heart.svg' alt='Not Liked' width='16' height='16' />
+            )}
+            {item?.likeCount || 0}
           </Button>
+          {!item?.published && <span class='badge rounded-pill bg-warning ms-2 text-dark'>Unpublished</span>}
         </p>
       )}
     </>

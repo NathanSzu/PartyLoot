@@ -293,7 +293,7 @@ export function DiscoveryForm({ item, showModal, handleCloseModal, setQueryParam
                 className='btn btn-warning w-100'
                 type='button'
                 onClick={() => saveDiscovery()}
-                data-cy={`compendium-save-draft${item?.itemName && item?.itemName}`}
+                data-cy={`compendium-save-draft-${item?.itemName && item?.itemName}`}
               >
                 Save draft
               </button>

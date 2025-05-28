@@ -38,3 +38,9 @@ Cypress.Commands.add('removeGroup', (uid = 'Cool group', uid2 = 'Cool group #2')
   cy.contains('button', uid).should('not.exist');
   cy.contains('button', uid2).should('not.exist');
 });
+
+Cypress.Commands.add('checkToastAndDismiss', (headerText, bodyText) => {
+  cy.contains('.toast-header', headerText).should('be.visible');
+  cy.contains('.toast-body', bodyText).should('be.visible');
+  cy.get('[data-dismiss="toast"]').click();
+});

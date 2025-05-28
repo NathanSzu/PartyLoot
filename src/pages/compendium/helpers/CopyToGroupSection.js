@@ -6,7 +6,7 @@ import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import fb from 'firebase';
 
-export default function CopyToGroupSection({ itemName, itemDesc, item }) {
+export default function CopyToGroupSection({ itemName, itemDesc, item, handleClose }) {
   const { groupList, groups } = useContext(GroupContext);
   const { writeHistoryEvent, setToastHeader, setToastContent, setShowToast } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
@@ -33,6 +33,7 @@ export default function CopyToGroupSection({ itemName, itemDesc, item }) {
         setToastHeader('Item copied to group');
         setToastContent(`${itemName} has been saved to your group`);
         setShowToast(true);
+        handleClose();
 
         let historyData = {
           itemName,
@@ -96,6 +97,7 @@ export default function CopyToGroupSection({ itemName, itemDesc, item }) {
             type='submit'
             className='btn btn-primary background-dark'
             onClick={handleSaveToGroup}
+            data-cy='save-to-group'
           >
             Save
           </Button>

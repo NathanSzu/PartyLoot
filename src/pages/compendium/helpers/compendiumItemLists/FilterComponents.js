@@ -73,7 +73,11 @@ export function FilterComponent({ queryParams, onFilterChange, isCompendium, set
             data-bs-parent='#filterAccordion'
           >
             <div className='accordion-body p-3 background-light'>
-              <form>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <Row>
                   <div className='col-12 px-1'>
                     <input
@@ -110,6 +114,7 @@ export function FilterComponent({ queryParams, onFilterChange, isCompendium, set
                         onClick={() => {
                           onFilterChange({ target: { name: 'creatorId', value: currentUser.uid } });
                         }}
+                        data-cy='show-my-entries'
                       >
                         Show my entries
                       </Button>

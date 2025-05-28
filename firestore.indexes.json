@@ -19,12 +19,112 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "creatorId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "creatorId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "rarity",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "creatorId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "type",
           "order": "ASCENDING"
         },
         {
           "fieldPath": "itemNameLower",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "published",
           "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "published",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "published",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "rarity",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "published",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "DESCENDING"
         }
       ]
     },
@@ -37,6 +137,10 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "creatorId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "itemNameLower",
           "order": "ASCENDING"
         }
@@ -46,10 +150,6 @@
       "collectionGroup": "compendium",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "type",
-          "order": "ASCENDING"
-        },
         {
           "fieldPath": "rarity",
           "order": "ASCENDING"
@@ -83,6 +183,24 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "itemNameLower",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "compendium",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "rarity",
           "order": "ASCENDING"
         },
@@ -106,10 +224,6 @@
         },
         {
           "fieldPath": "rarity",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "creatorId",
           "order": "ASCENDING"
         },
         {
@@ -152,6 +266,20 @@
       "fields": [
         {
           "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "metadata",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "metadataCategory",
           "order": "ASCENDING"
         },
         {

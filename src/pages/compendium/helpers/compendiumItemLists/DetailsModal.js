@@ -12,7 +12,7 @@ export function CompendiumDetailsModal({ itemId, itemName, itemDesc, item }) {
   return (
     <>
       <Col>
-        <Button className='background-dark w-100' variant='dark' onClick={handleShow}>
+        <Button className='background-dark w-100' variant='dark' onClick={handleShow} data-cy={`compendium-details-${itemName}`}>
           <img src='/APPIcons/eye-fill.svg' alt='View Icon' />
         </Button>
       </Col>
@@ -46,7 +46,7 @@ export function CompendiumDetailsModal({ itemId, itemName, itemDesc, item }) {
             </Col>
           </Row>
           <Row className='border-bottom pb-3'>
-            <CopyToGroupSection itemName={itemName} itemDesc={itemDesc} item={item} />
+            <CopyToGroupSection itemName={itemName} itemDesc={itemDesc} item={item} handleClose={handleClose} />
           </Row>
         </Modal.Body>
       </Modal>
