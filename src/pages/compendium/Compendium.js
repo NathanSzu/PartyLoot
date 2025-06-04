@@ -17,10 +17,10 @@ export default function Compendium() {
         onSelect={(k) => setKey(k)}
         className='background-light pe-0 pt-2'
       >
-        <Tab eventKey='ogl' title='Open Source Content'>
+        <Tab eventKey='ogl' title='OGL Content'>
           <CompendiumList searchItems={searchMagicItems} />
         </Tab>
-        <Tab eventKey='community' title='Community Homebrew'>
+        <Tab eventKey='community' title='Homebrew'>
           <CompendiumList searchItems={searchCompendium} isCompendium={true} />
         </Tab>
       </Tabs>

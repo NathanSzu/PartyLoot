@@ -295,7 +295,7 @@ export function DiscoveryForm({ item, showModal, handleCloseModal, setQueryParam
                 onClick={() => saveDiscovery()}
                 data-cy={`compendium-save-draft-${item?.itemName && item?.itemName}`}
               >
-                Save draft
+                Save
               </button>
             </div>
             <div className='col'>

@@ -3,7 +3,7 @@ import { Button, Col, Row, Modal } from 'react-bootstrap';
 import QuillDisplay from '../../../common/QuillDisplay';
 import CopyToGroupSection from '../CopyToGroupSection';
 
-export function CompendiumDetailsModal({ itemId, itemName, itemDesc, item }) {
+export function CompendiumDetailsModal({ itemName, itemDesc, item }) {
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
@@ -12,7 +12,12 @@ export function CompendiumDetailsModal({ itemId, itemName, itemDesc, item }) {
   return (
     <>
       <Col>
-        <Button className='background-dark w-100' variant='dark' onClick={handleShow} data-cy={`compendium-details-${itemName}`}>
+        <Button
+          className='background-dark w-100'
+          variant='dark'
+          onClick={handleShow}
+          data-cy={`compendium-details-${itemName}`}
+        >
           <img src='/APPIcons/eye-fill.svg' alt='View Icon' />
         </Button>
       </Col>
@@ -21,6 +26,16 @@ export function CompendiumDetailsModal({ itemId, itemName, itemDesc, item }) {
           <Modal.Title className='fancy-font fs-md-deco'>{itemName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {item.document__title && (
+            <Row className='text-start pb-3'>
+              <span>
+                Source:{' '}
+                <a href={item.document__url} target='_blank' rel='noopener noreferrer'>
+                  {item.document__title}
+                </a>
+              </span>
+            </Row>
+          )}
           <Row className='border-bottom'>
             <Col xs={12}>
               <QuillDisplay value={itemDesc} />

@@ -100,21 +100,6 @@ export const GlobalFeaturesProvider = ({ children }) => {
       );
   };
 
-  const formatItemDescription = (selection) => {
-    if (selection?.itemDesc) return selection.itemDesc;
-    if (selection?.desc) {
-      let modifiedStr = selection.desc
-        .replace(/(\*\*_)/g, '</p><p><strong>')
-        .replace(/(_\*\*)/g, '</strong>')
-        .replace(/( _)/g, ' <u>')
-        .replace(/(_ )/g, '</u> ')
-        .replace(/(_.)/g, '</u> ')
-        .replace(/( - )/g, '<br>- ');
-
-      return `<p><em>${selection.type} ${selection.requires_attunement}</em></p><p>${modifiedStr}</p>`;
-    }
-  };
-
   const checkLocalStorage = (key, set = false) => {
     let localStoragePLT = localStorage.getItem('plt');
     let storageObj = JSON.parse(localStoragePLT) || {};
@@ -151,7 +136,6 @@ export const GlobalFeaturesProvider = ({ children }) => {
         setExpandNavbar,
         setToastHeader,
         writeHistoryEvent,
-        formatItemDescription,
         checkLocalStorage,
         clearLocalStorageItems
       }}
