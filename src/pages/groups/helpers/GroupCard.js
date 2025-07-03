@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import EditGroup from './EditGroup';
+import GroupIcon from '../../../assets/GroupIcon';
 
-export default function GroupCard({ group, idx }) {
+export default function GroupCard({ group }) {
   const { setCurrentGroup } = useContext(GroupContext);
-
   const navigate = useNavigate();
 
   const handleSelectGroup = (groupId) => {
@@ -15,26 +14,39 @@ export default function GroupCard({ group, idx }) {
   };
 
   return (
-    <Row key={idx} className='border-top border-dark background-light mx-1 rounded' data-cy='group-card'>
-      <Col className='groups-overflow px-3 py-2'>
-        <span className='fancy-font fs-md-deco'>{group?.groupName}</span>
-      </Col>
-      <Col xs={3} className='auto d-flex align-items-center'>
-        <div className='vstack gap-1 col-md-5 mx-auto my-2'>
-          <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
-
-          <Button
-            disabled={!group}
-            id={group?.id}
-            data-cy='view-group'
-            onClick={(e) => {
-              handleSelectGroup(e.target.id);
-            }}
-          >
-            View
-          </Button>
+    <div className='card mb-2 background-light'>
+      <div className='row g-0'>
+        <div className='col-2 d-flex align-items-center justify-content-center p-1 background-white rounded-start'>
+          <GroupIcon id={group?.icon?.id} fill={group?.icon?.fill} />
         </div>
-      </Col>
-    </Row>
+        <div className='col'>
+          <div className='card-body'>
+            <h5 className='card-title fancy-font fs-md-deco'>{group?.groupName}</h5>
+            <p className='card-text'>
+              <small className='text-body-secondary'>
+                {group?.members.length} member{group?.members.length > 1 && 's'}
+              </small>
+            </p>
+          </div>
+        </div>
+        <div className='col-3 col-sm-2 d-flex align-items-center'>
+          <div className='vstack gap-1 col-md-5 m-2'>
+            <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
+            <button
+              type='button'
+              className='btn btn-primary'
+              disabled={!group}
+              id={group?.id}
+              data-cy='view-group'
+              onClick={(e) => {
+                handleSelectGroup(e.target.id);
+              }}
+            >
+              <img alt='View Group' src='/APPIcons/eye-fill.svg' />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

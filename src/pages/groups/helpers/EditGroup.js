@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
 import fb from 'firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
