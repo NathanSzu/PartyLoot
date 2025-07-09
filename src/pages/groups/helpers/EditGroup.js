@@ -1,132 +1,55 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
-import fb from 'firebase';
-import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { getGroupMembers, editGroup, deleteGroup, addMember, removeMember } from '../../../controllers/groupController';
+import GroupIcon from '../../../assets/GroupIcon';
 
-export default function EditGroup({ name, id, owner, members }) {
-  const { currentUser, db } = useContext(AuthContext);
-  const { groups } = useContext(GroupContext);
+export default function EditGroup({ group }) {
+  const { groupName, id, owner, members } = group;
+  const { currentUser } = useContext(AuthContext);
+  const isOwner = currentUser.uid === owner;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    setFalse();
+    resetState();
     setShow(true);
   };
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-  const [leaveConfirmation, setLeaveConfirmation] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [confirming, setConfirming] = useState(false);
 
-  const getGroupMembers = async () => {
-    setLoading(true);
-    await db
-      .collection('users')
-      .where(fb.firestore.FieldPath.documentId(), 'in', members)
-      .onSnapshot((querySnapshot) => {
-        let results = [];
-        querySnapshot.forEach((doc) => {
-          results.push({
-            ...doc.data(),
-            id: doc.id,
-          });
-        });
-        setGroupMembers(results);
-      });
-    setLoading(false);
-  };
-
-  const nameRef = useRef();
-  const memberRef = useRef();
+  const [formState, setFormState] = useState({
+    groupName: groupName || '',
+    icon: {
+      id: group.icon?.id || 1,
+      color: group.icon?.color || '#000000',
+    },
+  });
 
   useEffect(() => {
-    getGroupMembers();
+    getGroupMembers(members, setGroupMembers, setLoading);
   }, [members]);
 
-  const setFalse = () => {
-    setDeleteConfirmation(false);
-    setLeaveConfirmation(false);
+  const resetState = () => {
+    setConfirming(false);
     setAlert(null);
   };
 
-  const editGroup = () => {
-    if (nameRef.current.value === name || !nameRef.current.value) return;
-    setLoading(true);
-    groups
-      .doc(id)
-      .update({
-        groupName: nameRef.current.value,
-      })
-      .then(() => {
-        handleClose();
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error updating document: ', error);
-      });
+  const memberRef = useRef();
+
+  const handleDelete = () => {
+    confirming ? deleteGroup(currentUser, owner, setLoading, id, handleClose) : setConfirming(true);
   };
 
-  const deleteGroup = async () => {
-    if (currentUser.uid !== owner) return;
-    setLoading(true);
-    await fetch(process.env.REACT_APP_DELETE_GROUP_URL, {
-      method: 'POST',
-      body: id,
-    });
-    handleClose();
-    setLoading(false);
-  };
-
-  const addMember = () => {
-    if (!memberRef.current.value) return;
-    if (groupMembers.length > 9) {
-      setAlert('No more than 10 members can be added');
-      return;
-    }
-    setLoading(true);
-    db.collection('users')
-      .where('code', '==', memberRef.current.value.toUpperCase())
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          setAlert('User not found!');
-        } else {
-          querySnapshot.forEach((doc) => {
-            groups.doc(id).update({
-              members: fb.firestore.FieldValue.arrayUnion(doc.id),
-            });
-          });
-          memberRef.current.value = '';
-          setFalse();
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error getting user: ', error);
-      });
-  };
-
-  const removeMember = (uid, close = false) => {
-    setLoading(true);
-    groups
-      .doc(id)
-      .update({
-        members: fb.firestore.FieldValue.arrayRemove(uid),
-      })
-      .then(() => {
-        close && handleClose();
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error removing member: ', error);
-      });
+  const handleLeave = () => {
+    confirming ? removeMember(id, currentUser.uid, setLoading, handleClose, true) : setConfirming(true);
   };
 
   return (
     <>
       <Button
-        disabled={!name}
+        disabled={!groupName}
         variant='dark'
         className=' background-dark border-0'
         onClick={() => {
@@ -137,43 +60,105 @@ export default function EditGroup({ name, id, owner, members }) {
         <img alt='Edit Group' src='/APPIcons/gear-fill.svg'></img>
       </Button>
 
-      <Modal
-        show={show}
-        onHide={() => {
-          handleClose();
-          setFalse();
-        }}
-      >
+      <Modal show={show} onHide={() => handleClose()}>
         <div className='rounded'>
           <Form onSubmitCapture={(e) => e.preventDefault()}>
             <Modal.Header closeButton>
               <Modal.Title className='groups-overflow'>
-                {currentUser.uid === owner ? 'Edit: ' : null} {name}
+                {isOwner ? 'Edit: ' : null} {groupName}
               </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
               <Form.Group controlId='groupName' className='m-0'>
+                <Form.Label>Group name</Form.Label>
                 <Form.Control
-                  ref={nameRef}
-                  disabled={currentUser.uid === owner ? false : true}
+                  disabled={!isOwner}
                   type='text'
-                  defaultValue={name}
+                  value={formState.groupName}
+                  onChange={(e) =>
+                    setFormState((prev) => ({
+                      ...prev,
+                      groupName: e.target.value,
+                    }))
+                  }
                   data-cy='edit-group-name'
                 />
               </Form.Group>
+
+              {isOwner && (
+                <div className='d-flex border rounded mt-2 align-items-center'>
+                  <Col
+                    xs={3}
+                    className='text-center border-end d-flex flex-column justify-content-center'
+                    style={{ maxHeight: 86 }}
+                  >
+                    <GroupIcon id={formState.icon.id} fillColor={formState.icon.color} />
+                  </Col>
+                  <Col className='d-flex align-items-center'>
+                    <Form.Group controlId='groupIcon' className='mb-0 w-100'>
+                      <div className='d-flex align-items-center text-end'>
+                        <Form.Label className='mb-0 me-2' style={{ minWidth: 45 }}>
+                          Icon
+                        </Form.Label>
+                        <Form.Control
+                          className='w-100'
+                          type='number'
+                          min={1}
+                          max={28}
+                          value={formState.icon.id}
+                          disabled={!isOwner}
+                          onChange={(e) =>
+                            setFormState((prev) => ({
+                              ...prev,
+                              icon: { ...prev.icon, id: Number(e.target.value) },
+                            }))
+                          }
+                          data-cy='edit-group-icon'
+                          style={{ width: 70 }}
+                        />
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  <Col className='d-flex align-items-center text-end'>
+                    <Form.Group controlId='iconColor' className='mb-0 w-100'>
+                      <div className='d-flex align-items-center pe-3'>
+                        <Form.Label className='mb-0 me-2' style={{ minWidth: 45 }}>
+                          Color
+                        </Form.Label>
+                        <Form.Control
+                          className='w-100'
+                          type='color'
+                          value={formState.icon.color}
+                          disabled={!isOwner}
+                          onChange={(e) =>
+                            setFormState((prev) => ({
+                              ...prev,
+                              icon: { ...prev.icon, color: e.target.value },
+                            }))
+                          }
+                          data-cy='edit-icon-color'
+                          style={{ width: 50, height: 38, padding: 0, border: 'none', background: 'none' }}
+                        />
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </div>
+              )}
             </Modal.Body>
 
             <Modal.Footer className='justify-content-between border-0 pt-0'>
-              {deleteConfirmation ? (
+              {confirming && (
                 <Col xs={12} className='p-0'>
                   <Alert key='danger' variant='danger' className='w-100'>
-                    Be careful! Delete will permanently remove all group members and data.
+                    {isOwner
+                      ? 'Be careful! Delete will permanently remove all group members and data.'
+                      : 'Are you sure you want to leave this group?'}
                   </Alert>
                 </Col>
-              ) : null}
+              )}
 
-              {currentUser.uid === owner && (
+              {isOwner && (
                 <Button
                   as='input'
                   value='Save'
@@ -181,36 +166,28 @@ export default function EditGroup({ name, id, owner, members }) {
                   variant='dark'
                   className='background-dark border-0'
                   type='button'
-                  onClick={() => editGroup()}
+                  onClick={() => editGroup(id, formState, handleClose, setLoading)}
                 />
               )}
 
-              {currentUser.uid === owner ? (
-                <Button
-                  as='input'
-                  value={deleteConfirmation ? "Yes, I'm sure. Delete!" : 'Delete'}
-                  disabled={loading}
-                  variant='danger'
-                  className='background-danger border-0'
-                  type='button'
-                  onClick={() => {
-                    deleteConfirmation ? deleteGroup() : setDeleteConfirmation(true);
-                  }}
-                  data-cy={deleteConfirmation ? 'confirm-delete' : 'delete'}
-                />
-              ) : (
-                <Button
-                  as='input'
-                  value={leaveConfirmation ? "Yes, I'm sure. Leave Group!" : 'Leave Group'}
-                  disabled={loading}
-                  variant='danger'
-                  className='background-danger border-0'
-                  type='button'
-                  onClick={() => {
-                    leaveConfirmation ? removeMember(currentUser.uid, true) : setLeaveConfirmation(true);
-                  }}
-                />
-              )}
+              <Button
+                as='input'
+                value={
+                  isOwner
+                    ? confirming
+                      ? "Yes, I'm sure. Delete!"
+                      : 'Delete'
+                    : confirming
+                    ? "Yes, I'm sure. Leave Group!"
+                    : 'Leave Group'
+                }
+                disabled={loading}
+                variant='danger'
+                className='background-danger border-0'
+                type='button'
+                onClick={isOwner ? handleDelete : handleLeave}
+                data-cy={isOwner ? (confirming ? 'confirm-delete' : 'delete') : undefined}
+              />
             </Modal.Footer>
           </Form>
 
@@ -227,7 +204,7 @@ export default function EditGroup({ name, id, owner, members }) {
                 <Container key={idx}>
                   <Row className='p-2'>
                     <Col>{member.displayName}</Col>
-                    {currentUser.uid === owner ? (
+                    {isOwner ? (
                       <Col xs='auto'>
                         <Button
                           disabled={loading}
@@ -236,7 +213,7 @@ export default function EditGroup({ name, id, owner, members }) {
                           id={member.id}
                           type='button'
                           onClick={(e) => {
-                            removeMember(e.target.id);
+                            removeMember(id, e.target.id, setLoading, handleClose);
                           }}
                           data-cy='remove-member'
                         >
@@ -248,7 +225,7 @@ export default function EditGroup({ name, id, owner, members }) {
                 </Container>
               ))}
 
-          {currentUser.uid === owner && (
+          {isOwner && (
             <>
               <Modal.Header>
                 <Modal.Title>Add Members</Modal.Title>
@@ -275,7 +252,7 @@ export default function EditGroup({ name, id, owner, members }) {
                         type='button'
                         onClick={(e) => {
                           e.preventDefault();
-                          addMember();
+                          addMember(memberRef, groupMembers, setAlert, setLoading, id, resetState);
                         }}
                         data-cy='add-member'
                       >

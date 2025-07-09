@@ -17,7 +17,7 @@ export default function GroupCard({ group }) {
     <div className='card mb-2 background-light'>
       <div className='row g-0'>
         <div className='col-2 d-flex align-items-center justify-content-center p-1 background-white rounded-start'>
-          <GroupIcon id={group?.icon?.id} fill={group?.icon?.fill} />
+          <GroupIcon id={group?.icon?.id} fillColor={group?.icon?.color} />
         </div>
         <div className='col'>
           <div className='card-body'>
@@ -31,7 +31,7 @@ export default function GroupCard({ group }) {
         </div>
         <div className='col-3 col-sm-2 d-flex align-items-center'>
           <div className='vstack gap-1 col-md-5 m-2'>
-            <EditGroup name={group.groupName} id={group.id} owner={group.owner} members={group.members} />
+            <EditGroup group={group} />
             <button
               type='button'
               className='btn btn-primary'
