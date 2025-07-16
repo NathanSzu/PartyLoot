@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Row, Col, Spinner, Container, Navbar } from 'react-bootstrap';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
@@ -35,24 +35,18 @@ export default function Groups() {
           ) : (
             <>
               {
-                <Col className='d-none top-0 d-lg-block mx-auto'>
-                  <div className='py-3 position-fixed background-light rounded bs-fixed-col'>
-                    <Container>
-                      <Row>
-                        <Col xs={4} xl={5}>
-                          <img src='/PWAIcons/PL_512.png' className='img-fluid rounded' alt='...' />
-                        </Col>
-                        <Col xs={8} xl={7} className='d-flex align-items-center'>
-                          <div className='w-100 text-center'>
-                            <h1 className='fs-md-deco'>Welcome to Party Loot</h1>
-                            <div className='w-75 mx-auto'>
-                              <ButtonShareLink />
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Container>
-                  </div>
+                <Col lg={4} className='d-none top-0 d-lg-block mx-auto'>
+                  <Container>
+                    <Row>
+                      <Col xs={12} className='p-0'>
+                        <img src='/PWAIcons/PL_512.png' alt='Party Loot' className='rounded-top mw-100' />
+                      </Col>
+                      <Col xs={12} className='text-center rounded-bottom py-3 mt-auto background-light'>
+                        <h1 className='fs-md-deco text-dark'>Welcome to Party Loot</h1>
+                        <ButtonShareLink width='' />
+                      </Col>
+                    </Row>
+                  </Container>
                 </Col>
               }
               <Col>

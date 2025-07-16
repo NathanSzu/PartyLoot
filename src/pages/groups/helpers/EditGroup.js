@@ -1,5 +1,5 @@
 import { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, Container, Alert } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Alert, ListGroup } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { getGroupMembers, editGroup, deleteGroup, addMember, removeMember } from '../../../controllers/groupController';
 import GroupIcon from '../../../assets/GroupIcon';
@@ -145,6 +145,81 @@ export default function EditGroup({ group }) {
                   </Col>
                 </div>
               )}
+
+              <Form.Label className='pt-3'>Group members</Form.Label>
+
+              <ListGroup className='mt-1'>
+                {groupMembers &&
+                  groupMembers.map((member) => (
+                    <ListGroup.Item
+                      key={member.id}
+                      className='d-flex justify-content-between align-items-center'
+                      variant={member.id === currentUser.uid ? 'secondary' : undefined}
+                    >
+                      <span>
+                        {member.displayName}
+                        {member.id === currentUser.uid && ' (You)'}
+                      </span>
+                      {isOwner && member.id !== currentUser.uid && (
+                        <Button
+                          disabled={loading}
+                          variant='danger'
+                          className='background-danger'
+                          id={member.id}
+                          type='button'
+                          onClick={(e) => {
+                            removeMember(id, e.target.id, setLoading, handleClose);
+                          }}
+                          data-cy='remove-member'
+                          size='sm'
+                        >
+                          <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg' />
+                        </Button>
+                      )}
+                    </ListGroup.Item>
+                  ))}
+
+                {isOwner && (
+                  <ListGroup.Item>
+                    <Form className='w-100' onSubmitCapture={(e) => e.preventDefault()}>
+                      <Row>
+                        <Col>
+                          <Form.Group controlId='addMember'>
+                            <Form.Control
+                              ref={memberRef}
+                              type='text'
+                              placeholder='Enter group code'
+                              data-cy='enter-group-code'
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col xs={2} className='ps-0 text-end'>
+                          <Button
+                            disabled={loading}
+                            variant='dark'
+                            className='background-dark'
+                            type='button'
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addMember(memberRef, groupMembers, setAlert, setLoading, id, resetState);
+                            }}
+                            data-cy='add-member'
+                          >
+                            <img alt='Add Group Member' src='/APPIcons/add-user.svg' />
+                          </Button>
+                        </Col>
+                        <Col xs={12}>
+                          {alert && (
+                            <Alert variant='warning' className='mt-3 py-2'>
+                              {alert}
+                            </Alert>
+                          )}
+                        </Col>
+                      </Row>
+                    </Form>
+                  </ListGroup.Item>
+                )}
+              </ListGroup>
             </Modal.Body>
 
             <Modal.Footer className='justify-content-between border-0 pt-0'>
@@ -190,83 +265,6 @@ export default function EditGroup({ group }) {
               />
             </Modal.Footer>
           </Form>
-
-          {groupMembers.length > 1 && (
-            <Modal.Header>
-              <Modal.Title>Members</Modal.Title>
-            </Modal.Header>
-          )}
-
-          {groupMembers &&
-            groupMembers
-              .filter((member) => member.id !== currentUser.uid)
-              .map((member, idx) => (
-                <Container key={idx}>
-                  <Row className='p-2'>
-                    <Col>{member.displayName}</Col>
-                    {isOwner ? (
-                      <Col xs='auto'>
-                        <Button
-                          disabled={loading}
-                          variant='danger'
-                          className='background-danger border-0'
-                          id={member.id}
-                          type='button'
-                          onClick={(e) => {
-                            removeMember(id, e.target.id, setLoading, handleClose);
-                          }}
-                          data-cy='remove-member'
-                        >
-                          <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg'></img>
-                        </Button>
-                      </Col>
-                    ) : null}
-                  </Row>
-                </Container>
-              ))}
-
-          {isOwner && (
-            <>
-              <Modal.Header>
-                <Modal.Title>Add Members</Modal.Title>
-              </Modal.Header>
-              <Form className='w-100 mt-3' onSubmitCapture={(e) => e.preventDefault()}>
-                <Container>
-                  <Row className='p-2'>
-                    <Col>
-                      <Form.Group controlId='addMember'>
-                        <Form.Control
-                          ref={memberRef}
-                          type='text'
-                          placeholder='Enter group code'
-                          data-cy='enter-group-code'
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    <Col xs='auto'>
-                      <Button
-                        disabled={loading}
-                        variant='dark'
-                        className='background-dark border-0'
-                        type='button'
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addMember(memberRef, groupMembers, setAlert, setLoading, id, resetState);
-                        }}
-                        data-cy='add-member'
-                      >
-                        <img alt='Add Group Member' src='/APPIcons/add-user.svg' />
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>{alert && <Alert variant='warning'>{alert}</Alert>}</Col>
-                  </Row>
-                </Container>
-              </Form>
-            </>
-          )}
         </div>
       </Modal>
     </>

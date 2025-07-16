@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Modal, CloseButton } from 'react-bootstrap';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
@@ -9,7 +9,7 @@ export default function IntroCard() {
 
   return (
     <div className={`mb-2 ${dismiss && 'd-none'}`}>
-      <div className='modal intro-modal show top-layer' style={{ display: 'block', position: 'initial' }}>
+      <div className='modal show top-layer' style={{ display: 'block', position: 'initial' }}>
         <Modal.Dialog className='m-0'>
           <Modal.Header>
             <Modal.Title className='fancy-font fs-md-deco'>Creating items</Modal.Title>
