@@ -38,9 +38,8 @@ export default function ContainerListItem({ container }) {
             id={`collapse${container.id}`}
             className='accordion-collapse collapse'
             aria-labelledby='lootAccordionHeading'
-            data-bs-parent='#loot-accordion'
           >
-            <div className='accordion-body background-dark pt-0 rounded-bottom'>
+            <div className='accordion-body background-dark pt-0 pb-2 rounded-bottom'>
               <Row>
                 <Col className='text-light pb-3'>{container.description}</Col>
               </Row>

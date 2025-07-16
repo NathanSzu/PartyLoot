@@ -43,7 +43,6 @@ export default function LootList({ lootArray, isNested = false }) {
             id={getCollapseId(item.id)}
             className='accordion-collapse collapse'
             aria-labelledby={`heading${item.id}`}
-            data-bs-parent={getParentId()}
           >
             <div className={getAccordionBodyClass()}>
               <Container>
