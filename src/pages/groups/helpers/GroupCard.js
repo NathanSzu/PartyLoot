@@ -20,7 +20,7 @@ export default function GroupCard({ group }) {
           <GroupIcon id={group?.icon?.id} fillColor={group?.icon?.color} />
         </div>
         <div className='col'>
-          <div className='card-body'>
+          <div className='card-body pe-0'>
             <h5 className='card-title fancy-font fs-md-deco'>{group?.groupName}</h5>
             <p className='card-text'>
               <small className='text-body-secondary'>

@@ -51,6 +51,15 @@ export default function Home() {
   return (
     <Row>
       <Container fluid className='background-light rounded-bottom p-3' data-cy='welcome-message'>
+        <Row>
+          <Col className='text-center'><span>Ready to go?</span>
+            <LinkContainer to='/login'>
+              <Button variant='link' className='p-1 pb-2'>
+                Begin your adventure now!
+              </Button>
+            </LinkContainer>
+          </Col>
+        </Row>
         <Row className='justify-content-center p-3'>
           <Col xs={4} sm={4} md={3} className='p-0'>
             <img

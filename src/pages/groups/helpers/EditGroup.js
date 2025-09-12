@@ -1,5 +1,5 @@
 import { useState, useContext, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, Alert, ListGroup } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Alert, ListGroup, InputGroup } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { getGroupMembers, editGroup, deleteGroup, addMember, removeMember } from '../../../controllers/groupController';
 import GroupIcon from '../../../assets/GroupIcon';
@@ -93,21 +93,37 @@ export default function EditGroup({ group }) {
                     className='text-center border-end d-flex flex-column justify-content-center'
                     style={{ maxHeight: 86 }}
                   >
-                    <GroupIcon id={formState.icon.id} fillColor={formState.icon.color} />
+                    <div className='d-flex justify-content-center align-items-center w-100' style={{ height: '86px' }}>
+                      <GroupIcon id={formState.icon.id} fillColor={formState.icon.color} />
+                    </div>
                   </Col>
-                  <Col className='d-flex align-items-center'>
+                  <Col className='p-2'>
                     <Form.Group controlId='groupIcon' className='mb-0 w-100'>
-                      <div className='d-flex align-items-center text-end'>
-                        <Form.Label className='mb-0 me-2' style={{ minWidth: 45 }}>
-                          Icon
-                        </Form.Label>
+                      <Form.Label className='mb-1' style={{ minWidth: 45 }}>
+                        Icon
+                      </Form.Label>
+                      <InputGroup>
+                        <Button
+                          variant='outline-secondary'
+                          disabled={!isOwner || formState.icon.id <= 1}
+                          onClick={() =>
+                            setFormState((prev) => ({
+                              ...prev,
+                              icon: { ...prev.icon, id: Math.max(1, prev.icon.id - 1) },
+                            }))
+                          }
+                          data-cy='decrement-icon'
+                          style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                        >
+                          -
+                        </Button>
                         <Form.Control
-                          className='w-100'
+                        className='border-secondary'
                           type='number'
                           min={1}
                           max={28}
                           value={formState.icon.id}
-                          disabled={!isOwner}
+                          disabled
                           onChange={(e) =>
                             setFormState((prev) => ({
                               ...prev,
@@ -115,32 +131,48 @@ export default function EditGroup({ group }) {
                             }))
                           }
                           data-cy='edit-group-icon'
-                          style={{ width: 70 }}
+                          style={{
+                            width: 50,
+                            textAlign: 'center',
+                            borderRadius: 0,
+                          }}
                         />
-                      </div>
-                    </Form.Group>
-                  </Col>
-                  <Col className='d-flex align-items-center text-end'>
-                    <Form.Group controlId='iconColor' className='mb-0 w-100'>
-                      <div className='d-flex align-items-center pe-3'>
-                        <Form.Label className='mb-0 me-2' style={{ minWidth: 45 }}>
-                          Color
-                        </Form.Label>
-                        <Form.Control
-                          className='w-100'
-                          type='color'
-                          value={formState.icon.color}
-                          disabled={!isOwner}
-                          onChange={(e) =>
+                        <Button
+                          variant='outline-secondary'
+                          disabled={!isOwner || formState.icon.id >= 28}
+                          onClick={() =>
                             setFormState((prev) => ({
                               ...prev,
-                              icon: { ...prev.icon, color: e.target.value },
+                              icon: { ...prev.icon, id: Math.min(28, prev.icon.id + 1) },
                             }))
                           }
-                          data-cy='edit-icon-color'
-                          style={{ width: 50, height: 38, padding: 0, border: 'none', background: 'none' }}
-                        />
-                      </div>
+                          data-cy='increment-icon'
+                          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                        >
+                          +
+                        </Button>
+                      </InputGroup>
+                    </Form.Group>
+                  </Col>
+                  <Col className='p-2'>
+                    <Form.Group controlId='iconColor' className='mb-0 w-100'>
+                      <Form.Label className='mb-1' style={{ minWidth: 45 }}>
+                        Color
+                      </Form.Label>
+                      <Form.Control
+                        className='w-100'
+                        type='color'
+                        value={formState.icon.color}
+                        disabled={!isOwner}
+                        onChange={(e) =>
+                          setFormState((prev) => ({
+                            ...prev,
+                            icon: { ...prev.icon, color: e.target.value },
+                          }))
+                        }
+                        data-cy='edit-icon-color'
+                        style={{ width: 50, height: 38, padding: 0, border: 'none', background: 'none' }}
+                      />
                     </Form.Group>
                   </Col>
                 </div>
