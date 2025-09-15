@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { AuthContext } from './AuthContext';
-import { useLocation } from 'react-router-dom';
 
 export const GroupContext = React.createContext();
 
 export const GroupProvider = ({ children }) => {
   const { db, currentUser } = useContext(AuthContext);
-  const location = useLocation();
-
-  const clearGroupRoutes = ['groups', 'login', 'forgot-password', 'item-compendium', 'user-settings'];
 
   const [currentGroup, setCurrentGroup] = useState(null);
   const [groupList, setGroupList] = useState([]);
@@ -28,12 +24,9 @@ export const GroupProvider = ({ children }) => {
   const groupCurrency = groupDoc.collection('currency').doc('currency');
   const tagRef = groupDoc.collection('currency').doc('tags');
 
-  // Clear item query
   useEffect(() => {
-    if (clearGroupRoutes.some(route => location.pathname.includes(route))) {
-      setItemQuery({ searchQuery: '', itemOwner: 'party' });
-    }
-  }, [location.pathname]);
+    console.log(itemQuery);
+  }, [itemQuery]);
 
   // Fetch user's groups
   useEffect(() => {
@@ -41,8 +34,8 @@ export const GroupProvider = ({ children }) => {
     const unsubscribe = groups
       .where('members', 'array-contains', currentUser.uid)
       .orderBy('groupName')
-      .onSnapshot(snapshot => {
-        setGroupList(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .onSnapshot((snapshot) => {
+        setGroupList(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       });
     return () => unsubscribe();
   }, [currentUser]);
@@ -52,14 +45,14 @@ export const GroupProvider = ({ children }) => {
     if (!currentGroup) return;
 
     // Tags
-    const unsubscribeTags = tagRef.onSnapshot(doc => setAllTags(doc.data()));
+    const unsubscribeTags = tagRef.onSnapshot((doc) => setAllTags(doc.data()));
 
     // Loot
     const unsubscribeLoot = groupDoc
       .collection('loot')
       .orderBy('itemName')
-      .onSnapshot(snapshot => {
-        setAllLoot(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .onSnapshot((snapshot) => {
+        setAllLoot(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
         setLoadingLoot(false);
       });
 
@@ -68,8 +61,8 @@ export const GroupProvider = ({ children }) => {
       .collection('containers')
       .where('type', '==', '1')
       .orderBy('name')
-      .onSnapshot(snapshot => {
-        setPartyStorageContainers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .onSnapshot((snapshot) => {
+        setPartyStorageContainers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
         setLoadingContainers(false);
       });
 
@@ -77,21 +70,18 @@ export const GroupProvider = ({ children }) => {
     const unsubscribeOwners = groupDoc
       .collection('itemOwners')
       .where('type', '==', 'party')
-      .onSnapshot(snapshot => {
-        setItemOwners(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .onSnapshot((snapshot) => {
+        setItemOwners(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       });
 
     // Group Data
-    const unsubscribeGroupData = groupDoc.onSnapshot(doc => setGroupData(doc.data()));
+    const unsubscribeGroupData = groupDoc.onSnapshot((doc) => {
+      setGroupData(doc.data());
+      setItemQuery({ searchQuery: '', itemOwner: doc.data()?.favorites?.[currentUser.uid] || 'party' });
+    });
 
     // Currency
-    const unsubscribeCurrency = groupCurrency.onSnapshot(doc => setCurrency(doc.data()));
-
-    // Reset itemQuery
-    setItemQuery({
-      searchQuery: '',
-      itemOwner: groupData?.favorites?.[currentUser.uid] || 'party',
-    });
+    const unsubscribeCurrency = groupCurrency.onSnapshot((doc) => setCurrency(doc.data()));
 
     return () => {
       unsubscribeTags();
@@ -106,62 +96,49 @@ export const GroupProvider = ({ children }) => {
 
   // Derived: sortedLoot and filteredLoot
   const sortedLoot = useMemo(() => {
-    let ownerFiltered = itemQuery.itemOwner === 'party'
-      ? allLoot
-      : allLoot.filter(item => item.ownerId === itemQuery.itemOwner);
+    let ownerFiltered =
+      itemQuery.itemOwner === 'party' ? allLoot : allLoot.filter((item) => item.ownerId === itemQuery.itemOwner);
 
     if (itemQuery.searchQuery) {
       const regex = new RegExp(itemQuery.searchQuery, 'i');
       return ownerFiltered.filter(
-        item =>
-          regex.test(item.itemDesc || '') ||
-          regex.test(item.itemName || '') ||
-          regex.test(item.itemTags || '')
+        (item) => regex.test(item.itemDesc || '') || regex.test(item.itemName || '') || regex.test(item.itemTags || '')
       );
     }
     return ownerFiltered;
   }, [itemQuery, allLoot]);
 
   // Utility functions
-  const checkOwnerExists = id => itemOwners.some(owner => owner.id === id);
+  const checkOwnerExists = (id) => itemOwners.some((owner) => owner.id === id);
 
   const updateCurrency = (currencyKey, currencyQty) => {
-    groupCurrency.set(
-      { [itemQuery.itemOwner]: { [currencyKey]: Number(currencyQty) } },
-      { merge: true }
-    );
+    groupCurrency.set({ [itemQuery.itemOwner]: { [currencyKey]: Number(currencyQty) } }, { merge: true });
   };
 
-  const updateUserCurrency = currencyTotals => {
-    groupCurrency.set(
-      { [itemQuery.itemOwner]: currencyTotals },
-      { merge: true }
-    );
+  const updateUserCurrency = (currencyTotals) => {
+    groupCurrency.set({ [itemQuery.itemOwner]: currencyTotals }, { merge: true });
   };
 
-  const returnContainerItems = containerId =>
-    sortedLoot.filter(item => item?.container === containerId);
+  const returnContainerItems = (containerId) => sortedLoot.filter((item) => item?.container === containerId);
 
-  const containerExists = (containerList, item) =>
-    !!containerList.find(container => container.id === item.container);
+  const containerExists = (containerList, item) => !!containerList.find((container) => container.id === item.container);
 
-  const returnContainerlessItems = () =>
-    sortedLoot.filter(item => !containerExists(partyStorageContainers, item));
+  const returnContainerlessItems = () => sortedLoot.filter((item) => !containerExists(partyStorageContainers, item));
 
   const getItemOwner = (itemOwnerId, setState) => {
-    const owner = itemOwners.find(owner => owner.id === itemOwnerId);
+    const owner = itemOwners.find((owner) => owner.id === itemOwnerId);
     setState(owner?.name || 'the party');
   };
 
-  const setOneParam = param => setItemQuery(q => ({ ...q, itemOwner: param }));
+  const setOneParam = (param) => setItemQuery((q) => ({ ...q, itemOwner: param }));
 
-  const getItemOwners = ownerRef => {
+  const getItemOwners = (ownerRef) => {
     ownerRef
       .collection('itemOwners')
       .where('type', '==', 'party')
       .get()
-      .then(snapshot => {
-        setItemOwners(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .then((snapshot) => {
+        setItemOwners(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       });
   };
 
