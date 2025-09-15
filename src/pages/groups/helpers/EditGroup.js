@@ -87,21 +87,15 @@ export default function EditGroup({ group }) {
               </Form.Group>
 
               {isOwner && (
-                <div className='d-flex border rounded mt-2 align-items-center'>
-                  <Col
-                    xs={3}
-                    className='text-center border-end d-flex flex-column justify-content-center'
-                    style={{ maxHeight: 86 }}
-                  >
-                    <div className='d-flex justify-content-center align-items-center w-100' style={{ height: '86px' }}>
+                <Row className='pe-2'>
+                  <Col xs={3}>
+                    <div className='d-flex justify-content-center align-items-center' style={{ height: '86px' }}>
                       <GroupIcon id={formState.icon.id} fillColor={formState.icon.color} />
                     </div>
                   </Col>
-                  <Col className='p-2'>
+                  <Col xs={6}>
                     <Form.Group controlId='groupIcon' className='mb-0 w-100'>
-                      <Form.Label className='mb-1' style={{ minWidth: 45 }}>
-                        Icon
-                      </Form.Label>
+                      <Form.Label className='mb-1'>Icon</Form.Label>
                       <InputGroup>
                         <Button
                           variant='outline-secondary'
@@ -113,12 +107,11 @@ export default function EditGroup({ group }) {
                             }))
                           }
                           data-cy='decrement-icon'
-                          style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
                         >
                           -
                         </Button>
                         <Form.Control
-                        className='border-secondary'
+                          className='border-secondary text-center'
                           type='number'
                           min={1}
                           max={28}
@@ -131,11 +124,6 @@ export default function EditGroup({ group }) {
                             }))
                           }
                           data-cy='edit-group-icon'
-                          style={{
-                            width: 50,
-                            textAlign: 'center',
-                            borderRadius: 0,
-                          }}
                         />
                         <Button
                           variant='outline-secondary'
@@ -147,20 +135,17 @@ export default function EditGroup({ group }) {
                             }))
                           }
                           data-cy='increment-icon'
-                          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                         >
                           +
                         </Button>
                       </InputGroup>
                     </Form.Group>
                   </Col>
-                  <Col className='p-2'>
+                  <Col>
                     <Form.Group controlId='iconColor' className='mb-0 w-100'>
-                      <Form.Label className='mb-1' style={{ minWidth: 45 }}>
-                        Color
-                      </Form.Label>
+                      <Form.Label className='mb-1'>Color</Form.Label>
                       <Form.Control
-                        className='w-100'
+                        className='w-100 p-0'
                         type='color'
                         value={formState.icon.color}
                         disabled={!isOwner}
@@ -171,11 +156,10 @@ export default function EditGroup({ group }) {
                           }))
                         }
                         data-cy='edit-icon-color'
-                        style={{ width: 50, height: 38, padding: 0, border: 'none', background: 'none' }}
                       />
                     </Form.Group>
                   </Col>
-                </div>
+                </Row>
               )}
 
               <Form.Label className='pt-3'>Group members</Form.Label>
