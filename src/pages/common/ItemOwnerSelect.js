@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
 export default function ItemOwnerSelect({ setState, group, state, disabled = false }) {

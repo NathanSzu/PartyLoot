@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import ModalParty from './ModalParty';

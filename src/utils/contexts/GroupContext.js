@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { AuthContext } from './AuthContext';
 import { useLocation } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ export const GroupContext = React.createContext();
 
 export const GroupProvider = ({ children }) => {
   const { db, currentUser } = useContext(AuthContext);
-
   const location = useLocation();
 
   const clearGroupRoutes = ['groups', 'login', 'forgot-password', 'item-compendium', 'user-settings'];
@@ -16,12 +15,7 @@ export const GroupProvider = ({ children }) => {
   const [allTags, setAllTags] = useState({});
   const [allLoot, setAllLoot] = useState([]);
   const [partyStorageContainers, setPartyStorageContainers] = useState([]);
-  const [sortedLoot, setSortedLoot] = useState([]);
-  const [filteredLoot, setFilteredLoot] = useState([]);
-  const [itemQuery, setItemQuery] = useState({
-    searchQuery: '',
-    itemOwner: 'party',
-  });
+  const [itemQuery, setItemQuery] = useState({ searchQuery: '', itemOwner: 'party' });
   const [itemOwners, setItemOwners] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [currency, setCurrency] = useState(null);
@@ -34,206 +28,150 @@ export const GroupProvider = ({ children }) => {
   const groupCurrency = groupDoc.collection('currency').doc('currency');
   const tagRef = groupDoc.collection('currency').doc('tags');
 
-  const manageGroupSession = (pathname) => {
-    clearGroupRoutes.forEach((route) => {
-      if (pathname.includes(route)) {
-        setCurrentGroup(null);
-        setLoadingContainers(true);
-        setLoadingLoot(true);
-        setAllLoot([]);
-        setPartyStorageContainers([]);
-        setItemQuery({ ...itemQuery, itemOwner: 'party' });
-      }
-    });
-  };
+  // Clear item query
+  useEffect(() => {
+    if (clearGroupRoutes.some(route => location.pathname.includes(route))) {
+      setItemQuery({ searchQuery: '', itemOwner: 'party' });
+    }
+  }, [location.pathname]);
 
-  const getCurrency = () => {
-    groupCurrency.onSnapshot((doc) => {
-      setCurrency(doc.data());
-    });
-  };
+  // Fetch user's groups
+  useEffect(() => {
+    if (!currentUser) return;
+    const unsubscribe = groups
+      .where('members', 'array-contains', currentUser.uid)
+      .orderBy('groupName')
+      .onSnapshot(snapshot => {
+        setGroupList(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+    return () => unsubscribe();
+  }, [currentUser]);
 
-  const checkOwnerExists = (id) => {
-    const ownerExists = itemOwners.find(owner => owner.id === id);
-    return ownerExists;
-  };
+  // Fetch group data when group changes
+  useEffect(() => {
+    if (!currentGroup) return;
+
+    // Tags
+    const unsubscribeTags = tagRef.onSnapshot(doc => setAllTags(doc.data()));
+
+    // Loot
+    const unsubscribeLoot = groupDoc
+      .collection('loot')
+      .orderBy('itemName')
+      .onSnapshot(snapshot => {
+        setAllLoot(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLoadingLoot(false);
+      });
+
+    // Containers
+    const unsubscribeContainers = groupDoc
+      .collection('containers')
+      .where('type', '==', '1')
+      .orderBy('name')
+      .onSnapshot(snapshot => {
+        setPartyStorageContainers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLoadingContainers(false);
+      });
+
+    // Item Owners
+    const unsubscribeOwners = groupDoc
+      .collection('itemOwners')
+      .where('type', '==', 'party')
+      .onSnapshot(snapshot => {
+        setItemOwners(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+
+    // Group Data
+    const unsubscribeGroupData = groupDoc.onSnapshot(doc => setGroupData(doc.data()));
+
+    // Currency
+    const unsubscribeCurrency = groupCurrency.onSnapshot(doc => setCurrency(doc.data()));
+
+    // Reset itemQuery
+    setItemQuery({
+      searchQuery: '',
+      itemOwner: groupData?.favorites?.[currentUser.uid] || 'party',
+    });
+
+    return () => {
+      unsubscribeTags();
+      unsubscribeLoot();
+      unsubscribeContainers();
+      unsubscribeOwners();
+      unsubscribeGroupData();
+      unsubscribeCurrency();
+    };
+    // eslint-disable-next-line
+  }, [currentGroup]);
+
+  // Derived: sortedLoot and filteredLoot
+  const sortedLoot = useMemo(() => {
+    let ownerFiltered = itemQuery.itemOwner === 'party'
+      ? allLoot
+      : allLoot.filter(item => item.ownerId === itemQuery.itemOwner);
+
+    if (itemQuery.searchQuery) {
+      const regex = new RegExp(itemQuery.searchQuery, 'i');
+      return ownerFiltered.filter(
+        item =>
+          regex.test(item.itemDesc || '') ||
+          regex.test(item.itemName || '') ||
+          regex.test(item.itemTags || '')
+      );
+    }
+    return ownerFiltered;
+  }, [itemQuery, allLoot]);
+
+  // Utility functions
+  const checkOwnerExists = id => itemOwners.some(owner => owner.id === id);
 
   const updateCurrency = (currencyKey, currencyQty) => {
     groupCurrency.set(
-      {
-        [itemQuery.itemOwner]: { [currencyKey]: Number(currencyQty) },
-      },
+      { [itemQuery.itemOwner]: { [currencyKey]: Number(currencyQty) } },
       { merge: true }
     );
   };
 
-  const updateUserCurrency = (currencyTotals) => {
+  const updateUserCurrency = currencyTotals => {
     groupCurrency.set(
-      {
-        [itemQuery.itemOwner]: currencyTotals,
-      },
+      { [itemQuery.itemOwner]: currencyTotals },
       { merge: true }
     );
   };
 
-  const getLootItems = () => {
-    groupDoc
-      .collection('loot')
-      .orderBy('itemName')
-      .onSnapshot((querySnapshot) => {
-        let items = [];
-        querySnapshot.forEach((doc) => {
-          items.push({
-            id: doc.id,
-            ...doc.data(),
-          });
-        });
-        setAllLoot(items);
-        setLoadingLoot(false);
-      });
-  };
+  const returnContainerItems = containerId =>
+    sortedLoot.filter(item => item?.container === containerId);
 
-  const getLootContainers = (containerType) => {
-    groupDoc
-      .collection('containers')
-      .where('type', '==', containerType)
-      .orderBy('name')
-      .onSnapshot((querySnapshot) => {
-        let containers = [];
-        querySnapshot.forEach((doc) => {
-          containers.push({
-            id: doc.id,
-            ...doc.data(),
-          });
-        });
-        setPartyStorageContainers(containers);
-        setLoadingContainers(false);
-      });
-  };
+  const containerExists = (containerList, item) =>
+    !!containerList.find(container => container.id === item.container);
 
-  const sortLootItems = () => {
-    let ownerFiltered = [];
-    let queryFiltered = [];
-    if (itemQuery.itemOwner === 'party') {
-      ownerFiltered = allLoot;
-    } else {
-      ownerFiltered = allLoot.filter((item) => item.ownerId === itemQuery.itemOwner);
-    }
-
-    if (itemQuery.searchQuery) {
-      queryFiltered = ownerFiltered.filter(
-        (item) =>
-          item.itemDesc?.search(new RegExp(`${itemQuery.searchQuery}`, 'i')) >= 0 ||
-          item.itemName?.search(new RegExp(`${itemQuery.searchQuery}`, 'i')) >= 0 ||
-          item.itemTags?.search(new RegExp(`${itemQuery.searchQuery}`, 'i')) >= 0
-      );
-    } else {
-      queryFiltered = ownerFiltered;
-    }
-    setSortedLoot(queryFiltered);
-    setFilteredLoot(ownerFiltered);
-  };
-
-  const returnContainerItems = (containerId) => {
-    let containerItems = sortedLoot?.filter((item) => item?.container === containerId);
-    return containerItems;
-  };
-
-  const containerExists = (containerList, item) => {
-    let exists = false;
-    if (item?.container) {
-      containerList.forEach((container) => {
-        if (container.id === item.container) exists = true;
-      });
-    }
-    return exists;
-  };
-
-  const returnContainerlessItems = () => {
-    let containerlessItems = sortedLoot?.filter((item) => !containerExists(partyStorageContainers, item));
-    return containerlessItems;
-  };
-
-  const getItemOwners = (dbRef = groupDoc) => {
-    dbRef
-      .collection('itemOwners')
-      .where('type', '==', 'party')
-      .onSnapshot((querySnapshot) => {
-        let tempOwners = [];
-        querySnapshot.forEach((doc) => {
-          tempOwners.push({
-            id: doc.id,
-            ...doc.data(),
-          });
-        });
-        setItemOwners(tempOwners);
-      });
-  };
+  const returnContainerlessItems = () =>
+    sortedLoot.filter(item => !containerExists(partyStorageContainers, item));
 
   const getItemOwner = (itemOwnerId, setState) => {
-    const filteredOwner = itemOwners.filter((owner) => owner.id === itemOwnerId);
-    filteredOwner?.[0] ? setState(filteredOwner[0].name) : setState('the party');
+    const owner = itemOwners.find(owner => owner.id === itemOwnerId);
+    setState(owner?.name || 'the party');
   };
 
-  const getGroupData = () => {
-    groupDoc.onSnapshot((doc) => {
-      setGroupData(doc.data());
-    });
-  };
+  const setOneParam = param => setItemQuery(q => ({ ...q, itemOwner: param }));
 
-  const setOneParam = (param) => {
-    setItemQuery({
-      ...itemQuery,
-      itemOwner: param,
-    });
-  };
-
-  useEffect(() => {
-    currentUser &&
-      groups
-        .where('members', 'array-contains', currentUser.uid)
-        .orderBy('groupName')
-        .onSnapshot((querySnapshot) => {
-          let groupList = [];
-          querySnapshot.forEach((doc) => {
-            groupList.push({ id: doc.id, ...doc.data() });
-          });
-
-          setGroupList(groupList);
-        });
-  }, [currentUser]);
-
-  // When a group is selected, set the tags, get the related loot items, and reset the searchQuery state
-  useEffect(() => {
-    if (currentGroup) {
-      tagRef.onSnapshot((querySnapshot) => {
-        setAllTags(querySnapshot.data());
+  const getItemOwners = ownerRef => {
+    ownerRef
+      .collection('itemOwners')
+      .where('type', '==', 'party')
+      .get()
+      .then(snapshot => {
+        setItemOwners(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       });
-      setItemQuery({
-        searchQuery: '',
-        itemOwner: groupData?.favorites?.[currentUser.uid] || 'party',
-      });
-      getLootItems();
-      getLootContainers('1');
-      getItemOwners();
-      getGroupData();
-      getCurrency();
-    }
-  }, [currentGroup]);
-
-  useEffect(() => {
-    sortLootItems();
-  }, [itemQuery, allLoot]);
-
-  useEffect(() => {
-    manageGroupSession(location.pathname);
-  }, [location]);
+  };
 
   return (
     <GroupContext.Provider
       value={{
         currentGroup,
         setCurrentGroup,
+        setLoadingContainers,
+        setLoadingLoot,
         groupData,
         itemOwners,
         checkOwnerExists,
@@ -246,7 +184,6 @@ export const GroupProvider = ({ children }) => {
         updateCurrency,
         updateUserCurrency,
         sortedLoot,
-        filteredLoot,
         setItemQuery,
         itemQuery,
         loadingContainers,
@@ -255,8 +192,8 @@ export const GroupProvider = ({ children }) => {
         returnContainerItems,
         returnContainerlessItems,
         partyStorageContainers,
-        getItemOwners,
         getItemOwner,
+        getItemOwners,
       }}
     >
       {children}

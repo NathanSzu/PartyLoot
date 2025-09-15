@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 import LootList from '../itemCRUD/LootList';

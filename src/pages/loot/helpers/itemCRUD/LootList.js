@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import CreateLootItem from './CreateLootItem';
 import HeldBySection from './HeldBySection';
@@ -8,7 +7,6 @@ import ItemTagDisplay from './ItemTagDisplay';
 
 export default function LootList({ lootArray, isNested = false }) {
   const getCollapseId = (itemId) => isNested ? `nestedCollapse${itemId}` : `collapse${itemId}`;
-  const getParentId = () => isNested ? '#container-accordion' : '#loot-accordion';
   const getAccordionBodyClass = () => isNested 
     ? 'accordion-body border-bottom border-start border-end border-white background-light rounded-bottom'
     : 'accordion-body background-light rounded-bottom';

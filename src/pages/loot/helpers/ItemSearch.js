@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import { useRef, useContext } from 'react';
 import { Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 

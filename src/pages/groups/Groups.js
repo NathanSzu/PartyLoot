@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Row, Col, Spinner, Container, Navbar } from 'react-bootstrap';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
@@ -9,8 +9,13 @@ import IntroCard from './helpers/IntroCard';
 import ButtonShareLink from '../common/ButtonShareLink';
 
 export default function Groups() {
-  const { groupList } = useContext(GroupContext);
+  const { groupList, setLoadingLoot, setLoadingContainers } = useContext(GroupContext);
   const { checkLocalStorage } = useContext(GlobalFeatures);
+
+  useEffect(() => {
+    setLoadingContainers(true);
+    setLoadingLoot(true);
+  }, [setLoadingContainers, setLoadingLoot]);
 
   return (
     <Row className='lazy-scroll-container'>

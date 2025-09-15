@@ -38,9 +38,7 @@ export default function GroupCard({ group }) {
               disabled={!group}
               id={group?.id}
               data-cy='view-group'
-              onClick={(e) => {
-                handleSelectGroup(e.target.id);
-              }}
+              onClick={() => handleSelectGroup(group.id)}
             >
               <img alt='View Group' src='/APPIcons/eye-fill.svg' />
             </button>

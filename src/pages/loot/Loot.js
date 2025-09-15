@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Card, Navbar, Row, Col, Container, Button } from 'react-bootstrap';
 import CreateLootItem from './helpers/itemCRUD/CreateLootItem';

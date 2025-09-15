@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import ButtonShareLink from '../../common/ButtonShareLink';
 import PatreonButton from '../../common/PatreonButton';

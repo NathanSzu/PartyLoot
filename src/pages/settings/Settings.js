@@ -1,17 +1,10 @@
-import React, { useContext, useEffect } from 'react';
-import { Row, Col, Container, Card } from 'react-bootstrap';
-import { GroupContext } from '../../utils/contexts/GroupContext';
+import { Row, Col, Card } from 'react-bootstrap';
 import metadata from '../../utils/metadata.json';
 import AccountSettingsCard from './helpers/AccountSettingsCard';
 import AppSupportCard from './helpers/AppSupportCard';
 import ConfigurationCard from './helpers/ConfigurationsCard'
 
 export default function Settings() {
-  const { setCurrentGroup } = useContext(GroupContext);
-
-  useEffect(() => {
-    setCurrentGroup(' ');
-  });
 
   return (
     <Row className='background-light rounded-bottom'>

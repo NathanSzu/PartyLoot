@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // Importing and initializing firebase from utils/firebase config file.
 import firebaseApp from '../../utils/firebase';
@@ -18,8 +18,6 @@ export default function BootLogin() {
 
   const emailRef = useRef(false);
   const passwordRef = useRef(false);
-
-  const navigate = useNavigate();
 
   // Sets the login form display state. This affects which input components are displayed.
   const toggleLogin = () => {

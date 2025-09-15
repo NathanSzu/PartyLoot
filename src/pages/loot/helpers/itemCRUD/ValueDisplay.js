@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function ValueDisplay() {
   const { defaultColors, currencyKeys } = useContext(GlobalFeatures);
-  const { allTags, filteredLoot } = useContext(GroupContext);
+  const { allTags, sortedLoot } = useContext(GroupContext);
 
   const [itemTotals, setItemTotals] = useState({});
   const [loadingTotals, setLoadingTotals] = useState(true);
@@ -35,8 +35,8 @@ export default function ValueDisplay() {
   };
 
   useEffect(() => {
-    sumItems(filteredLoot);
-  }, [filteredLoot]);
+    sumItems(sortedLoot);
+  }, [sortedLoot]);
 
   return (
     <Row className='px-1 pt-2'>
