@@ -26,10 +26,17 @@ export default function ContainerListItem({ container }) {
               aria-controls={`collapse${container.id}`}
             >
               <Container>
-                <Row className='justify-content-end'>
+                <Row className='justify-content-between align-items-center'>
                   <Col className='ps-0'>
-                    <h1 className='fancy-font fs-sm-deco text-light m-0 py-0'>{container.name}</h1>
+                    <h1 className='fancy-font fs-sm-deco text-light m-0 py-0'>
+                      {container.name}
+                    </h1>
                   </Col>
+                  {container.type === '2' && (
+                    <Col xs="auto" className='pe-0'>
+                      <em className='text-light'>hidden</em>
+                    </Col>
+                  )}
                 </Row>
               </Container>
             </button>

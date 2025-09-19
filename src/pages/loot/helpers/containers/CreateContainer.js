@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import {
   Modal,
   Button,
@@ -21,7 +21,7 @@ import {
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function CreateContainer() {
-  const { groupDoc, partyStorageContainers } = useContext(GroupContext);
+  const { groupDoc, partyStorageContainers, isGameMaster } = useContext(GroupContext);
   const [show, setShow] = useState(false);
   const [containerData, setContainerData] = useState({
     type: '1',
@@ -133,11 +133,17 @@ export default function CreateContainer() {
               <FormLabel>Type</FormLabel>
               <FormSelect value={containerData.type} onChange={(e) => handleContainerUpdate('type', e.target.value)}>
                 <option value='1'>Party storage</option>
+                {isGameMaster && <option value='2'>GM vault</option>}
               </FormSelect>
               {containerData.type === '1' && (
                 <FormText className='text-muted'>
                   Party storage containers will automatically show on your loot list if you are the owner of any items
                   in the container
+                </FormText>
+              )}
+              {containerData.type === '2' && (
+                <FormText className='text-muted'>
+                  GM vault containers are only visible to Game Masters and can be used to store hidden loot and rewards
                 </FormText>
               )}
             </FormGroup>

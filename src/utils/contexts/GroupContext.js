@@ -17,6 +17,7 @@ export const GroupProvider = ({ children }) => {
   const [currency, setCurrency] = useState(null);
   const [loadingContainers, setLoadingContainers] = useState(true);
   const [loadingLoot, setLoadingLoot] = useState(true);
+  const [isGameMaster, setIsGameMaster] = useState(false);
 
   // Query declarations
   const groups = db.collection('groups');
@@ -40,7 +41,7 @@ export const GroupProvider = ({ children }) => {
     return () => unsubscribe();
   }, [currentUser]);
 
-  // Fetch group data when group changes
+    // Fetch group data when group changes
   useEffect(() => {
     if (!currentGroup) return;
 
@@ -56,16 +57,6 @@ export const GroupProvider = ({ children }) => {
         setLoadingLoot(false);
       });
 
-    // Containers
-    const unsubscribeContainers = groupDoc
-      .collection('containers')
-      .where('type', '==', '1')
-      .orderBy('name')
-      .onSnapshot((snapshot) => {
-        setPartyStorageContainers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-        setLoadingContainers(false);
-      });
-
     // Item Owners
     const unsubscribeOwners = groupDoc
       .collection('itemOwners')
@@ -76,8 +67,10 @@ export const GroupProvider = ({ children }) => {
 
     // Group Data
     const unsubscribeGroupData = groupDoc.onSnapshot((doc) => {
-      setGroupData(doc.data());
-      setItemQuery({ searchQuery: '', itemOwner: doc.data()?.favorites?.[currentUser.uid] || 'party' });
+      const data = doc.data();
+      setGroupData(data);
+      setItemQuery({ searchQuery: '', itemOwner: data?.favorites?.[currentUser.uid] || 'party' });
+      setIsGameMaster(data?.gameMasters?.includes(currentUser?.uid) || false);
     });
 
     // Currency
@@ -86,13 +79,32 @@ export const GroupProvider = ({ children }) => {
     return () => {
       unsubscribeTags();
       unsubscribeLoot();
-      unsubscribeContainers();
       unsubscribeOwners();
       unsubscribeGroupData();
       unsubscribeCurrency();
     };
     // eslint-disable-next-line
   }, [currentGroup]);
+
+  // Containers effect - separate to react to GM status changes
+  useEffect(() => {
+    if (!currentGroup) return;
+
+    const containerTypes = isGameMaster ? ['1', '2'] : ['1'];
+    
+    const unsubscribeContainers = groupDoc
+      .collection('containers')
+      .where('type', 'in', containerTypes)
+      .orderBy('type', 'desc')
+      .orderBy('name')
+      .onSnapshot((snapshot) => {
+        setPartyStorageContainers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        setLoadingContainers(false);
+      });
+
+    return () => unsubscribeContainers();
+    // eslint-disable-next-line
+  }, [currentGroup, isGameMaster]);
 
   // Derived: sortedLoot and filteredLoot
   const sortedLoot = useMemo(() => {
@@ -171,6 +183,7 @@ export const GroupProvider = ({ children }) => {
         partyStorageContainers,
         getItemOwner,
         getItemOwners,
+        isGameMaster,
       }}
     >
       {children}
