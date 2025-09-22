@@ -25,10 +25,6 @@ export const GroupProvider = ({ children }) => {
   const groupCurrency = groupDoc.collection('currency').doc('currency');
   const tagRef = groupDoc.collection('currency').doc('tags');
 
-  useEffect(() => {
-    console.log(itemQuery);
-  }, [itemQuery]);
-
   // Fetch user's groups
   useEffect(() => {
     if (!currentUser) return;
@@ -69,7 +65,7 @@ export const GroupProvider = ({ children }) => {
     const unsubscribeGroupData = groupDoc.onSnapshot((doc) => {
       const data = doc.data();
       setGroupData(data);
-      setItemQuery({ searchQuery: '', itemOwner: data?.favorites?.[currentUser.uid] || 'party' });
+      setItemQuery({ searchQuery: '', itemOwner: data?.favorites?.[currentUser?.uid] || 'party' });
       setIsGameMaster(data?.gameMasters?.includes(currentUser?.uid) || false);
     });
 

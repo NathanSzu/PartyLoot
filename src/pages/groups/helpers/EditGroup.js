@@ -1,13 +1,17 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, ListGroup, InputGroup } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
+import { GroupContext } from '../../../utils/contexts/GroupContext';
+import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { getGroupMembers, editGroup, deleteGroup, addMember, removeMember } from '../../../controllers/groupController';
 import GroupIcon from '../../../assets/GroupIcon';
 
 export default function EditGroup({ group }) {
-  const { groupName, id, owner, members } = group;
+  const { groupName, id, owner, members, gameMasters = [] } = group;
   const { currentUser } = useContext(AuthContext);
-  const isOwner = currentUser.uid === owner;
+  const { groups } = useContext(GroupContext);
+  const { setToastContent, setToastHeader, toggleShowToast } = useContext(GlobalFeatures);
+  const isOwner = currentUser?.uid === owner;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -28,12 +32,91 @@ export default function EditGroup({ group }) {
   });
 
   useEffect(() => {
-    getGroupMembers(members, setGroupMembers, setLoading);
+    if (members && members.length > 0) {
+      getGroupMembers(members, setGroupMembers, setLoading);
+    }
   }, [members]);
+
+  // Reset state when currentUser changes (user logout/login)
+  useEffect(() => {
+    if (!currentUser) {
+      // Only reset when user is completely logged out
+      setGroupMembers([]);
+      setAlert(null);
+      setConfirming(false);
+      setLoading(false);
+      setShow(false);
+    }
+    // Update form state when group data changes
+    setFormState({
+      groupName: groupName || '',
+      icon: {
+        id: group.icon?.id || 1,
+        color: group.icon?.color || '#000000',
+      },
+    });
+  }, [currentUser, groupName, group.icon?.id, group.icon?.color]);
+
+  // Close modal if user is no longer owner (only on user change, not ownership change)
+  useEffect(() => {
+    if (show && !currentUser) {
+      // Only close if user is logged out completely
+      setShow(false);
+    }
+  }, [show, currentUser]);
 
   const resetState = () => {
     setConfirming(false);
     setAlert(null);
+    // Don't reset groupMembers here - let the useEffect handle it
+    setLoading(false);
+    // Reset form state to current group data
+    setFormState({
+      groupName: groupName || '',
+      icon: {
+        id: group.icon?.id || 1,
+        color: group.icon?.color || '#000000',
+      },
+    });
+  };
+
+  const toggleGMStatus = async (memberId, isCurrentlyGM) => {
+    if (!isOwner) return;
+
+    setLoading(true);
+    setAlert(null);
+
+    try {
+      const groupRef = groups.doc(id);
+      let updatedGMs;
+      
+      if (isCurrentlyGM) {
+        // Remove GM status
+        updatedGMs = gameMasters.filter(gmId => gmId !== memberId);
+      } else {
+        // Add GM status
+        updatedGMs = [...gameMasters, memberId];
+      }
+
+      await groupRef.update({
+        gameMasters: updatedGMs
+      });
+
+      const memberName = groupMembers.find(m => m.id === memberId)?.displayName || 'User';
+      const isOwnerTogglingSelf = memberId === currentUser.uid;
+      
+      setToastHeader('GM Permissions Updated');
+      setToastContent(
+        `${isOwnerTogglingSelf ? 'You have' : memberName + ' has'} been ${isCurrentlyGM ? 'removed from' : 'granted'} Game Master permissions.`
+      );
+      toggleShowToast();
+
+    } catch (error) {
+      console.error('Error updating GM permissions:', error);
+      setAlert('Failed to update GM permissions. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const memberRef = useRef();
@@ -65,7 +148,7 @@ export default function EditGroup({ group }) {
           <Form onSubmitCapture={(e) => e.preventDefault()}>
             <Modal.Header closeButton>
               <Modal.Title className='groups-overflow'>
-                {isOwner ? 'Edit: ' : null} {groupName}
+                {isOwner ? 'Edit: ' : 'View: '} {groupName}
               </Modal.Title>
             </Modal.Header>
 
@@ -166,34 +249,58 @@ export default function EditGroup({ group }) {
 
               <ListGroup className='mt-1'>
                 {groupMembers &&
-                  groupMembers.map((member) => (
-                    <ListGroup.Item
-                      key={member.id}
-                      className='d-flex justify-content-between align-items-center'
-                      variant={member.id === currentUser.uid ? 'secondary' : undefined}
-                    >
-                      <span>
-                        {member.displayName}
-                        {member.id === currentUser.uid && ' (You)'}
-                      </span>
-                      {isOwner && member.id !== currentUser.uid && (
-                        <Button
-                          disabled={loading}
-                          variant='danger'
-                          className='background-danger'
-                          id={member.id}
-                          type='button'
-                          onClick={(e) => {
-                            removeMember(id, e.target.id, setLoading, handleClose);
-                          }}
-                          data-cy='remove-member'
-                          size='sm'
-                        >
-                          <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg' />
-                        </Button>
-                      )}
-                    </ListGroup.Item>
-                  ))}
+                  groupMembers.map((member) => {
+                    const isGM = gameMasters.includes(member.id);
+                    const isSelf = member.id === currentUser.uid;
+                    return (
+                      <ListGroup.Item
+                        key={member.id}
+                        className='d-flex justify-content-between align-items-center'
+                        variant={isSelf ? 'secondary' : undefined}
+                      >
+                        <div>
+                          <span>
+                            {member.displayName}
+                            {isSelf && ' (You)'}
+                          </span>
+                          {isGM && (
+                            <span className='badge bg-success ms-2'>GM</span>
+                          )}
+                        </div>
+                        
+                        {isOwner && (
+                          <div className='d-flex gap-2'>
+                            <Button
+                              variant={isGM ? 'outline-danger' : 'outline-success'}
+                              size='sm'
+                              disabled={loading}
+                              onClick={() => toggleGMStatus(member.id, isGM)}
+                              title={isGM ? 'Remove GM permissions' : 'Grant GM permissions'}
+                            >
+                              {isGM ? '- GM' : '+ GM'}
+                            </Button>
+                            {!isSelf && (
+                              <Button
+                                disabled={loading}
+                                variant='danger'
+                                className='background-danger'
+                                id={member.id}
+                                type='button'
+                                onClick={(e) => {
+                                  removeMember(id, e.target.id, setLoading, handleClose);
+                                }}
+                                data-cy='remove-member'
+                                size='sm'
+                                title='Remove member from group'
+                              >
+                                <img alt='Delete Group' id={member.id} src='/APPIcons/remove-user.svg' />
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </ListGroup.Item>
+                    );
+                  })}
 
                 {isOwner && (
                   <ListGroup.Item>
