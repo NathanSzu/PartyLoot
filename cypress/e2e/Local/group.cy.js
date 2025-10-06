@@ -4,19 +4,19 @@ let uid = uuidv4().substring(0, 8);
 let uid2 = uuidv4().substring(0, 8);
 
 describe('Group actions', () => {
-  before(() => {
+  beforeEach(() => {
     cy.login();
     cy.addGroup(uid);
   });
 
-  after(() => {
+  afterEach(() => {
     cy.removeGroup(uid, uid2);
   });
 
   it('edit group', () => {
     cy.get('[data-cy=edit-group]').eq(0).click();
     cy.get('[data-cy=edit-group-name]').clear().type(uid2);
-    cy.get('[value=Save]').click();
+    cy.get('[data-cy=save-group]').click();
     cy.contains('div', uid2).should('have.length', 1);
   });
 
@@ -27,5 +27,13 @@ describe('Group actions', () => {
     cy.contains('div', 'Cool_Guy1').should('exist');
     cy.get('[data-cy=remove-member]').click();
     cy.contains('div', 'Cool_Guy1').should('not.exist');
+  });
+
+  it('assign and remove GM role', () => {
+    cy.get('[data-cy=edit-group]').eq(0).click();
+    cy.get('[data-cy=assign-gm]').click();
+    cy.get('[data-cy="gm-badge"]');
+    cy.get('[data-cy=assign-gm]').click();
+    cy.get('[data-cy="gm-badge"]').should('not.exist');
   });
 });

@@ -22,7 +22,7 @@ Cypress.Commands.add('addGroup', (uid = 'Cool group') => {
 });
 
 Cypress.Commands.add('selectGroup', (uid = 'Cool group') => {
-  cy.contains('[data-cy="group-card"]', uid).within(() => {
+  cy.contains('.row', uid).within(() => {
     cy.get('[data-cy="view-group"]').click();
   });
 });

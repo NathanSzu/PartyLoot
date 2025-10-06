@@ -89,28 +89,29 @@ export default function EditGroup({ group }) {
     try {
       const groupRef = groups.doc(id);
       let updatedGMs;
-      
+
       if (isCurrentlyGM) {
         // Remove GM status
-        updatedGMs = gameMasters.filter(gmId => gmId !== memberId);
+        updatedGMs = gameMasters.filter((gmId) => gmId !== memberId);
       } else {
         // Add GM status
         updatedGMs = [...gameMasters, memberId];
       }
 
       await groupRef.update({
-        gameMasters: updatedGMs
+        gameMasters: updatedGMs,
       });
 
-      const memberName = groupMembers.find(m => m.id === memberId)?.displayName || 'User';
+      const memberName = groupMembers.find((m) => m.id === memberId)?.displayName || 'User';
       const isOwnerTogglingSelf = memberId === currentUser.uid;
-      
+
       setToastHeader('GM Permissions Updated');
       setToastContent(
-        `${isOwnerTogglingSelf ? 'You have' : memberName + ' has'} been ${isCurrentlyGM ? 'removed from' : 'granted'} Game Master permissions.`
+        `${isOwnerTogglingSelf ? 'You have' : memberName + ' has'} been ${
+          isCurrentlyGM ? 'removed from' : 'granted'
+        } Game Master permissions.`
       );
       toggleShowToast();
-
     } catch (error) {
       console.error('Error updating GM permissions:', error);
       setAlert('Failed to update GM permissions. Please try again.');
@@ -263,14 +264,13 @@ export default function EditGroup({ group }) {
                             {member.displayName}
                             {isSelf && ' (You)'}
                           </span>
-                          {isGM && (
-                            <span className='badge bg-success ms-2'>GM</span>
-                          )}
+                          {isGM && <span data-cy='gm-badge' className='badge bg-success ms-2'>GM</span>}
                         </div>
-                        
+
                         {isOwner && (
                           <div className='d-flex gap-2'>
                             <Button
+                              data-cy='assign-gm'
                               variant={isGM ? 'outline-danger' : 'outline-success'}
                               size='sm'
                               disabled={loading}
@@ -358,6 +358,7 @@ export default function EditGroup({ group }) {
 
               {isOwner && (
                 <Button
+                  data-cy='save-group'
                   as='input'
                   value='Save'
                   disabled={loading}
