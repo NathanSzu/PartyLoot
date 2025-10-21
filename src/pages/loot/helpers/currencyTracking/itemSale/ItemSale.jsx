@@ -1,5 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, Container } from 'react-bootstrap';
+import { doc, deleteDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { db } from '../../../../../utils/firebase';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
@@ -11,8 +13,8 @@ export default function ItemSale({ item }) {
   const { writeHistoryEvent, defaultColors, currencyKeys } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
-  const currencyRef = groupDoc.collection('currency').doc('currency');
-  const itemRef = groupDoc.collection('loot').doc(item.id);
+  const currencyRef = doc(db, 'groups', groupDoc.id, 'currency', 'currency');
+  const itemRef = doc(db, 'groups', groupDoc.id, 'loot', item.id);
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,30 +62,28 @@ export default function ItemSale({ item }) {
     return output;
   };
 
-  const deleteItem = () => {
-    itemRef
-      .delete()
-      .then(() => {
-        handleClose();
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error removing item: ', err);
-      });
+  const deleteItem = async () => {
+    try {
+      await deleteDoc(itemRef);
+      handleClose();
+      setLoading(false);
+    } catch (err) {
+      console.error('Error removing item: ', err);
+      setLoading(false);
+    }
   };
 
-  const updateQty = (itemQty, sellQty) => {
-    itemRef
-      .update({
+  const updateQty = async (itemQty, sellQty) => {
+    try {
+      await updateDoc(itemRef, {
         itemQty: itemQty - sellQty,
-      })
-      .then(() => {
-        handleClose();
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error updating quantity: ', err);
       });
+      handleClose();
+      setLoading(false);
+    } catch (err) {
+      console.error('Error updating quantity: ', err);
+      setLoading(false);
+    }
   };
 
   const checkSellValidations = (currencyKeys, sellState, sellQty) => {
@@ -108,14 +108,13 @@ export default function ItemSale({ item }) {
   };
 
   const writeSaleTotals = async (sellerId, total) => {
-    currencyRef
-      .set(
-        {
-          [sellerId]: total,
-        },
-        { merge: true }
-      )
-      .catch((err) => console.error(err));
+    try {
+      await setDoc(currencyRef, {
+        [sellerId]: total,
+      }, { merge: true });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const compileHistoryData = (sellQty, item, sellState, currencyKeys) => {
@@ -131,18 +130,24 @@ export default function ItemSale({ item }) {
     writeHistoryEvent(currentUser.uid, 'sellItem', data);
   };
 
-  const sellItem = () => {
+  const sellItem = async () => {
     if (!checkSellValidations(currencyKeys, sellState, sellQty)) return;
     setLoading(true);
-    let totals = calculateSale(sellerId, currency, sellState, currencyKeys);
-    writeSaleTotals(sellerId, totals).then(() => {
+    
+    try {
+      let totals = calculateSale(sellerId, currency, sellState, currencyKeys);
+      await writeSaleTotals(sellerId, totals);
       compileHistoryData(sellQty, item, sellState, currencyKeys);
+      
       if (item.itemQty <= sellQty || !item?.itemQty) {
-        deleteItem();
+        await deleteItem();
       } else {
-        updateQty(item.itemQty, sellQty);
+        await updateQty(item.itemQty, sellQty);
       }
-    });
+    } catch (err) {
+      console.error('Error selling item:', err);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -4,9 +4,10 @@ import ButtonShareLink from '../../common/ButtonShareLink';
 import PatreonButton from '../../common/PatreonButton';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
+import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 
 export default function PatchNotes() {
-  const { db } = useContext(AuthContext);
   const { checkLocalStorage } = useContext(GlobalFeatures);
 
   useEffect(() => {
@@ -30,15 +31,17 @@ export default function PatchNotes() {
   };
 
   const getLatestPatchNote = () => {
-    return db
-      .collection('updateNotes')
-      .orderBy('posted', 'desc')
-      .limit(1)
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          showNoteIfNew({ id: doc.id, ...doc.data() });
-        });
+    const q = query(
+      collection(db, 'updateNotes'),
+      orderBy('posted', 'desc'),
+      limit(1)
+    );
+    
+    return onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        showNoteIfNew({ id: doc.id, ...doc.data() });
       });
+    });
   };
 
   const markShowNote = (doc) => {
@@ -47,7 +50,7 @@ export default function PatchNotes() {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} data-cy='view-patchnotes-dialog'>
+    <Modal show={show} onHide={handleClose} id='view-patchnotes-dialog'>
       <Modal.Header closeButton>
         <h2 className='fs-md-deco mb-0'>{patchNoteDoc.title}</h2>
       </Modal.Header>

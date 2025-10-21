@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
 export default function ContainerSelect({ itemData, setItemData, disabled = false }) {

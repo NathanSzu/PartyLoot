@@ -4,10 +4,10 @@ import { GlobalFeatures } from '../../../../utils/contexts/GlobalFeatures';
 import QuillInput from '../../../common/QuillInput';
 import RaritySelect from '../../../common/RaritySelect';
 import TypeSelect from '../../../common/TypeSelect';
-import { addCompendiumItem, updateCompendiumItem } from '../../../../controllers/compendiumController';
+import { addCompendiumItem, updateCompendiumItem, deleteCompendiumItem } from '../../../../controllers/compendiumController';
 
 export function DiscoveryForm({ item, showModal, handleCloseModal, setQueryParams }) {
-  const { currentUser, db } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const { setToastHeader, setToastContent, toggleShowToast } = useContext(GlobalFeatures);
 
   const [loading, setLoading] = useState(false);
@@ -112,24 +112,22 @@ export function DiscoveryForm({ item, showModal, handleCloseModal, setQueryParam
     }
   };
 
-  const deleteEntry = () => {
+  const deleteEntry = async () => {
     if (!confirmDelete) return;
     setLoading(true);
-    db.collection('compendium')
-      .doc(item.id)
-      .delete()
-      .then(() => {
-        setLoading(false);
-        handleClose();
-        setToastHeader('Item deleted');
-        setToastContent(`Your item "${discoveryRecord.itemName}" has been successfully deleted.`);
-        toggleShowToast();
-        setQueryParams();
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.error('Error deleting entry', err);
-      });
+    
+    try {
+      await deleteCompendiumItem(item.id);
+      setLoading(false);
+      handleClose();
+      setToastHeader('Item deleted');
+      setToastContent(`Your item "${discoveryRecord.itemName}" has been successfully deleted.`);
+      toggleShowToast();
+      setQueryParams();
+    } catch (err) {
+      setLoading(false);
+      console.error('Error deleting entry', err);
+    }
   };
 
   const modalClass = showModal ? 'modal d-block show' : 'modal d-none';

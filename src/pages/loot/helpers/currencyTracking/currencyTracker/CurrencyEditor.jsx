@@ -1,5 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../../../../utils/firebase';
 import CurrencyTrackerInput from './CurrencyTrackerInput';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
@@ -7,7 +9,7 @@ import { AuthContext } from '../../../../../utils/contexts/AuthContext';
 
 export default function CurrencyEditor() {
   const { currentUser } = useContext(AuthContext);
-  const { groupDoc, getItemOwner, itemQuery, currency, itemOwners, tagRef, allTags } = useContext(GroupContext);
+  const { groupDoc, getItemOwner, itemQuery, currency, allTags } = useContext(GroupContext);
   const { defaultColors, currencyKeys, writeHistoryEvent } = useContext(GlobalFeatures);
 
   const [tagState, setTagState] = useState({});
@@ -39,13 +41,22 @@ export default function CurrencyEditor() {
 
   const updateTags = async (tagState) => {
     setLoading(true);
-    tagRef.set(tagState, { merge: true }).catch((err) => console.error(err));
+    try {
+      const tagsRef = doc(db, 'groups', groupDoc.id, 'currency', 'tags');
+      await setDoc(tagsRef, tagState, { merge: true });
+    } catch (err) {
+      console.error('Error updating tags:', err);
+    }
   };
 
   const updateCurrencyTotals = async (newCurrencyTotals) => {
     setLoading(true);
-    const groupCurrency = groupDoc.collection('currency').doc('currency');
-    groupCurrency.set({ [itemQuery.itemOwner]: newCurrencyTotals }, { merge: true }).catch((err) => console.error(err));
+    try {
+      const currencyRef = doc(db, 'groups', groupDoc.id, 'currency', 'currency');
+      await setDoc(currencyRef, { [itemQuery.itemOwner]: newCurrencyTotals }, { merge: true });
+    } catch (err) {
+      console.error('Error updating currency:', err);
+    }
   };
 
   const compileHistoryData = (itemOwner, oldCurrency, newCurrency, currencyKeys) => {
@@ -61,18 +72,17 @@ export default function CurrencyEditor() {
     writeHistoryEvent(currentUser.uid, 'updateCurrency', data);
   };
 
-  const updateCurrencyData = (tagState, newCurrencyTotals) => {
-    updateTags(tagState)
-      .then(() => {
-        clearStateAndClose();
-        setLoading(false);
-      })
-      .catch((err) => console.error('Error updating tags: ', err));
-    updateCurrencyTotals(newCurrencyTotals)
-      .then(() => {
-        compileHistoryData(itemOwner, currency[itemQuery.itemOwner], newCurrencyTotals, currencyKeys);
-      })
-      .catch((err) => console.error('Error updating currency: ', err));
+  const updateCurrencyData = async (tagState, newCurrencyTotals) => {
+    try {
+      await updateTags(tagState);
+      await updateCurrencyTotals(newCurrencyTotals);
+      compileHistoryData(itemOwner, currency?.[itemQuery.itemOwner] || {}, newCurrencyTotals, currencyKeys);
+      clearStateAndClose();
+      setLoading(false);
+    } catch (err) {
+      console.error('Error updating currency data:', err);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

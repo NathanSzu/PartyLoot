@@ -1,12 +1,16 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-
-const db = firebase.firestore();
+import { collection, query, where, orderBy, getDocs, getFirestore } from 'firebase/firestore';
+import { db } from '../utils/firebase';
 
 export const getFilterFields = async () => {
   let results = [];
 
-  const querySnapshot = await db.collection('metadata').where('metadataCategory', '==', 'filterFields').orderBy('name', 'asc').get();
+  const q = query(
+    collection(db, 'metadata'),
+    where('metadataCategory', '==', 'filterFields'),
+    orderBy('name', 'asc')
+  );
+  
+  const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     results.push({
       ...doc.data(),
@@ -18,7 +22,12 @@ export const getFilterFields = async () => {
 };
 
 export const getSettingByName = async (name) => {
-  const querySnapshot = await db.collection('metadata').where('name', '==', name).get();
+  const q = query(
+    collection(db, 'metadata'),
+    where('name', '==', name)
+  );
+  
+  const querySnapshot = await getDocs(q);
   let result = null;
   querySnapshot.forEach((doc) => {
     result = {

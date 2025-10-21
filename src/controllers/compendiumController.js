@@ -1,37 +1,57 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-
-const db = firebase.firestore();
+import { 
+  collection, 
+  serverTimestamp,
+  query,
+  where,
+  orderBy,
+  startAfter,
+  endBefore,
+  limitToLast,
+  limit,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  updateDoc
+} from 'firebase/firestore';
+import { db } from '../utils/firebase';
 
 const buildCompendiumQuery = (params) => {
   const searchFilterLower = params.search.toLowerCase() || '';
-  let query = db.collection('compendium');
+  let q = query(collection(db, 'compendium'));
 
-  if (!params.creatorId) query = query.where('published', '==', true);
+  if (!params.creatorId) q = query(q, where('published', '==', true));
 
-  if (params.type) query = query.where('type', '==', params.type);
-  if (params.rarity) query = query.where('rarity', '==', params.rarity);
+  if (params.type) q = query(q, where('type', '==', params.type));
+  if (params.rarity) q = query(q, where('rarity', '==', params.rarity));
 
-  query = query
-    .where('itemNameLower', '>=', searchFilterLower)
-    .where('itemNameLower', '<=', searchFilterLower + '\uf8ff');
+  q = query(q,
+    where('itemNameLower', '>=', searchFilterLower),
+    where('itemNameLower', '<=', searchFilterLower + '\uf8ff')
+  );
 
-  if (params.creatorId) query = query.where('creatorId', '==', params.creatorId);
+  if (params.creatorId) q = query(q, where('creatorId', '==', params.creatorId));
 
-  query = query.orderBy('itemNameLower');
+  q = query(q, orderBy('itemNameLower'));
 
-  return query;
+  return q;
 };
 
-const applyPagination = (query, params, limit) => {
+const applyPagination = (q, params, limitCount) => {
+  const constraints = [];
+  
   if (params.nextPage) {
-    query = query.startAfter(params.nextPage).limit(limit);
+    constraints.push(startAfter(params.nextPage));
   } else if (params.prevPage) {
-    query = query.endBefore(params.prevPage).limitToLast(limit);
-  } else {
-    query = query.limit(limit);
+    constraints.push(endBefore(params.prevPage));
+    constraints.push(limitToLast(limitCount));
+    return query(q, ...constraints);
   }
-  return query;
+  
+  constraints.push(limit(limitCount));
+  return query(q, ...constraints);
 };
 
 const hasNextItem = async (next, params) => {
@@ -39,9 +59,9 @@ const hasNextItem = async (next, params) => {
     return null;
   }
 
-  const query = buildCompendiumQuery(params).startAfter(next).limit(1);
+  const q = query(buildCompendiumQuery(params), startAfter(next), limit(1));
 
-  return query.get().then((querySnapshot) => {
+  return getDocs(q).then((querySnapshot) => {
     if (!querySnapshot.empty) return next;
   });
 };
@@ -51,22 +71,22 @@ const hasPreviousItem = async (previous, params) => {
     return null;
   }
 
-  const query = buildCompendiumQuery(params).endBefore(previous).limitToLast(1);
+  const q = query(buildCompendiumQuery(params), endBefore(previous), limitToLast(1));
 
-  return query.get().then((querySnapshot) => {
+  return getDocs(q).then((querySnapshot) => {
     if (!querySnapshot.empty) return previous;
   });
 };
 
-export const searchCompendium = async (queryParams, limit = 10) => {
-  const query = applyPagination(buildCompendiumQuery(queryParams, limit), queryParams, limit);
+export const searchCompendium = async (queryParams, limitCount = 10) => {
+  const q = applyPagination(buildCompendiumQuery(queryParams), queryParams, limitCount);
 
-  const querySnapshot = await query.get();
+  const querySnapshot = await getDocs(q);
   let results = [];
-  querySnapshot.forEach((doc) => {
+  querySnapshot.forEach((docSnap) => {
     results.push({
-      ...doc.data(),
-      id: doc.id,
+      ...docSnap.data(),
+      id: docSnap.id,
     });
   });
 
@@ -78,37 +98,37 @@ export const searchCompendium = async (queryParams, limit = 10) => {
 };
 
 export const isLiked = async (itemId, userId) => {
-  const itemRef = db.collection('compendium').doc(itemId);
-  const collectionRef = itemRef.collection('likes');
-  const doc = await collectionRef.doc(userId).get();
-  return doc.exists;
+  const itemRef = doc(db, 'compendium', itemId);
+  const collectionRef = collection(itemRef, 'likes');
+  const docSnap = await getDoc(doc(collectionRef, userId));
+  return docSnap.exists();
 };
 
 export const addLike = async (itemId, userId) => {
-  const itemRef = db.collection('compendium').doc(itemId);
-  const collectionRef = itemRef.collection('likes');
-  await collectionRef.doc(userId).set({
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+  const itemRef = doc(db, 'compendium', itemId);
+  const collectionRef = collection(itemRef, 'likes');
+  await setDoc(doc(collectionRef, userId), {
+    timestamp: serverTimestamp(),
   });
 };
 
 export const removeLike = async (itemId, userId) => {
-  const itemRef = db.collection('compendium').doc(itemId);
-  const collectionRef = itemRef.collection('likes');
-  await collectionRef.doc(userId).delete();
+  const itemRef = doc(db, 'compendium', itemId);
+  const collectionRef = collection(itemRef, 'likes');
+  await deleteDoc(doc(collectionRef, userId));
 };
 
 export const addCompendiumItem = async (itemData) => {
-  const itemRef = db.collection('compendium');
-  await itemRef.add({ ...itemData, created: firebase.firestore.FieldValue.serverTimestamp() });
+  const itemRef = collection(db, 'compendium');
+  await addDoc(itemRef, { ...itemData, created: serverTimestamp() });
 };
 
 export const updateCompendiumItem = async (itemId, itemData) => {
-  const itemRef = db.collection('compendium').doc(itemId);
-  await itemRef.update({ ...itemData, updated: firebase.firestore.FieldValue.serverTimestamp() });
+  const itemRef = doc(db, 'compendium', itemId);
+  await updateDoc(itemRef, { ...itemData, updated: serverTimestamp() });
 };
 
 export const deleteCompendiumItem = async (itemId) => {
-  const itemRef = db.collection('compendium').doc(itemId);
-  await itemRef.delete();
+  const itemRef = doc(db, 'compendium', itemId);
+  await deleteDoc(itemRef);
 };

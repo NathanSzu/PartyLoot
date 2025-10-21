@@ -5,7 +5,7 @@ let uid = uuidv4().substring(0, 8);
 describe('Settings', () => {
   before(() => {
     cy.login();
-    cy.get('[data-cy=navbar-toggle]').click();
+    cy.get('[data-cy="navbar-toggle"]').click();
     cy.get('[data-cy="navbar-settings"]').click();
   });
 

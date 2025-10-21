@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import { AuthContext } from './AuthContext';
 import { GroupContext } from './GroupContext';
 
 export const GlobalFeatures = React.createContext();
 
 export const GlobalFeaturesProvider = ({ children }) => {
-  const { db } = useContext(AuthContext);
   const { currentGroup, groupData } = useContext(GroupContext);
 
   const [showToast, setShowToast] = useState(false);
@@ -85,19 +86,19 @@ export const GlobalFeaturesProvider = ({ children }) => {
         break;
     }
 
-    db.collection('groups')
-      .doc(groupId)
-      .set(
-        {
-          history: setHistory(groupData?.history, {
-            completedBy,
-            action,
-            summary,
-            timestamp: timestamp.toDateString(),
-          }),
-        },
-        { merge: true }
-      );
+    try {
+      const groupRef = doc(db, 'groups', groupId);
+      await setDoc(groupRef, {
+        history: setHistory(groupData?.history, {
+          completedBy,
+          action,
+          summary,
+          timestamp: timestamp.toDateString(),
+        }),
+      }, { merge: true });
+    } catch (error) {
+      console.error('Error writing history event:', error);
+    }
   };
 
   const checkLocalStorage = (key, set = false) => {
@@ -115,7 +116,7 @@ export const GlobalFeaturesProvider = ({ children }) => {
     let localStoragePLT = localStorage.getItem('plt');
     let storageObj = JSON.parse(localStoragePLT) || {};
     keysArr.forEach((key) => {
-      delete storageObj[key]
+      delete storageObj[key];
     });
     localStorage.setItem('plt', JSON.stringify(storageObj));
   };

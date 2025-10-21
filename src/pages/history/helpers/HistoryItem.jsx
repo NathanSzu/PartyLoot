@@ -1,27 +1,28 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { ListGroup } from 'react-bootstrap';
+import { doc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function HistoryItem({ event }) {
   const { db } = useContext(AuthContext);
-  const userRef = db.collection('users').doc(event.completedBy);
-
+  
   const [displayName, setDisplayName] = useState('A shade');
   const [loading, setLoading] = useState(true);
 
-  const maskDisplayName = () => {
-    userRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setDisplayName(doc.data().displayName);
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error getting name:', error);
-      });
+  const maskDisplayName = async () => {
+    try {
+      const userRef = doc(db, 'users', event.completedBy);
+      const docSnap = await getDoc(userRef);
+      
+      if (docSnap.exists()) {
+        setDisplayName(docSnap.data().displayName);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error getting name:', error);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -1,28 +1,26 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { collection, doc, addDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../utils/firebase';
 
 const COLLECTION_NAME = 'groups';
 const LOOT_COLLECTION_NAME = 'loot';
 
 export const createLootItem = async (lootData, groupId) => {
-  const db = firebase.firestore();
-  const lootRef = db.collection(COLLECTION_NAME).doc(groupId).collection(LOOT_COLLECTION_NAME);
-  return lootRef.add({
+  const lootRef = collection(db, COLLECTION_NAME, groupId, LOOT_COLLECTION_NAME);
+  return addDoc(lootRef, {
     ...lootData,
-    created: firebase.firestore.FieldValue.serverTimestamp(),
-    updated: firebase.firestore.FieldValue.serverTimestamp()
+    created: serverTimestamp(),
+    updated: serverTimestamp()
   }).catch((error) => {
     console.error('Error creating new item: ', error);
   });
 };
 
 export const updateLootItem = async (lootData, groupId, lootId) => {
-  const db = firebase.firestore();
-  const lootRef = db.collection(COLLECTION_NAME).doc(groupId).collection(LOOT_COLLECTION_NAME).doc(lootId);
+  const lootRef = doc(db, COLLECTION_NAME, groupId, LOOT_COLLECTION_NAME, lootId);
   
-  return lootRef.set({
+  return setDoc(lootRef, {
     ...lootData,
-    updated: firebase.firestore.FieldValue.serverTimestamp()
+    updated: serverTimestamp()
   }, { merge: true }).catch((error) => {
     console.error('Error updating item: ', error);
   });

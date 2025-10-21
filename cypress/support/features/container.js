@@ -9,7 +9,7 @@ const createContainer = (containerName = name1) => {
   cy.closeDialog('create-container-form');
 };
 
-const openContainerModal = () => cy.get('[data-cy="container-modal"]').click();
+const openContainerModal = () => cy.get('[data-cy="container-modal"]').should('be.visible').click();
 
 const openContainerFromList = (containerName = name1) => {
   cy.contains('.list-group-item', containerName).within(() => {

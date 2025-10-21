@@ -22,18 +22,18 @@ describe('Item actions', () => {
   it('edit item', () => {
     loot.addItem();
     cy.contains('#loot-accordion', 'New item').eq(0).click();
-    cy.get('[data-cy=edit-item]').click();
-    cy.get('[data-cy=item-name]').type(' (edited)');
-    cy.get('[data-cy=item-tags]').type(', valuable');
-    cy.get('[data-cy=rarity-select]').select('legendary');
-    cy.get('[data-cy=save-item]').click();
+    cy.get('[data-cy="edit-item"]').click();
+    cy.get('[data-cy="item-name"]').type(' (edited)');
+    cy.get('[data-cy="item-tags"]').type(', valuable');
+    cy.get('[data-cy="rarity-select"]').select('legendary');
+    cy.get('[data-cy="save-item"]').click();
     cy.contains('#loot-accordion', 'New item (edited)');
   });
 
   it('sell one item', () => {
     loot.addItem(20);
     loot.fillSellFields(1);
-    cy.get('[data-cy=confirm-sell-item]').click();
+    cy.get('[data-cy="confirm-sell-item"]').click();
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
     loot.checkCurrencyValues(1);
     cy.contains('#loot-accordion', 'x19');
@@ -42,34 +42,34 @@ describe('Item actions', () => {
   it('sell an item with no qty', () => {
     loot.addItem();
     loot.fillSellFields();
-    cy.get('[data-cy=confirm-sell-item]').click();
+    cy.get('[data-cy="confirm-sell-item"]').click();
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
     loot.checkCurrencyValues(1);
-    cy.get('#loot-accordion').children().should('not.exist');
+    cy.contains('#loot-accordion', 'New item').should('not.exist');
   });
 
   it('sell one item to a different party member', () => {
     loot.addItem(19);
-    cy.get('[data-cy=modal-party]').click();
-    cy.get('[data-cy=new-member-input]').type(ownerUid);
-    cy.get('[data-cy=save-new-member]').click();
+    cy.get('[data-cy="modal-party"]').click();
+    cy.get('[data-cy="new-member-input"]').type(ownerUid);
+    cy.get('[data-cy="save-new-member"]').click();
     cy.closeDialog('edit-party-dialog');
     loot.fillSellFields();
     loot.selectItemOwner(ownerUid);
-    cy.get('[data-cy=confirm-sell-item]').click();
+    cy.get('[data-cy="confirm-sell-item"]').click();
     cy.contains('#gold-tracker-accordion', 'Party Gold').click();
     loot.checkCurrencyValues(0);
-    cy.get('[data-cy=owner-select]').select(ownerUid);
+    cy.get('#ownerSelect').select(ownerUid);
     loot.checkCurrencyValues(1);
-    cy.get('[data-cy=owner-select]').select('party');
+    cy.get('#ownerSelect').select('party');
     cy.contains('#loot-accordion', 'x18');
   });
 
   it('sell max qty item', () => {
     loot.addItem(19);
     cy.contains('#loot-accordion', 'New item').eq(0).click();
-    cy.get('[data-cy=sell-item]').click();
-    cy.get('[data-cy=sell-max-qty]').click();
+    cy.get('[data-cy="sell-item"]').click();
+    cy.get('[data-cy="sell-max-qty"]').click();
     cy.get('[role=dialog]').within(() => {
       currencyKeys.forEach((key) => {
         cy.get(`[data-cy=${key}]`).type(1);
@@ -84,8 +84,8 @@ describe('Item actions', () => {
   it('delete item', () => {
     loot.addItem();
     cy.contains('#loot-accordion', 'New item').eq(0).click();
-    cy.get('[data-cy=delete-item]').click();
-    cy.get('[data-cy=confirm-item-delete]').click();
+    cy.get('[data-cy="delete-item"]').click();
+    cy.get('[data-cy="confirm-item-delete"]').click();
     cy.contains('#loot-accordion', 'New item').should('not.exist');
   });
 
@@ -103,7 +103,7 @@ describe('Item actions', () => {
   });
 });
 
-describe.only('Search and filter functionality', () => {
+describe('Search and filter functionality', () => {
   beforeEach(() => {
     cy.login();
     cy.addGroup(uid);
@@ -127,24 +127,24 @@ describe.only('Search and filter functionality', () => {
   it('search items by tag', () => {
     loot.addItem(1, 'Magic Sword');
     cy.contains('.accordion-item', 'Magic Sword').click();
-    cy.get('[data-cy=edit-item]').click();
-    cy.get('[data-cy=item-tags]').clear();
-    cy.get('[data-cy=save-item]').click();
+    cy.get('[data-cy="edit-item"]').click();
+    cy.get('[data-cy="item-tags"]').clear();
+    cy.get('[data-cy="save-item"]').click();
     loot.addItem(1, 'Healing Potion');
-    cy.get('[data-cy=search-input]').type('scroll');
+    cy.get('[data-cy="search-input"]').type('scroll');
     cy.contains('.accordion-item', 'Healing Potion').should('exist');
     cy.contains('.accordion-item', 'Magic Sword').should('not.exist');
   });
 
-  it.only('search items by clicking tag button', () => {
+  it('search items by clicking tag button', () => {
     loot.addItem(1, 'Magic Sword');
     cy.contains('.accordion-item', 'Magic Sword').click();
-    cy.get('[data-cy=edit-item]').click();
-    cy.get('[data-cy=item-tags]').clear();
-    cy.get('[data-cy=save-item]').click();
+    cy.get('[data-cy="edit-item"]').click();
+    cy.get('[data-cy="item-tags"]').clear();
+    cy.get('[data-cy="save-item"]').click();
     loot.addItem(1, 'Healing Potion');
     cy.contains('.accordion-item', 'Healing Potion').click();
-    cy.get('[data-cy=tag-button]').contains('scroll').click();
+    cy.get('[data-cy="tag-button"]').contains('scroll').click();
     cy.contains('.accordion-item', 'Healing Potion').should('exist');
     cy.contains('.accordion-item', 'Magic Sword').should('not.exist');
   });

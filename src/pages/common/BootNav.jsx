@@ -1,7 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Row } from 'react-bootstrap';
-import firebaseApp from '../../utils/firebase';
+import { auth } from '../../utils/firebase';
+import { signOut } from 'firebase/auth';
 import { AuthContext } from '../../utils/contexts/AuthContext';
 
 export default function BootNav() {
@@ -21,9 +22,7 @@ export default function BootNav() {
   };
 
   const logOut = () => {
-    firebaseApp
-      .auth()
-      .signOut()
+    signOut(auth)
       .then(() => {
         // Sign-out successful.
         navigate('/');
@@ -38,8 +37,7 @@ export default function BootNav() {
 
   useEffect(() => {
     setExpanded(false);
-  }, [location])
-  
+  }, [location]);
 
   return (
     <Row>

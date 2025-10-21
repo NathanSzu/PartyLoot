@@ -1,10 +1,11 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Modal, Alert } from 'react-bootstrap';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import fb from 'firebase';
 
 export default function ModalAppRequest() {
-  const { currentUser, db, userData } = useContext(AuthContext);
+  const { currentUser, userData } = useContext(AuthContext);
   const [action, setAction] = useState('...');
   const [userMsg, setUserMsg] = useState('');
   const [status, setStatus] = useState(null);
@@ -29,7 +30,7 @@ export default function ModalAppRequest() {
     setLoading(false);
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (
       !usernameRef.current.value ||
@@ -41,38 +42,47 @@ export default function ModalAppRequest() {
       setStatus('danger');
       return;
     }
+
     setLoading(true);
-    db.collection('communications')
-      .doc()
-      .set({
+
+    try {
+      await addDoc(collection(db, 'communications'), {
         username: usernameRef.current.value,
         email: emailRef.current.value,
         action: actionRef.current.value,
         description: descriptionRef.current.value,
-        sent: fb.firestore.FieldValue.serverTimestamp(),
-      })
-      .then(() => {
-        setUserMsg('Message sent!');
-        setStatus('success');
-        const killModal = setTimeout(() => {
-          setShowRequestModal(false);
-          clearModal();
-        }, 3500);
-        return () => {
-          clearTimeout(killModal);
-        };
-      })
-      .catch((error) => {
-        console.error('Error creating new group: ', error);
-        setLoading(false);
-        setUserMsg('Unknown error, please try again.');
-        setStatus('danger');
+        sent: serverTimestamp(),
       });
+
+      setUserMsg('Message sent!');
+      setStatus('success');
+      setLoading(false);
+
+      const killModal = setTimeout(() => {
+        setShowRequestModal(false);
+        clearModal();
+      }, 3500);
+
+      return () => {
+        clearTimeout(killModal);
+      };
+    } catch (error) {
+      console.error('Error creating new communication: ', error);
+      setLoading(false);
+      setUserMsg('Unknown error, please try again.');
+      setStatus('danger');
+    }
   };
 
   return (
     <>
-      <Button variant='dark' className='p-2 mb-2 w-100 background-dark border-0' onClick={() => setShowRequestModal(true)}>Request Feature / Report Bug</Button>
+      <Button
+        variant='dark'
+        className='p-2 mb-2 w-100 background-dark border-0'
+        onClick={() => setShowRequestModal(true)}
+      >
+        Request Feature / Report Bug
+      </Button>
 
       <Modal
         show={showRequestModal}
@@ -89,11 +99,19 @@ export default function ModalAppRequest() {
           <Modal.Body>
             <Form.Group controlId='Username'>
               <Form.Label>Name</Form.Label>
-              <Form.Control type='text' ref={usernameRef} defaultValue={userData && userData.displayName} />
+              <Form.Control
+                type='text'
+                ref={usernameRef}
+                defaultValue={userData && userData.displayName}
+              />
             </Form.Group>
             <Form.Group controlId='Username'>
               <Form.Label>Email</Form.Label>
-              <Form.Control type='text' ref={emailRef} defaultValue={currentUser && currentUser.email} />
+              <Form.Control
+                type='text'
+                ref={emailRef}
+                defaultValue={currentUser && currentUser.email}
+              />
             </Form.Group>
             <Form.Group controlId='Action'>
               <Form.Label>What would you like to do?</Form.Label>
@@ -110,9 +128,15 @@ export default function ModalAppRequest() {
             </Form.Group>
             <Form.Group controlId='Description'>
               <Form.Label>{`Describe your ${action}`}</Form.Label>
-              <Form.Control as='textarea' ref={descriptionRef} placeholder='Please be as descriptive as possible!' />
+              <Form.Control
+                as='textarea'
+                ref={descriptionRef}
+                placeholder='Please be as descriptive as possible!'
+              />
             </Form.Group>
-            <Form.Group>{userMsg && <Alert variant={status && status}>{userMsg}</Alert>}</Form.Group>
+            <Form.Group>
+              {userMsg && <Alert variant={status && status}>{userMsg}</Alert>}
+            </Form.Group>
           </Modal.Body>
 
           <Modal.Footer>

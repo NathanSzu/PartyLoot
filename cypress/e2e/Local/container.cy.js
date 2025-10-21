@@ -33,9 +33,9 @@ describe('Container actions', () => {
     loot.addItem();
     cy.get('.accordion-header').contains(containerName).should('not.exist');
     cy.contains('#loot-accordion', 'New item').eq(0).click();
-    cy.get('[data-cy=edit-item]').click();
-    cy.get('[data-cy=container-select]').select(containerName);
-    cy.get('[data-cy=save-item]').click();
+    cy.get('[data-cy="edit-item"]').click();
+    cy.get('[data-cy="container-select"]').select(containerName);
+    cy.get('[data-cy="save-item"]').click();
     cy.get('.accordion-header').contains(containerName).should('be.visible');
   });
 

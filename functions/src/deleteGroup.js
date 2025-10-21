@@ -8,7 +8,7 @@ const deleteGroup = async (req, res) => {
   logger.log('Deleting group...');
 
   await firebase_tools.firestore.delete(path, {
-    project: process.env.REACT_APP_PROJECT_ID,
+    project: process.env.VITE_PROJECT_ID,
     recursive: true,
     force: true,
     token: process.env.GOOGLE_FIREBASE_TOKEN,

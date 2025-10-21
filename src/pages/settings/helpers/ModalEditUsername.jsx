@@ -1,10 +1,12 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Form, Button, Modal, Alert } from 'react-bootstrap';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function ModalEditUsername({ userData }) {
-  const { db, setUsername } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
+  const { setUsername } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [alert, setAlert] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
@@ -16,25 +18,25 @@ export default function ModalEditUsername({ userData }) {
   };
   const usernameRef = useRef(null);
 
-  const uniqueNameCheck = (value) => {
-    db.collection('users')
-      .where('displayName', '==', value)
-      .limit(1)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.docs.length === 0) {
-          setUsername(value).then(() => {
-            handleClose();
-            setLoading(false);
-          });
-        } else {
-          setAlert('Username taken!');
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error('Error checking username: ', err);
-      });
+  const uniqueNameCheck = async (value) => {
+    try {
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('displayName', '==', value), limit(1));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.docs.length === 0) {
+        await setUsername(value);
+        handleClose();
+        setLoading(false);
+      } else {
+        setAlert('Username taken!');
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Error checking username: ', err);
+      setAlert('Error checking username availability');
+      setLoading(false);
+    }
   };
 
   const usernameIsValid = (value) => {
@@ -43,14 +45,17 @@ export default function ModalEditUsername({ userData }) {
     if (value === userData?.displayName?.trim()) return false;
     if (value.length < 5) {
       setValidationMsg('Username must contain at least 5 characters');
+      setLoading(false);
       return false;
     }
     if (value.length > 15) {
       setValidationMsg('Username must contain fewer than 15 characters');
+      setLoading(false);
       return false;
     }
     if (!regex.test(value)) {
       setValidationMsg('Username cannot contain spaces or special characters');
+      setLoading(false);
       return false;
     }
     setValidationMsg('');

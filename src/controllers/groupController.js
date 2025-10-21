@@ -1,46 +1,58 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { 
+  collection, 
+  doc, 
+  getDocs, 
+  updateDoc, 
+  setDoc, 
+  query, 
+  where, 
+  onSnapshot, 
+  documentId, 
+  arrayUnion, 
+  arrayRemove 
+} from 'firebase/firestore';
+import { db } from '../utils/firebase';
 
-const db = firebase.firestore();
-const groupCollection = db.collection('groups');
+const groupCollection = collection(db, 'groups');
 
 export const getGroupMembers = async (members, setGroupMembers, setLoading) => {
   setLoading(true);
-  await db
-    .collection('users')
-    .where(firebase.firestore.FieldPath.documentId(), 'in', members)
-    .onSnapshot((querySnapshot) => {
-      let results = [];
-      querySnapshot.forEach((doc) => {
-        results.push({
-          ...doc.data(),
-          id: doc.id,
-        });
+  const q = query(
+    collection(db, 'users'),
+    where(documentId(), 'in', members)
+  );
+  
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    let results = [];
+    querySnapshot.forEach((doc) => {
+      results.push({
+        ...doc.data(),
+        id: doc.id,
       });
-      setGroupMembers(results);
     });
-  setLoading(false);
+    setGroupMembers(results);
+    setLoading(false);
+  });
+  
+  return unsubscribe; // Return unsubscribe function for cleanup
 };
 
-export const editGroup = (id, values, handleClose, setLoading) => {
+export const editGroup = async (id, values, handleClose, setLoading) => {
   setLoading(true);
-  groupCollection
-    .doc(id)
-    .set({ ...values }, { merge: true })
-    .then(() => {
-      handleClose && handleClose();
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.error('Error updating document: ', error);
-      setLoading(false);
-    });
+  try {
+    await setDoc(doc(groupCollection, id), values, { merge: true });
+    handleClose && handleClose();
+    setLoading(false);
+  } catch (error) {
+    console.error('Error updating document: ', error);
+    setLoading(false);
+  }
 };
 
 export const deleteGroup = async (currentUser, owner, setLoading, id, handleClose) => {
   if (currentUser.uid !== owner) return;
   setLoading(true);
-  await fetch(process.env.REACT_APP_DELETE_GROUP_URL, {
+  await fetch(import.meta.env.VITE_DELETE_GROUP_URL, {
     method: 'POST',
     body: id,
   });
@@ -49,48 +61,51 @@ export const deleteGroup = async (currentUser, owner, setLoading, id, handleClos
 };
 
 // Add member
-export const addMember = (memberRef, groupMembers, setAlert, setLoading, id, setFalse) => {
+export const addMember = async (memberRef, groupMembers, setAlert, setLoading, id, setFalse) => {
   if (!memberRef.current.value) return;
   if (groupMembers.length > 9) {
     setAlert('No more than 10 members can be added');
     return;
   }
   setLoading(true);
-  db.collection('users')
-    .where('code', '==', memberRef.current.value.toUpperCase())
-    .get()
-    .then((querySnapshot) => {
-      if (querySnapshot.empty) {
-        setAlert('User not found!');
-      } else {
-        querySnapshot.forEach((doc) => {
-          groupCollection.doc(id).update({
-            members: firebase.firestore.FieldValue.arrayUnion(doc.id),
-          });
+  
+  try {
+    const q = query(
+      collection(db, 'users'),
+      where('code', '==', memberRef.current.value.toUpperCase())
+    );
+    
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
+      setAlert('User not found!');
+    } else {
+      querySnapshot.forEach(async (docSnap) => {
+        await updateDoc(doc(groupCollection, id), {
+          members: arrayUnion(docSnap.id),
         });
-        memberRef.current.value = '';
-        setFalse();
-      }
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.error('Error getting user: ', error);
-    });
+      });
+      memberRef.current.value = '';
+      setFalse();
+    }
+    setLoading(false);
+  } catch (error) {
+    console.error('Error getting user: ', error);
+    setLoading(false);
+  }
 };
 
 // Remove member
-export const removeMember = (id, uid, setLoading, handleClose, close = false) => {
+export const removeMember = async (id, uid, setLoading, handleClose, close = false) => {
   setLoading(true);
-  groupCollection
-    .doc(id)
-    .update({
-      members: firebase.firestore.FieldValue.arrayRemove(uid),
-    })
-    .then(() => {
-      close && handleClose();
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.error('Error removing member: ', error);
+  try {
+    await updateDoc(doc(groupCollection, id), {
+      members: arrayRemove(uid),
     });
+    close && handleClose();
+    setLoading(false);
+  } catch (error) {
+    console.error('Error removing member: ', error);
+    setLoading(false);
+  }
 };

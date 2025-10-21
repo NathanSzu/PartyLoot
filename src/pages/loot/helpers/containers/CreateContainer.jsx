@@ -18,10 +18,12 @@ import {
   ListGroup,
   ListGroupItem,
 } from 'react-bootstrap';
+import { collection, addDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../../../utils/firebase';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function CreateContainer() {
-  const { groupDoc, partyStorageContainers, isGameMaster } = useContext(GroupContext);
+  const { groupDoc, partyStorageContainers, isGameMaster } = useContext(GroupContext); // Remove db from destructuring
   const [show, setShow] = useState(false);
   const [containerData, setContainerData] = useState({
     type: '1',
@@ -45,50 +47,55 @@ export default function CreateContainer() {
     setShow(true);
   };
 
-  const addContainer = () => {
+  const addContainer = async () => {
     if (!containerData?.name) {
       setValidationMsg('Container name cannot be empty');
       return;
     }
     setLoading(true);
-    groupDoc
-      .collection('containers')
-      .add(containerData)
-      .then(() => {
-        handleClose();
-        setLoading(false);
-      });
+    try {
+      const containersRef = collection(db, 'groups', groupDoc.id, 'containers');
+      await addDoc(containersRef, containerData);
+      handleClose();
+      setLoading(false);
+    } catch (error) {
+      console.error('Error adding container:', error);
+      setLoading(false);
+    }
   };
 
-  const updateContainer = (containerData) => {
+  const updateContainer = async (containerData) => {
     setLoading(true);
-    let tempContainerData = { ...containerData };
-    delete tempContainerData.id;
-    groupDoc
-      .collection('containers')
-      .doc(containerData.id)
-      .set(tempContainerData, { merge: true })
-      .then(() => {
-        handleClose();
-        setLoading(false);
-      });
+    try {
+      let tempContainerData = { ...containerData };
+      delete tempContainerData.id;
+      const containerRef = doc(db, 'groups', groupDoc.id, 'containers', containerData.id);
+      await setDoc(containerRef, tempContainerData, { merge: true });
+      handleClose();
+      setLoading(false);
+    } catch (error) {
+      console.error('Error updating container:', error);
+      setLoading(false);
+    }
   };
 
-  const deleteContainer = (id) => {
+  const deleteContainer = async (id) => {
     setLoading(true);
     if (!deleteConfirmation) {
       setDeleteConfirmation(true);
       setLoading(false);
+      return;
     }
     if (deleteConfirmation) {
-      groupDoc
-        .collection('containers')
-        .doc(id)
-        .delete()
-        .then(() => {
-          handleClose();
-          setLoading(false);
-        });
+      try {
+        const containerRef = doc(db, 'groups', groupDoc.id, 'containers', id);
+        await deleteDoc(containerRef);
+        handleClose();
+        setLoading(false);
+      } catch (error) {
+        console.error('Error deleting container:', error);
+        setLoading(false);
+      }
     }
   };
 

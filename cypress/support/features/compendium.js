@@ -1,8 +1,8 @@
 export function fillCompendiumFields(fields) {
-  if (fields.name) cy.get('[data-cy="new-discovery-name"]').clear().type(fields.name);
-  if (fields.charges) cy.get('[data-cy="new-discovery-charges"]').clear().type(fields.charges);
-  if (fields.rarity) cy.get('[data-cy="rarity-select"]').select(fields.rarity);
-  if (fields.type) cy.get('[data-cy="type-select"]').select(fields.type);
+  if (fields.name) cy.get('#discovery-item-name').clear().type(fields.name);
+  if (fields.charges) cy.get('#discovery-max-charges').clear().type(fields.charges);
+  if (fields.rarity) cy.get('#raritySelect').select(fields.rarity);
+  if (fields.type) cy.get('#typeSelect').select(fields.type);
   if (fields.acknowledgement) cy.get('[data-cy="discovery-acknowledgement"]').check({ force: true });
 }
 

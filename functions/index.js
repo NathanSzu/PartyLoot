@@ -3,7 +3,7 @@ const { logger } = require('firebase-functions');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentCreated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 const { deleteGroup } = require('./src/deleteGroup');
-
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 const FieldValue = require('firebase-admin').firestore.FieldValue;
@@ -25,12 +25,10 @@ exports.compendiumLikeAdded = onDocumentCreated('compendium/{item}/likes/{like}'
   const itemRef = ref.parent.parent;
   const itemRefId = itemRef.id;
 
-  db.doc(`compendium/${itemRefId}`)
-    .set({ likeCount: FieldValue.increment(1) }, { merge: true })
-    .catch((err) => {
-      logger.error(err);
-      return null;
-    });
+  setDoc(doc(db, `compendium/${itemRefId}`), { likeCount: FieldValue.increment(1) }, { merge: true }).catch((err) => {
+    logger.error(err);
+    return null;
+  });
 });
 
 exports.compendiumLikeRemoved = onDocumentDeleted('compendium/{item}/likes/{like}', (event) => {
@@ -44,47 +42,41 @@ exports.compendiumLikeRemoved = onDocumentDeleted('compendium/{item}/likes/{like
   const itemRef = ref.parent.parent;
   const itemRefId = itemRef.id;
 
-  db.doc(`compendium/${itemRefId}`)
-    .set({ likeCount: FieldValue.increment(-1) }, { merge: true })
-    .catch((err) => {
-      logger.error(err);
-      return null;
-    });
+  setDoc(doc(db, `compendium/${itemRefId}`), { likeCount: FieldValue.increment(-1) }, { merge: true }).catch((err) => {
+    logger.error(err);
+    return null;
+  });
 });
 
 exports.itemSearch = onRequest({ cors: true }, async (req, res) => {
   let results = [];
 
-  axios
-    .all([
-      axios.get(`https://api.open5e.com/v1/magicitems/?search=${req.body}`),
-    ])
-    .then((resArr) => {
-      for (let i = 0; i < resArr.length; i++) {
-        results = results.concat(resArr[i].data.results);
-      }
+  axios.all([axios.get(`https://api.open5e.com/v1/magicitems/?search=${req.body}`)]).then((resArr) => {
+    for (let i = 0; i < resArr.length; i++) {
+      results = results.concat(resArr[i].data.results);
+    }
 
-      db.collection('compendium')
-        .where('itemNameLower', '>=', req.body)
-        .where('itemNameLower', '<=', req.body + '\uf8ff')
-        .limit(10)
-        .get()
-        .then((snap) => {
-          snap.forEach((item) => {
-            results.push({
-              ...item.data(),
-              id: item.id,
-              name: item.data().itemName,
-              document__title: 'Compendium',
-            });
+    getDocs(collection(db, 'compendium'))
+      .where('itemNameLower', '>=', req.body)
+      .where('itemNameLower', '<=', req.body + '\uf8ff')
+      .limit(10)
+      .get()
+      .then((snap) => {
+        snap.forEach((item) => {
+          results.push({
+            ...item.data(),
+            id: item.id,
+            name: item.data().itemName,
+            document__title: 'Compendium',
           });
-
-          results.sort((a, b) => {
-            return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
-          });
-          res.status(200).send(results);
         });
-    });
+
+        results.sort((a, b) => {
+          return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+        });
+        res.status(200).send(results);
+      });
+  });
 });
 
 const createTransporter = async () => {
@@ -146,5 +138,4 @@ exports.reportNotification = onDocumentCreated('communications/{documentId}', (e
   send(mailOptions);
 });
 
-
-exports.deleteGroupTrigger = onRequest({ cors: true }, (req, res) => deleteGroup(req,res));
+exports.deleteGroupTrigger = onRequest({ cors: true }, (req, res) => deleteGroup(req, res));

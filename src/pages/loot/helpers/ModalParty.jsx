@@ -1,6 +1,7 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { Form, Row, Col, Button, Modal, Container } from 'react-bootstrap';
-import fb from 'firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
@@ -11,7 +12,6 @@ export default function ModalParty() {
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
-  const itemOwnersRef = groupDoc.collection('itemOwners');
   const addItemOwnerRef = useRef('');
 
   const [loading, setLoading] = useState(false);
@@ -30,28 +30,31 @@ export default function ModalParty() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const addItemOwner = () => {
+  const addItemOwner = async () => {
     if (!addItemOwnerRef.current.value) {
       console.error('Enter a name first');
       return;
     }
     setLoading(true);
-    itemOwnersRef
-      .add({
+    try {
+      const itemOwnersRef = collection(db, 'groups', groupDoc.id, 'itemOwners');
+      await addDoc(itemOwnersRef, {
         name: addItemOwnerRef.current.value,
         type: 'party',
-        createdOn: fb.firestore.FieldValue.serverTimestamp(),
-      })
-      .then(() => {
-        writeHistoryEvent(currentUser.uid, 'addPartyMember', { name: addItemOwnerRef.current.value }).then(() => {
-          addItemOwnerRef.current.value = '';
-          setLoading(false);
-        });
-      })
-      .catch((err) => {
-        console.error(err.code);
-        console.error(err.message);
+        createdOn: serverTimestamp(),
       });
+      
+      await writeHistoryEvent(currentUser.uid, 'addPartyMember', { 
+        name: addItemOwnerRef.current.value 
+      });
+      
+      addItemOwnerRef.current.value = '';
+      setLoading(false);
+    } catch (err) {
+      console.error(err.code);
+      console.error(err.message);
+      setLoading(false);
+    }
   };
 
   return (

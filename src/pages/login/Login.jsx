@@ -1,9 +1,8 @@
 import { useState, useRef } from 'react';
 import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
-// Importing and initializing firebase from utils/firebase config file.
-import firebaseApp from '../../utils/firebase';
+import { auth } from '../../utils/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function BootLogin() {
   const [email, setEmail] = useState(null);
@@ -72,9 +71,7 @@ export default function BootLogin() {
     if (!passwordRef.current.value) return;
     if (emailValid && passwordValid && passwordLengthValid) {
       setLoading(true);
-      firebaseApp
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           setLoading(false);
         })
@@ -92,9 +89,7 @@ export default function BootLogin() {
     if (!passwordRef.current.value) return;
     if (emailValid) {
       setLoading(true);
-      firebaseApp
-        .auth()
-        .signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           setLoading(false);
         })

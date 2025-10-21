@@ -33,6 +33,7 @@ export function LikeDisplay({ item }) {
 
   useEffect(() => {
     const fetchLikedStatus = async () => {
+      if (!item?.id) return;
       try {
         const likedStatus = await isLiked(item.id, currentUser.uid);
         setLiked(likedStatus);

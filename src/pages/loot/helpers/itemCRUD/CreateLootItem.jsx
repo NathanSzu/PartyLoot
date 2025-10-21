@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, FormLabel } from 'react-bootstrap';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../../utils/contexts/AuthContext';

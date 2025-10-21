@@ -1,5 +1,5 @@
 Cypress.Commands.add('closeDialog', (selector) => {
-  cy.get(`[data-cy=${selector}]`).within(() => {
+  cy.get(`#${selector}`).within(() => {
     cy.get('.btn-close').click();
   });
 });

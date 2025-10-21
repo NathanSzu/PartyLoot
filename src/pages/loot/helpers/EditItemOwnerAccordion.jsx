@@ -1,5 +1,7 @@
-import React, { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { Col, Row, Container, Button, Alert, Form } from 'react-bootstrap';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
@@ -9,80 +11,74 @@ export default function EditItemOwnerAccordion({ itemOwner, handleClose }) {
   const { currentUser } = useContext(AuthContext);
   const { writeHistoryEvent } = useContext(GlobalFeatures);
 
-  const itemOwnersRef = groupDoc.collection('itemOwners');
-
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
   const nameRef = useRef();
 
-  const removeItemOwner = (itemOwnerId) => {
+  const removeItemOwner = async (itemOwnerId) => {
     setLoadingDelete(true);
-    itemOwnersRef
-      .doc(itemOwnerId)
-      .update({
+    try {
+      const itemOwnerRef = doc(db, 'groups', groupDoc.id, 'itemOwners', itemOwnerId);
+      await updateDoc(itemOwnerRef, {
         type: 'deleted',
-      })
-      .then(() => {
-        writeHistoryEvent(currentUser.uid, 'deletePartyMember', { name: itemOwner.name }).then(() => {
-          setLoadingDelete(false);
-          checkFavorite(groupData, itemOwner) && setFavoriteItemOwner(itemOwner);
-          handleClose();
-        });
-      })
-      .catch((err) => {
-        console.error(err.code);
-        console.error(err.message);
       });
+      
+      await writeHistoryEvent(currentUser.uid, 'deletePartyMember', { name: itemOwner.name });
+      setLoadingDelete(false);
+      checkFavorite(groupData, itemOwner) && setFavoriteItemOwner(itemOwner);
+      handleClose();
+    } catch (err) {
+      console.error(err.code);
+      console.error(err.message);
+    }
   };
 
-  const saveNameChange = (itemOwnerId) => {
+  const saveNameChange = async (itemOwnerId) => {
     let itemOwnerName = itemOwner.name;
     setLoadingSave(true);
-    itemOwnersRef
-      .doc(itemOwnerId)
-      .update({
+    try {
+      const itemOwnerRef = doc(db, 'groups', groupDoc.id, 'itemOwners', itemOwnerId);
+      await updateDoc(itemOwnerRef, {
         name: nameRef.current.value,
-      })
-      .then(() => {
-        writeHistoryEvent(currentUser.uid, 'editPartyMember', {
-          name: nameRef.current.value,
-          oldName: itemOwnerName,
-        }).then(() => {
-          setLoadingSave(false);
-          handleClose();
-        });
-      })
-      .catch((err) => {
-        console.error(err.code);
-        console.error(err.message);
       });
+      
+      await writeHistoryEvent(currentUser.uid, 'editPartyMember', {
+        name: nameRef.current.value,
+        oldName: itemOwnerName,
+      });
+      setLoadingSave(false);
+      handleClose();
+    } catch (err) {
+      console.error(err.code);
+      console.error(err.message);
+    }
   };
 
   const checkFavorite = (groupData, itemOwner) => {
     return groupData?.favorites?.[currentUser.uid] === itemOwner?.id;
   };
 
-  const setFavoriteItemOwner = (itemOwner) => {
+  const setFavoriteItemOwner = async (itemOwner) => {
     setLoadingSave(true);
     const newFavorite = checkFavorite(groupData, itemOwner) ? 'party' : itemOwner.id;
-    groupDoc
-      .update({
+    try {
+      const groupRef = doc(db, 'groups', groupDoc.id);
+      await updateDoc(groupRef, {
         [`favorites.${currentUser.uid}`]: newFavorite,
-      })
-      .then(() => {
-        setItemQuery({
-          ...itemQuery,
-          itemOwner: newFavorite,
-        });
-        handleClose();
-        setLoadingSave(false);
-      })
-      .catch((err) => {
-        console.error(err.code);
-        console.error(err.message);
       });
+      
+      setItemQuery({
+        ...itemQuery,
+        itemOwner: newFavorite,
+      });
+      handleClose();
+      setLoadingSave(false);
+    } catch (err) {
+      console.error(err.code);
+      console.error(err.message);
+    }
   };
 
   return (

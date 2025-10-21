@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Row, Spinner, Col } from 'react-bootstrap';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../../../utils/firebase';
 import { GroupContext } from '../../../../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../../../../utils/contexts/GlobalFeatures';
 import CurrencyTrackerDisplay from './CurrencyTrackerDisplay';
@@ -16,27 +18,34 @@ export default function CurrencyTracker() {
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    groupDoc
-      .collection('itemOwners')
-      .doc(itemQuery.itemOwner)
-      .get()
-      .then((doc) => {
+
+    const fetchItemOwner = async () => {
+      try {
+        const itemOwnerRef = doc(db, 'groups', groupDoc.id, 'itemOwners', itemQuery.itemOwner);
+        const docSnap = await getDoc(itemOwnerRef);
+
         if (isMounted) {
-          if (doc.exists) {
-            setItemOwnerName(doc.data().name);
+          if (docSnap.exists()) {
+            setItemOwnerName(docSnap.data().name);
           } else {
             setItemOwnerName('Party');
           }
           setLoading(false);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error getting document:', error);
-      });
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchItemOwner();
+
     return () => {
       isMounted = false;
     };
-  }, [itemQuery.itemOwner]);
+  }, [itemQuery.itemOwner, groupDoc.id]);
 
   return (
     <>

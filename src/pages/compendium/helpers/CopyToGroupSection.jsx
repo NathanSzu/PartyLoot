@@ -4,10 +4,11 @@ import ItemOwnerSelect from '../../common/ItemOwnerSelect';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import fb from 'firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 
 export default function CopyToGroupSection({ itemName, itemDesc, item, handleClose }) {
-  const { groupList, groups } = useContext(GroupContext);
+  const { groupList } = useContext(GroupContext);
   const { writeHistoryEvent, setToastHeader, setToastContent, setShowToast } = useContext(GlobalFeatures);
   const { currentUser } = useContext(AuthContext);
 
@@ -15,20 +16,19 @@ export default function CopyToGroupSection({ itemName, itemDesc, item, handleClo
   const [owner, setOwner] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const groupLootRef = groups.doc(group || 'null').collection('loot');
-
   const handleSaveToGroup = () => {
     setLoading(true);
-    groupLootRef
-      .add({
-        itemName,
-        itemQty: 1,
-        itemDesc,
-        rarity: item.rarity.toLowerCase(),
-        type: item.type,
-        ownerId: owner || 'party',
-        created: fb.firestore.FieldValue.serverTimestamp(),
-      })
+    const groupLootRef = collection(db, 'groups', group, 'loot');
+
+    addDoc(groupLootRef, {
+      itemName,
+      itemQty: 1,
+      itemDesc,
+      rarity: item.rarity.toLowerCase(),
+      type: item.type,
+      ownerId: owner || 'party',
+      created: serverTimestamp(),
+    })
       .then(() => {
         setToastHeader('Item copied to group');
         setToastContent(`${itemName} has been saved to your group`);

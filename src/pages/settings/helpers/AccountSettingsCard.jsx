@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Row, Col, Button, Card } from 'react-bootstrap';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import firebaseApp from '../../../utils/firebase';
+import { auth } from '../../../utils/firebase';
 import ModalEditUsername from './ModalEditUsername';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 
@@ -13,8 +13,7 @@ export default function AccountSettingsCard() {
 
   const passwordReset = (email) => {
     setLoading(true);
-    firebaseApp
-      .auth()
+    auth
       .sendPasswordResetEmail(email)
       .then(function () {
         setToastHeader('Reset email sent');

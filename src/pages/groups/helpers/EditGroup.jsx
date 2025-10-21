@@ -1,7 +1,8 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col, Alert, ListGroup, InputGroup } from 'react-bootstrap';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
-import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { GlobalFeatures } from '../../../utils/contexts/GlobalFeatures';
 import { getGroupMembers, editGroup, deleteGroup, addMember, removeMember } from '../../../controllers/groupController';
 import GroupIcon from '../../../assets/GroupIcon';
@@ -9,7 +10,6 @@ import GroupIcon from '../../../assets/GroupIcon';
 export default function EditGroup({ group }) {
   const { groupName, id, owner, members, gameMasters = [] } = group;
   const { currentUser } = useContext(AuthContext);
-  const { groups } = useContext(GroupContext);
   const { setToastContent, setToastHeader, toggleShowToast } = useContext(GlobalFeatures);
   const isOwner = currentUser?.uid === owner;
   const [show, setShow] = useState(false);
@@ -87,7 +87,8 @@ export default function EditGroup({ group }) {
     setAlert(null);
 
     try {
-      const groupRef = groups.doc(id);
+      // Create the document reference directly using the group's id
+      const groupRef = doc(db, 'groups', id);
       let updatedGMs;
 
       if (isCurrentlyGM) {
@@ -98,7 +99,8 @@ export default function EditGroup({ group }) {
         updatedGMs = [...gameMasters, memberId];
       }
 
-      await groupRef.update({
+      // Use updateDoc instead of .update()
+      await updateDoc(groupRef, {
         gameMasters: updatedGMs,
       });
 

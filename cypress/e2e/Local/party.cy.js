@@ -26,11 +26,11 @@ describe('Party actions', () => {
     addPartyMember(memberId);
 
     // Then update the member
-    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy="modal-party"]').click();
     cy.get(`[data-cy=${memberId}]`).click();
-    cy.get('[data-cy=edit-member-input]').clear();
-    cy.get('[data-cy=edit-member-input]').type(updatedMemberId);
-    cy.get('[data-cy=save-member-input]').click();
+    cy.get('[data-cy="edit-member-input"]').clear();
+    cy.get('[data-cy="edit-member-input"]').type(updatedMemberId);
+    cy.get('[data-cy="save-member-input"]').click();
     cy.get(`[data-cy=${updatedMemberId}]`).should('exist');
   });
 
@@ -39,18 +39,18 @@ describe('Party actions', () => {
     addPartyMember(memberId);
 
     // Then favorite the member
-    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy="modal-party"]').click();
     cy.get(`[data-cy=${memberId}]`).click();
-    cy.get('[data-cy=set-unfavorite]').should('not.exist');
-    cy.get('[data-cy=set-favorite]').click();
+    cy.get('[data-cy="set-unfavorite"]').should('not.exist');
+    cy.get('[data-cy="set-favorite"]').click();
     cy.get('#loot-accordion').should('not.be.visible');
     cy.contains('select', memberId);
     
     // Then unfavorite the member
-    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy="modal-party"]').click();
     cy.get(`[data-cy=${memberId}]`).click();
-    cy.get('[data-cy=set-favorite]').should('not.exist');
-    cy.get('[data-cy=set-unfavorite]').click();
+    cy.get('[data-cy="set-favorite"]').should('not.exist');
+    cy.get('[data-cy="set-unfavorite"]').click();
     cy.get('#loot-accordion').should('be.visible');
     cy.contains('select', 'Party');
   });
@@ -60,11 +60,11 @@ describe('Party actions', () => {
     addPartyMember(memberId);
 
     // Then delete the member
-    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy="modal-party"]').click();
     cy.get(`[data-cy=${memberId}]`).click();
-    cy.get('[data-cy=delete-member]').click();
-    cy.get('[data-cy=confirm-delete-member]').click();
-    cy.get('[data-cy=modal-party]').click();
+    cy.get('[data-cy="delete-member"]').click();
+    cy.get('[data-cy="confirm-delete-member"]').click();
+    cy.get('[data-cy="modal-party"]').click();
     cy.get('#partyAccordion').within(() => {
       cy.get('.accordion-item').should('not.exist');
     });

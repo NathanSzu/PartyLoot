@@ -1,35 +1,34 @@
-// Importing firebase SDK
-import firebase from "firebase/app";
-// Importing firestore database
-import "firebase/firestore";
-// Importing firebase user authentication
-import "firebase/auth";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
+import { getFirestore, enableNetwork } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
-// Configuration for firebase
+// Your web app's Firebase configuration
 const config = {
-  apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_APP_ID,
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
-const firebaseApp = firebase.initializeApp(config);
+// Initialize Firebase
+const app = initializeApp(config);
 
-firebase
-  .firestore()
-  .enablePersistence()
-  .catch((err) => {
-    if (err.code === "failed-precondition") {
-      // Multiple tabs open, persistence can only be enabled
-      // in one tab at a a time.
-      // ...
-    } else if (err.code === "unimplemented") {
-      // The current browser does not support all of the
-      // features required to enable persistence
-      // ...
-    }
-  });
+// Initialize Firebase Authentication and get a reference to the service
+export const auth = getAuth(app);
 
-export default firebaseApp;
+// Initialize Cloud Firestore and get a reference to the service
+export const db = getFirestore(app);
+
+// Enable offline persistence (move to component initialization)
+export const enableFirestoreNetwork = async () => {
+  try {
+    await enableNetwork(db);
+  } catch (err) {
+    console.error('Firebase persistence error:', err);
+  }
+};
+
+export default app;

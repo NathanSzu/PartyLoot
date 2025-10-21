@@ -1,12 +1,13 @@
-import React, { useState, useContext, useRef } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import fb from 'firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import { GroupContext } from '../../../utils/contexts/GroupContext';
 import { AuthContext } from '../../../utils/contexts/AuthContext';
 
 export default function AddGroup() {
   const { currentUser } = useContext(AuthContext);
-  const { groups } = useContext(GroupContext);
+  const { setCurrentGroup } = useContext(GroupContext);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -14,27 +15,33 @@ export default function AddGroup() {
 
   const nameRef = useRef();
 
-  const addGroup = () => {
+  const addGroup = async () => {
     if (!nameRef.current.value) {
       return;
     }
+    
     setLoading(true);
-    groups
-      .add({
+    
+    try {
+      const groupsRef = collection(db, 'groups');
+      const docRef = await addDoc(groupsRef, {
         groupName: nameRef.current.value,
         owner: currentUser.uid,
         members: [currentUser.uid],
-        created: fb.firestore.FieldValue.serverTimestamp(),
-      })
-      .then(() => {
-        setLoading(false);
-        handleClose();
-      })
-      .catch((error) => {
-        console.error('Error creating new group: ', error);
-        setLoading(false);
-        handleClose();
+        gameMasters: [currentUser.uid],
+        created: serverTimestamp(),
       });
+      
+      // Optionally set the new group as current
+      setCurrentGroup(docRef.id);
+      
+      setLoading(false);
+      handleClose();
+    } catch (error) {
+      console.error('Error creating new group: ', error);
+      setLoading(false);
+      handleClose();
+    }
   };
 
   return (

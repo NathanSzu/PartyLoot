@@ -14,7 +14,7 @@ describe('routing protection', () => {
   pages.forEach(page => {
     it(`re-route from ${page} to /root if user is not logged in`, () => {
       cy.visit(page);
-      cy.url().should('eq', 'http://localhost:3000/');
+      cy.url().should('eq', 'http://localhost:5173/');
     });
   });
 

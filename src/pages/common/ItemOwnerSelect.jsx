@@ -2,12 +2,10 @@ import { useEffect, useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
 export default function ItemOwnerSelect({ setState, group, state, disabled = false }) {
-  const { groups, itemOwners, getItemOwners } = useContext(GroupContext);
-
-  const ownerRef = groups.doc(group || 'null');
+  const { itemOwners, getItemOwners } = useContext(GroupContext);
 
   useEffect(() => {
-    getItemOwners(ownerRef);
+    getItemOwners(group);
   }, [group]);
 
   return (
