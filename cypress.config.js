@@ -1,6 +1,6 @@
-const { defineConfig } = require('cypress');
+import { defineConfig } from 'cypress';
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
@@ -11,8 +11,9 @@ module.exports = defineConfig({
     defaultCommandTimeout: 10000,
     video: false,
     trashAssetsBeforeRuns: false,
-    setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config);
+    async setupNodeEvents(on, config) {
+      const { default: setupNodeEvents } = await import('./cypress/plugins/index.js');
+      return setupNodeEvents(on, config);
     },
     testIsolation: false
   },

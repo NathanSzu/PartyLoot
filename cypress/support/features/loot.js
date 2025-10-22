@@ -42,7 +42,7 @@ const checkCurrencyValues = (value) => {
   });
 };
 
-module.exports = {
+export {
   addItem,
   fillItemFields,
   fillSellFields,

@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
-const loot = require('../../support/features/loot');
+import * as loot from '../../support/features/loot';
 let uid = uuidv4().substring(0, 8);
 let uid2 = uuidv4().substring(0, 8);
 let ownerUid = uuidv4().substring(0, 8);

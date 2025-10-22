@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 import { v4 as uuidv4 } from 'uuid';
-const loot = require('../../support/features/loot');
+import * as loot from '../../support/features/loot';
 import {
   clearContainerFields,
   createContainer,

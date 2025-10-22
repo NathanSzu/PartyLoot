@@ -2,7 +2,6 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { register } from './serviceWorker';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -14,17 +13,16 @@ createRoot(document.getElementById('root')).render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-register({
-  onUpdate: (registration) => {
-    const waitingServiceWorker = registration.waiting;
 
-    if (waitingServiceWorker) {
-      waitingServiceWorker.addEventListener('statechange', (event) => {
-        if (event.target.state === 'activated') {
-          window.location.reload();
-        }
+// PWA Service Worker Registration using vite-plugin-pwa
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
       });
-      waitingServiceWorker.postMessage({ type: 'SKIP_WAITING' });
-    }
-  },
-});
+  });
+}
