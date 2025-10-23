@@ -105,7 +105,7 @@ export default function CreateContainer() {
         <img alt='Add container' src='APPIcons/treasure-chest.svg' />
       </Button>
 
-      <Modal show={show} onHide={handleClose} data-cy='create-container-form'>
+      <Modal show={show} onHide={handleClose} id='create-container-form'>
         <ModalHeader closeButton>
           <ModalTitle>{containerToEdit ? `Edit: ${containerToEdit}` : 'Create new container'}</ModalTitle>
         </ModalHeader>

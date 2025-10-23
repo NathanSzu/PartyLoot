@@ -63,7 +63,7 @@ export default function ModalParty() {
         <img alt='Edit Party' src='APPIcons/view-users.svg' />
       </Button>
 
-      <Modal size='lg' show={show} onHide={handleClose} data-cy='edit-party-dialog'>
+      <Modal size='lg' show={show} onHide={handleClose} id='edit-party-dialog'>
         <Modal.Header closeButton>
           <Modal.Title>Edit party members</Modal.Title>
         </Modal.Header>
