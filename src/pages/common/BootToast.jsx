@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Toast } from 'react-bootstrap';
 import { GlobalFeatures } from '../../utils/contexts/GlobalFeatures';
 
