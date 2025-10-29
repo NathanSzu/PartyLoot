@@ -2,7 +2,12 @@ import { useContext } from 'react';
 import { GroupContext } from '../../utils/contexts/GroupContext';
 
 export default function ContainerSelect({ itemData, setItemData, disabled = false }) {
-  const { partyStorageContainers } = useContext(GroupContext);
+  const { allContainers, isGameMaster } = useContext(GroupContext);
+
+  // Filter containers - show all containers if user has GM permissions, otherwise only show type '1'
+  const availableContainers = isGameMaster 
+    ? allContainers
+    : allContainers.filter(container => container.type === '1');
 
   return (
     <select
@@ -17,7 +22,7 @@ export default function ContainerSelect({ itemData, setItemData, disabled = fals
       aria-label='Add to container'
     >
       <option value=''>none</option>
-      {partyStorageContainers.map((container) => (
+      {availableContainers.map((container) => (
         <option key={container.id} value={container.id}>
           {container.name}
         </option>

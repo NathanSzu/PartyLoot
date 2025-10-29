@@ -6,7 +6,12 @@ import LootList from './LootList';
 import { Spinner } from 'react-bootstrap';
 
 export default function LootWrapper() {
-  const { returnContainerlessItems, partyStorageContainers, loadingContainers, loadingLoot } = useContext(GroupContext);
+  const { returnContainerlessItems, allContainers, loadingContainers, loadingLoot, isGameMaster } = useContext(GroupContext);
+
+  // Filter containers - show all containers if user has GM permissions, otherwise only show type '1'
+  const availableContainers = isGameMaster 
+    ? allContainers
+    : allContainers.filter(container => container.type === '1');
 
   return (
     <div className='accordion accordion-flush p-0' id='loot-accordion'>
@@ -17,7 +22,7 @@ export default function LootWrapper() {
               <Spinner variant='white' />
             </div>
           ) : (
-            partyStorageContainers.map((container) => <ContainerListItem container={container} key={container.id} />)
+            availableContainers.map((container) => <ContainerListItem container={container} key={container.id} />)
           )}
         </Col>
         <Col xs={12} lg={6} className='px-1'>

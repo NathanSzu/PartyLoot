@@ -23,7 +23,7 @@ import { db } from '../../../../utils/firebase';
 import { GroupContext } from '../../../../utils/contexts/GroupContext';
 
 export default function CreateContainer() {
-  const { groupDoc, partyStorageContainers, isGameMaster } = useContext(GroupContext); // Remove db from destructuring
+  const { groupDoc, allContainers, isGameMaster } = useContext(GroupContext); // Remove db from destructuring
   const [show, setShow] = useState(false);
   const [containerData, setContainerData] = useState({
     type: '1',
@@ -198,12 +198,12 @@ export default function CreateContainer() {
             </Button>
           )}
         </ModalBody>
-        {!containerData?.id && partyStorageContainers.length > 0 && (
+        {!containerData?.id && allContainers.length > 0 && (
           <ModalFooter>
             <ModalTitle className='w-100'>Existing containers</ModalTitle>
 
             <ListGroup className='w-100'>
-              {partyStorageContainers?.map((container) => (
+              {(isGameMaster ? allContainers : allContainers.filter(container => container.type === '1'))?.map((container) => (
                 <ListGroupItem key={container.id}>
                   <Row>
                     <Col className='align-self-center'>{container.name}</Col>

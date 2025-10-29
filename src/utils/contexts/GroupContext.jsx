@@ -21,12 +21,12 @@ export const GroupProvider = ({ children }) => {
   const [groupList, setGroupList] = useState([]);
   const [allTags, setAllTags] = useState({});
   const [allLoot, setAllLoot] = useState([]);
-  const [partyStorageContainers, setPartyStorageContainers] = useState([]);
+  const [allContainers, setAllContainers] = useState([]);
   const [itemQuery, setItemQuery] = useState({ searchQuery: '', itemOwner: 'party' });
   const [itemOwners, setItemOwners] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [currency, setCurrency] = useState(null);
-  const [loadingContainers, setLoadingContainers] = useState(true);
+  const [loadingContainers, setLoadingContainers] = useState(false);
   const [loadingLoot, setLoadingLoot] = useState(true);
   const [isGameMaster, setIsGameMaster] = useState(false);
 
@@ -107,20 +107,23 @@ export const GroupProvider = ({ children }) => {
 
   // Containers effect - separate to react to GM status changes
   useEffect(() => {
-    if (!currentGroup) return;
+    if (!currentGroup) {
+      setLoadingContainers(false);
+      return;
+    }
 
-    const containerTypes = isGameMaster ? ['1', '2'] : ['1'];
-    
+    setLoadingContainers(true);
+
     const containersRef = collection(db, 'groups', currentGroup, 'containers');
     const containersQuery = query(
       containersRef,
-      where('type', 'in', containerTypes),
       orderBy('type', 'desc'),
       orderBy('name')
     );
     
     const unsubscribeContainers = onSnapshot(containersQuery, (snapshot) => {
-      setPartyStorageContainers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const containers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setAllContainers(containers);
       setLoadingContainers(false);
     });
 
@@ -168,9 +171,11 @@ export const GroupProvider = ({ children }) => {
 
   const returnContainerItems = (containerId) => sortedLoot.filter((item) => item?.container === containerId);
 
-  const containerExists = (containerList, item) => !!containerList.find((container) => container.id === item.container);
+  const returnContainerlessItems = () => sortedLoot.filter((item) => {
+    if (!item.container) return true;
 
-  const returnContainerlessItems = () => sortedLoot.filter((item) => !containerExists(partyStorageContainers, item));
+      return false;
+  });
 
   const getItemOwner = (itemOwnerId, setState) => {
     const owner = itemOwners.find((owner) => owner.id === itemOwnerId);
@@ -198,6 +203,7 @@ export const GroupProvider = ({ children }) => {
         setCurrentGroup,
         setLoadingContainers,
         setLoadingLoot,
+        allContainers,
         groupData,
         itemOwners,
         checkOwnerExists,
@@ -216,7 +222,6 @@ export const GroupProvider = ({ children }) => {
         setOneParam,
         returnContainerItems,
         returnContainerlessItems,
-        partyStorageContainers,
         getItemOwner,
         getItemOwners,
         isGameMaster,
