@@ -107,10 +107,10 @@ describe('Compendium Copy to Group', () => {
   it('copy open source content to a group', () => {
     cy.get('[data-cy="navbar-toggle"]').click();
     cy.get('[data-cy="navbar-compendium"]').click();
-    cy.get('[data-cy="compendium-details-Aberrant Agreement"]', { timeout: 50000 }).click();
+    cy.get('[data-cy="compendium-details-Adamantine Armor (Breastplate)"]', { timeout: 50000 }).click();
     cy.get('#groupSelect').select(groupId);
     cy.get('[data-cy="save-to-group"]').click();
-    cy.checkToastAndDismiss('Item copied to group', 'Aberrant Agreement');
+    cy.checkToastAndDismiss('Item copied to group', 'Adamantine Armor (Breastplate)');
   });
 
   it('copy community homebrew to a group', () => {

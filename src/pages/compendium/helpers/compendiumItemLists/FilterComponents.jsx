@@ -86,7 +86,7 @@ export function FilterComponent({ queryParams, onFilterChange, isCompendium, set
                       className='form-control border-0 text-center'
                       value={queryParams.search || ''}
                       onChange={(e) => onFilterChange(e)}
-                      placeholder='Search by name or description'
+                      placeholder='Search by name'
                       data-cy='compendium-search'
                     />
                   </div>

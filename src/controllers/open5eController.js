@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.open5e.com/v1';
+const BASE_URL = 'https://api.open5e.com/v2/magicitems/';
 
 export const searchMagicItems = async (queryParams, limit = 10) => {
   try {
@@ -6,11 +6,11 @@ export const searchMagicItems = async (queryParams, limit = 10) => {
     if (queryParams?.nextPage || queryParams?.prevPage) {
       url = queryParams.nextPage || queryParams.prevPage;
     } else {
-      url = new URL('/magicitems/', BASE_URL);
-      const params = new URLSearchParams({
-        ...queryParams,
-        limit,
-      });
+      url = new URL(BASE_URL);
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (queryParams?.search) params.set('name__icontains', queryParams.search);
+      if (queryParams?.type) params.set('category', queryParams.type.toLowerCase().replace(/\s+/g, '-'));
+      if (queryParams?.rarity) params.set('rarity', queryParams.rarity.toLowerCase().replace(/\s+/g, '-'));
       url.search = params.toString();
     }
 

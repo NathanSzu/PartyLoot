@@ -24,8 +24,8 @@ export default function CopyToGroupSection({ itemName, itemDesc, item, handleClo
       itemName,
       itemQty: 1,
       itemDesc,
-      rarity: item.rarity.toLowerCase(),
-      type: item.type,
+      rarity: item.rarity?.name?.toLowerCase() || item.rarity?.toLowerCase() || '',
+      type: item.category?.name || item.type,
       ownerId: owner || 'party',
       created: serverTimestamp(),
     })

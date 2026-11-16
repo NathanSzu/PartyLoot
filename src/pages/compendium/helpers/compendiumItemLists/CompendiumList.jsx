@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 import { MemoizedListItem, LoadingListItem, NoResults } from './CompendiumListItem';
 import Pagination from './Pagination';
 import { FilterComponent } from './FilterComponents';
@@ -7,13 +7,21 @@ import { FilterComponent } from './FilterComponents';
 export function CompendiumList({ searchItems, isCompendium }) {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [queryParams, setQueryParams] = useState({ type: '', rarity: '', search: '' });
 
   const getItems = async (queryParams) => {
     setLoading(true);
-    const data = await searchItems(queryParams);
-    setData(data);
-    setLoading(false);
+    setError(null);
+    try {
+      const data = await searchItems(queryParams);
+      setData(data);
+    } catch (error) {
+      console.error('Error retrieving compendium items:', error);
+      setError('Unable to load items. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -49,12 +57,19 @@ export function CompendiumList({ searchItems, isCompendium }) {
             <LoadingListItem />
             <LoadingListItem />
           </>
+        ) : error ? (
+          <ListGroup.Item role='alert' data-cy='compendium-load-error' className='d-flex justify-content-between align-items-center'>
+            {error}
+            <Button variant='outline-dark' size='sm' onClick={() => getItems(queryParams)}>
+              Retry
+            </Button>
+          </ListGroup.Item>
         ) : (
           <>
             {data?.results?.map((item) => (
             <MemoizedListItem
-              key={item.slug || item.id}
-              itemId={item.slug || item.id}
+              key={item.slug || item.id || item.key}
+              itemId={item.slug || item.id || item.key}
               itemName={item.name || item.itemName}
               itemDesc={item.desc || item.itemDesc}
               item={item}
@@ -64,7 +79,7 @@ export function CompendiumList({ searchItems, isCompendium }) {
             <Pagination nextPage={data?.next} prevPage={data?.previous} onPageChange={onPageChange} />
           </>
         )}
-        {data?.results?.length < 1 && !loading && <NoResults />}
+        {data?.results?.length === 0 && !loading && !error && <NoResults />}
       </ListGroup>
     </>
   );
